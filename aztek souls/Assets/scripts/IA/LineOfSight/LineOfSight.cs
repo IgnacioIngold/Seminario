@@ -95,11 +95,7 @@ namespace IA.LineOfSight
         /// <returns> verdadero si el objetivo recurrente está dentro de la línea de visión</returns>
         public bool IsInSight()
         {
-            positionDiference = target.position - origin.transform.position;
-            distanceToTarget = positionDiference.magnitude;
-            angleToTarget = Vector3.Angle(origin.transform.forward, positionDiference);
-
-            dirToTarget = positionDiference.normalized;
+            Update(this.target);
 
             if (distanceToTarget > range || angleToTarget > angle) return false;
 
@@ -116,11 +112,7 @@ namespace IA.LineOfSight
         /// <returns>Verdadero si el Objetivo específicado está dentro de la línea de visión</returns>
         public bool IsInSight(Transform target)
         {
-            positionDiference = target.position - origin.transform.position;
-            distanceToTarget = positionDiference.magnitude;
-            angleToTarget = Vector3.Angle(origin.transform.forward, positionDiference);
-
-            dirToTarget = positionDiference.normalized;
+            Update(target);
 
             if (distanceToTarget > range || angleToTarget > angle) return false;
 
@@ -129,6 +121,20 @@ namespace IA.LineOfSight
                 return hitInfo.transform == target;
 
             return true;
+        }
+
+        /// <summary>
+        /// Actualiza el estado de la línea de visión.
+        /// </summary>
+        public void Update(Transform target = null)
+        {
+            if (target == null) target = this.target;
+
+            positionDiference = target.position - origin.transform.position;
+            distanceToTarget = positionDiference.magnitude;
+            angleToTarget = Vector3.Angle(origin.transform.forward, positionDiference);
+
+            dirToTarget = positionDiference.normalized;
         }
     }
 

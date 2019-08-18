@@ -26,8 +26,10 @@ public class Cursed : MonoBehaviour, IKilleable
     public float AttackRange;
     public float attackDamage;
     public float rotationLerpSpeed;
+    public float minForwardAngle;
 
-    private bool CanAttack = true;
+    bool _canAttack = true;
+    Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
     [Header("Line Of Sight")]
     [SerializeField] Transform target = null;
@@ -84,14 +86,21 @@ public class Cursed : MonoBehaviour, IKilleable
         {
             if (!IsAlive) sm.Feed(enemyState.dead);
 
-            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
-            agent.Move(sight.dirToTarget * speed * Time.deltaTime);
+            sight.Update();
+            //_lastEnemyPositionKnown = sight.target.position; // Recordamos la ultima posición en el que el player fue visto.
+            if (sight.angleToTarget > minForwardAngle)
+                transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            else
+            {
+                transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+                agent.Move(sight.dirToTarget * speed * Time.deltaTime);
+            }
 
             //transitions
             if (sight.distanceToTarget < AttackRange) //Si entra dentro del rango de ataque.
                 sm.Feed(enemyState.attack);
 
-            if (!sight.IsInSight()) //Si el objetivo entra en la línea de visión.
+            if (sight.distanceToTarget > sight.range) //Si el objetivo se va afuera del rango de visión.
                 sm.Feed(enemyState.idle);
         }; 
         #endregion
@@ -104,7 +113,7 @@ public class Cursed : MonoBehaviour, IKilleable
         };
         attack.OnUpdate += () =>
         {
-            if (CanAttack)
+            if (_canAttack)
             {
                 print("Enemy is Attacking");
                 StartCoroutine(Attack());
@@ -168,7 +177,7 @@ public class Cursed : MonoBehaviour, IKilleable
 
     IEnumerator Attack()
     {
-        CanAttack = false;
+        _canAttack = false;
 
         //Activa Animación.
         //Anims.SetBool("Attack", True);
@@ -180,7 +189,7 @@ public class Cursed : MonoBehaviour, IKilleable
 
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
-        CanAttack = true;
+        _canAttack = true;
     }
 
     //Snippet for Debugg
@@ -206,6 +215,10 @@ public class Cursed : MonoBehaviour, IKilleable
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, sight.angle + 1, 0) * transform.forward * sight.range);
         Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -sight.angle - 1, 0) * transform.forward * sight.range);
+
+        Gizmos.color = Color.gray;
+        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, minForwardAngle + 1, 0) * transform.forward * sight.range);
+        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -minForwardAngle - 1, 0) * transform.forward * sight.range);
     }
 #endif
 }
