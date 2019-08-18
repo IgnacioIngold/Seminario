@@ -1,0 +1,16 @@
+﻿/* Determina Comportamiento común para todas los tipos de Unidades. */
+namespace Core.Entities
+{
+    // Todas las unidades que pueden recibir Daño.
+    public interface IDamageable
+    {
+        void GetDamage(params object[] DamageStats);
+    }
+    //Todas las unidades que pueden recibir Daño y tienen 2 estados Básicos: vivos o muertos.
+    public interface IKilleable : IDamageable
+    {
+        bool IsAlive { get; }
+    }
+}
+
+
