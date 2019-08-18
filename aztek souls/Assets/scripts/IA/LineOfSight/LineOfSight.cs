@@ -10,7 +10,7 @@ namespace IA.LineOfSight
         /// </summary>
         /// <param name="range">Rango máximo de la visión</param>
         /// <param name="angle">Ángulo máximo de la visión</param>
-        public static LineOfSight CreateSightEntity(this Transform _origin, float range, float angle)
+        public static LineOfSight CreateSightEntity(this Transform _origin, float range = 1, float angle = 1)
         {
             return new LineOfSight(_origin, range, angle);
         }

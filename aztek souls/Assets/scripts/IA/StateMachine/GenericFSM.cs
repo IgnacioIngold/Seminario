@@ -18,6 +18,11 @@ namespace IA.StateMachine.Generic
             current.Update();
         }
 
+        public void SetCurrentState(State<T> input)
+        {
+            current = input;
+        }
+
         public void Feed(T input)
         {
             var transition = current.GetTransition(input);
@@ -36,7 +41,7 @@ namespace IA.StateMachine.Generic
         }
     }
 
-    public abstract class State<T>
+    public class State<T>
     {
         public string StateName { get; private set; }
 
