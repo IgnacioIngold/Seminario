@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa7b4ea2d994144d909af946812b9cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1
+  speed: 0.04
 --- !u!4 &80460099
 Transform:
   m_ObjectHideFlags: 0
@@ -276,7 +276,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 94b814f0978830749bff9ab5b2ef6147,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 52.07464
+      value: 53.83
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 94b814f0978830749bff9ab5b2ef6147,
         type: 3}
@@ -483,7 +483,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -2573733167556495074, guid: 94b814f0978830749bff9ab5b2ef6147, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
