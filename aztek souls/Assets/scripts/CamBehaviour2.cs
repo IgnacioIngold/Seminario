@@ -2,24 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Behaviour Original de la cámara.
-public class CameraBehaviour : MonoBehaviour
+public class CamBehaviour2 : MonoBehaviour
 {
     public Transform Target;
     public Transform LocalCam;
-
     public Vector3 camOffSet = Vector3.zero;
-
-    public float transitionVelocity = 0.5f;
-    public float RotationSpeed = 10f; 
-
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    MoveCamera();
-    //    RotateCamera("CameraRotation");
-    //}
+    public float transitionVelocity;
+    public float RotationSpeed;
 
     public void MoveCamera()
     {
@@ -28,12 +17,12 @@ public class CameraBehaviour : MonoBehaviour
             transform.position = Vector3.Slerp(transform.position, Target.position, transitionVelocity);
     }
 
-    public void RotateCamera(string CameraAxis)
+    public void RotateCamera(string MouseAxis)
     {
         if (Target != null)
         {
-            print("Behaviour 2");
-            float value = Input.GetAxisRaw(CameraAxis);
+            //En este caso quiero que rote constantemente usando el mouse.
+            float value = Input.GetAxisRaw(MouseAxis);
             transform.Rotate(Vector3.up, RotationSpeed * value * Time.deltaTime, Space.Self);
         }
     }

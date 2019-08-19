@@ -152,6 +152,9 @@ MonoBehaviour:
   Speed: 4
   DebugGameObject: {fileID: 444976925}
   WorldForward: {fileID: 1156065814}
+  CameraBehaviour: 1
+  behaviour1: {fileID: 1156065813}
+  behaviour2: {fileID: 1156065815}
 --- !u!4 &80460099
 Transform:
   m_ObjectHideFlags: 0
@@ -240,7 +243,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0.078125, y: 0.07421875, z: 0.02734375, w: -0.0390625}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -552,6 +555,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1156065814}
   - component: {fileID: 1156065813}
+  - component: {fileID: 1156065815}
   m_Layer: 0
   m_Name: CamPivot
   m_TagString: Untagged
@@ -584,13 +588,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1156065812}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.6289993e-21, z: -1.7526653e-21}
+  m_LocalPosition: {x: 0, y: 2.547211e-23, z: -1.6981397e-23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 534669905}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1156065815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156065812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 608b3c7517f14fd40acffdd3900ac257, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 80460099}
+  LocalCam: {fileID: 534669905}
+  camOffSet: {x: 0, y: 14, z: -16}
+  transitionVelocity: 0.3
+  RotationSpeed: 50
 --- !u!4 &1787125087 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 94b814f0978830749bff9ab5b2ef6147,
