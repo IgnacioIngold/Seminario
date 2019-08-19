@@ -37,9 +37,8 @@ public class Hero : MonoBehaviour
         Move();
     }
 
-    public void Move()
+    private void FixedUpdate()
     {
-        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
@@ -47,28 +46,22 @@ public class Hero : MonoBehaviour
             DebugGameObject.transform.position = hit.point;
         }
 
-        _dirX = Input.GetAxis("Horizontal");
-        _dirY = Input.GetAxis("Vertical");
-        _dir = WorldForward.forward * _dirY + WorldForward.right * _dirX;
-
-
-        //if (Mathf.Abs(Input.GetAxis("Horizontal"))
-        //     >0.5 && Mathf.Abs(Input.GetAxis("Vertical")) >0.5)
-        //{
-        //    transform.position += _dir * speed * Time.deltaTime;
-        //}
-        transform.position += _dir * Speed * Time.deltaTime;
-
-        _am.SetFloat("VelY", _dirY);
-        _am.SetFloat("VelX", _dirX);
-    }
-
-    private void OnDrawGizmos()
-    {
         if (MousePosInWorld != Vector3.zero)
         {
             Vector3 DesiredForward = (MousePosInWorld - transform.position).normalized;
             transform.forward = Vector3.Slerp(transform.forward, DesiredForward, 0.1f);
         }
+    }
+
+    public void Move()
+    {
+        _dirX = Input.GetAxis("Horizontal");
+        _dirY = Input.GetAxis("Vertical");
+        _dir = WorldForward.forward * _dirY + WorldForward.right * _dirX;
+
+        transform.position += _dir * Speed * Time.deltaTime;
+
+        _am.SetFloat("VelY", _dirY);
+        _am.SetFloat("VelX", _dirX);
     }
 }
