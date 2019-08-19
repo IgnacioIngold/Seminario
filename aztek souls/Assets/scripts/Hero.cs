@@ -99,6 +99,9 @@ public class Hero : MonoBehaviour
                 behaviour1.enabled = false;
                 DebugGameObject.SetActive(true);
 
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+
                 behaviour2.enabled = true;
                 behaviour2.MoveCamera();
                 behaviour2.RotateCamera("CameraRotation");
