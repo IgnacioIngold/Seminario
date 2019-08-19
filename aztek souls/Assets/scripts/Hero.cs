@@ -5,16 +5,30 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
-    public float speed;
+    public float Speed;
+    public GameObject DebugGameObject;
+    public Transform WorldForward;
+
     Animator _am;
     float _dirX;
     float _dirY;
     Vector3 _dir;
 
 
+    RaycastHit hit;
+    Vector3 MousePosInWorld = Vector3.zero;
+
+
     void Awake()
     {
         _am = GetComponentInChildren<Animator>();
+    }
+
+    private Camera cam;
+
+    void Start()
+    {
+        cam = Camera.main;
     }
 
     // Update is called once per frame
@@ -25,23 +39,36 @@ public class Hero : MonoBehaviour
 
     public void Move()
     {
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            MousePosInWorld = hit.point;
+            DebugGameObject.transform.position = hit.point;
+        }
+
         _dirX = Input.GetAxis("Horizontal");
         _dirY = Input.GetAxis("Vertical");
-        _dir = Vector3.Normalize(new Vector3(_dirX, 0, _dirY));
+        _dir = WorldForward.forward * _dirY + WorldForward.right * _dirX;
 
-        Debug.Log("Vertical" + Input.GetAxis("Vertical") + "Horizontal" + Input.GetAxis("Horizontal"));
 
-        if (Mathf.Abs(Input.GetAxis("Horizontal"))
-             >0.5 && Mathf.Abs(Input.GetAxis("Vertical")) >0.5)
+        //if (Mathf.Abs(Input.GetAxis("Horizontal"))
+        //     >0.5 && Mathf.Abs(Input.GetAxis("Vertical")) >0.5)
+        //{
+        //    transform.position += _dir * speed * Time.deltaTime;
+        //}
+        transform.position += _dir * Speed * Time.deltaTime;
+
+        _am.SetFloat("VelY", _dirY);
+        _am.SetFloat("VelX", _dirX);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (MousePosInWorld != Vector3.zero)
         {
-            transform.position += _dir * speed / 2;
-            
+            Vector3 DesiredForward = (MousePosInWorld - transform.position).normalized;
+            transform.forward = Vector3.Slerp(transform.forward, DesiredForward, 0.1f);
         }
-            
-
-        transform.position += _dir * speed;
-
-        _am.SetFloat("VelY", _dirY,0.2f,Time.deltaTime*2);
-        _am.SetFloat("VelX", _dirX, 0.2f, Time.deltaTime * 2);
     }
 }
