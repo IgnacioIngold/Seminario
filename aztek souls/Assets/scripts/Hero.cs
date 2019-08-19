@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class Hero : MonoBehaviour
 {
-    public float Speed;
-    public GameObject DebugGameObject;
+    public float Speed = 4f;
+    public float rollRange = 5f;
+    public GameObject MousePosDebugObject;
+    public GameObject RollPosDebugObject;
+    public LayerMask RollObstacles;
     public Transform WorldForward;
 
     #region DebugCamara
@@ -24,6 +28,10 @@ public class Hero : MonoBehaviour
 
     Animator _am;
     Camera cam;
+    Collider _col;
+
+    bool canMove = true;
+    bool rolling = false;
     float _dirX;
     float _dirY;
     Vector3 _dir;
@@ -36,6 +44,14 @@ public class Hero : MonoBehaviour
     void Awake()
     {
         _am = GetComponentInChildren<Animator>();
+        _col = GetComponent<Collider>();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+        Gizmos.DrawWireSphere(transform.position, rollRange);
     }
 
 
@@ -47,15 +63,56 @@ public class Hero : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        RotateCam();
+        if (canMove)
+        {
+            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            RotateCam();
+        }
     }
 
     private void FixedUpdate()
     {
         if (CameraBehaviour == CamType.Free)
             ProjectMouseToWorld();
+
+        //Rool
+        if (!rolling && Input.GetKeyDown(KeyCode.Space))
+            Rool(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+        if (rolling)
+            transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
     }
+
+    private void Rool(float AxisX, float AxisY)
+    {
+        //Calculamos la dirección y el punto final.
+        Vector3 rollDirection = WorldForward.forward * AxisY + WorldForward.right * AxisX;
+        Vector3 FinalPos = Vector3.zero;
+
+        //Necesito saber cual es el rango real de mi desplazamiento.
+        float realRange = rollRange;
+        RaycastHit obstacle;
+        Ray ray = new Ray(transform.position, rollDirection);
+        if (Physics.Raycast(ray, out obstacle, rollRange, RollObstacles))
+        {
+            //Golpeamos con algo y limitamos el desplazamiento, de acuerdo a un offset.
+            if (obstacle.collider != null)
+                realRange = Vector3.Distance(transform.position, obstacle.point);
+        }
+
+        FinalPos = transform.position + (rollDirection * realRange);
+
+        //Arreglamos nuestra orientación.
+        _dir = (FinalPos - transform.position).normalized;
+
+        //Calculamos la velocidad del desplazamiento:
+        //float Velocity = 1f / rollRange;
+        float Velocity = 0.2f;
+
+        //Vamos a usar una corrutina
+        StartCoroutine(Roll(FinalPos, Velocity));
+    }
+
 
     /// <summary>
     /// Proyecta y coloca un Objeto en el mundo de acuerdo a la posición del Mouse.
@@ -66,7 +123,7 @@ public class Hero : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             MousePosInWorld = hit.point;
-            DebugGameObject.transform.position = hit.point;
+            MousePosDebugObject.transform.position = hit.point;
         }
 
         #region Forward Setting
@@ -78,16 +135,14 @@ public class Hero : MonoBehaviour
         #endregion
     }
 
-    public void Move()
+    public void Move(float AxisX, float AxisY)
     {
-        _dirX = Input.GetAxis("Horizontal");
-        _dirY = Input.GetAxis("Vertical");
-        _dir = WorldForward.forward * _dirY + WorldForward.right * _dirX;
+        _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
 
         transform.position += _dir * Speed * Time.deltaTime;
 
-        _am.SetFloat("VelY", _dirY);
-        _am.SetFloat("VelX", _dirX);
+        _am.SetFloat("VelY", AxisX);
+        _am.SetFloat("VelX", AxisY);
     }
 
     public void RotateCam()
@@ -97,7 +152,7 @@ public class Hero : MonoBehaviour
         {
             case CamType.Free:
                 behaviour1.enabled = false;
-                DebugGameObject.SetActive(true);
+                MousePosDebugObject.SetActive(true);
 
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -114,7 +169,7 @@ public class Hero : MonoBehaviour
                 behaviour1.MoveCamera();
                 behaviour1.RotateCamera("Mouse X");
 
-                DebugGameObject.SetActive(false);
+                MousePosDebugObject.SetActive(false);
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
 
@@ -124,5 +179,45 @@ public class Hero : MonoBehaviour
             default:
                 break;
         }
+    }
+
+
+    IEnumerator Roll(Vector3 finalPos, float Velocity)
+    {
+        //Primero que nada avisamos que no podemos hacer otras acciones.
+        canMove = false;
+        //Desactivamos el collider.
+        _col.enabled = false;
+
+        //Debug - Init
+        RollPosDebugObject.SetActive(true);
+        RollPosDebugObject.transform.position = finalPos;
+
+
+        rolling = true;
+        while (rolling)
+        {
+            //Chequeamos si debemos seguir haciendo el roll.
+            //Si mi posición es es igual a la posición objetivo rompo el ciclo.
+            if (Vector3.Distance(transform.position, finalPos) < 0.1f )
+            {
+                rolling = false;
+                break;
+            }
+
+            //Hacemos el desplazamiento
+            transform.position = Vector3.Lerp(transform.position, finalPos, Velocity);
+            yield return new WaitForEndOfFrame();
+        }
+
+        //Debug - Finit
+        RollPosDebugObject.SetActive(false);
+
+        //Volvemos a avisar que ya nos podemos mover.
+        canMove = true;
+        //Reactivamos el collider.
+        _col.enabled = true;
+
+        //Adicional poner el roll en enfriamiento.
     }
 }
