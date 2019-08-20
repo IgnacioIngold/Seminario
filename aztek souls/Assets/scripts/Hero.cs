@@ -77,13 +77,13 @@ public class Hero : MonoBehaviour
 
         //Rool
         if (!rolling && Input.GetKeyDown(KeyCode.Space))
-            Rool(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            RollExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         if (rolling)
             transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
     }
 
-    private void Rool(float AxisX, float AxisY)
+    private void RollExecute(float AxisX, float AxisY)
     {
         //Calculamos la dirección y el punto final.
         Vector3 rollDirection = WorldForward.forward * AxisY + WorldForward.right * AxisX;
