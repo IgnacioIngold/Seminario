@@ -2,13 +2,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using IA.StateMachine.Generic;
+using Core.Entities;
+
 
 [RequireComponent(typeof(Collider))]
-public class Hero : MonoBehaviour
+public class Hero : MonoBehaviour, IKilleable
 {
+    [Header("Main Stats")]
+    [SerializeField] float _hp = 100f;
+    public float Health
+    {
+        get { return _hp; }
+        set
+        {
+            _hp = value;
+            HealthText.text = "Health: " + (int)_hp;
+        }
+    }
+
     public float Speed = 4f;
     public float rollRange = 5f;
     public float rollVelocity = 10f;
+    public float rollCost = 10f;
+
+    [SerializeField] float _st = 100f;
+    public float Stamina
+    {
+        get { return _st; }
+        set
+        {
+            //Display Value
+            _st = value;
+            StaminaText.text = "Stamina: " + (int)_st;
+        }
+    }
+    public float MaxStamina = 100f;
+    public float StaminaRegeneration = 2f;
+
+    [Header("Debug Elements")]
+
+    public Text HealthText;
+    public Text StaminaText;
     public GameObject MousePosDebugObject;
     public GameObject RollPosDebugObject;
     public LayerMask RollObstacles;
@@ -28,6 +64,25 @@ public class Hero : MonoBehaviour
     #endregion
 
     //----------------Private Members---------------
+
+    private struct AttackNode
+    {
+        float duration;
+        float buttonWindow;
+    }
+
+    private enum attackMode
+    {
+        idle,
+        light1,
+        light2,
+        light3,
+        parry
+    }
+    GenericFSM<attackMode> attack;
+    Dictionary<attackMode, AttackNode> nodeStats;
+
+
     Animator _am;
     Camera cam;
     Collider _col;
@@ -42,12 +97,31 @@ public class Hero : MonoBehaviour
     RaycastHit ProjectMouseToWorld_RayHit;
     Vector3 MousePosInWorld = Vector3.zero;
 
+    public bool IsAlive => _hp > 0;
+
     //----------------------------------------- Unity Functions -------------------------------------------------------
 
     void Awake()
     {
         _am = GetComponentInChildren<Animator>();
         _col = GetComponent<Collider>();
+
+        //Starting Display
+        HealthText.text = "Health: " + _hp;
+        StaminaText.text = "Stamina: " + _st;
+
+        //State Machine de modo de ataque.
+        var idle = new State<attackMode>("Idle");
+        var light1 = new State<attackMode>("Light1");
+        var light2 = new State<attackMode>("Light2");
+        var light3 = new State<attackMode>("Light3");
+        var parry = new State<attackMode>("Parry");
+
+        idle.OnUpdate += () =>
+        {
+            //Si presiono la tecla correspondiente entro al primer ataque.
+        };
+
     }
 
     void Start()
@@ -63,6 +137,9 @@ public class Hero : MonoBehaviour
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             RotateCam();
         }
+
+        if (Stamina < MaxStamina)
+            Stamina += StaminaRegeneration * Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -71,7 +148,7 @@ public class Hero : MonoBehaviour
             ProjectMouseToWorld();
 
         //Rool
-        if (!rolling && Input.GetKeyDown(KeyCode.Space))
+        if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space))
             RoolExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         if (rolling)
@@ -89,6 +166,8 @@ public class Hero : MonoBehaviour
 
     private void RoolExecute(float AxisX, float AxisY)
     {
+        Stamina -= rollCost;
+
         //Calculamos la dirección y el punto final.
         Vector3 rollDirection = WorldForward.forward * AxisY + WorldForward.right * AxisX;
         Vector3 FinalPos = Vector3.zero;
@@ -222,5 +301,17 @@ public class Hero : MonoBehaviour
         _col.enabled = true;
 
         //Adicional poner el roll en enfriamiento.
+    }
+
+    public void GetDamage(params object[] DamageStats)
+    {
+        float Damage = (float)DamageStats[0];
+        Health -= Damage;
+
+        //Muerte del Jugador
+        if (Health <= 0)
+        {
+            print("Estas Muerto Wey");
+        }
     }
 }
