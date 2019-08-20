@@ -72,7 +72,7 @@ public class Hero : MonoBehaviour
 
         //Rool
         if (!rolling && Input.GetKeyDown(KeyCode.Space))
-            Rool(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            RollExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         if (rolling)
             transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
