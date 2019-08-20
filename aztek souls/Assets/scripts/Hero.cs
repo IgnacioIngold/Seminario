@@ -135,9 +135,9 @@ public class Hero : MonoBehaviour, IKilleable
         if (canMove)
         {
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            RotateCam();
+            
         }
-
+        RotateCam();
         if (Stamina < MaxStamina)
             Stamina += StaminaRegeneration * Time.deltaTime;
     }
@@ -191,6 +191,7 @@ public class Hero : MonoBehaviour, IKilleable
         //Calculamos la velocidad del desplazamiento:
         float Velocity = rollVelocity * Time.deltaTime;
 
+        _am.SetTrigger("RollAction");
         //Vamos a usar una corrutina
         StartCoroutine(Roll(FinalPos, Velocity));
     }
