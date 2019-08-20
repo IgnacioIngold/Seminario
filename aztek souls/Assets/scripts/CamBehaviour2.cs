@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Behaviour Adicional para la cámara.
 public class CamBehaviour2 : MonoBehaviour
 {
     public Transform Target;

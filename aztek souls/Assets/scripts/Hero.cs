@@ -8,6 +8,7 @@ public class Hero : MonoBehaviour
 {
     public float Speed = 4f;
     public float rollRange = 5f;
+    public float rollVelocity = 10f;
     public GameObject MousePosDebugObject;
     public GameObject RollPosDebugObject;
     public LayerMask RollObstacles;
@@ -26,6 +27,7 @@ public class Hero : MonoBehaviour
 
     #endregion
 
+    //----------------Private Members---------------
     Animator _am;
     Camera cam;
     Collider _col;
@@ -37,23 +39,16 @@ public class Hero : MonoBehaviour
     Vector3 _dir;
 
 
-    RaycastHit hit;
+    RaycastHit ProjectMouseToWorld_RayHit;
     Vector3 MousePosInWorld = Vector3.zero;
 
+    //----------------------------------------- Unity Functions -------------------------------------------------------
 
     void Awake()
     {
         _am = GetComponentInChildren<Animator>();
         _col = GetComponent<Collider>();
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-        Gizmos.DrawWireSphere(transform.position, rollRange);
-    }
-
 
     void Start()
     {
@@ -83,6 +78,15 @@ public class Hero : MonoBehaviour
             transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+        Gizmos.DrawWireSphere(transform.position, rollRange);
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------
+
     private void Rool(float AxisX, float AxisY)
     {
         //Calculamos la dirección y el punto final.
@@ -106,8 +110,7 @@ public class Hero : MonoBehaviour
         _dir = (FinalPos - transform.position).normalized;
 
         //Calculamos la velocidad del desplazamiento:
-        //float Velocity = 1f / rollRange;
-        float Velocity = 0.2f;
+        float Velocity = rollVelocity * Time.deltaTime;
 
         //Vamos a usar una corrutina
         StartCoroutine(Roll(FinalPos, Velocity));
@@ -120,10 +123,10 @@ public class Hero : MonoBehaviour
     private void ProjectMouseToWorld()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out ProjectMouseToWorld_RayHit))
         {
-            MousePosInWorld = hit.point;
-            MousePosDebugObject.transform.position = hit.point;
+            MousePosInWorld = ProjectMouseToWorld_RayHit.point;
+            MousePosDebugObject.transform.position = ProjectMouseToWorld_RayHit.point;
         }
 
         #region Forward Setting
@@ -182,7 +185,7 @@ public class Hero : MonoBehaviour
     }
 
 
-    IEnumerator Roll(Vector3 finalPos, float Velocity)
+    IEnumerator Roll(Vector3 finalPos, float ScaledVelocity)
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
         canMove = false;
@@ -199,14 +202,14 @@ public class Hero : MonoBehaviour
         {
             //Chequeamos si debemos seguir haciendo el roll.
             //Si mi posición es es igual a la posición objetivo rompo el ciclo.
-            if (Vector3.Distance(transform.position, finalPos) < 0.1f )
+            if (Vector3.Distance(transform.position, finalPos) < 0.5f )
             {
                 rolling = false;
                 break;
             }
 
             //Hacemos el desplazamiento
-            transform.position = Vector3.Lerp(transform.position, finalPos, Velocity);
+            transform.position = Vector3.Lerp(transform.position, finalPos, ScaledVelocity);
             yield return new WaitForEndOfFrame();
         }
 
