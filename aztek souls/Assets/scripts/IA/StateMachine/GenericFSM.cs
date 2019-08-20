@@ -5,7 +5,7 @@ namespace IA.StateMachine.Generic
 {
     public class GenericFSM<T>
     {
-        private State<T> current;
+        public State<T> current;
 
         public GenericFSM(State<T> initialState)
         {
@@ -16,11 +16,6 @@ namespace IA.StateMachine.Generic
         public void Update()
         {
             current.Update();
-        }
-
-        public void SetCurrentState(State<T> input)
-        {
-            current = input;
         }
 
         public void Feed(T input)
@@ -113,9 +108,14 @@ namespace IA.StateMachine.Generic
             if (transitions.ContainsKey(input))
             {
                 Transition<T> transition = transitions[input];
-                return Tuple.Create(transition.OnTransition, transition.TargetState); ;
+                return Tuple.Create(transition.OnTransition, transition.TargetState);
             }
             else return null;
+        }
+
+        public bool hasTransitionTo(T input)
+        {
+            return transitions.ContainsKey(input);
         }
 
         public void Enter(T input)
