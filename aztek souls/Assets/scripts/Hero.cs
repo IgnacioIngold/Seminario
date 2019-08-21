@@ -23,6 +23,7 @@ public class Hero : MonoBehaviour, IKilleable
     }
 
     public float Speed = 4f;
+    public float RunSpeed;
     public float rollRange = 5f;
     public float rollVelocity = 10f;
     public float rollCost = 10f;
@@ -134,7 +135,11 @@ public class Hero : MonoBehaviour, IKilleable
     {
         if (canMove)
         {
-            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
+            if(Stamina >= 0 && Input.GetKey(KeyCode.LeftShift))
+            {
+                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), RunSpeed, true);
+            }
             
         }
         RotateCam();
@@ -150,6 +155,7 @@ public class Hero : MonoBehaviour, IKilleable
         //Rool
         if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space))
             RoolExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
 
         if (rolling)
             transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
@@ -218,15 +224,19 @@ public class Hero : MonoBehaviour, IKilleable
         #endregion
     }
 
-    public void Move(float AxisX, float AxisY)
+    public void Move(float AxisX, float AxisY,float s,bool running)
     {
         _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
 
-        transform.position += _dir * Speed * Time.deltaTime;
+        transform.position += _dir * s * Time.deltaTime;
 
         _am.SetFloat("VelY", AxisX);
         _am.SetFloat("VelX", AxisY);
+
+        _am.SetBool("Running", running);
+        
     }
+   
 
     public void RotateCam()
     {
