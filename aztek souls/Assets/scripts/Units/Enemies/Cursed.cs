@@ -81,6 +81,7 @@ public class Cursed : MonoBehaviour, IKilleable
         pursue.OnEnter += (x) =>
         {
             print("Enemy has started Chasing After Player");
+            anims.SetBool("isWalking",true);
         };
         pursue.OnUpdate += () =>
         {
@@ -102,13 +103,15 @@ public class Cursed : MonoBehaviour, IKilleable
 
             if (sight.distanceToTarget > sight.range) //Si el objetivo se va afuera del rango de visión.
                 sm.Feed(enemyState.idle);
-        }; 
+        };
+       
         #endregion
 
         #region Attack State
         attack.OnEnter += (x) =>
         {
             agent.isStopped = true;
+            anims.SetTrigger("attack");
             print("Enemy started AttackMode");
         };
         attack.OnUpdate += () =>
@@ -132,6 +135,7 @@ public class Cursed : MonoBehaviour, IKilleable
         dead.OnEnter += (x) =>
         {
             print("Enemy is dead");
+            anims.SetTrigger("died");
             // Posible Spawneo de cosas.
         };  
         #endregion
@@ -180,13 +184,14 @@ public class Cursed : MonoBehaviour, IKilleable
         _canAttack = false;
 
         //Activa Animación.
-        //Anims.SetBool("Attack", True);
+        
 
         //Cálculo de daño
         //var toDamage = target.GetComponent<IKilleable>();
         //object[] damageStats = new object[] { attackDamage };
         //toDamage.GetDamage(damageStats);
 
+        
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
         _canAttack = true;

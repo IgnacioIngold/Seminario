@@ -1,29 +1,12 @@
 fileFormatVersion: 2
-guid: 4746cc924c4c6c141aa8f01b46a54ce3
+guid: 4d90890a7417a184098c0b112010a4b4
 ModelImporter:
   serializedVersion: 26
-  internalIDToNameTable: []
-  externalObjects:
+  internalIDToNameTable:
   - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bear_alpha
-    second: {fileID: 2800000, guid: 199a9c16414cdbe4381000885118a965, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bear_diffuse
-    second: {fileID: 2800000, guid: 65764ce4e4de5a448ac63cb10ec9c0fe, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bear_normal
-    second: {fileID: 2800000, guid: c6abf66d5d5d54d4599460144b6480e5, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: bear_specular
-    second: {fileID: 2800000, guid: a8caa6ca31f5cbd48a68f83ca28f21ea, type: 3}
+      74: -203655887218126122
+    second: mixamo.com
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -50,7 +33,36 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: mixamo.com
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 121
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []
@@ -87,8 +99,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips:
-  - 7337b97b70ff9de458327c980182f8d6
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

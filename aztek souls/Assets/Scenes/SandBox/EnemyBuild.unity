@@ -695,37 +695,37 @@ PrefabInstance:
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.positionDiference.x
-      value: -10.85
+      value: -11.34
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.positionDiference.z
-      value: -2.74
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.dirToTarget.x
-      value: -0.9685952
+      value: -0.9904191
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.dirToTarget.y
-      value: 0.044635724
+      value: 0.043669272
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.dirToTarget.z
-      value: -0.24460377
+      value: -0.13100782
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.angleToTarget
-      value: 39.349205
+      value: 32.726883
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: sight.distanceToTarget
-      value: 11.3
+      value: 11.449698
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -742,15 +742,25 @@ PrefabInstance:
       propertyPath: speed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: AttackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: attackDamage
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 4977729587222478665, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587255576859, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587255576861, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
