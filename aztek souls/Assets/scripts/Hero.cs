@@ -136,10 +136,11 @@ public class Hero : MonoBehaviour, IKilleable
         if (canMove)
         {
             Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
-            if(Stamina >= 0 && Input.GetKey(KeyCode.LeftShift))
+            if(Stamina >= 0 && Input.GetKey(KeyCode.LeftShift) && Input.GetAxis("Vertical")>0.5)
             {
                 Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), RunSpeed, true);
             }
+            Debug.Log(Input.GetAxis("Vertical"));
             
         }
         RotateCam();
