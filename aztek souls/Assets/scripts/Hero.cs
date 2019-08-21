@@ -141,7 +141,7 @@ public class Hero : MonoBehaviour, IKilleable
             if (Stamina > 0f && Input.GetKey(KeyCode.LeftShift))
             {
                 Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), RunSpeed, true);
-                Stamina -= 15f * Time.deltaTime;
+                Stamina -= 20f * Time.deltaTime;
             }
             else
                 Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
@@ -310,10 +310,11 @@ public class Hero : MonoBehaviour, IKilleable
         //Debug - Finit
         RollPosDebugObject.SetActive(false);
 
+        canMove = true;
         yield return new WaitForSeconds(0.5f);
 
         //Volvemos a avisar que ya nos podemos mover.
-        canMove = true;
+        
         //Reactivamos el collider.
         _col.enabled = true;
 
