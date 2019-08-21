@@ -135,14 +135,18 @@ public class Hero : MonoBehaviour, IKilleable
     {
         if (canMove)
         {
-            Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
-            if(Stamina >= 0 && Input.GetKey(KeyCode.LeftShift) && Input.GetAxis("Vertical")>0.5)
+            //TODO: Acá tenemos que hacer que la key se libere al momento de iniciar correr, solo cuando volvemos a pulsar el shift
+            //Deberíamos reanudar la acción de correr.
+
+            if (Stamina > 0f && Input.GetKey(KeyCode.LeftShift))
             {
                 Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), RunSpeed, true);
+                Stamina -= 15f * Time.deltaTime;
             }
-            Debug.Log(Input.GetAxis("Vertical"));
-            
+            else
+                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
         }
+
         RotateCam();
         if (Stamina < MaxStamina)
             Stamina += StaminaRegeneration * Time.deltaTime;
@@ -159,7 +163,7 @@ public class Hero : MonoBehaviour, IKilleable
 
 
         if (rolling)
-            transform.forward = Vector3.Slerp(transform.forward, _dir, 0.2f);
+            transform.forward = _dir;
     }
 
     private void OnDrawGizmosSelected()
@@ -229,13 +233,15 @@ public class Hero : MonoBehaviour, IKilleable
     {
         _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
 
+        //Correcting Forward.
+        transform.forward = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
+
         transform.position += _dir * s * Time.deltaTime;
 
         _am.SetFloat("VelY", AxisX);
         _am.SetFloat("VelX", AxisY);
 
         _am.SetBool("Running", running);
-        
     }
    
 
@@ -266,9 +272,6 @@ public class Hero : MonoBehaviour, IKilleable
                 MousePosDebugObject.SetActive(false);
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
-
-                transform.forward = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
-
                 break;
             default:
                 break;
@@ -306,6 +309,8 @@ public class Hero : MonoBehaviour, IKilleable
 
         //Debug - Finit
         RollPosDebugObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
 
         //Volvemos a avisar que ya nos podemos mover.
         canMove = true;
