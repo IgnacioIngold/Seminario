@@ -18,6 +18,9 @@ public class TriggerWeapon : Weapon
     private void OnTriggerEnter(Collider other)
     {
         IKilleable KilleableObject = other.GetComponent<IKilleable>();
+
+        if (other.gameObject == Owner) return;
+
         if (KilleableObject != null && KilleableObject.IsAlive)
             KilleableObject.GetDamage(getOwnerStats());
     }
