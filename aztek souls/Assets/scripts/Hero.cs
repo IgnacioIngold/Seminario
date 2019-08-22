@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using IA.StateMachine.Generic;
 using Core.Entities;
-using Utility.Timers;
 
 
 [RequireComponent(typeof(Collider))]
-public class Hero : MonoBehaviour, IKilleable
+public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 {
     [Header("Main Stats")]
     [SerializeField] float _hp = 100f;
@@ -46,6 +42,7 @@ public class Hero : MonoBehaviour, IKilleable
     [Header("Attack System")]
 
     public string AttackButton = "Fire1";
+    [HideInInspector] public float currentDamage = 0;
     public float[] comboInputFrame = new float[3];
     public float[] animDurations = new float[3];
     public float[] AttackCosts = new float[3];
@@ -74,24 +71,6 @@ public class Hero : MonoBehaviour, IKilleable
     #endregion
 
     //----------------Private Members---------------
-
-    private struct AttackNode
-    {
-        float duration;
-        float buttonWindow;
-    }
-
-    private enum attackMode
-    {
-        idle,
-        light1,
-        light2,
-        light3,
-        parry
-    }
-    GenericFSM<attackMode> attack;
-    Dictionary<attackMode, AttackNode> nodeStats;
-
 
     Animator _am;
     Camera cam;
@@ -123,19 +102,6 @@ public class Hero : MonoBehaviour, IKilleable
         //Starting Display
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
-
-        //State Machine de modo de ataque.
-        var idle = new State<attackMode>("Idle");
-        var light1 = new State<attackMode>("Light1");
-        var light2 = new State<attackMode>("Light2");
-        var light3 = new State<attackMode>("Light3");
-        var parry = new State<attackMode>("Parry");
-
-        idle.OnUpdate += () =>
-        {
-            //Si presiono la tecla correspondiente entro al primer ataque.
-        };
-
     }
 
     void Start()
@@ -204,6 +170,7 @@ public class Hero : MonoBehaviour, IKilleable
         Attacking = true;
         int index = 0;
         ComboCounter = 1;
+        currentDamage = AttackDamages[0];
         float nextComboFrame;
 
         while (true)
@@ -212,8 +179,9 @@ public class Hero : MonoBehaviour, IKilleable
                 break;
 
             //Ejecutamos el ataque correspondiente.
-            ExecuteAnimation(executionStack[index]);     
+            ExecuteAnimation(executionStack[index]);
             Stamina -= AttackCosts[index];
+            currentDamage = AttackDamages[index];
 
             //Calculamos cuanto tiempo tiene que pasar para recibir input.
             nextComboFrame = animDurations[index] - comboInputFrame[index];
@@ -432,6 +400,10 @@ public class Hero : MonoBehaviour, IKilleable
         //Adicional poner el roll en enfriamiento.
     }
 
+    /// <summary>
+    /// Permite que esta unidad Recíba Daño.
+    /// </summary>
+    /// <param name="DamageStats"></param>
     public void GetDamage(params object[] DamageStats)
     {
         float Damage = (float)DamageStats[0];
@@ -445,5 +417,12 @@ public class Hero : MonoBehaviour, IKilleable
             print("Estas Muerto Wey");
             _am.SetTrigger("died");
         }
+    }
+    /// <summary>
+    /// Retorna las estadísticas de daño de esta Unidad.
+    /// </summary>
+    public object[] GetDamageStats()
+    {
+        return new object[] { currentDamage };
     }
 }

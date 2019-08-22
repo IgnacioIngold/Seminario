@@ -11,6 +11,11 @@ namespace Core.Entities
     {
         bool IsAlive { get; }
     }
+    //Todas las Unidades que pueden tener estadísticas de combate.
+    public interface IAttacker<T>
+    {
+        T GetDamageStats();
+    }
 }
 
 
