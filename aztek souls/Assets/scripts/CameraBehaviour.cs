@@ -32,7 +32,7 @@ public class CameraBehaviour : MonoBehaviour
     {
         if (Target != null)
         {
-            print("Behaviour 2");
+            //print("Behaviour 2");
             float value = Input.GetAxisRaw(CameraAxis);
             transform.Rotate(Vector3.up, RotationSpeed * value * Time.deltaTime, Space.Self);
         }

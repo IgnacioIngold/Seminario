@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using IA.StateMachine.Generic;
 using Core.Entities;
+using Utility.Timers;
 
 
 [RequireComponent(typeof(Collider))]
@@ -41,6 +42,14 @@ public class Hero : MonoBehaviour, IKilleable
     }
     public float MaxStamina = 100f;
     public float StaminaRegeneration = 2f;
+
+    [Header("Attack System")]
+
+    public string AttackButton = "Fire1";
+    public float[] comboInputFrame = new float[3];
+    public float[] animDurations = new float[3];
+    public float[] AttackCosts = new float[3];
+    public float[] AttackDamages = new float[3];
 
     [Header("Debug Elements")]
 
@@ -97,8 +106,11 @@ public class Hero : MonoBehaviour, IKilleable
 
     RaycastHit ProjectMouseToWorld_RayHit;
     Vector3 MousePosInWorld = Vector3.zero;
+    private bool Attacking;
+    private int ComboCounter;
 
     public bool IsAlive => _hp > 0;
+    int[] executionStack = new int[3];
 
     //----------------------------------------- Unity Functions -------------------------------------------------------
 
@@ -106,6 +118,7 @@ public class Hero : MonoBehaviour, IKilleable
     {
         _am = GetComponentInChildren<Animator>();
         _col = GetComponent<Collider>();
+        executionStack = new int[]{ 0,0,0};
 
         //Starting Display
         HealthText.text = "Health: " + _hp;
@@ -150,6 +163,9 @@ public class Hero : MonoBehaviour, IKilleable
         RotateCam();
         if (Stamina < MaxStamina)
             Stamina += StaminaRegeneration * Time.deltaTime;
+
+        if (!Attacking && Input.GetButtonDown(AttackButton))
+            Attack();
     }
 
     private void FixedUpdate()
@@ -174,6 +190,101 @@ public class Hero : MonoBehaviour, IKilleable
     }
 
     //-----------------------------------------------------------------------------------------------------------------
+    private void Attack()
+    {
+        //Rellenar el Stack.
+        executionStack = new int[] { 1, 0, 0 };
+
+        StartCoroutine(Combo());
+    }
+
+    IEnumerator Combo()
+    {
+        print("Inicio del combo");
+        Attacking = true;
+        int index = 0;
+        ComboCounter = 1;
+        float nextComboFrame;
+
+        while (true)
+        {
+            if (index >= executionStack.Length || executionStack[index] == 0)
+                break;
+
+            //Ejecutamos el ataque correspondiente.
+            ExecuteAnimation(executionStack[index]);     
+            Stamina -= AttackCosts[index];
+
+            //Calculamos cuanto tiempo tiene que pasar para recibir input.
+            nextComboFrame = animDurations[index] - comboInputFrame[index];
+            yield return new WaitForSeconds(nextComboFrame);
+
+            float inputFrame = comboInputFrame[index];//Cuánto tiempo espero para recibir input.
+            bool gettedInput = false;
+            while (inputFrame > 0)
+            {
+                //Chequear el nuevo input
+                if (!gettedInput == Input.GetButtonDown(AttackButton))
+                {
+                    gettedInput = true;
+                    ComboCounter++;
+                    index++;
+
+                    if (index < executionStack.Length)
+                    {
+                        executionStack[index] = ComboCounter;
+                        print("recibido siguiente ataque: " + index + " ID de animación:" + executionStack[index]);
+                    }
+                    else
+                        print("Recibido input, pero el combo llego a su fin.");
+                    break;
+                }
+                yield return new WaitForSeconds(0.01f);
+                inputFrame -= 0.01f;
+            }
+
+#if UNITY_EDITOR
+
+            print("Fin ciclo de input");
+            if (!gettedInput)
+            {
+                if (index < executionStack.Length)
+                    print("Fin del Stack de Ejecución.");
+                else
+                    print("No se recibió input a tiempo.");
+                index++;
+            }
+#endif
+        }
+
+        Attacking = false;
+        executionStack = new int[] { 0, 0, 0 };
+        print("Fin del Combo");
+    }
+
+    public void ExecuteAnimation(int animationID)
+    {
+        switch (animationID)
+        {
+            case 1:
+                //Attaque básico.
+                print("Ataque básico");
+                break;
+            case 2:
+                //Combo 1
+                print("Combo 1");
+                break;
+            case 3:
+                //Combo 2
+                print("Combo 2");
+                //Añado el bono.
+                break;
+
+            default:
+                break;
+        }
+    }
+
 
     private void RoolExecute(float AxisX, float AxisY)
     {
