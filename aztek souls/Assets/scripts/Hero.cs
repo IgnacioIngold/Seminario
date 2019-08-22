@@ -326,10 +326,13 @@ public class Hero : MonoBehaviour, IKilleable
         float Damage = (float)DamageStats[0];
         Health -= Damage;
 
+        _am.SetTrigger("hurted");
+
         //Muerte del Jugador
         if (Health <= 0)
         {
             print("Estas Muerto Wey");
+            _am.SetTrigger("died");
         }
     }
 }
