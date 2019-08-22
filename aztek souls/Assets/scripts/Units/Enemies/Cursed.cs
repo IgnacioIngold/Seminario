@@ -67,6 +67,7 @@ public class Cursed : MonoBehaviour, IKilleable
         #region Estados
 
         #region Idle State
+        idle.OnEnter += (x) => { anims.SetBool("isWalking", false); };
         idle.OnUpdate += () =>
         {
             print("Enemy is OnIdle");
@@ -111,7 +112,7 @@ public class Cursed : MonoBehaviour, IKilleable
         attack.OnEnter += (x) =>
         {
             agent.isStopped = true;
-            anims.SetTrigger("attack");
+            anims.SetBool("isWalking", false);
             print("Enemy started AttackMode");
         };
         attack.OnUpdate += () =>
@@ -184,14 +185,14 @@ public class Cursed : MonoBehaviour, IKilleable
         _canAttack = false;
 
         //Activa Animación.
-        
+        anims.SetTrigger("attack");
 
         //Cálculo de daño
         //var toDamage = target.GetComponent<IKilleable>();
         //object[] damageStats = new object[] { attackDamage };
         //toDamage.GetDamage(damageStats);
 
-        
+
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
         _canAttack = true;
