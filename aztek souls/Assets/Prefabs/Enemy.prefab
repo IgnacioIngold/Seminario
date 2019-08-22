@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4977729587222478664
 Transform:
   m_ObjectHideFlags: 0
@@ -110,7 +110,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4977729587255576858
 Transform:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ BoxCollider:
   m_GameObject: {fileID: 4977729587255576859}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -255,25 +255,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainState: 0
   health: 20
-  speed: 5
+  speed: 2
   attackRate: 1
-  AttackRange: 1
-  attackDamage: 1
-  rotationLerpSpeed: 0.1
-  minForwardAngle: 0
+  AttackRange: 2
+  attackDamage: 45
+  rotationLerpSpeed: 0.02
+  minForwardAngle: 40
   target: {fileID: 0}
   sight:
     visibles:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 513
     target: {fileID: 0}
     origin: {fileID: 4977729587628454729}
     range: 10
     angle: 45
-    positionDiference: {x: -8.853001, y: 0.5, z: 8.889}
-    dirToTarget: {x: -0.7051108, y: 0.039823268, z: 0.707978}
-    angleToTarget: 44.929363
-    distanceToTarget: 12.555474
+    positionDiference: {x: -11.34, y: 0.5, z: -1.5}
+    dirToTarget: {x: -0.9904191, y: 0.043669272, z: -0.13100782}
+    angleToTarget: 32.726883
+    distanceToTarget: 11.449698
 --- !u!1001 &4352608564197577109
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -28,7 +28,7 @@ public class Cursed : MonoBehaviour, IKilleable
     public float rotationLerpSpeed;
     public float minForwardAngle;
 
-    bool _canAttack = true;
+    bool Attacking = false;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
     [Header("Line Of Sight")]
@@ -42,13 +42,15 @@ public class Cursed : MonoBehaviour, IKilleable
     //Componentes Propios
     GenericFSM<enemyState> sm;
     State<enemyState> idle;
+    public float minDetectionRange;
+
 
     //Propiedades.
     /// <summary>
     /// Retorna verdadero si mis puntos de vida son mayores a 0
     /// </summary>
     public bool IsAlive => health > 0;
-
+    bool targetDetected = false;
 
     private void Awake()
     {
@@ -73,8 +75,13 @@ public class Cursed : MonoBehaviour, IKilleable
             print("Enemy is OnIdle");
 
             //transitions
-            if (sight.IsInSight()) //Si esta dentro de mi visión --> pursue.
+            if (targetDetected) sm.Feed(enemyState.pursue);
+
+            if (sight.IsInSight() || sight.distanceToTarget < minDetectionRange)
+            {
+                targetDetected = true;
                 sm.Feed(enemyState.pursue);
+            }
         }; 
         #endregion
 
@@ -86,9 +93,17 @@ public class Cursed : MonoBehaviour, IKilleable
         };
         pursue.OnUpdate += () =>
         {
+            //transitions
             if (!IsAlive) sm.Feed(enemyState.dead);
 
             sight.Update();
+            if (sight.distanceToTarget < AttackRange) //Si entra dentro del rango de ataque.
+                sm.Feed(enemyState.attack);
+
+            if (sight.distanceToTarget > sight.range) //Si el objetivo se va afuera del rango de visión.
+                sm.Feed(enemyState.idle);
+
+            //Actions.
             //_lastEnemyPositionKnown = sight.target.position; // Recordamos la ultima posición en el que el player fue visto.
             if (sight.angleToTarget > minForwardAngle)
                 transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
@@ -97,13 +112,6 @@ public class Cursed : MonoBehaviour, IKilleable
                 transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
                 agent.Move(sight.dirToTarget * speed * Time.deltaTime);
             }
-
-            //transitions
-            if (sight.distanceToTarget < AttackRange) //Si entra dentro del rango de ataque.
-                sm.Feed(enemyState.attack);
-
-            if (sight.distanceToTarget > sight.range) //Si el objetivo se va afuera del rango de visión.
-                sm.Feed(enemyState.idle);
         };
        
         #endregion
@@ -117,18 +125,11 @@ public class Cursed : MonoBehaviour, IKilleable
         };
         attack.OnUpdate += () =>
         {
-            if (_canAttack)
+            if (!Attacking)
             {
                 print("Enemy is Attacking");
                 StartCoroutine(Attack());
             }
-
-            //Transitions
-            if (!sight.IsInSight())
-                sm.Feed(enemyState.idle);
-
-            if (sight.IsInSight() && sight.distanceToTarget > AttackRange)
-                sm.Feed(enemyState.pursue);
         };
         #endregion
 
@@ -182,7 +183,7 @@ public class Cursed : MonoBehaviour, IKilleable
 
     IEnumerator Attack()
     {
-        _canAttack = false;
+        Attacking = true;
 
         //Activa Animación.
         anims.SetTrigger("attack");
@@ -195,7 +196,13 @@ public class Cursed : MonoBehaviour, IKilleable
 
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
-        _canAttack = true;
+        Attacking = false;
+
+        if (!sight.IsInSight())
+            sm.Feed(enemyState.idle);
+        else
+            if (sight.distanceToTarget > AttackRange)
+                sm.Feed(enemyState.pursue);
     }
 
     //Snippet for Debugg
@@ -217,6 +224,10 @@ public class Cursed : MonoBehaviour, IKilleable
         Gizmos.color = Color.red;
         Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
         Gizmos.DrawWireSphere(transform.position, AttackRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+        Gizmos.DrawWireSphere(transform.position, minDetectionRange);
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, sight.angle + 1, 0) * transform.forward * sight.range);
