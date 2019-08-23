@@ -140,7 +140,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             ProjectMouseToWorld();
 
         //Rool
-        if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space))
+        if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space) && canMove)
             RoolExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
 
@@ -160,7 +160,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     {
         //Rellenar el Stack.
         executionStack = new int[] { 1, 0, 0 };
-
+        canMove = false;
         StartCoroutine(Combo());
     }
 
@@ -212,7 +212,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             }
 
 #if UNITY_EDITOR
-
+            canMove = true;
             print("Fin ciclo de input");
             if (!gettedInput)
             {
@@ -236,15 +236,15 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             case 1:
                 //Attaque básico.
-                print("Ataque básico");
+                _am.SetTrigger("atk1");
                 break;
             case 2:
                 //Combo 1
-                print("Combo 1");
+                _am.SetTrigger("atk2");
                 break;
             case 3:
                 //Combo 2
-                print("Combo 2");
+                _am.SetTrigger("atk3");
                 //Añado el bono.
                 break;
 
