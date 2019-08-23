@@ -14,6 +14,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         get { return _hp; }
         set
         {
+            if (value < 0) value = 0;
             _hp = value;
             HealthText.text = "Health: " + (int)_hp;
         }
@@ -423,6 +424,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     /// </summary>
     public object[] GetDamageStats()
     {
-        return new object[] { currentDamage };
+        return new object[1]{ currentDamage };
     }
 }

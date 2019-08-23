@@ -7,7 +7,7 @@ using IA.StateMachine.Generic;
 using IA.LineOfSight;
 
 [RequireComponent(typeof(Animator)), RequireComponent(typeof(NavMeshAgent))]
-public class Cursed : MonoBehaviour, IKilleable
+public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
     //Estados
     public enum enemyState
@@ -30,6 +30,9 @@ public class Cursed : MonoBehaviour, IKilleable
 
     bool Attacking = false;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
+
+    [Header("Attacks")]
+    public Collider DamageCollider;
 
     [Header("Line Of Sight")]
     [SerializeField] Transform target = null;
@@ -59,6 +62,9 @@ public class Cursed : MonoBehaviour, IKilleable
         //transform.CreateSightEntity();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
+
+        //Collider
+        DamageCollider.enabled = false;
 
         //State Machine.
         idle = new State<enemyState>("Idle");
@@ -184,6 +190,7 @@ public class Cursed : MonoBehaviour, IKilleable
     IEnumerator Attack()
     {
         Attacking = true;
+        DamageCollider.enabled = true;
 
         //Activa Animación.
         anims.SetTrigger("attack");
@@ -196,6 +203,7 @@ public class Cursed : MonoBehaviour, IKilleable
 
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
+        DamageCollider.enabled = false;
         Attacking = false;
 
         if (!sight.IsInSight())
@@ -203,6 +211,13 @@ public class Cursed : MonoBehaviour, IKilleable
         else
             if (sight.distanceToTarget > AttackRange)
                 sm.Feed(enemyState.pursue);
+    }
+    /// <summary>
+    /// Retorna las estadísticas de combate de esta Unidad.
+    /// </summary>
+    public object[] GetDamageStats()
+    {
+        return new object[1] { attackDamage };
     }
 
     //Snippet for Debugg
