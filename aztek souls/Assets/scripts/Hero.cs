@@ -22,6 +22,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         }
     }
 
+    public float maxHp;
     public float Speed = 4f;
     public float RunSpeed;
     public float rollRange = 5f;
@@ -63,6 +64,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public LayerMask RollObstacles;
     public Transform WorldForward;
 
+    HealthBar _myHealthBar;
+
     //----------------Private Members---------------
 
     Rigidbody _rb;
@@ -92,8 +95,10 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         _col = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
         executionStack = new int[]{ 0,0,0};
+        Health = maxHp;
 
         //Starting Display
+        _myHealthBar = GetComponentInChildren<HealthBar>();
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
     }
@@ -390,6 +395,7 @@ private void FixedUpdate()
         {
             float Damage = (float)DamageStats[0];
             Health -= Damage;
+            _myHealthBar.UpdateHeathBar(Health, maxHp);
             StartCoroutine(HurtFreeze());
         }
     }
