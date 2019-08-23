@@ -409,16 +409,26 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     {
         float Damage = (float)DamageStats[0];
         Health -= Damage;
-
+        StartCoroutine(HurtFreeze());
+    }
+    IEnumerator HurtFreeze()
+    {
+        canMove = false;
         _am.SetTrigger("hurted");
 
+        yield return new WaitForSeconds(1f);
+
         //Muerte del Jugador
-        if (Health <= 0)
+        if (!IsAlive)
         {
-            print("Estas Muerto Wey");
+            canMove = false;
             _am.SetTrigger("died");
+            print("Estas Muerto Wey");
         }
+        else
+            canMove = true;
     }
+
     /// <summary>
     /// Retorna las estadísticas de daño de esta Unidad.
     /// </summary>
