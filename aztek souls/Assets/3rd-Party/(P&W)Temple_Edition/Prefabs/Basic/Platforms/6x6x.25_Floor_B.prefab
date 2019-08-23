@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 6400000}
+  - component: {fileID: 5539094323155866152}
   m_Layer: 0
   m_Name: 6x6x.25_Floor_B
   m_TagString: Untagged
@@ -93,3 +94,16 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300014, guid: f343696efbf83b549817f225c91a52a8, type: 3}
+--- !u!65 &5539094323155866152
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9999999, y: 0.16666599, z: 24}
+  m_Center: {x: -0.00000011920929, y: 0, z: 0}

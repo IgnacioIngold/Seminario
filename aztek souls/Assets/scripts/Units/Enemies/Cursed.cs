@@ -78,7 +78,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
 
-        EnemyHP.text = "Enemy Health: " + _hp;
+        //EnemyHP.text = "Enemy Health: " + _hp;
 
         //Collider
         DamageCollider.enabled = false;
