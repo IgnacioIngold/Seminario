@@ -72,6 +72,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     bool invulnerable = false;
     bool canMove = true;
+    bool _running = false;
     bool rolling = false;
     float _dirX;
     float _dirY;
@@ -116,27 +117,25 @@ private void FixedUpdate()
     {
         if (!IsAlive) return;
 
-        if (canMove)
+        if (canMove && Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             //TODO: Acá tenemos que hacer que la key se libere al momento de iniciar correr, solo cuando volvemos a pulsar el shift
             //Deberíamos reanudar la acción de correr.
 
-            if (Stamina > 0f && Input.GetKey(KeyCode.LeftShift))
-            {
-                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), RunSpeed, true);
-                Stamina -= 20f * Time.deltaTime;
-            }
-            else
-                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Speed, false);
+            _running = Input.GetKey(KeyCode.LeftShift);
+
+            if (Stamina > 0f)
+                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), _running ? RunSpeed : Speed);
+        }
+        else
+        {
+            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
         }
 
         //Rool
         if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space) && canMove)
             RoolExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
-
-        if (rolling)
-            transform.forward = _dir;
     }
 
     private void OnDrawGizmosSelected()
@@ -282,7 +281,7 @@ private void FixedUpdate()
         StartCoroutine(Roll(FinalPos, Velocity));
     }
 
-    public void Move(float AxisX, float AxisY,float s,bool running)
+    public void Move(float AxisX, float AxisY,float movementSpeed)
     {
         _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
         //_dir = WorldForward.forward;
@@ -293,14 +292,24 @@ private void FixedUpdate()
         //_rb.MoveRotation(Quaternion.Euler(newForward));
         //_rb.rotation = Quaternion.Euler(newForward);
 
+        if (_running)
+        {
+            Stamina -= 20f * Time.deltaTime;
+            transform.forward = _dir;
+            _am.SetBool("Running", _running);
+        }
+        else
+        {
+            _running = false;
+            _am.SetBool("Running", _running);
+        }
+
         //Position
-        transform.position += _dir * s * Time.deltaTime;
-        //_rb.MovePosition(transform.position + transform.TransformDirection(_dir.x, 0, _dir.z) * s * Time.deltaTime);
+        //transform.position += _dir * movementSpeed * Time.deltaTime;
 
-        _am.SetFloat("VelY", AxisX);
+        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
         _am.SetFloat("VelX", AxisY);
-
-        _am.SetBool("Running", running);
+        _am.SetFloat("VelY", AxisX);
     }
 
     public void RotateWithCamera()
@@ -335,8 +344,12 @@ private void FixedUpdate()
 
 
         rolling = true;
+        
+
         while (rolling)
         {
+            transform.forward = _dir;
+
             //Chequeamos si debemos seguir haciendo el roll.
             //Si mi posición es es igual a la posición objetivo rompo el ciclo.
             if (Vector3.Distance(transform.position, finalPos) < 0.5f )
@@ -351,13 +364,16 @@ private void FixedUpdate()
         }
 
         //Debug - Finit
-        if (RollPosDebugObject) RollPosDebugObject.SetActive(false);
+        //if (RollPosDebugObject) RollPosDebugObject.SetActive(false);
 
         canMove = true;
-        yield return new WaitForSeconds(0.5f);
 
+        yield return new WaitForSeconds(0.1f);
+
+        _dir = WorldForward.forward;
+        transform.forward = _dir;
         //Volvemos a avisar que ya nos podemos mover.
-        
+
         //Reactivamos el collider.
         _col.enabled = true;
 
