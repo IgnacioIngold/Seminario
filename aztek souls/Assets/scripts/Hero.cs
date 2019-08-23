@@ -32,8 +32,10 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         get { return _st; }
         set
         {
-            //Display Value
+            if (value < 0) value = 0;
             _st = value;
+
+            //Display Value
             StaminaText.text = "Stamina: " + (int)_st;
         }
     }
@@ -103,6 +105,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         //Starting Display
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
+
+        RotateCam();
     }
 
     void Start()
@@ -113,6 +117,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     // Update is called once per frame
     void Update()
     {
+        if (!IsAlive) return;
+
         if (canMove)
         {
             //TODO: Acá tenemos que hacer que la key se libere al momento de iniciar correr, solo cuando volvemos a pulsar el shift

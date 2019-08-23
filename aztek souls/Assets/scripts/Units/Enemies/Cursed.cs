@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using Core.Entities;
 using IA.StateMachine.Generic;
 using IA.LineOfSight;
@@ -20,7 +21,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public enemyState MainState;
 
     [Header("Estadísticas")]
-    public float health;
+    [SerializeField] float _hp;
     public float speed;
     public float attackRate;
     public float AttackRange;
@@ -28,6 +29,17 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public float rotationLerpSpeed;
     public float minForwardAngle;
 
+    public float Health
+    {
+        get { return _hp; }
+        set
+        {
+            _hp = value;
+            if (_hp < 0) _hp = 0;
+
+            EnemyHP.text = "Enemy Health: " + _hp;
+        }
+    }
     bool Attacking = false;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
@@ -37,6 +49,9 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     [Header("Line Of Sight")]
     [SerializeField] Transform target = null;
     [SerializeField] LineOfSight sight = null;
+
+    [Header("Debug")]
+    public Text EnemyHP;
 
     //Componentes de Unity
     Animator anims;
@@ -52,7 +67,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     /// <summary>
     /// Retorna verdadero si mis puntos de vida son mayores a 0
     /// </summary>
-    public bool IsAlive => health > 0;
+    public bool IsAlive => _hp > 0;
     bool targetDetected = false;
 
     private void Awake()
@@ -62,6 +77,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         //transform.CreateSightEntity();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
+
+        EnemyHP.text = "Enemy Health: " + _hp;
 
         //Collider
         DamageCollider.enabled = false;
@@ -179,12 +196,12 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public void GetDamage(params object[] DamageStats)
     {
         float Damage = (float)DamageStats[0];
-        health -= Damage;
+        print("Enemigo ha recibido daño: " + Damage);
+        Health -= Damage;
 
         //Activo Animación de "recibir Daño"
 
-
-        if (health <= 0)
+        if (!IsAlive)
             sm.Feed(enemyState.dead);
     }
 

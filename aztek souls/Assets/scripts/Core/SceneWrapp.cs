@@ -12,15 +12,15 @@ namespace Core.Definitions
         public void ChangeToScene(int index)
         {
             SceneManager.LoadScene(index);
+            Time.timeScale = 1;
         }
 
         public void CloseGame()
         {
-            Application.Quit();
-
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
+            Application.Quit();
         }
     }
 
@@ -29,10 +29,18 @@ namespace Core.Definitions
     /// </summary>
     public static class Definitions
     {
-        public const short MainMenu = 0;
-        public const short Credits = 1;
-        public const short Level1 = 2;
-        public const short WinScene = 5;
-        public const short DefeatScene = 6;
+        #region Debug Definitions
+
+        public const short MainScene = 0;
+
+        #endregion
+
+        #region Real definitions
+        //public const short MainMenu = 0;
+        //public const short Credits = 1;
+        //public const short Level1 = 2;
+        //public const short WinScene = 5;
+        //public const short DefeatScene = 6; 
+#endregion
     }
 }
