@@ -52,6 +52,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public float[] AttackDamages = new float[3];
 
     [Header("Debug Elements")]
+    public Collider AttackCollider;
 
     public Text HealthText;
     public Text StaminaText;
@@ -190,6 +191,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             Stamina -= AttackCosts[index];
             currentDamage = AttackDamages[index];
 
+            AttackCollider.enabled = true;
+
             //Calculamos cuanto tiempo tiene que pasar para recibir input.
             nextComboFrame = animDurations[index] - comboInputFrame[index];
             yield return new WaitForSeconds(nextComboFrame);
@@ -234,6 +237,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
         Attacking = false;
         executionStack = new int[] { 0, 0, 0 };
+        AttackCollider.enabled = false;
         print("Fin del Combo");
     }
 
