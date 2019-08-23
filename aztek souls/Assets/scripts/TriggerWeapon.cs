@@ -15,7 +15,7 @@ public abstract class Weapon : MonoBehaviour
 [AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
 public class TriggerWeapon : Weapon
 {
-    public Collider col;
+    Collider col;
 
     private void Awake()
     {
