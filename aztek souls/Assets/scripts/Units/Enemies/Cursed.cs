@@ -79,6 +79,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         idle.OnUpdate += () =>
         {
             print("Enemy is OnIdle");
+            var toDamage = target.GetComponent<IKilleable>();
+            if (!toDamage.IsAlive) return;
 
             //transitions
             if (targetDetected) sm.Feed(enemyState.pursue);
@@ -195,22 +197,23 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         //Activa Animación.
         anims.SetTrigger("attack");
 
-        //Cálculo de daño
-        //var toDamage = target.GetComponent<IKilleable>();
-        //object[] damageStats = new object[] { attackDamage };
-        //toDamage.GetDamage(damageStats);
-
-
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
         DamageCollider.enabled = false;
         Attacking = false;
 
-        if (!sight.IsInSight())
-            sm.Feed(enemyState.idle);
-        else
-            if (sight.distanceToTarget > AttackRange)
-                sm.Feed(enemyState.pursue);
+        //Chequeo si el enemigo esta vivo.
+        var toDamage = target.GetComponent<IKilleable>();
+        if (!toDamage.IsAlive)
+            sm.Feed(enemyState.idle);                        // Si el enemigo no esta Vivo, vuelvo a idle
+        else                                                 // Si esta vivo...
+        {
+            if (!sight.IsInSight())                          // pero no esta en mi línea de visión...
+                sm.Feed(enemyState.idle);                    // vuelvo a idle.
+            else
+            if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
+                sm.Feed(enemyState.pursue);                  // paso a pursue.
+        }
     }
     /// <summary>
     /// Retorna las estadísticas de combate de esta Unidad.
