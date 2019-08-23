@@ -47,7 +47,6 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public Collider DamageCollider;
 
     [Header("Line Of Sight")]
-    [SerializeField] Transform target = null;
     [SerializeField] LineOfSight sight = null;
 
     [Header("Debug")]
@@ -78,7 +77,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
 
-        //EnemyHP.text = "Enemy Health: " + _hp;
+        EnemyHP.text = "Enemy Health: " + _hp;
 
         //Collider
         DamageCollider.enabled = false;
@@ -96,7 +95,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         idle.OnUpdate += () =>
         {
             print("Enemy is OnIdle");
-            var toDamage = target.GetComponent<IKilleable>();
+            var toDamage = sight.target.GetComponent<IKilleable>();
             if (!toDamage.IsAlive) return;
 
             //transitions
@@ -220,7 +219,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         Attacking = false;
 
         //Chequeo si el enemigo esta vivo.
-        var toDamage = target.GetComponent<IKilleable>();
+        var toDamage = sight.target.GetComponent<IKilleable>();
         if (!toDamage.IsAlive)
             sm.Feed(enemyState.idle);                        // Si el enemigo no esta Vivo, vuelvo a idle
         else                                                 // Si esta vivo...

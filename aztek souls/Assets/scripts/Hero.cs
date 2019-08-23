@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using Core.Entities;
 
 
-[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
 public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 {
     [Header("Main Stats")]
@@ -16,7 +16,9 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             if (value < 0) value = 0;
             _hp = value;
-            HealthText.text = "Health: " + (int)_hp;
+
+            if (HealthText != null) HealthText.text = "Health: " + (int)_hp;
+            else print("No asignaste el texto de la vida salamín");
         }
     }
 
@@ -36,7 +38,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             _st = value;
 
             //Display Value
-            StaminaText.text = "Stamina: " + (int)_st;
+            if (StaminaText != null) StaminaText.text = "Stamina: " + (int)_st;
+            else print("No asignaste el texto de la Stamina salamín");
         }
     }
     public float MaxStamina = 100f;
@@ -53,7 +56,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     [Header("Debug Elements")]
     public Collider AttackCollider;
-
     public Text HealthText;
     public Text StaminaText;
     public GameObject MousePosDebugObject;
@@ -61,34 +63,20 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public LayerMask RollObstacles;
     public Transform WorldForward;
 
-    #region DebugCamara
-
-    public enum CamType
-    {
-        Free,
-        Fixed
-    }
-    public CamType CameraBehaviour;
-    public CameraBehaviour behaviour1;
-    public CamBehaviour2 behaviour2;
-
-    #endregion
-
     //----------------Private Members---------------
 
+    Rigidbody _rb;
     Animator _am;
     Camera cam;
     Collider _col;
 
+    bool invulnerable = false;
     bool canMove = true;
     bool rolling = false;
     float _dirX;
     float _dirY;
     Vector3 _dir;
 
-
-    RaycastHit ProjectMouseToWorld_RayHit;
-    Vector3 MousePosInWorld = Vector3.zero;
     private bool Attacking;
     private int ComboCounter;
 
@@ -101,13 +89,12 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     {
         _am = GetComponentInChildren<Animator>();
         _col = GetComponent<Collider>();
+        _rb = GetComponent<Rigidbody>();
         executionStack = new int[]{ 0,0,0};
 
         //Starting Display
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
-
-        RotateCam();
     }
 
     void Start()
@@ -117,6 +104,15 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     // Update is called once per frame
     void Update()
+    {
+        if (Stamina<MaxStamina)
+            Stamina += StaminaRegeneration* Time.deltaTime;
+
+        if (!Attacking && Input.GetButtonDown(AttackButton))
+            Attack();
+    }
+
+private void FixedUpdate()
     {
         if (!IsAlive) return;
 
@@ -131,21 +127,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
                 Stamina -= 20f * Time.deltaTime;
             }
             else
-                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),Speed,false);
+                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Speed, false);
         }
-
-        RotateCam();
-        if (Stamina < MaxStamina)
-            Stamina += StaminaRegeneration * Time.deltaTime;
-
-        if (!Attacking && Input.GetButtonDown(AttackButton))
-            Attack();
-    }
-
-    private void FixedUpdate()
-    {
-        if (CameraBehaviour == CamType.Free)
-            ProjectMouseToWorld();
 
         //Rool
         if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space) && canMove)
@@ -164,6 +147,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     }
 
     //-----------------------------------------------------------------------------------------------------------------
+    #region Attack System
     private void Attack()
     {
         //Rellenar el Stack.
@@ -262,7 +246,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             default:
                 break;
         }
-    }
+    } 
+    #endregion
 
 
     private void RoolExecute(float AxisX, float AxisY)
@@ -297,75 +282,42 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         StartCoroutine(Roll(FinalPos, Velocity));
     }
 
-
-    /// <summary>
-    /// Proyecta y coloca un Objeto en el mundo de acuerdo a la posición del Mouse.
-    /// </summary>
-    private void ProjectMouseToWorld()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out ProjectMouseToWorld_RayHit))
-        {
-            MousePosInWorld = ProjectMouseToWorld_RayHit.point;
-            MousePosDebugObject.transform.position = ProjectMouseToWorld_RayHit.point;
-        }
-
-        #region Forward Setting
-        if (MousePosInWorld != Vector3.zero)
-        {
-            Vector3 DesiredForward = (MousePosInWorld - transform.position).normalized;
-            transform.forward = Vector3.Slerp(transform.forward, DesiredForward, 0.1f);
-        } 
-        #endregion
-    }
-
     public void Move(float AxisX, float AxisY,float s,bool running)
     {
         _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
+        //_dir = WorldForward.forward;
 
         //Correcting Forward.
-        transform.forward = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
+        Vector3 newForward = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
+        transform.forward = newForward;
+        //_rb.MoveRotation(Quaternion.Euler(newForward));
+        //_rb.rotation = Quaternion.Euler(newForward);
 
+        //Position
         transform.position += _dir * s * Time.deltaTime;
+        //_rb.MovePosition(transform.position + transform.TransformDirection(_dir.x, 0, _dir.z) * s * Time.deltaTime);
 
         _am.SetFloat("VelY", AxisX);
         _am.SetFloat("VelX", AxisY);
 
         _am.SetBool("Running", running);
     }
-   
 
-    public void RotateCam()
+    public void RotateWithCamera()
     {
-        //Mover Rotar la cámara 
-        switch (CameraBehaviour)
-        {
-            case CamType.Free:
-                behaviour1.enabled = false;
-                MousePosDebugObject.SetActive(true);
+        //float orientation = Input.GetAxisRaw("Mouse X");
+        _dir = WorldForward.forward;
+        transform.forward = Vector3.Slerp(transform.forward, _dir, 0.1f);
 
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
+        //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 1, 0) * Speed * orientation * Time.deltaTime);
+        //Vector3 EulerRot = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
 
-                behaviour2.enabled = true;
-                behaviour2.MoveCamera();
-                behaviour2.RotateCamera("CameraRotation");
-                break;
+        //_rb.MoveRotation(Quaternion.Euler(EulerRot * Speed));
+        //var rotación = _rb.rotation;
+        //rotación = Quaternion.Euler(EulerRot);
+        //_rb.MoveRotation(_rb.rotation * deltaRotation);
 
-            case CamType.Fixed:
-                behaviour2.enabled = false;
-
-                behaviour1.enabled = true;
-                behaviour1.MoveCamera();
-                behaviour1.RotateCamera("Mouse X");
-
-                MousePosDebugObject.SetActive(false);
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                break;
-            default:
-                break;
-        }
+        //_rb.MoveRotation(_rb.rotation * Quaternion.Euler(_dir * Time.deltaTime));
     }
 
 
@@ -373,12 +325,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
         canMove = false;
-        //Desactivamos el collider.
-        _col.enabled = false;
 
         //Debug - Init
-        RollPosDebugObject.SetActive(true);
-        RollPosDebugObject.transform.position = finalPos;
+        if (RollPosDebugObject)
+        {
+            RollPosDebugObject.SetActive(true);
+            RollPosDebugObject.transform.position = finalPos;
+        }
 
 
         rolling = true;
@@ -398,7 +351,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         }
 
         //Debug - Finit
-        RollPosDebugObject.SetActive(false);
+        if (RollPosDebugObject) RollPosDebugObject.SetActive(false);
 
         canMove = true;
         yield return new WaitForSeconds(0.5f);
@@ -417,9 +370,12 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     /// <param name="DamageStats"></param>
     public void GetDamage(params object[] DamageStats)
     {
-        float Damage = (float)DamageStats[0];
-        Health -= Damage;
-        StartCoroutine(HurtFreeze());
+        if (!invulnerable)
+        {
+            float Damage = (float)DamageStats[0];
+            Health -= Damage;
+            StartCoroutine(HurtFreeze());
+        }
     }
     IEnumerator HurtFreeze()
     {

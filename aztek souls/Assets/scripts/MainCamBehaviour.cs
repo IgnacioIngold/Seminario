@@ -1,15 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //Behaviour Adicional para la cámara.
-public class CamBehaviour2 : MonoBehaviour
+public class MainCamBehaviour : MonoBehaviour
 {
+    public string MouseAxis;
     public Transform Target;
     public Transform LocalCam;
     public Vector3 camOffSet = Vector3.zero;
     public float transitionVelocity;
     public float RotationSpeed;
+
+    private void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void Update()
+    {
+        MoveCamera();
+        RotateCamera(MouseAxis);
+    }
+
 
     public void MoveCamera()
     {
