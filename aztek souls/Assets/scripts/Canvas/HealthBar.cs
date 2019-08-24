@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
-    Image _life;
+    public Image life;
+    public Image stamina;
 
     // Start is called before the first frame update
     void Awake()
     {
-        _life = GetComponent<Image>();
+
     }
 
     // Update is called once per frame
@@ -17,6 +18,13 @@ public class HealthBar : MonoBehaviour
     {
         var pct = currentHealth / maxHealth;
 
-        _life.fillAmount = pct;
+        life.fillAmount = pct;
+    }
+
+    public void UpdateStamina(float Stamina, float MaxStamina)
+    {
+        var pct = Stamina / MaxStamina;
+
+        stamina.fillAmount = pct;
     }
 }

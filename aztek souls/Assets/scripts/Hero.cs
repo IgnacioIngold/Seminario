@@ -64,7 +64,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public LayerMask RollObstacles;
     public Transform WorldForward;
 
-    HealthBar _myHealthBar;
+    HealthBar _myBars;
 
     //----------------Private Members---------------
 
@@ -98,7 +98,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         Health = maxHp;
 
         //Starting Display
-        _myHealthBar = GetComponentInChildren<HealthBar>();
+        _myBars = GetComponentInChildren<HealthBar>();
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
     }
@@ -116,6 +116,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
         if (!Attacking && Input.GetButtonDown(AttackButton))
             Attack();
+
+        _myBars.UpdateStamina(Stamina, MaxStamina);
     }
 
 private void FixedUpdate()
@@ -395,7 +397,7 @@ private void FixedUpdate()
         {
             float Damage = (float)DamageStats[0];
             Health -= Damage;
-            _myHealthBar.UpdateHeathBar(Health, maxHp);
+            _myBars.UpdateHeathBar(Health, maxHp);
             StartCoroutine(HurtFreeze());
         }
     }
