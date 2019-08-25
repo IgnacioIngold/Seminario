@@ -9,6 +9,7 @@ using Core.Entities;
 public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 {
     public InputKeyMap controls;
+    public HealthBar _myBars;
     [SerializeField] string currentStateDisplay = "";
     public Transform AxisOrientation;
     public enum CharacterState
@@ -89,7 +90,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public Text HealthText;
     public Text StaminaText;
 
-    HealthBar _myBars;
+    
 
     //----------------Private Members---------------
 
@@ -128,9 +129,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
 
         //Starting Display
-        _myBars = GetComponentInChildren<HealthBar>();
-        HealthText.text = "Health: " + _hp;
-        StaminaText.text = "Stamina: " + _st;
+        //_myBars = GetComponentInChildren<HealthBar>();
 
         //Relleno las acciones que me permite determinar si ingresé el input correspondiente.
         _condition_idle = () => { return Input.GetAxisRaw(controls.HorizontalAxis) == 0 && Input.GetAxisRaw(controls.VerticalAxis) == 0; };
