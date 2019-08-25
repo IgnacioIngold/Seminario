@@ -1,14 +1,33 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using IA.StateMachine.Generic;
 using Core.Entities;
-
 
 [RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
 public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 {
+    public InputKeyMap controls;
+    [SerializeField] string currentStateDisplay = "";
+    public Transform AxisOrientation;
+    public enum CharacterState
+    {
+        idle,
+        walking,
+        running,
+        rolling,
+        Attacking,
+        Hurted,
+        dead
+    }
+    GenericFSM<CharacterState> States;
+    Func<bool> _idle,_walk, _attack, _roll, _run = delegate { return false; };
+    public event Action OnDie = delegate { };
+
     [Header("Main Stats")]
     [SerializeField] float _hp = 100f;
+    public float maxHp = 100f;
     public float Health
     {
         get { return _hp; }
@@ -16,18 +35,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             if (value < 0) value = 0;
             _hp = value;
-
-            if (HealthText != null) HealthText.text = "Health: " + (int)_hp;
-            else print("No asignaste el texto de la vida salamín");
         }
     }
-
-    public float maxHp;
-    public float Speed = 4f;
-    public float RunSpeed;
-    public float rollRange = 5f;
-    public float rollVelocity = 10f;
-    public float rollCost = 10f;
 
     [SerializeField] float _st = 100f;
     public float Stamina
@@ -46,6 +55,15 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public float MaxStamina = 100f;
     public float StaminaRegeneration = 2f;
 
+    public float walkSpeed = 4f;
+    public float runSpeed = 6f;
+
+    public float rollCost = 10f;
+    public float rollDuration = 1f;
+    public float rollSpeed = 10f;
+
+
+
     [Header("Attack System")]
 
     public string AttackButton = "Fire1";
@@ -59,10 +77,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public Collider AttackCollider;
     public Text HealthText;
     public Text StaminaText;
-    public GameObject MousePosDebugObject;
-    public GameObject RollPosDebugObject;
-    public LayerMask RollObstacles;
-    public Transform WorldForward;
 
     HealthBar _myHealthBar;
 
@@ -70,16 +84,12 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     Rigidbody _rb;
     Animator _am;
-    Camera cam;
     Collider _col;
 
     bool invulnerable = false;
     bool canMove = true;
     bool _running = false;
-    bool rolling = false;
-    float _dirX;
-    float _dirY;
-    Vector3 _dir;
+    Vector3 _dir = Vector3.zero;
 
     private bool Attacking;
     private int ComboCounter;
@@ -87,7 +97,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public bool IsAlive => _hp > 0;
     int[] executionStack = new int[3];
 
-    //----------------------------------------- Unity Functions -------------------------------------------------------
+
+    //========================================= Unity Functions =======================================================
 
     void Awake()
     {
@@ -97,60 +108,250 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         executionStack = new int[]{ 0,0,0};
         Health = maxHp;
 
+
         //Starting Display
         _myHealthBar = GetComponentInChildren<HealthBar>();
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
-    }
 
-    void Start()
-    {
-        cam = Camera.main;
+        //Relleno las acciones que me permite determinar si ingresé el input correspondiente.
+        _idle = () => { return Input.GetAxisRaw(controls.HorizontalAxis) == 0 && Input.GetAxisRaw(controls.VerticalAxis) == 0; };
+        _walk = () => { return Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis); };
+        _attack = () => { return Stamina > 0 && Input.GetButton(controls.AttackButton); };
+        _roll = () => { return Stamina > 0 && Input.GetButtonDown(controls.RollButton); };
+
+        _run = () => { return Stamina > 0f && Input.GetButton(controls.ToogleRun); };
+
+        //State Machine.
+        #region Declaración de Estados
+        var idle = new State<CharacterState>("Idle");
+        var Walking = new State<CharacterState>("Walking");
+        var Running = new State<CharacterState>("Running");
+        var Rolling = new State<CharacterState>("Rolling");
+        var Attacking = new State<CharacterState>("Attacking");
+        var Hitted = new State<CharacterState>("Hurted");
+        var Dead = new State<CharacterState>("Dead");
+        #endregion
+
+        #region Transiciones
+        idle.AddTransition(CharacterState.dead, Dead)
+            .AddTransition(CharacterState.Hurted, Hitted)
+            .AddTransition(CharacterState.walking, Walking)
+            .AddTransition(CharacterState.running, Running)
+            //.AddTransition(CharacterState.rolling, Rolling)
+            .AddTransition(CharacterState.Attacking, Attacking);
+
+        Walking.AddTransition(CharacterState.dead, Dead)
+               .AddTransition(CharacterState.Hurted, Hitted)
+               .AddTransition(CharacterState.idle, idle)
+               .AddTransition(CharacterState.running, Running)
+               .AddTransition(CharacterState.rolling, Rolling)
+               .AddTransition(CharacterState.Attacking, Attacking);
+
+        Running.AddTransition(CharacterState.dead, Dead)
+               .AddTransition(CharacterState.Hurted, Hitted)
+               .AddTransition(CharacterState.idle, idle)
+               .AddTransition(CharacterState.walking, Walking)
+               .AddTransition(CharacterState.rolling, Rolling)
+               .AddTransition(CharacterState.Attacking, Attacking);
+
+        Rolling.AddTransition(CharacterState.dead, Dead)
+               .AddTransition(CharacterState.idle, idle)
+               .AddTransition(CharacterState.walking, Walking)
+               .AddTransition(CharacterState.running, Running)
+               .AddTransition(CharacterState.Attacking, Attacking);
+
+
+        Attacking.AddTransition(CharacterState.dead, Dead)
+                 .AddTransition(CharacterState.Hurted, Hitted)
+                 .AddTransition(CharacterState.idle, idle)
+                 .AddTransition(CharacterState.walking, Walking)
+                 .AddTransition(CharacterState.running, Running)
+                 .AddTransition(CharacterState.rolling, Rolling);
+
+        Hitted.AddTransition(CharacterState.dead, Dead)
+              .AddTransition(CharacterState.idle, idle)
+              .AddTransition(CharacterState.walking, Walking)
+              .AddTransition(CharacterState.running, Running)
+              .AddTransition(CharacterState.rolling, Rolling);
+
+        #endregion
+
+        #region Idle State
+        idle.OnEnter += (previousState) =>
+        {
+            //StopAllCoroutines();
+            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
+        };
+        idle.OnUpdate += () =>
+        {
+            //Transiciones chequearemos el input.
+
+            //Walk
+            if (canMove && _walk())
+            {
+                States.Feed(CharacterState.walking);
+                return;
+            }
+
+            //RunStart
+            if (_run())
+            {
+                print("RUN START");
+                States.Feed(CharacterState.running);
+                return;
+            }
+
+            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
+            transform.forward = newForward;
+            //Roll ---> Cuando estas en Idle no podes decir en que dirección hacer el roll so...
+            //if (!rolling && _roll()) States.Feed(CharacterState.rolling);
+        }; 
+        #endregion
+
+        #region Walk State
+        Walking.OnUpdate += () =>
+        {
+            //Transiciones primero :D
+            if (_idle())
+            {
+                print("From Walking to Idle");
+                States.Feed(CharacterState.idle);
+                return;
+            }
+            if (_run())
+            {
+                States.Feed(CharacterState.running);
+                return;
+            }
+            if (_roll())
+            {
+                States.Feed(CharacterState.rolling);
+                return;
+            }
+
+            _am.SetFloat("VelX", Input.GetAxis("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxis("Horizontal"));
+
+            Move(Input.GetAxis(controls.HorizontalAxis),
+                 Input.GetAxis(controls.VerticalAxis));
+        }; 
+        #endregion
+
+        #region Run State
+        Running.OnEnter += (previousState) =>
+        {
+            _running = true;
+            _am.SetBool("Running", _running);
+        };
+        Running.OnUpdate += () =>
+        {
+            //Transiciones primero :D
+            if (!_run())
+            {
+                //print("END OF RUN");
+                States.Feed(CharacterState.idle);
+                return;
+            }
+
+            if (_roll())
+            {
+                States.Feed(CharacterState.rolling);
+                return;
+            }
+
+            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
+
+            Move(Input.GetAxis(controls.HorizontalAxis),
+                 Input.GetAxis(controls.VerticalAxis));
+        };
+        Running.OnExit += (nextState) =>
+        {
+            _running = false;
+            _am.SetBool("Running", _running);
+        };
+        #endregion
+
+        #region Roll State
+
+        Rolling.OnEnter += (previousState) => 
+        {
+            _am.SetTrigger("RollAction");
+            invulnerable = true;
+            StartCoroutine(Roll(Input.GetAxis(controls.HorizontalAxis), Input.GetAxis(controls.VerticalAxis)));
+        };
+        Rolling.OnExit += (nextState) => 
+        {
+            invulnerable = false;
+            StopCoroutine("Roll");
+        }; 
+
+        #endregion
+
+        Attacking.OnEnter += (previousState) => { };
+        Attacking.OnUpdate += () => { };
+        Attacking.OnExit += (nextState) => { };
+
+        #region OnHit State
+
+        Hitted.OnEnter += (previousState) =>
+        {
+            canMove = false;
+            _am.SetTrigger("hurted");
+            StartCoroutine(HurtFreeze());
+        };
+        Hitted.OnExit += (x) =>
+        {
+            canMove = true;
+        };
+
+        #endregion
+
+        Dead.OnEnter += (previousState) => 
+        {
+            //print("Estas Muerto Wey");
+
+            canMove = false;
+            _am.SetTrigger("died");
+            OnDie();
+        };
+
+
+        States = new GenericFSM<CharacterState>(idle);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Stamina<MaxStamina)
-            Stamina += StaminaRegeneration* Time.deltaTime;
+        if (!IsAlive) return;
 
-        if (!Attacking && Input.GetButtonDown(AttackButton))
-            Attack();
+        if (Stamina < MaxStamina)
+            Stamina += StaminaRegeneration* Time.deltaTime;
     }
 
-private void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!IsAlive) return;
 
-        if (canMove && Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            //TODO: Acá tenemos que hacer que la key se libere al momento de iniciar correr, solo cuando volvemos a pulsar el shift
-            //Deberíamos reanudar la acción de correr.
-
-            _running = Input.GetKey(KeyCode.LeftShift);
-
-            if (Stamina > 0f)
-                Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), _running ? RunSpeed : Speed);
-        }
-        else
-        {
-            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
-            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
-        }
-
-        //Rool
-        if (!rolling && Stamina >= rollCost && Input.GetKeyDown(KeyCode.Space) && canMove)
-            RoolExecute(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        States.Update();
+        currentStateDisplay = States.current.StateName;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-        Gizmos.DrawWireSphere(transform.position, rollRange);
-    }
+    //#region Debug
+    //private void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+    //    Gizmos.DrawWireSphere(transform.position, rollRange);
+    //}
+    //#endregion
 
+
+    //=================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------
+
     #region Attack System
     private void Attack()
     {
@@ -250,140 +451,96 @@ private void FixedUpdate()
             default:
                 break;
         }
-    } 
+    }
     #endregion
 
+    //---------------------------------- MÉTODOS PÚBLICOS -------------------------------------------------------------
 
-    private void RoolExecute(float AxisX, float AxisY)
+
+
+    //---------------------------------- MÉTODS PRIVADOS --------------------------------------------------------------
+
+    void Move(float AxisX, float AxisY)
+    {
+        //WorldForward es un objeto que usamos para determinar nuestra orientacón en el mundo.
+        //En este caso se trata del objeto Pivot de la cámara.
+
+        _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+
+        float movementSpeed = walkSpeed;
+
+        //Correcting Forward.
+        if (_running)
+        {
+            movementSpeed = runSpeed;
+            Stamina -= 20f * Time.deltaTime;
+            transform.forward = _dir;
+        }
+        else
+        {
+            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
+            transform.forward = newForward;
+        }
+
+        // Update Position
+        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
+    }
+
+    //---------------------------------------- CORRUTINAS -------------------------------------------------------------
+
+    IEnumerator Roll(float AxisX, float AxisY)
     {
         Stamina -= rollCost;
 
         //Calculamos la dirección y el punto final.
-        Vector3 rollDirection = WorldForward.forward * AxisY + WorldForward.right * AxisX;
-        Vector3 FinalPos = Vector3.zero;
+        Vector3 rollDirection = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+        Vector3 FinalPos = Vector3.zero;           // Calculo la posición Final.
+        //float realRange = rollRange;               // Necesito saber cual es el rango real de mi desplazamiento.
 
-        //Necesito saber cual es el rango real de mi desplazamiento.
-        float realRange = rollRange;
-        RaycastHit obstacle;
-        Ray ray = new Ray(transform.position, rollDirection);
-        if (Physics.Raycast(ray, out obstacle, rollRange, RollObstacles))
-        {
-            //Golpeamos con algo y limitamos el desplazamiento, de acuerdo a un offset.
-            if (obstacle.collider != null)
-                realRange = Vector3.Distance(transform.position, obstacle.point);
-        }
-
-        FinalPos = transform.position + (rollDirection * realRange);
+        FinalPos = transform.position + (rollDirection * rollSpeed);
 
         //Arreglamos nuestra orientación.
         _dir = (FinalPos - transform.position).normalized;
 
         //Calculamos la velocidad del desplazamiento:
-        float Velocity = rollVelocity * Time.deltaTime;
+        //float Velocity = rollVelocity * Time.deltaTime;
 
-        _am.SetTrigger("RollAction");
-        //Vamos a usar una corrutina
-        StartCoroutine(Roll(FinalPos, Velocity));
-    }
-
-    public void Move(float AxisX, float AxisY,float movementSpeed)
-    {
-        _dir = WorldForward.forward * AxisY + WorldForward.right * AxisX;
-        //_dir = WorldForward.forward;
-
-        //Correcting Forward.
-        Vector3 newForward = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
-        transform.forward = newForward;
-        //_rb.MoveRotation(Quaternion.Euler(newForward));
-        //_rb.rotation = Quaternion.Euler(newForward);
-
-        if (_running)
-        {
-            Stamina -= 20f * Time.deltaTime;
-            transform.forward = _dir;
-            _am.SetBool("Running", _running);
-        }
-        else
-        {
-            _running = false;
-            _am.SetBool("Running", _running);
-        }
-
-        //Position
-        //transform.position += _dir * movementSpeed * Time.deltaTime;
-
-        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
-        _am.SetFloat("VelX", AxisY);
-        _am.SetFloat("VelY", AxisX);
-    }
-
-    public void RotateWithCamera()
-    {
-        //float orientation = Input.GetAxisRaw("Mouse X");
-        _dir = WorldForward.forward;
-        transform.forward = Vector3.Slerp(transform.forward, _dir, 0.1f);
-
-        //Quaternion deltaRotation = Quaternion.Euler(new Vector3(0, 1, 0) * Speed * orientation * Time.deltaTime);
-        //Vector3 EulerRot = Vector3.Slerp(transform.forward, WorldForward.forward, 0.1f);
-
-        //_rb.MoveRotation(Quaternion.Euler(EulerRot * Speed));
-        //var rotación = _rb.rotation;
-        //rotación = Quaternion.Euler(EulerRot);
-        //_rb.MoveRotation(_rb.rotation * deltaRotation);
-
-        //_rb.MoveRotation(_rb.rotation * Quaternion.Euler(_dir * Time.deltaTime));
-    }
-
-
-    IEnumerator Roll(Vector3 finalPos, float ScaledVelocity)
-    {
         //Primero que nada avisamos que no podemos hacer otras acciones.
         canMove = false;
-
-        //Debug - Init
-        if (RollPosDebugObject)
-        {
-            RollPosDebugObject.SetActive(true);
-            RollPosDebugObject.transform.position = finalPos;
-        }
-
-
-        rolling = true;
-        
-
-        while (rolling)
-        {
-            transform.forward = _dir;
-
-            //Chequeamos si debemos seguir haciendo el roll.
-            //Si mi posición es es igual a la posición objetivo rompo el ciclo.
-            if (Vector3.Distance(transform.position, finalPos) < 0.5f )
-            {
-                rolling = false;
-                break;
-            }
-
-            //Hacemos el desplazamiento
-            transform.position = Vector3.Lerp(transform.position, finalPos, ScaledVelocity);
-            yield return new WaitForEndOfFrame();
-        }
-
-        //Debug - Finit
-        //if (RollPosDebugObject) RollPosDebugObject.SetActive(false);
-
-        canMove = true;
-
-        yield return new WaitForSeconds(0.1f);
-
-        _dir = WorldForward.forward;
         transform.forward = _dir;
-        //Volvemos a avisar que ya nos podemos mover.
 
-        //Reactivamos el collider.
-        _col.enabled = true;
+        // Hacemos el Roll.
+        _rb.velocity = (_dir * rollSpeed);
+        yield return new WaitForSeconds(rollDuration);
+        _rb.velocity = Vector3.zero;
 
-        //Adicional poner el roll en enfriamiento.
+        // Pequeño Delay para cuando el roll Termina.
+        yield return new WaitForSeconds(0.2f);
+
+        //End of Roll.
+
+        canMove = true;                      // Avisamos que ya nos podemos mover.
+        //_dir = WorldForward.forward;       // Calculamos nuestra orientación...
+        //transform.forward = _dir;          // Seteamos la orientación como se debe.
+        _col.enabled = true;                 // Reactivamos el collider.
+        States.Feed(CharacterState.idle);
+
+        // Adicional poner el roll en enfriamiento.
     }
+
+    //Yo creo que esto podría tener un enfriamiento.
+    IEnumerator HurtFreeze()
+    {
+        // Cooldown.
+        yield return new WaitForSeconds(1f);
+
+        //Muerte del Jugador
+        if (!IsAlive) States.Feed(CharacterState.dead);
+
+        States.Feed(CharacterState.idle);
+    }
+
+    //--------------------------------------- INTERFACES --------------------------------------------------------------
 
     /// <summary>
     /// Permite que esta unidad Recíba Daño.
@@ -393,30 +550,15 @@ private void FixedUpdate()
     {
         if (!invulnerable)
         {
+            //FeedBack de Daño.
             float Damage = (float)DamageStats[0];
             Health -= Damage;
-            _myHealthBar.UpdateHeathBar(Health, maxHp);
-            StartCoroutine(HurtFreeze());
+            _myHealthBar.UpdateHeathBar(_hp, maxHp);
+
+            //Entro al estado de recibir daño.
+            States.Feed(CharacterState.Hurted);
         }
     }
-    IEnumerator HurtFreeze()
-    {
-        canMove = false;
-        _am.SetTrigger("hurted");
-
-        yield return new WaitForSeconds(1f);
-
-        //Muerte del Jugador
-        if (!IsAlive)
-        {
-            canMove = false;
-            _am.SetTrigger("died");
-            print("Estas Muerto Wey");
-        }
-        else
-            canMove = true;
-    }
-
     /// <summary>
     /// Retorna las estadísticas de daño de esta Unidad.
     /// </summary>

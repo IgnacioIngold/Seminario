@@ -1468,9 +1468,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &7661046019132836000
 MonoBehaviour:
@@ -1484,15 +1484,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa7b4ea2d994144d909af946812b9cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controls:
+    AttackButton: Attack1
+    ToogleRun: Run
+    RollButton: Roll
+    HorizontalAxis: Horizontal
+    VerticalAxis: Vertical
+    MouseHorizontal: Mouse X
+  currentStateDisplay: 
   _hp: 100
-  Speed: 4
-  RunSpeed: 8
-  rollRange: 5
-  rollVelocity: 1.9
-  rollCost: 10
+  maxHp: 100
   _st: 100
   MaxStamina: 100
   StaminaRegeneration: 10
+  walkSpeed: 4
+  runSpeed: 6
+  rollCost: 10
+  rollTime: 1
+  rollSpeed: 10
   AttackButton: Fire1
   currentDamage: 0
   comboInputFrame:
@@ -1511,14 +1520,12 @@ MonoBehaviour:
   - 20
   - 30
   - 40
-  AttackCollider: {fileID: 402275697197298727}
-  HealthText: {fileID: 0}
-  StaminaText: {fileID: 0}
-  MousePosDebugObject: {fileID: 0}
-  RollPosDebugObject: {fileID: 0}
   RollObstacles:
     serializedVersion: 2
     m_Bits: 512
+  AttackCollider: {fileID: 402275697197298727}
+  HealthText: {fileID: 0}
+  StaminaText: {fileID: 0}
   WorldForward: {fileID: 0}
 --- !u!1 &9221691054023298325
 GameObject:

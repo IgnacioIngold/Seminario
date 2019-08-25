@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -613,7 +613,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 6, y: -7, z: 6, w: 1.3e-44}
+  m_BoundingSphereOverride: {x: 3.4e-44, y: 0, z: 1, w: 1e-45}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -832,9 +832,29 @@ PrefabInstance:
       objectReference: {fileID: 1156065814}
     - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
         type: 3}
-      propertyPath: maxHp
-      value: 100
+      propertyPath: DashSpeed
+      value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
+        type: 3}
+      propertyPath: StartDashTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
+        type: 3}
+      propertyPath: DashTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
+        type: 3}
+      propertyPath: rollTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
+        type: 3}
+      propertyPath: AxisOrientation
+      value: 
+      objectReference: {fileID: 1156065814}
     - target: {fileID: 9221691053449003891, guid: cfb70ed26c77c794c83539b2e83c715f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -889,16 +909,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9221691053994894318, guid: cfb70ed26c77c794c83539b2e83c715f,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9221691053994894318, guid: cfb70ed26c77c794c83539b2e83c715f,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 112
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfb70ed26c77c794c83539b2e83c715f, type: 3}
@@ -6029,7 +6039,7 @@ PrefabInstance:
     - target: {fileID: 2656546818329981232, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}
       propertyPath: RotationSpeed
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 805980042818859328, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}
