@@ -25,6 +25,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _runCondition, _condition_rollingWhileRun = delegate { return false; };
     public event Action OnDie = delegate { };
     public event Action OnPositionIsUpdated = delegate { };
+    public event Action OnActionHasEnded = delegate { };
 
     [Header("Main Stats")]
     [SerializeField] float _hp = 100f;
@@ -62,6 +63,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     }
     public float MaxStamina = 100f;
     public float StaminaRegeneration = 2f;
+    public float StRecoverDelay = 0.8f;
     public float ExhaustTime = 2f;
 
     public float walkSpeed = 4f;
@@ -122,6 +124,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         _rb = GetComponent<Rigidbody>();
         executionStack = new int[]{ 0,0,0};
         Health = maxHp;
+        OnActionHasEnded += () => { StartCoroutine(StaminaRecoverDelay()); };
 
 
         //Starting Display
@@ -309,6 +312,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             _running = false;
             _recoverStamina = true;
             _am.SetBool("Running", _running);
+            OnActionHasEnded();
         };
         #endregion
 
@@ -325,6 +329,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             invulnerable = false;
             _recoverStamina = true;
+
+            OnActionHasEnded();
             //StopCoroutine(Roll());
         }; 
 
@@ -370,13 +376,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
         if (_recoverStamina && Stamina < MaxStamina)
         {
-            float rate = (_exhausted ? StaminaRegeneration / 2 : StaminaRegeneration) * Time.deltaTime;
+            float rate = (_exhausted ? StaminaRegeneration / 10 : StaminaRegeneration) * Time.deltaTime;
             Stamina += rate;
-        }
-
-        if (Input.GetButtonDown(controls.RollButton))
-        {
-            print("ROLL FROM UPDATE");
         }
 
         if (_rolling)
@@ -581,6 +582,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         States.Feed(CharacterState.idle);
 
         // Adicional poner el roll en enfriamiento.
+    }
+
+    IEnumerator StaminaRecoverDelay()
+    {
+        _recoverStamina = false;
+        yield return new WaitForSeconds(StRecoverDelay);
+        _recoverStamina = true;
     }
 
     IEnumerator exhausted()
