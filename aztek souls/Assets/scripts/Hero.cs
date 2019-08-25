@@ -78,7 +78,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public Text HealthText;
     public Text StaminaText;
 
-    HealthBar _myHealthBar;
+    HealthBar _myBars;
 
     //----------------Private Members---------------
 
@@ -110,7 +110,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
 
         //Starting Display
-        _myHealthBar = GetComponentInChildren<HealthBar>();
+        _myBars = GetComponentInChildren<HealthBar>();
         HealthText.text = "Health: " + _hp;
         StaminaText.text = "Stamina: " + _st;
 
