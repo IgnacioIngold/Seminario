@@ -35,6 +35,9 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             if (value < 0) value = 0;
             _hp = value;
+
+            if (_myBars != null)
+                _myBars.UpdateHeathBar(_hp, maxHp);
         }
     }
 
@@ -48,8 +51,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             _st = value;
 
             //Display Value
-            if (StaminaText != null) StaminaText.text = "Stamina: " + (int)_st;
-            else print("No asignaste el texto de la Stamina salamín");
+            if (_myBars != null)
+                _myBars.UpdateStamina(Stamina, MaxStamina);
         }
     }
     public float MaxStamina = 100f;
@@ -553,7 +556,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             //FeedBack de Daño.
             float Damage = (float)DamageStats[0];
             Health -= Damage;
-            _myHealthBar.UpdateHeathBar(_hp, maxHp);
+            _myBars.UpdateHeathBar(_hp, maxHp);
+            _myBars.UpdateStamina(Stamina, MaxStamina);
 
             //Entro al estado de recibir daño.
             States.Feed(CharacterState.Hurted);
