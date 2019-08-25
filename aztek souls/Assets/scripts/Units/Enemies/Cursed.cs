@@ -94,7 +94,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         idle.OnEnter += (x) => { anims.SetBool("isWalking", false); };
         idle.OnUpdate += () =>
         {
-            print("Enemy is OnIdle");
+            //print("Enemy is OnIdle");
             var toDamage = sight.target.GetComponent<IKilleable>();
             if (!toDamage.IsAlive) return;
 

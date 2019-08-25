@@ -22,8 +22,9 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         dead
     }
     GenericFSM<CharacterState> States;
-    Func<bool> _idle,_walk, _attack, _roll, _run = delegate { return false; };
+    Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _runCondition, _condition_rollingWhileRun = delegate { return false; };
     public event Action OnDie = delegate { };
+    public event Action OnPositionIsUpdated = delegate { };
 
     [Header("Main Stats")]
     [SerializeField] float _hp = 100f;
@@ -47,7 +48,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         get { return _st; }
         set
         {
-            if (value < 0) value = 0;
+            if (value < 0)
+            {
+                StartCoroutine(exhausted());
+                value = 0;
+            }
             _st = value;
 
             //Display Value
@@ -57,6 +62,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     }
     public float MaxStamina = 100f;
     public float StaminaRegeneration = 2f;
+    public float ExhaustTime = 2f;
 
     public float walkSpeed = 4f;
     public float runSpeed = 6f;
@@ -100,6 +106,12 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     public bool IsAlive => _hp > 0;
     int[] executionStack = new int[3];
 
+    //4 Fixes.
+    private bool _rolling = false;
+    private bool _recoverStamina = true;
+    private bool _exhausted = false;
+    private Vector3 _rollDir = Vector3.zero;
+
 
     //========================================= Unity Functions =======================================================
 
@@ -118,12 +130,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         StaminaText.text = "Stamina: " + _st;
 
         //Relleno las acciones que me permite determinar si ingresé el input correspondiente.
-        _idle = () => { return Input.GetAxisRaw(controls.HorizontalAxis) == 0 && Input.GetAxisRaw(controls.VerticalAxis) == 0; };
-        _walk = () => { return Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis); };
-        _attack = () => { return Stamina > 0 && Input.GetButton(controls.AttackButton); };
-        _roll = () => { return Stamina > 0 && Input.GetButtonDown(controls.RollButton); };
+        _condition_idle = () => { return Input.GetAxisRaw(controls.HorizontalAxis) == 0 && Input.GetAxisRaw(controls.VerticalAxis) == 0; };
+        _condition_walk = () => { return Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis); };
+        _condition_attack = () => { return Input.GetButton(controls.AttackButton) && !_exhausted; };
+        _condition_roll = () => { return Stamina > 0 && !_exhausted && Input.GetButtonDown(controls.RollButton); };
+        _condition_rollingWhileRun = () => { return _condition_roll() && (Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis)); };
 
-        _run = () => { return Stamina > 0f && Input.GetButton(controls.ToogleRun); };
+        _runCondition = () => { return Stamina > 0f && !_exhausted && Input.GetButton(controls.ToogleRun); };
 
         //State Machine.
         #region Declaración de Estados
@@ -192,16 +205,16 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             //Transiciones chequearemos el input.
 
             //Walk
-            if (canMove && _walk())
+            if (canMove && _condition_walk())
             {
                 States.Feed(CharacterState.walking);
                 return;
             }
 
             //RunStart
-            if (_run())
+            if (_runCondition())
             {
-                print("RUN START");
+                //print("RUN START");
                 States.Feed(CharacterState.running);
                 return;
             }
@@ -209,7 +222,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
             transform.forward = newForward;
             //Roll ---> Cuando estas en Idle no podes decir en que dirección hacer el roll so...
-            //if (!rolling && _roll()) States.Feed(CharacterState.rolling);
         }; 
         #endregion
 
@@ -217,19 +229,24 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         Walking.OnUpdate += () =>
         {
             //Transiciones primero :D
-            if (_idle())
+            if (_condition_idle())
             {
-                print("From Walking to Idle");
+                //print("From Walking to Idle");
                 States.Feed(CharacterState.idle);
                 return;
             }
-            if (_run())
+            if (_runCondition())
             {
                 States.Feed(CharacterState.running);
                 return;
             }
-            if (_roll())
+            if (_condition_roll())
             {
+                //Calculo la dirección de roll.
+                Vector3 axis = new Vector3(Input.GetAxis(controls.HorizontalAxis), 0, Input.GetAxis(controls.VerticalAxis));
+                //_dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+                _rollDir = AxisOrientation.forward * axis.z + AxisOrientation.right * axis.x;
+
                 States.Feed(CharacterState.rolling);
                 return;
             }
@@ -245,23 +262,33 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         #region Run State
         Running.OnEnter += (previousState) =>
         {
+            Debug.LogWarning("RUN START");
             _running = true;
+            _recoverStamina = false;
             _am.SetBool("Running", _running);
+            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
+
+
+            Move(Input.GetAxis(controls.HorizontalAxis),
+                 Input.GetAxis(controls.VerticalAxis));
         };
         Running.OnUpdate += () =>
         {
             //Transiciones primero :D
-            if (!_run())
+
+            if (Input.GetKeyUp(KeyCode.Space))
             {
-                //print("END OF RUN");
-                States.Feed(CharacterState.idle);
-                return;
+                Debug.Assert(true, "ROLL NOW!");
             }
 
-            if (_roll())
+            if (_condition_roll())
             {
+                Vector3 axis = new Vector3(Input.GetAxis(controls.HorizontalAxis), 0, Input.GetAxis(controls.VerticalAxis));
+                //_dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+                _rollDir = AxisOrientation.forward * axis.z + AxisOrientation.right * axis.x;
+
                 States.Feed(CharacterState.rolling);
-                return;
             }
 
             _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
@@ -269,10 +296,18 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
             Move(Input.GetAxis(controls.HorizontalAxis),
                  Input.GetAxis(controls.VerticalAxis));
+
+            if (!_runCondition())
+            {
+                //print("END OF RUN");
+                States.Feed(CharacterState.idle);
+            }
         };
         Running.OnExit += (nextState) =>
         {
+            Debug.LogWarning("RUN END");
             _running = false;
+            _recoverStamina = true;
             _am.SetBool("Running", _running);
         };
         #endregion
@@ -283,12 +318,14 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         {
             _am.SetTrigger("RollAction");
             invulnerable = true;
-            StartCoroutine(Roll(Input.GetAxis(controls.HorizontalAxis), Input.GetAxis(controls.VerticalAxis)));
+            _recoverStamina = false;
+            StartCoroutine(Roll());
         };
         Rolling.OnExit += (nextState) => 
         {
             invulnerable = false;
-            StopCoroutine("Roll");
+            _recoverStamina = true;
+            //StopCoroutine(Roll());
         }; 
 
         #endregion
@@ -317,6 +354,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             //print("Estas Muerto Wey");
 
             canMove = false;
+            _recoverStamina = false;
             _am.SetTrigger("died");
             OnDie();
         };
@@ -330,8 +368,20 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     {
         if (!IsAlive) return;
 
-        if (Stamina < MaxStamina)
-            Stamina += StaminaRegeneration* Time.deltaTime;
+        if (_recoverStamina && Stamina < MaxStamina)
+        {
+            float rate = (_exhausted ? StaminaRegeneration / 2 : StaminaRegeneration) * Time.deltaTime;
+            Stamina += rate;
+        }
+
+        if (Input.GetButtonDown(controls.RollButton))
+        {
+            print("ROLL FROM UPDATE");
+        }
+
+        if (_rolling)
+            OnPositionIsUpdated();
+
     }
 
     private void FixedUpdate()
@@ -469,6 +519,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         //En este caso se trata del objeto Pivot de la cámara.
 
         _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+        //print("La dirección es: " + _dir);
+        //print("El jugador esta apretando, el axis? H: " + Input.GetAxis("Horizontal") + " V: " + Input.GetAxis("Vertical"));
+
+        if (Input.GetButtonDown(controls.RollButton))
+        {
+            print("ROLL");
+        }
 
         float movementSpeed = walkSpeed;
 
@@ -487,26 +544,21 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
         // Update Position
         _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
+        OnPositionIsUpdated();
     }
 
     //---------------------------------------- CORRUTINAS -------------------------------------------------------------
 
-    IEnumerator Roll(float AxisX, float AxisY)
+    IEnumerator Roll()
     {
+        _rolling = true;
         Stamina -= rollCost;
 
         //Calculamos la dirección y el punto final.
-        Vector3 rollDirection = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-        Vector3 FinalPos = Vector3.zero;           // Calculo la posición Final.
-        //float realRange = rollRange;               // Necesito saber cual es el rango real de mi desplazamiento.
-
-        FinalPos = transform.position + (rollDirection * rollSpeed);
+        Vector3 FinalPos = transform.position + (_rollDir * rollSpeed); // Calculo la posición Final.
 
         //Arreglamos nuestra orientación.
         _dir = (FinalPos - transform.position).normalized;
-
-        //Calculamos la velocidad del desplazamiento:
-        //float Velocity = rollVelocity * Time.deltaTime;
 
         //Primero que nada avisamos que no podemos hacer otras acciones.
         canMove = false;
@@ -521,7 +573,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         yield return new WaitForSeconds(0.2f);
 
         //End of Roll.
-
+        _rolling = false;
         canMove = true;                      // Avisamos que ya nos podemos mover.
         //_dir = WorldForward.forward;       // Calculamos nuestra orientación...
         //transform.forward = _dir;          // Seteamos la orientación como se debe.
@@ -529,6 +581,15 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         States.Feed(CharacterState.idle);
 
         // Adicional poner el roll en enfriamiento.
+    }
+
+    IEnumerator exhausted()
+    {
+        _exhausted = true;
+        print("Exhausted");
+        yield return new WaitForSeconds(ExhaustTime);
+        print("Recovered");
+        _exhausted = false;
     }
 
     //Yo creo que esto podría tener un enfriamiento.

@@ -14,11 +14,11 @@ public class MainCamBehaviour : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Target.GetComponent<Hero>().OnPositionIsUpdated += MoveCamera;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        MoveCamera();
         RotateCamera(MouseAxis);
     }
 
