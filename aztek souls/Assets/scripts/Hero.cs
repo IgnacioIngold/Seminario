@@ -23,10 +23,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         dead
     }
     GenericFSM<CharacterState> States;
-    Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _runCondition, _condition_rollingWhileRun = delegate { return false; };
     public event Action OnDie = delegate { };
     public event Action OnPositionIsUpdated = delegate { };
     public event Action OnActionHasEnded = delegate { };
+
+    public bool IsAlive => _hp > 0;                           //Implementación de IKilleable.
 
     [Header("Main Stats")]
     [SerializeField] float _hp = 100f;
@@ -43,7 +44,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
                 _myBars.UpdateHeathBar(_hp, maxHp);
         }
     }
-
     [SerializeField] float _st = 100f;
     public float Stamina
     {
@@ -69,15 +69,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     public float walkSpeed = 4f;
     public float runSpeed = 6f;
+    public float runCost = 20f;
 
     public float rollCost = 10f;
     public float rollDuration = 1f;
     public float rollSpeed = 10f;
 
-
-
     [Header("Attack System")]
-
     public string AttackButton = "Fire1";
     [HideInInspector] public float currentDamage = 0;
     public float[] comboInputFrame = new float[3];
@@ -87,34 +85,32 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
     [Header("Debug Elements")]
     public Collider AttackCollider;
-    public Text HealthText;
-    public Text StaminaText;
-
-    
 
     //----------------Private Members---------------
+
+    Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _runCondition, _condition_rollingWhileRun = delegate { return false; };
 
     Rigidbody _rb;
     Animator _am;
     Collider _col;
 
+    Vector3 _dir = Vector3.zero;
+    Vector3 _rollDir = Vector3.zero;
+
+
     bool invulnerable = false;
     bool canMove = true;
     bool _running = false;
-    Vector3 _dir = Vector3.zero;
 
-    private bool Attacking;
-    private int ComboCounter;
+    bool Attacking;
 
-    public bool IsAlive => _hp > 0;
+    int ComboCounter;
     int[] executionStack = new int[3];
 
     //4 Fixes.
-    private bool _rolling = false;
-    private bool _recoverStamina = true;
-    private bool _exhausted = false;
-    private Vector3 _rollDir = Vector3.zero;
-
+    bool _rolling = false;
+    bool _recoverStamina = true;
+    bool _exhausted = false;
 
     //========================================= Unity Functions =======================================================
 
@@ -392,16 +388,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         currentStateDisplay = States.current.StateName;
     }
 
-    //#region Debug
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-    //    Gizmos.DrawWireSphere(transform.position, rollRange);
-    //}
-    //#endregion
-
-
     //=================================================================================================================
     //-----------------------------------------------------------------------------------------------------------------
 
@@ -508,9 +494,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
     #endregion
 
     //---------------------------------- MÉTODOS PÚBLICOS -------------------------------------------------------------
-
-
-
     //---------------------------------- MÉTODS PRIVADOS --------------------------------------------------------------
 
     void Move(float AxisX, float AxisY)
@@ -533,7 +516,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         if (_running)
         {
             movementSpeed = runSpeed;
-            Stamina -= 20f * Time.deltaTime;
+            Stamina -= runCost * Time.deltaTime;
             transform.forward = _dir;
         }
         else
@@ -599,7 +582,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         _exhausted = false;
     }
 
-    //Yo creo que esto podría tener un enfriamiento.
     IEnumerator HurtFreeze()
     {
         // Cooldown.
