@@ -10,6 +10,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 {
     public InputKeyMap controls;
     public HealthBar _myBars;
+
     [SerializeField] string currentStateDisplay = "";
     public Transform AxisOrientation;
     public enum CharacterState
@@ -50,10 +51,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         get { return _st; }
         set
         {
-            if (value < 0)
+            _st = value;
+            if (_st < 0)
             {
                 StartCoroutine(exhausted());
-                value = 0;
+                _st = 0;
             }
             _st = value;
 
@@ -74,6 +76,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
     public float rollCost = 10f;
     public float rollDuration = 1f;
     public float rollSpeed = 10f;
+    public float RollCoolDown = 0.1f;
 
     [Header("Attack System")]
     public string AttackButton = "Fire1";
@@ -92,25 +95,25 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
     Rigidbody _rb;
     Animator _am;
-    Collider _col;
+    Collider _col;                                           //Collider a activar al atacar.
 
-    Vector3 _dir = Vector3.zero;
-    Vector3 _rollDir = Vector3.zero;
+    Vector3 _dir = Vector3.zero;                             // La dirección al que el jugador esta mirando actualmente.
+    Vector3 _rollDir = Vector3.zero;                         // La dirección al que el jugador esta rolleando.
 
 
-    bool invulnerable = false;
-    bool canMove = true;
-    bool _running = false;
+    bool _invulnerable = false;                              // Si el jugador puede recibir daño.
+    bool _canMove = true;                                    // Si el jugador puede moverse.
+    bool _running = false;                                   // Si el jugador está corriendo.
 
-    bool Attacking;
-
-    int ComboCounter;
-    int[] executionStack = new int[3];
+    bool Attacking;                                          //
+    int ComboCounter;                                        //
+    int[] executionStack = new int[3];                       //
 
     //4 Fixes.
-    bool _rolling = false;
-    bool _recoverStamina = true;
-    bool _exhausted = false;
+    bool _canRoll = true;                                    // Si puedo rollear.
+    bool _rolling = false;                                   // Si estoy rolleando actualmente.
+    bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
+    bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
     //========================================= Unity Functions =======================================================
 
@@ -119,19 +122,22 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         _am = GetComponentInChildren<Animator>();
         _col = GetComponent<Collider>();
         _rb = GetComponent<Rigidbody>();
+
         executionStack = new int[]{ 0,0,0};
+
         Health = maxHp;
-        OnActionHasEnded += () => { StartCoroutine(StaminaRecoverDelay()); };
 
-
-        //Starting Display
-        //_myBars = GetComponentInChildren<HealthBar>();
+        OnActionHasEnded += () => 
+        {
+            StopCoroutine("StaminaRecoverDelay");
+            StartCoroutine(StaminaRecoverDelay(StRecoverDelay));
+        };
 
         //Relleno las acciones que me permite determinar si ingresé el input correspondiente.
         _condition_idle = () => { return Input.GetAxisRaw(controls.HorizontalAxis) == 0 && Input.GetAxisRaw(controls.VerticalAxis) == 0; };
         _condition_walk = () => { return Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis); };
         _condition_attack = () => { return Input.GetButton(controls.AttackButton) && !_exhausted; };
-        _condition_roll = () => { return Stamina > 0 && !_exhausted && Input.GetButtonDown(controls.RollButton); };
+        _condition_roll = () => { return _canRoll && Stamina > 0 && !_exhausted && Input.GetButtonDown(controls.RollButton); };
         _condition_rollingWhileRun = () => { return _condition_roll() && (Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis)); };
 
         _condition_run = () => { return Stamina > 0f && !_exhausted && Input.GetButton(controls.ToogleRun); };
@@ -170,7 +176,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
                .AddTransition(CharacterState.Attacking, Attacking);
 
         Rolling.AddTransition(CharacterState.dead, Dead)
-               .AddTransition(CharacterState.idle, idle)
+               .AddTransition(CharacterState.idle, idle, (x) => 
+               {
+                   _running = false;
+                   _am.SetBool("Running", false);
+               })
                .AddTransition(CharacterState.walking, Walking)
                .AddTransition(CharacterState.running, Running)
                .AddTransition(CharacterState.Attacking, Attacking);
@@ -204,7 +214,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             //Transiciones chequearemos el input.
 
             //Walk
-            if (canMove && _condition_walk())
+            if (_canMove && _condition_walk())
             {
                 States.Feed(CharacterState.walking);
                 return;
@@ -264,12 +274,15 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         {
             Debug.LogWarning("RUN START");
             _running = true;
-            _recoverStamina = false;
             _am.SetBool("Running", _running);
         };
         Running.OnUpdate += () =>
         {
-            //Transiciones primero :D
+            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
+            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
+
+            Move(Input.GetAxis(controls.HorizontalAxis),
+                 Input.GetAxis(controls.VerticalAxis));
 
             if (_condition_roll())
             {
@@ -281,18 +294,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             }
             else if (!_condition_run() || !_condition_walk())
                 States.Feed(CharacterState.idle);
-
-            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
-            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
-
-            Move(Input.GetAxis(controls.HorizontalAxis),
-                 Input.GetAxis(controls.VerticalAxis));
         };
         Running.OnExit += (nextState) =>
         {
             Debug.LogWarning("RUN END");
             _running = false;
-            _recoverStamina = true;
             OnActionHasEnded();
         };
         #endregion
@@ -301,20 +307,16 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
         Rolling.OnEnter += (previousState) => 
         {
-
-            _am.SetTrigger("RollAction");
-            invulnerable = true;
             _recoverStamina = false;
-            StartCoroutine(Roll());
+            if (!_rolling)
+            {
+                _am.SetTrigger("RollAction");
+                StartCoroutine(Roll());
+            }
         };
         Rolling.OnExit += (nextState) => 
         {
-            if (!_running)
-               _am.SetBool("Running", false);
-
-            invulnerable = false;
             _recoverStamina = true;
-
             OnActionHasEnded();
             //StopCoroutine(Roll());
         }; 
@@ -329,13 +331,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
         Hitted.OnEnter += (previousState) =>
         {
-            canMove = false;
+            _canMove = false;
             _am.SetTrigger("hurted");
             StartCoroutine(HurtFreeze());
         };
         Hitted.OnExit += (x) =>
         {
-            canMove = true;
+            _canMove = true;
         };
 
         #endregion
@@ -344,7 +346,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         {
             //print("Estas Muerto Wey");
 
-            canMove = false;
+            _canMove = false;
             _recoverStamina = false;
             _am.SetTrigger("died");
             OnDie();
@@ -386,7 +388,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
     {
         //Rellenar el Stack.
         executionStack = new int[] { 1, 0, 0 };
-        canMove = false;
+        _canMove = false;
         StartCoroutine(Combo());
     }
 
@@ -440,7 +442,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             }
 
 #if UNITY_EDITOR
-            canMove = true;
+            _canMove = true;
             print("Fin ciclo de input");
             if (!gettedInput)
             {
@@ -525,6 +527,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
     IEnumerator Roll()
     {
         _rolling = true;
+        
+        _invulnerable = true;
         Stamina -= rollCost;
 
         //Calculamos la dirección y el punto final.
@@ -534,7 +538,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         _dir = (FinalPos - transform.position).normalized;
 
         //Primero que nada avisamos que no podemos hacer otras acciones.
-        canMove = false;
+        _canMove = false;
         transform.forward = _dir;
 
         // Hacemos el Roll.
@@ -547,19 +551,28 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
         //End of Roll.
         _rolling = false;
-        canMove = true;                      // Avisamos que ya nos podemos mover.
+        _canMove = true;                      // Avisamos que ya nos podemos mover.
+        _invulnerable = false;
         //_dir = WorldForward.forward;       // Calculamos nuestra orientación...
         //transform.forward = _dir;          // Seteamos la orientación como se debe.
         _col.enabled = true;                 // Reactivamos el collider.
-        States.Feed(CharacterState.idle);
-
         // Adicional poner el roll en enfriamiento.
+        StartCoroutine(RollCooldown());
+
+        States.Feed(CharacterState.idle);
     }
 
-    IEnumerator StaminaRecoverDelay()
+    IEnumerator RollCooldown()
+    {
+        _canRoll = false;
+        yield return new WaitForSeconds(RollCoolDown);
+        _canRoll = true;
+    }
+
+    IEnumerator StaminaRecoverDelay(float Delay)
     {
         _recoverStamina = false;
-        yield return new WaitForSeconds(StRecoverDelay);
+        yield return new WaitForSeconds(Delay);
         _recoverStamina = true;
     }
 
@@ -591,7 +604,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
     /// <param name="DamageStats"></param>
     public void GetDamage(params object[] DamageStats)
     {
-        if (!invulnerable)
+        if (!_invulnerable)
         {
             //FeedBack de Daño.
             float Damage = (float)DamageStats[0];
