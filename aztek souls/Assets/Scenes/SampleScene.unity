@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -863,12 +863,12 @@ PrefabInstance:
     - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
         type: 3}
       propertyPath: rollDuration
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
         type: 3}
       propertyPath: rollSpeed
-      value: 15
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7661046019132836000, guid: cfb70ed26c77c794c83539b2e83c715f,
         type: 3}
@@ -4723,7 +4723,7 @@ PrefabInstance:
     - target: {fileID: 8810540733292271349, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8810540733292271345, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
@@ -4845,20 +4845,20 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8810540733292271351, guid: 6285299d0eb33e64e8bf136496655b2f,
-        type: 3}
-      propertyPath: m_UiScaleMode
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8810540732311334259, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8810540733473778298, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810540733292271351, guid: 6285299d0eb33e64e8bf136496655b2f,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6285299d0eb33e64e8bf136496655b2f, type: 3}

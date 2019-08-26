@@ -6,7 +6,7 @@ using IA.StateMachine.Generic;
 using Core.Entities;
 
 [RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
-public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
+public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 {
     public InputKeyMap controls;
     public HealthBar _myBars;
@@ -232,12 +232,12 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
                 //print("From Walking to Idle");
                 States.Feed(CharacterState.idle);
                 return;
-            }
+            } else 
             if (_runCondition())
             {
                 States.Feed(CharacterState.running);
                 return;
-            }
+            } else
             if (_condition_roll())
             {
                 //Calculo la dirección de roll.
@@ -264,21 +264,10 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
             _running = true;
             _recoverStamina = false;
             _am.SetBool("Running", _running);
-            _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
-            _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
-
-
-            Move(Input.GetAxis(controls.HorizontalAxis),
-                 Input.GetAxis(controls.VerticalAxis));
         };
         Running.OnUpdate += () =>
         {
             //Transiciones primero :D
-
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                Debug.Assert(true, "ROLL NOW!");
-            }
 
             if (_condition_roll())
             {
@@ -288,18 +277,13 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
 
                 States.Feed(CharacterState.rolling);
             }
+            else if(!_runCondition()) States.Feed(CharacterState.idle);
 
             _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
             _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
 
             Move(Input.GetAxis(controls.HorizontalAxis),
                  Input.GetAxis(controls.VerticalAxis));
-
-            if (!_runCondition())
-            {
-                //print("END OF RUN");
-                States.Feed(CharacterState.idle);
-            }
         };
         Running.OnExit += (nextState) =>
         {
@@ -553,7 +537,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>
         _rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
 
         //End of Roll.
         _rolling = false;
