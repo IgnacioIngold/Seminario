@@ -5,7 +5,7 @@ using UnityEngine;
 using Core.Entities;
 
 [RequireComponent(typeof(Rigidbody))]
-public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTarget
+public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTrackingTarget
 {
     //Eventos
     public event Action OnDie = delegate { };
@@ -186,7 +186,10 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTarget
 
     public void Die()
     {
+        _anims.SetTrigger("died");
+        _canMove = false;
 
+        //Termina el juego...
     }
 
     IEnumerator Roll()
@@ -218,10 +221,6 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTarget
         _rolling = false;
         _recoverStamina = true;
         _canMove = true;                      // Avisamos que ya nos podemos mover.
-        //_dir = WorldForward.forward;       // Calculamos nuestra orientación...
-        //transform.forward = _dir;          // Seteamos la orientación como se debe.
-        //_col.enabled = true;                 // Reactivamos el collider.
-        //States.Feed(CharacterState.idle);
 
         // Adicional poner el roll en enfriamiento.
     }

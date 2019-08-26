@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public interface CamTarget
+public interface CamTrackingTarget
 {
     event Action OnPositionIsUpdated;
 }
@@ -20,7 +20,7 @@ public class MainCamBehaviour : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        Target.GetComponent<CamTarget>().OnPositionIsUpdated += MoveCamera;
+        Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
     }
 
     private void LateUpdate()

@@ -6,7 +6,7 @@ using IA.StateMachine.Generic;
 using Core.Entities;
 
 [RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
-public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
+public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTrackingTarget
 {
     public InputKeyMap controls;
     public HealthBar _myBars;
