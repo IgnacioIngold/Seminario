@@ -88,7 +88,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
     //----------------Private Members---------------
 
-    Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _runCondition, _condition_rollingWhileRun = delegate { return false; };
+    Func<bool> _condition_idle,_condition_walk, _condition_attack, _condition_roll, _condition_run, _condition_rollingWhileRun = delegate { return false; };
 
     Rigidbody _rb;
     Animator _am;
@@ -134,7 +134,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         _condition_roll = () => { return Stamina > 0 && !_exhausted && Input.GetButtonDown(controls.RollButton); };
         _condition_rollingWhileRun = () => { return _condition_roll() && (Input.GetButton(controls.HorizontalAxis) || Input.GetButton(controls.VerticalAxis)); };
 
-        _runCondition = () => { return Stamina > 0f && !_exhausted && Input.GetButton(controls.ToogleRun); };
+        _condition_run = () => { return Stamina > 0f && !_exhausted && Input.GetButton(controls.ToogleRun); };
 
         //State Machine.
         #region Declaración de Estados
@@ -195,6 +195,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         idle.OnEnter += (previousState) =>
         {
             //StopAllCoroutines();
+            _am.SetBool("Running", _running);
             _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
             _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
         };
@@ -210,7 +211,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             }
 
             //RunStart
-            if (_runCondition())
+            if (_condition_walk() && _condition_run())
             {
                 //print("RUN START");
                 States.Feed(CharacterState.running);
@@ -220,10 +221,11 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
             transform.forward = newForward;
             //Roll ---> Cuando estas en Idle no podes decir en que dirección hacer el roll so...
-        }; 
+        };
         #endregion
 
         #region Walk State
+        Walking.OnEnter += (previusState) => { _am.SetBool("Running", _running); };
         Walking.OnUpdate += () =>
         {
             //Transiciones primero :D
@@ -233,7 +235,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
                 States.Feed(CharacterState.idle);
                 return;
             } else 
-            if (_runCondition())
+            if (_condition_run())
             {
                 States.Feed(CharacterState.running);
                 return;
@@ -277,7 +279,8 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
                 States.Feed(CharacterState.rolling);
             }
-            else if(!_runCondition()) States.Feed(CharacterState.idle);
+            else if (!_condition_run() || !_condition_walk())
+                States.Feed(CharacterState.idle);
 
             _am.SetFloat("VelX", Input.GetAxisRaw("Vertical"));
             _am.SetFloat("VelY", Input.GetAxisRaw("Horizontal"));
@@ -290,7 +293,6 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
             Debug.LogWarning("RUN END");
             _running = false;
             _recoverStamina = true;
-            _am.SetBool("Running", _running);
             OnActionHasEnded();
         };
         #endregion
@@ -299,6 +301,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
 
         Rolling.OnEnter += (previousState) => 
         {
+
             _am.SetTrigger("RollAction");
             invulnerable = true;
             _recoverStamina = false;
@@ -306,6 +309,9 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         };
         Rolling.OnExit += (nextState) => 
         {
+            if (!_running)
+               _am.SetBool("Running", false);
+
             invulnerable = false;
             _recoverStamina = true;
 
@@ -537,7 +543,7 @@ public class Hero : MonoBehaviour, IKilleable,IAttacker<object[]>, CamTarget
         _rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
 
         //End of Roll.
         _rolling = false;
