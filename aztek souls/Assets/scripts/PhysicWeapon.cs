@@ -2,7 +2,7 @@
 using Core.Entities;
 
 [AddComponentMenu("Core/Physic Weapon"), RequireComponent(typeof(Collider))]
-public class PhysicWeapon : Weapon
+public class PhysicWeapon : HitTrigger
 {
     private void OnCollisionEnter(Collision collision)
     {

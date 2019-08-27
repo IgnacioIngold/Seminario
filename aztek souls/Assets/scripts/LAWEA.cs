@@ -17,6 +17,8 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTracking
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     Rigidbody _rb;                                          // Componente Rigidbody.
     Animator _anims;                                        // Componente Animator.
+    [SerializeField]
+    Weapon currentWeapon;
 
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
@@ -91,12 +93,76 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTracking
     bool _canRoll = true;                                    // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
 
+    bool _attacking = false;                                         // Si estoy atacando actualmente.
+
     public bool IsAlive => _hp > 0;                          //Implementación de IKilleable.
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
+
+        // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
+        // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
+        currentWeapon = new Weapon(
+                        () => {
+                            _attacking = true;
+
+                            //Bloqueo las animaciones anteriores.
+                            StopAllCoroutines();
+                            _anims.SetBool("Running", false);
+                            _anims.SetFloat("VelY", 0);
+                            _anims.SetFloat("VelX", 0);
+
+                            _moving = false;
+
+                            _canMove = false;
+                            _recoverStamina = false;
+
+                            Debug.LogWarning("INICIO COMBATE");
+                        }, 
+
+                        () =>
+                        {
+                            _attacking = false;
+
+                            _canMove = true;
+                            _recoverStamina = true;
+                            Debug.LogWarning("FIN COMBATE");
+                        });
+
+        //Combo 1
+        Attack light1 = new Attack(() => { });
+        Attack light2 = new Attack(() => { });
+        Attack light3 = new Attack(() => { });
+
+        light1.AddConnectedAttack(Inputs.light, light2);
+        light1.IDName = "A";
+        light1.AttackDuration = 1f;
+        light1.Damage = 20f;
+        light1.Cost = 2f;
+        light1.OnExecute += () => 
+        {
+            //Por aqui va la activación de la animación correspondiente a este ataque.
+            print("Ejecutando Ataque:" + light1.IDName);
+        };
+
+        light2.AddConnectedAttack(Inputs.light, light3);
+        light2.IDName = "B";
+        light2.AttackDuration = 1f;
+        light2.Damage = 20f;
+        light2.Cost = 2f;
+        light2.OnExecute += () => { print("Ejecutando Ataque:" + light2.IDName); };
+
+        light3.IDName = "C";
+        light3.AttackDuration = 1f;
+        light3.Damage = 20f;
+        light3.Cost = 2f;
+        light3.OnExecute += () => { print("Ejecutando Ataque:" + light3.IDName); };
+
+
+        currentWeapon.AddEntryPoint(Inputs.light, light1);
+
 
         Health = maxHp;
         Stamina = MaxStamina;
@@ -114,6 +180,17 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTracking
         if (!IsAlive) return;
 
         //Inputs, asi es más responsive.
+        if (_attacking)
+        {
+            currentWeapon.Update();
+            return;
+        }
+
+        if (!_attacking && Input.GetButtonDown("LighAttack"))
+        {
+            currentWeapon.StartAttack();
+            return;
+        }
 
         if (Stamina > 0 && !_exhausted && Input.GetButtonDown("Run")) _running = true;
         if (_running && Input.GetButtonUp("Run") || _exhausted ) _running = false;

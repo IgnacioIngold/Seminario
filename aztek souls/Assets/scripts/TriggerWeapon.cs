@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Core.Entities;
 
-public abstract class Weapon : MonoBehaviour
+public abstract class HitTrigger : MonoBehaviour
 {
     public GameObject Owner;
     protected object[] getOwnerStats()
@@ -13,7 +13,7 @@ public abstract class Weapon : MonoBehaviour
 }
 
 [AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
-public class TriggerWeapon : Weapon
+public class TriggerWeapon : HitTrigger
 {
     Collider col;
 
