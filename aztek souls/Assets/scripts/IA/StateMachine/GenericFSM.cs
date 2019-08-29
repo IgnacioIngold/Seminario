@@ -101,7 +101,7 @@ namespace IA.StateMachine.Generic
         /// Retorna el Evento intermedio y el estado final de la transición identificada por el parámetro dado.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns></returns>
+        /// <returns>Tupla donde: Action = Función de la transición, State = el estado Objetivo.</returns>
         public Tuple<Action<T>,State<T>> GetTransition(T input)
         {
             if (transitions.ContainsKey(input))

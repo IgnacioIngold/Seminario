@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+
+public interface CamTrackingTarget
+{
+    event Action OnPositionIsUpdated;
+}
 
 //Behaviour Adicional para la cámara.
 public class MainCamBehaviour : MonoBehaviour
@@ -14,10 +20,10 @@ public class MainCamBehaviour : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        Target.GetComponent<Hero>().OnPositionIsUpdated += MoveCamera;
+        Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         RotateCamera(MouseAxis);
     }

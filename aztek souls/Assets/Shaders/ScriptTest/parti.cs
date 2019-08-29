@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class parti : MonoBehaviour
 {
-    public ParticleSystem particleLauncher;
-    private void Awake()
-    {
-        
-    }
+    public GameObject parent;
+    public GameObject particleInstace;
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            particleLauncher.Emit(1);
-
+            Instantiate(particleInstace, parent.transform);
         }
-        
     }
-
-    
 }
