@@ -311,7 +311,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         // Hacemos el Roll.
         _rb.velocity = (_dir * rollSpeed);
-        yield return new WaitForSeconds(rollDuration);
+
+        float remainingDuration = rollDuration;
+        while (remainingDuration > 0)
+        {
+            remainingDuration -= Time.deltaTime;
+            OnPositionIsUpdated();
+            yield return null;
+        }
         _rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
