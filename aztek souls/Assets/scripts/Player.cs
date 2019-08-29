@@ -259,7 +259,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void FixedUpdate()
     {
-        if (_moving) Move();
+        if (!IsAlive) return;
+        if (_canMove && _moving) Move();
     }
 
     public void Move()
