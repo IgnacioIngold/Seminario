@@ -146,7 +146,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //Combo 1
         Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 2f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.8f, Cost = 2f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.5f, Cost = 2f, Damage = 20f };
         Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 2f, Damage = 20f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
@@ -160,6 +160,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         light2.AddConnectedAttack(Inputs.light, light3);
         light2.OnExecute += () => {
             _anims.SetTrigger("atk2");
+            
             print("Ejecutando Ataque:" + light2.IDName);
         };
 
