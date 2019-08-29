@@ -24,7 +24,7 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
     Rigidbody _rb;                                          // Componente Rigidbody.
     Animator _anims;                                        // Componente Animator.
     [SerializeField]
-    Weapon currentWeapon;
+    Weapon CurrentWeapon;
 
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
@@ -115,7 +115,7 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
 
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        currentWeapon = new Weapon(
+        CurrentWeapon = new Weapon(
                         () => {
                             _attacking = true;
 
@@ -144,15 +144,11 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
                         );
 
         //Combo 1
-        Attack light1 = new Attack(() => { });
-        Attack light2 = new Attack(() => { });
-        Attack light3 = new Attack(() => { });
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1f, Cost = 2f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1f, Cost = 2f, Damage = 20f };
+        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 2f, Damage = 20f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
-        light1.IDName = "A";
-        light1.AttackDuration = 1f;
-        light1.Damage = 20f;
-        light1.Cost = 2f;
         light1.OnExecute += () => 
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
@@ -160,25 +156,18 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
-        light2.IDName = "B";
-        light2.AttackDuration = 1f;
-        light2.Damage = 20f;
-        light2.Cost = 2f;
         light2.OnExecute += () => { print("Ejecutando Ataque:" + light2.IDName); };
 
         light3.IDName = "C";
-        light3.AttackDuration = 1f;
-        light3.Damage = 20f;
-        light3.Cost = 2f;
         light3.OnExecute += () => { print("Ejecutando Ataque:" + light3.IDName); };
 
-
-        currentWeapon.AddEntryPoint(Inputs.light, light1);
+        CurrentWeapon.AddEntryPoint(Inputs.light, light1);
 
 
         Health = maxHp;
         Stamina = MaxStamina;
 
+        //Permite tener un Delay
         OnActionHasEnded += () =>
         {
             StopCoroutine("StaminaRecoverDelay");
@@ -200,12 +189,12 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         //Inputs, asi es más responsive.
         if (_attacking)
         {
-            currentWeapon.Update();
+            CurrentWeapon.Update();
             return;
         }
         if (!_attacking && Input.GetButtonDown("LighAttack"))
         {
-            currentWeapon.StartAttack();
+            CurrentWeapon.StartAttack();
             return;
         }
 
@@ -388,6 +377,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
-        throw new NotImplementedException();
+        return CurrentWeapon.CurrentAttack.GetDamageStats();
     }
 }

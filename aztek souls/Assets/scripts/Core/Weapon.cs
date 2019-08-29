@@ -12,7 +12,7 @@ public enum Inputs
 [Serializable]
 public class Weapon
 {
-    public Attack Current = null;
+    public Attack CurrentAttack = null;
 
     public Dictionary<Inputs, Attack> entryPoints = new Dictionary<Inputs, Attack>();
     event Action OnBeginAttack = delegate { };
@@ -33,19 +33,19 @@ public class Weapon
 
     public void StartAttack()
     {
-        if (Current == null)
+        if (CurrentAttack == null)
         {
             if (Input.GetButtonDown("LighAttack"))
-                Current = entryPoints[Inputs.light];
+                CurrentAttack = entryPoints[Inputs.light];
 
             if (Input.GetButtonDown("StrongAttack"))
-                Current = entryPoints[Inputs.strong];
+                CurrentAttack = entryPoints[Inputs.strong];
 
             OnBeginAttack();
         }
 
-        currentDuration = Current.AttackDuration;
-        Current.OnExecute();
+        currentDuration = CurrentAttack.AttackDuration;
+        CurrentAttack.OnExecute();
     }
 
     public void Update()
@@ -67,24 +67,24 @@ public class Weapon
 
         if (currentDuration < 0)
         {
-            var nextCurrent = Current.getConnectedAttack(nextAttack);
+            var nextCurrent = CurrentAttack.getConnectedAttack(nextAttack);
 
             nextAttack = Inputs.none;
             if (nextCurrent != null)
             {
-                Current = nextCurrent;
+                CurrentAttack = nextCurrent;
                 StartAttack();
             }
             else
             {
-                Current = null;
+                CurrentAttack = null;
                 MonoBehaviour.print("FIN DE CADENA");
                 OnExitAttack();
             }
         }
     }
 
-    public void AddEntryPoint(Inputs type, Attack attack)
+    public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
         if (entryPoints == null)
             entryPoints = new Dictionary<Inputs, Attack>();
@@ -93,5 +93,7 @@ public class Weapon
             entryPoints[type] = attack;
         else
             entryPoints.Add(type, attack);
+
+        return this;
     }
 }

@@ -13,24 +13,22 @@ public class Attack : IAttacker<object[]>
     public float Damage = 0f;
     public float AttackDuration = 1f;
 
+    public Attack()
+    {
+        InitBegginingAttacksDict();
+    }
     public Attack(Action OnExecute)
     {
         this.OnExecute += OnExecute;
 
-        ConnectedAttacks = new Dictionary<Inputs, Attack>();
-        ConnectedAttacks.Add(Inputs.light, null);
-        ConnectedAttacks.Add(Inputs.strong, null);
-        ConnectedAttacks.Add(Inputs.none, null);
+        InitBegginingAttacksDict();
     }
     public Attack(Action OnExecute, Action AttackEffects)
     {
         this.OnExecute += OnExecute;
         this.AttackEffects += AttackEffects;
 
-        ConnectedAttacks = new Dictionary<Inputs, Attack>();
-        ConnectedAttacks.Add(Inputs.light, null);
-        ConnectedAttacks.Add(Inputs.strong, null);
-        ConnectedAttacks.Add(Inputs.none, null);
+        InitBegginingAttacksDict();
     }
 
     /// <summary>
@@ -38,12 +36,14 @@ public class Attack : IAttacker<object[]>
     /// </summary>
     /// <param name="type">Tipo de input que identifica a la conección.</param>
     /// <param name="ConnectedAttack">Ataque a conectar. </param>
-    public void AddConnectedAttack(Inputs type, Attack ConnectedAttack)
+    public Attack AddConnectedAttack(Inputs type, Attack ConnectedAttack)
     {
         if (!ConnectedAttacks.ContainsKey(type))
             ConnectedAttacks.Add(type, ConnectedAttack);
         else
             ConnectedAttacks[type] = ConnectedAttack;
+
+        return this;
     }
 
     public Attack getConnectedAttack(Inputs input)
@@ -55,5 +55,13 @@ public class Attack : IAttacker<object[]>
     {
         //Acá retorno todas las estadísticas del ataque.
         return new object[] { Damage };
+    }
+
+    private void InitBegginingAttacksDict()
+    {
+        ConnectedAttacks = new Dictionary<Inputs, Attack>();
+        ConnectedAttacks.Add(Inputs.light, null);
+        ConnectedAttacks.Add(Inputs.strong, null);
+        ConnectedAttacks.Add(Inputs.none, null);
     }
 }
