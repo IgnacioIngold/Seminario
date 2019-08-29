@@ -23,7 +23,7 @@ public class MainCamBehaviour : MonoBehaviour
         Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         RotateCamera(MouseAxis);
     }
