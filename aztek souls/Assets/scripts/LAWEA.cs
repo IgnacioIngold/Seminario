@@ -209,9 +209,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
             return;
         }
 
-        if (Stamina > 0 && !_exhausted && Input.GetButtonDown("Run")) _running = true;
-        if (_running && Input.GetButtonUp("Run") || _exhausted ) _running = false;
-        _anims.SetBool("Running", _running);
 
         float AxisY = Input.GetAxis("Vertical");
         float AxisX = Input.GetAxis("Horizontal");
@@ -229,14 +226,37 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         }
         if (_rolling) transform.forward = _rollDir;
 
+
         if (_canMove)
         {
             if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
             {
                 _moving = true;
                 _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+
+                if (!_running && Stamina > 0 && !_exhausted && Input.GetButtonDown("Run"))
+                {
+                    _running = true;
+                    _anims.SetBool("Running", true);
+                    _recoverStamina = false;
+                }
+
+                if (_running && Input.GetButtonUp("Run") || _exhausted)
+                {
+                    _running = false;
+                    _anims.SetBool("Running", false);
+                    _recoverStamina = true;
+                }
             }
-            else _moving = false;
+            else
+                _moving = false;
+        }
+
+        if (notMoveInFrame)
+        {
+            _running = false;
+            _anims.SetBool("Running", false);
+            _recoverStamina = true;
         }
 
         if (_recoverStamina && Stamina < MaxStamina)
@@ -258,7 +278,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         //Correcting Forward.
         if (_running)
         {
-            _recoverStamina = false;
             movementSpeed = runSpeed;
             Stamina -= runCost * Time.deltaTime;
             if (_dir != Vector3.zero)
@@ -266,7 +285,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         }
         else
         {
-            _recoverStamina = true;
             Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
             transform.forward = newForward;
         }
