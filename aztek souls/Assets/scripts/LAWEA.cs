@@ -12,6 +12,7 @@ public interface IPlayerController
 [RequireComponent(typeof(Rigidbody))]
 public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
 {
+    #region Estado
     //Eventos
     public event Action OnDie = delegate { };
     public event Action OnActionHasEnded = delegate { };
@@ -76,6 +77,8 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
     public float StaminaRegeneration = 2f;                   // Regeneración por segundo de estamina.
     public float StRecoverDelay = 0.8f;                      // Delay de Regeneración de estamina luego de ejectuar una acción.
     public float ExhaustTime = 2f;                           // Tiempo que dura el Estado de "Exhaust".
+    [Range(2,10)]
+    public float staminaRateDecrease = 5;                    // Reducción de regeneración de stamina al estar exhausto.
     bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
     bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
@@ -102,7 +105,8 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
 
     public bool IsAlive => _hp > 0;                          //Implementación de IKilleable.
 
-    public bool active { get => enabled; set => enabled = value; }
+    public bool active { get => enabled; set => enabled = value; } 
+    #endregion
 
     private void Awake()
     {
@@ -182,6 +186,12 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         };
     }
 
+    private void Start()
+    {
+        //Esto es para Updatear la cámara apenas comienza el juego.
+        OnPositionIsUpdated();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -193,7 +203,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
             currentWeapon.Update();
             return;
         }
-
         if (!_attacking && Input.GetButtonDown("LighAttack"))
         {
             currentWeapon.StartAttack();
@@ -204,37 +213,35 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         if (_running && Input.GetButtonUp("Run") || _exhausted ) _running = false;
         _anims.SetBool("Running", _running);
 
-        if (!_rolling)
+        float AxisY = Input.GetAxis("Vertical");
+        float AxisX = Input.GetAxis("Horizontal");
+        _anims.SetFloat("VelY", AxisX);
+        _anims.SetFloat("VelX", AxisY);
+
+        bool notMoveInFrame = Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") == 0;
+
+        if (!_rolling && Stamina > rollCost && !notMoveInFrame && Input.GetButtonDown("Roll"))
         {
-            float AxisY = Input.GetAxis("Vertical");
-            float AxisX = Input.GetAxis("Horizontal");
+            _anims.SetTrigger("RollAction");
+            _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
 
-            _anims.SetFloat("VelY", AxisX);
-            _anims.SetFloat("VelX", AxisY);
-
-            if (Input.GetButtonDown("Roll"))
-            {
-                _anims.SetTrigger("RollAction");
-                _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-
-                StartCoroutine(Roll());
-            }
-
-            if (_canMove)
-            {
-                if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-                {
-                    _moving = true;
-                    _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-                }
-                else _moving = false;
-            }
+            StartCoroutine(Roll());
         }
-        else transform.forward = _rollDir;
+        if (_rolling) transform.forward = _rollDir;
+
+        if (_canMove)
+        {
+            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            {
+                _moving = true;
+                _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+            }
+            else _moving = false;
+        }
 
         if (_recoverStamina && Stamina < MaxStamina)
         {
-            float rate = (_exhausted ? StaminaRegeneration / 10 : StaminaRegeneration) * Time.deltaTime;
+            float rate = (_exhausted ? StaminaRegeneration / staminaRateDecrease : StaminaRegeneration) * Time.deltaTime;
             Stamina += rate;
         }
     }
@@ -279,6 +286,8 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
 
     IEnumerator Roll()
     {
+        //Primero que nada avisamos que no podemos hacer otras acciones.
+        _canMove = false;
         _rolling = true;
         _recoverStamina = false;
 
@@ -289,10 +298,6 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
 
         //Arreglamos nuestra orientación.
         _dir = (FinalPos - transform.position).normalized;
-
-        //Primero que nada avisamos que no podemos hacer otras acciones.
-        _canMove = false;
-        //transform.forward = _rollDir;
 
         // Hacemos el Roll.
         _rb.velocity = (_dir * rollSpeed);
