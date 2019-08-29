@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FollowWorld : MonoBehaviour
 {
@@ -19,7 +17,5 @@ public class FollowWorld : MonoBehaviour
     {
         Vector3 pos =cam.WorldToScreenPoint(lookAt.position + Offset);
         transform.position = pos;
-        
-
     }
 }
