@@ -1,16 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-using Core.Definitions;
 
 namespace Core
 {
     public class SceneInterface : MonoBehaviour
     {
+        public event Action OnGamePause = delegate { };
+
         public string PauseMenuButton;
-        public Hero Player;
-        public Cursed MainEnemy;
+        public GameObject PlayerObject;
+        public Cursed[] Enemies;
         public GameObject PauseMenuPanel;
+
+        IPlayerController Player;
+
+        private void Awake()
+        {
+            Player = PlayerObject.GetComponent<IPlayerController>();
+        }
 
         // Update is called once per frame
         void Update()
@@ -33,8 +40,14 @@ namespace Core
 
             PauseMenuPanel.SetActive(state);
 
-            Player.enabled = !state;
-            MainEnemy.enabled = !state;
+            Player.active = !state;
+
+            foreach (Cursed enemy in Enemies)
+            {
+                enemy.enabled = !state;
+            }
+
+            OnGamePause();
         }
     }
 
