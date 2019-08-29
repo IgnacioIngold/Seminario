@@ -145,22 +145,29 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                         );
 
         //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1f, Cost = 2f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1f, Cost = 2f, Damage = 20f };
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 2f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.8f, Cost = 2f, Damage = 20f };
         Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 2f, Damage = 20f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
         light1.OnExecute += () => 
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
+            _anims.SetTrigger("atk1");
             print("Ejecutando Ataque:" + light1.IDName);
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
-        light2.OnExecute += () => { print("Ejecutando Ataque:" + light2.IDName); };
+        light2.OnExecute += () => {
+            _anims.SetTrigger("atk2");
+            print("Ejecutando Ataque:" + light2.IDName);
+        };
 
         light3.IDName = "C";
-        light3.OnExecute += () => { print("Ejecutando Ataque:" + light3.IDName); };
+        light3.OnExecute += () => {
+            _anims.SetTrigger("atk3");
+            print("Ejecutando Ataque:" + light3.IDName);
+        };
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
 
