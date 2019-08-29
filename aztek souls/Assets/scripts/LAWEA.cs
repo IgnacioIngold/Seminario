@@ -4,8 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Core.Entities;
 
+public interface IPlayerController
+{
+    bool active { get; set; }
+}
+
 [RequireComponent(typeof(Rigidbody))]
-public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTrackingTarget
+public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
 {
     //Eventos
     public event Action OnDie = delegate { };
@@ -93,9 +98,11 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTracking
     bool _canRoll = true;                                    // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
 
-    bool _attacking = false;                                         // Si estoy atacando actualmente.
+    bool _attacking = false;                                 // Si estoy atacando actualmente.
 
     public bool IsAlive => _hp > 0;                          //Implementación de IKilleable.
+
+    public bool active { get => enabled; set => enabled = value; }
 
     private void Awake()
     {
@@ -129,7 +136,8 @@ public class LAWEA : MonoBehaviour, IKilleable, IAttacker<object[]>, CamTracking
                             _canMove = true;
                             _recoverStamina = true;
                             Debug.LogWarning("FIN COMBATE");
-                        });
+                        }
+                        );
 
         //Combo 1
         Attack light1 = new Attack(() => { });
