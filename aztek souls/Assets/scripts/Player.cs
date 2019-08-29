@@ -10,7 +10,7 @@ public interface IPlayerController
 }
 
 [RequireComponent(typeof(Rigidbody))]
-public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
+public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
 {
     #region Estado
     //Eventos
@@ -113,6 +113,7 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
 
+        //INICIO DEL COMBATE.
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
         CurrentWeapon = new Weapon(
@@ -163,6 +164,7 @@ public class LAWEA : MonoBehaviour, IPlayerController, IKilleable, IAttacker<obj
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
 
+        //FIN DEL COMBATE.
 
         Health = maxHp;
         Stamina = MaxStamina;
