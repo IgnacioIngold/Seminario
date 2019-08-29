@@ -105,7 +105,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     public bool IsAlive => _hp > 0;                          //Implementación de IKilleable.
 
-    public bool active { get => enabled; set => enabled = value; } 
+    public bool active { get => enabled; set => enabled = value; }
+    public bool invulnerable => _invulnerable;
+
     #endregion
 
     private void Awake()

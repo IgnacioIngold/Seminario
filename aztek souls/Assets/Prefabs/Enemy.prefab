@@ -10,8 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4977729587628454729}
   - component: {fileID: 975511497449741897}
+  - component: {fileID: 6895735466124644833}
   - component: {fileID: 4977729587628454838}
+  - component: {fileID: 7144479274148408764}
   - component: {fileID: 4977729587628454839}
+  - component: {fileID: 8778782535501286402}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -47,6 +50,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.6974921, y: 8.510801, z: 2.2369468}
   m_Center: {x: -0.14459704, y: 3.7554007, z: 0.1770257}
+--- !u!136 &6895735466124644833
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4977729587628454836}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 4, z: 0}
 --- !u!195 &4977729587628454838
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -69,6 +86,22 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &7144479274148408764
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4977729587628454836}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
 --- !u!114 &4977729587628454839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainState: 0
+  Target: {fileID: 0}
   _hp: 50
   speed: 5
   attackRate: 2.667
@@ -90,6 +124,10 @@ MonoBehaviour:
   rotationLerpSpeed: 0.02
   minForwardAngle: 40
   DamageCollider: {fileID: 5820169764597540763}
+  ChargeCollider: {fileID: 6895735466124644833}
+  StopCharge: 0
+  ChargeSpeed: 40
+  ChargeMaxDistance: 40
   sight:
     visibles:
       serializedVersion: 2
@@ -102,8 +140,29 @@ MonoBehaviour:
     dirToTarget: {x: -0.60490143, y: 0.004147426, z: -0.79628956}
     angleToTarget: 7.781446
     distanceToTarget: 24.400671
-  EnemyHP: {fileID: 0}
   minDetectionRange: 10
+  MediumRange: 10
+  HighRange: 20
+  EnemyHP: {fileID: 0}
+  Debug_Gizmos: 1
+  Debug_LineOfSight: 1
+  Debug_AttackRange: 1
+  Debug_MinDetectionRange: 1
+  Debug_CombatRanges: 1
+--- !u!114 &8778782535501286402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4977729587628454836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a16697c60d9c05b468f53f57348c666a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layer: 0
+  ObservedCollider: {fileID: 6895735466124644833}
 --- !u!1 &5894970556734389423
 GameObject:
   m_ObjectHideFlags: 0

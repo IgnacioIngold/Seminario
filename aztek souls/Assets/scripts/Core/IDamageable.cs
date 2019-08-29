@@ -4,6 +4,7 @@ namespace Core.Entities
     // Todas las unidades que pueden recibir Daño.
     public interface IDamageable
     {
+        bool invulnerable { get; }
         void GetDamage(params object[] DamageStats);
     }
     //Todas las unidades que pueden recibir Daño y tienen 2 estados Básicos: vivos o muertos.
