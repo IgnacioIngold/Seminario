@@ -114,9 +114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186770638fd92484ab9cc964f749e1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainState: 0
   Target: {fileID: 0}
-  _hp: 50
+  MainState: 0
+  _hp: 100
   speed: 5
   attackRate: 2.667
   AttackRange: 7
@@ -124,10 +124,6 @@ MonoBehaviour:
   rotationLerpSpeed: 0.02
   minForwardAngle: 40
   DamageCollider: {fileID: 5820169764597540763}
-  ChargeCollider: {fileID: 6895735466124644833}
-  StopCharge: 0
-  ChargeSpeed: 40
-  ChargeMaxDistance: 40
   sight:
     visibles:
       serializedVersion: 2
@@ -136,19 +132,21 @@ MonoBehaviour:
     origin: {fileID: 4977729587628454729}
     range: 40
     angle: 45
-    positionDiference: {x: -14.76, y: 0.101199985, z: -19.43}
-    dirToTarget: {x: -0.60490143, y: 0.004147426, z: -0.79628956}
-    angleToTarget: 7.781446
-    distanceToTarget: 24.400671
+    positionDiference: {x: -62.44, y: 1.3132772, z: -1.71}
+    dirToTarget: {x: -0.9994044, y: 0.021020101, z: -0.02736998}
+    angleToTarget: 34.682255
+    distanceToTarget: 62.477215
+  ChargeCollider: {fileID: 6895735466124644833}
+  chargeSpeed: 30
+  maxChargeDistance: 100
   minDetectionRange: 10
-  MediumRange: 10
-  HighRange: 20
+  MediumRange: 12
+  HighRange: 35
   EnemyHP: {fileID: 0}
   Debug_Gizmos: 1
-  Debug_LineOfSight: 1
-  Debug_AttackRange: 1
-  Debug_MinDetectionRange: 1
-  Debug_CombatRanges: 1
+  Debug_LineOFSight: 1
+  Debug_Attacks: 1
+  Debug_DetectionRanges: 1
 --- !u!114 &8778782535501286402
 MonoBehaviour:
   m_ObjectHideFlags: 0

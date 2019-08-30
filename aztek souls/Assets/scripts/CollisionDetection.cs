@@ -32,7 +32,7 @@ public class CollisionDetection : MonoBehaviour
 
             if (killeable == null)
             {
-                //print("EL colisionador choco con algo que no es KILLEABLE: " + other.gameObject.name);
+                print("EL colisionador choco con algo que no es KILLEABLE: " + other.gameObject.name);
                 ObservedCollider.enabled = false;
                 OnCollide();
             }

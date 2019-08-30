@@ -10,6 +10,8 @@ using IA.LineOfSight;
 [RequireComponent(typeof(Animator)), RequireComponent(typeof(NavMeshAgent))]
 public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
+    public Transform Target;
+
     //Estados
     public enum enemyState
     {
@@ -51,6 +53,15 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     [Header("Line Of Sight")]
     [SerializeField] LineOfSight sight = null;
 
+    [Header("Charge")]
+    public Collider ChargeCollider;
+    public float chargeSpeed = 30f;
+    public float maxChargeDistance = 100f;
+
+    bool stopCharging = false;
+    Vector3 _initialChargePosition;
+    Vector3 _chargeDir = Vector3.zero;
+
 
     //----------------Componentes de Unity
     Animator anims;
@@ -86,17 +97,20 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     {
         //Seteos iniciales.
         anims = GetComponentInChildren<Animator>();
-        //transform.CreateSightEntity();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
+        sight.target = Target;
 
         EnemyHP.text = "Enemy Health: " + _hp;
 
         //Collider
         DamageCollider.enabled = false;
+        ChargeCollider.enabled = false;
+        GetComponent<CollisionDetection>().OnCollide += () => { stopCharging = true; };
 
         //State Machine.
         idle = new State<enemyState>("Idle");
+        var think = new State<enemyState>("Thinking");
         var pursue = new State<enemyState>("Pursue");
         var charge = new State<enemyState>("Charge");
         var attack = new State<enemyState>("Attack");
@@ -118,12 +132,15 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
             var toDamage = sight.target.GetComponent<IKilleable>();
             if (!toDamage.IsAlive) return;
 
-            //transitions
-            if (targetDetected) sm.Feed(enemyState.pursue);
-
             if (sight.IsInSight() || sight.distanceToTarget < minDetectionRange)
-            {
                 targetDetected = true;
+
+            //transitions
+            if (targetDetected)
+            {
+                if (sight.distanceToTarget > HighRange)
+                    sm.Feed(enemyState.charge);
+
                 sm.Feed(enemyState.pursue);
             }
         }; 
@@ -160,29 +177,51 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 
         #endregion
 
-        charge.OnEnter += (previousState) => 
+        #region Charge
+        charge.OnEnter += (previousState) =>
         {
             //Activo la animación.
+            print("CHAAAAAAAAAAAAAAARGEEEEE");
 
             //Activo la detección.
+            ChargeCollider.enabled = true;
+
+            //Guardo la posición inicial.
+            _initialChargePosition = transform.position;
 
             //Calculo la dirección a la que me voy a mover.
+            _chargeDir = (Target.position - transform.position).normalized;
         };
-        charge.OnUpdate += () => 
+        charge.OnUpdate += () =>
         {
             //Me muevo primero
+            //transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
 
-            //Si Collisione con algo, me detengo.
+            //Si Collisione con algo, me detengo. (Paso a Idle)
+            if (stopCharging)
+                sm.Feed(enemyState.idle);
 
             //Sino...
-                //Voy calculando la distancia en la que me estoy moviendo
-                //Si la distancia es mayor al máximo
-                    //Me detengo.
+            //Voy calculando la distancia en la que me estoy moviendo
+            float distance = Vector3.Distance(transform.position, _initialChargePosition);
+            //Si la distancia es mayor al máximo
+            if (distance > maxChargeDistance)
+            {
+                //Me detengo.
+                print("TE pasaste de verga :D");
+                sm.Feed(enemyState.idle);
+            }
         };
-        charge.OnExit += (nextState) => 
+        charge.OnExit += (nextState) =>
         {
             // Reseteo el boleano de la colisión.
-        };
+            stopCharging = false;
+
+            //DesActivo la detección.
+            ChargeCollider.enabled = false;
+        }; 
+        #endregion
 
         #region Attack State
         attack.OnEnter += (x) =>
@@ -207,7 +246,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
             print("Enemy is dead");
             anims.SetTrigger("died");
             // Posible Spawneo de cosas.
-        };  
+        };
         #endregion
 
         #endregion
@@ -215,6 +254,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         #region Transiciones
         //Transiciones posibles.
         idle.AddTransition(enemyState.pursue, pursue)
+            .AddTransition(enemyState.charge, charge)
             .AddTransition(enemyState.dead, dead);
 
         pursue.AddTransition(enemyState.dead, dead)
@@ -251,7 +291,6 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         if (!IsAlive)
             sm.Feed(enemyState.dead);
     }
-
 
     IEnumerator Attack()
     {
