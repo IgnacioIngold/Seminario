@@ -9,7 +9,7 @@ public interface IPlayerController
     bool active { get; set; }
 }
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
 {
     #region Estado
@@ -21,7 +21,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
-    Rigidbody _rb;                                          // Componente Rigidbody.
+    //Rigidbody _rb;                                          // Componente Rigidbody.
+    CharacterController controller;
     Animator _anims;                                        // Componente Animator.
     [SerializeField]
     Weapon CurrentWeapon;
@@ -112,7 +113,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        //_rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
         _anims = GetComponentInChildren<Animator>();
 
         //INICIO DEL COMBATE.
@@ -306,7 +308,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
 
         // Update Position
-        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
+        //_rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
+        if (!controller.isGrounded)
+        {
+            _dir.y -= 10f;
+        }
+
+        controller.Move(_dir.normalized * movementSpeed * Time.deltaTime);
         OnPositionIsUpdated();
     }
 
@@ -334,16 +342,24 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _dir = (FinalPos - transform.position).normalized;
 
         // Hacemos el Roll.
-        _rb.velocity = (_dir * rollSpeed);
+        //_rb.velocity = (_dir * rollSpeed);
 
         float remainingDuration = rollDuration;
         while (remainingDuration > 0)
         {
             remainingDuration -= Time.deltaTime;
+
+            if (!controller.isGrounded)
+            {
+                _rollDir.y -= 10f;
+            }
+
+            controller.Move(_rollDir * rollSpeed * Time.deltaTime);
+
             OnPositionIsUpdated();
             yield return null;
         }
-        _rb.velocity = Vector3.zero;
+        //_rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
         yield return new WaitForSeconds(0.1f);

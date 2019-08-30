@@ -47,9 +47,9 @@ MonoBehaviour:
   MouseAxis: Mouse X
   Target: {fileID: 0}
   LocalCam: {fileID: 805980044348616964}
-  camOffSet: {x: 0, y: 30, z: -10}
+  camOffSet: {x: 0, y: 15, z: -10}
   transitionVelocity: 0.1
-  RotationSpeed: 10
+  RotationSpeed: 50
 --- !u!1 &805980044348616987
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,8 +91,8 @@ Camera:
   m_GameObject: {fileID: 805980044348616987}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

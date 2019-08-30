@@ -1245,7 +1245,7 @@ PrefabInstance:
     - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 41.14
+      value: 39.4
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -1255,7 +1255,7 @@ PrefabInstance:
     - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.71
+      value: 9.6
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -1309,59 +1309,69 @@ PrefabInstance:
       objectReference: {fileID: 1911784849}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
-      propertyPath: sight.positionDiference.x
-      value: -54.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.positionDiference.y
-      value: 1.3132772
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.positionDiference.z
-      value: -14.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.dirToTarget.x
-      value: -0.96576303
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.dirToTarget.y
-      value: 0.023400638
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.dirToTarget.z
-      value: -0.25836834
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.angleToTarget
-      value: 104.97327
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.distanceToTarget
-      value: 56.12143
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
       propertyPath: EnemyHP
       value: 
       objectReference: {fileID: 2110422577}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
-      propertyPath: _hp
-      value: 100
+      propertyPath: Target
+      value: 
+      objectReference: {fileID: 1911784849}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.range
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
-      propertyPath: Target
-      value: 
-      objectReference: {fileID: 1911784844}
+      propertyPath: sight.positionDiference.x
+      value: -60.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.positionDiference.z
+      value: -9.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.dirToTarget.x
+      value: -0.98749787
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.dirToTarget.y
+      value: 0.021365048
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.dirToTarget.z
+      value: -0.1561776
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.angleToTarget
+      value: 42.09687
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: sight.distanceToTarget
+      value: 61.468487
+      objectReference: {fileID: 0}
+    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: chargeSpeed
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895735466124644833, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7144479274148408764, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc, type: 3}
 --- !u!114 &484031949 stripped
@@ -5483,18 +5493,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 155709697}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1911784844 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7163442870093080255, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
-    type: 3}
-  m_PrefabInstance: {fileID: 155709697}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911784843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35dd7bfc2a6f8e64c9282b75701b7b2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1911784849 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7163442870093080226, guid: 950a79e3d89c3a840b4ef8c02b69a20c,

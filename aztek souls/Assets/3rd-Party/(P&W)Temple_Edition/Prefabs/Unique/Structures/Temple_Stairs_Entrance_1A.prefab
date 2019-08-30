@@ -923,7 +923,6 @@ GameObject:
   - component: {fileID: 400020}
   - component: {fileID: 3300018}
   - component: {fileID: 2300018}
-  - component: {fileID: 6400018}
   m_Layer: 0
   m_Name: Stairs
   m_TagString: Untagged
@@ -991,20 +990,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400018
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100022}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300004, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
 --- !u!1 &100024
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,6 +1002,7 @@ GameObject:
   - component: {fileID: 3300020}
   - component: {fileID: 2300020}
   - component: {fileID: 6400020}
+  - component: {fileID: 8455283658453093519}
   m_Layer: 0
   m_Name: Stairs_Collider
   m_TagString: Untagged
@@ -1098,6 +1084,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 4300002, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
+--- !u!65 &8455283658453093519
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100024}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0000002, y: 2, z: 0.32}
+  m_Center: {x: -0.00000333786, y: 0.0000038146973, z: -0.15}
 --- !u!1 &100026
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,7 +1108,7 @@ GameObject:
   - component: {fileID: 400028}
   - component: {fileID: 3300022}
   - component: {fileID: 2300022}
-  - component: {fileID: 6400022}
+  - component: {fileID: 1657303374015777803}
   m_Layer: 0
   m_Name: Stairs_Collider
   m_TagString: Untagged
@@ -1177,8 +1176,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400022
-MeshCollider:
+--- !u!65 &1657303374015777803
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1187,10 +1186,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300002, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 2.0000002, y: 2, z: 0.32}
+  m_Center: {x: -0.00000333786, y: 0.0000038146973, z: -0.15}
 --- !u!1 &100028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,7 +1200,6 @@ GameObject:
   - component: {fileID: 400030}
   - component: {fileID: 3300024}
   - component: {fileID: 2300024}
-  - component: {fileID: 6400024}
   m_Layer: 0
   m_Name: Stairs
   m_TagString: Untagged
@@ -1270,20 +1267,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400024
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100028}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300004, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
 --- !u!1 &100030
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,7 +1342,6 @@ GameObject:
   - component: {fileID: 400032}
   - component: {fileID: 3300026}
   - component: {fileID: 2300026}
-  - component: {fileID: 6400026}
   m_Layer: 0
   m_Name: Stairs
   m_TagString: Untagged
@@ -1427,20 +1409,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400026
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100034}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300004, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
 --- !u!1 &100036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1452,7 +1420,7 @@ GameObject:
   - component: {fileID: 400034}
   - component: {fileID: 3300028}
   - component: {fileID: 2300028}
-  - component: {fileID: 6400028}
+  - component: {fileID: 2432774333483210755}
   m_Layer: 0
   m_Name: Stairs_Collider
   m_TagString: Untagged
@@ -1520,8 +1488,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400028
-MeshCollider:
+--- !u!65 &2432774333483210755
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1530,10 +1498,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300002, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 2.0000002, y: 2, z: 0.32}
+  m_Center: {x: -0.00000333786, y: 0.0000038146973, z: -0.15}
 --- !u!1 &100038
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,7 +1512,7 @@ GameObject:
   - component: {fileID: 400040}
   - component: {fileID: 3300030}
   - component: {fileID: 2300030}
-  - component: {fileID: 6400030}
+  - component: {fileID: 1290459692936634775}
   m_Layer: 0
   m_Name: Stairs_Collider
   m_TagString: Untagged
@@ -1613,8 +1580,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &6400030
-MeshCollider:
+--- !u!65 &1290459692936634775
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1623,10 +1590,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300002, guid: 2e8bc81596d3b974ebff9d0e870a5def, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 2.0000002, y: 2, z: 0.32}
+  m_Center: {x: -0.00000333786, y: 0.0000038146973, z: -0.15}
 --- !u!1 &100040
 GameObject:
   m_ObjectHideFlags: 0

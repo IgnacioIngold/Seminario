@@ -113,6 +113,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         var think = new State<enemyState>("Thinking");
         var pursue = new State<enemyState>("Pursue");
         var charge = new State<enemyState>("Charge");
+        var JumpAttack = new State<enemyState>("AirAttack");
         var attack = new State<enemyState>("Attack");
         var dead = new State<enemyState>("Dead");
 
@@ -181,6 +182,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         charge.OnEnter += (previousState) =>
         {
             //Activo la animación.
+
             print("CHAAAAAAAAAAAAAAARGEEEEE");
 
             //Activo la detección.
@@ -336,7 +338,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 
             if (Debug_LineOFSight)
             {
-                Gizmos.color = sight.IsInSight() ? Color.green : Color.red;       //Target In Sight es un bool en una clase Externa.
+                Gizmos.color = sight.IsInSight() ? Color.green : Color.red;   //Target In Sight es un bool en una clase Externa.
                 float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
                 if (distanceToTarget > sight.range) distanceToTarget = sight.range;
                 sight.dirToTarget.Normalize();
