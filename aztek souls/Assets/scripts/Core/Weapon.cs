@@ -95,6 +95,13 @@ public class Weapon
         }
     }
 
+    public void InterruptAttack()
+    {
+        CurrentAttack = null;
+        MonoBehaviour.print("FIN DE CADENA");
+        OnExitAttack();
+    }
+
     public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
         if (entryPoints == null)

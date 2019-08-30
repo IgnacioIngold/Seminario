@@ -452,6 +452,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //FeedBack de Daño.
             float Damage = (float)DamageStats[0];
             Health -= Damage;
+            CurrentWeapon.InterruptAttack();
+            _attacking = false;
+
             _myBars.UpdateHeathBar(_hp, maxHp);
             _myBars.UpdateStamina(Stamina, MaxStamina);
 
