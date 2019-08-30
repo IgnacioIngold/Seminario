@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fog
-  m_Shader: {fileID: 4800000, guid: fe1556d269ae88846a8e44d25558609c, type: 3}
+  m_Name: Fire
+  m_Shader: {fileID: 4800000, guid: 5dbcb0c9d7d3e98479e6905e021244bf, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 4
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -20,7 +20,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 30343aff922e8604ea1ff9c2640a6db4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 47a783cc353b7194bb77ad4c02d94f94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureSample1:
+        m_Texture: {fileID: 2800000, guid: a17446cc00514484ab1e31d5872db88a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ramppat:
+        m_Texture: {fileID: 2800000, guid: 8a794f4103045f548818c9d9f4d02960, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -28,9 +36,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _EdgeLength: 2
-    - _Fogdensity: 0.000015294117
-    - _Height: 0.5
     - __dirty: 0
+    - _speed: -0.02
     m_Colors:
-    - _COlor: {r: 0, g: 0.3018868, b: 0.097312495, a: 0}
+    - _distorcion: {r: 0, g: 0, b: 0, a: 0}
+    - _idstorcion2: {r: 2, g: 2, b: 0, a: 0}
