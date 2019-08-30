@@ -11,6 +11,7 @@ using IA.LineOfSight;
 public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
     public Transform Target;
+    public GameObject OnHitParticle;
 
     //Estados
     public enum enemyState

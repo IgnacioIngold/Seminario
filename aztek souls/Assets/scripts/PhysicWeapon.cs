@@ -9,7 +9,12 @@ public class PhysicWeapon : HitTrigger
         if (collision.gameObject == Owner) return;
 
         IKilleable KilleableObject = collision.gameObject.GetComponent<IKilleable>();
-        if (KilleableObject != null && KilleableObject.IsAlive)
-            KilleableObject.GetDamage(getOwnerStats());
+        if (KilleableObject != null)
+        {
+            if (KilleableObject.IsAlive)
+                KilleableObject.GetDamage(getOwnerStats());
+        }
+
+        col.enabled = false;
     }
 }

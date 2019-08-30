@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using Core.Entities;
+using System.Collections.Generic;
 
 public abstract class HitTrigger : MonoBehaviour
 {
+    [SerializeField]
+    protected Collider col;
     public GameObject Owner;
+    public GameObject OnHitParticle;
     protected object[] getOwnerStats()
     {
         return Owner.GetComponent<IAttacker<object[]>>() != null ?
@@ -12,15 +16,15 @@ public abstract class HitTrigger : MonoBehaviour
     }
 }
 
-[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
+//[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
 public class TriggerWeapon : HitTrigger
 {
-    Collider col;
+    public bool debugThisUnit;
 
-    private void Awake()
-    {
-        col = GetComponent<Collider>();
-    }
+    //private void Awake()
+    //{
+    //    col = GetComponent<Collider>();
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -29,7 +33,18 @@ public class TriggerWeapon : HitTrigger
         if (other.gameObject == Owner) return;
 
         if (KilleableObject != null && KilleableObject.IsAlive)
+        {
+            if (debugThisUnit)
+                print("Colisiono con algo we: " + other.gameObject.name);
+
             KilleableObject.GetDamage(getOwnerStats());
+        }
+
+        if (KilleableObject != null && other.gameObject != Owner)
+        {
+            GameObject particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+        }
 
         col.enabled = false;
     }

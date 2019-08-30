@@ -1,5 +1,66 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4396505241561543038
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2672852666933432236}
+  - component: {fileID: 1121617188601699858}
+  - component: {fileID: 2185664293185661076}
+  m_Layer: 0
+  m_Name: DamageTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2672852666933432236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4396505241561543038}
+  m_LocalRotation: {x: -0.0005202245, y: 0.16551645, z: -0.000087309985, w: 0.9862069}
+  m_LocalPosition: {x: 36.0983, y: 0.07538539, z: 71.48631}
+  m_LocalScale: {x: 266.4051, y: 218.85028, z: 409.18057}
+  m_Children: []
+  m_Father: {fileID: 7054949752583765858}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 19.054, z: 0}
+--- !u!114 &1121617188601699858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4396505241561543038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1131de405274f24b987c1a9078eb155, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  col: {fileID: 2185664293185661076}
+  Owner: {fileID: 7163442870093080248}
+  OnHitParticle: {fileID: 1814572451649613208, guid: 0b06197c649b6d148a042d07e399dac5,
+    type: 3}
+--- !u!65 &2185664293185661076
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4396505241561543038}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2804985, y: 0.25164366, z: 0.23677437}
+  m_Center: {x: 0.030433854, y: 0.0107165715, z: -0.0073550986}
 --- !u!1 &7163442870093080248
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myBars: {fileID: 0}
   AxisOrientation: {fileID: 0}
+  AttackCollider: {fileID: 0}
   maxHp: 100
   MaxStamina: 100
   StaminaRegeneration: 15
@@ -188,6 +250,12 @@ PrefabInstance:
 --- !u!4 &2743569139323334756 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 94b814f0978830749bff9ab5b2ef6147,
+    type: 3}
+  m_PrefabInstance: {fileID: 7163442869671222142}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7054949752583765858 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -9042772588573301732, guid: 94b814f0978830749bff9ab5b2ef6147,
     type: 3}
   m_PrefabInstance: {fileID: 7163442869671222142}
   m_PrefabAsset: {fileID: 0}

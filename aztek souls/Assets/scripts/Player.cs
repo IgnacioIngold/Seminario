@@ -21,6 +21,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
+    public Collider AttackCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
