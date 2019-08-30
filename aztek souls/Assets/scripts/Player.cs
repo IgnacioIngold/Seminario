@@ -149,16 +149,20 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                         );
 
         //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 20f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 20f, Damage = 20f };
         Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 20f, Damage = 20f };
-        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 30f, Damage = 30f };
+        Attack quick1 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
+        Attack quick2 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
+        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 30f, Damage = 30f };
+        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 2.2f, Cost = 30f, Damage = 30f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
         light1.OnExecute += () => 
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
            _anims.SetTrigger("atk1");
+            _anims.SetInteger("combat", 0);
             Stamina -= light1.Cost;
             print("Ejecutando Ataque:" + light1.IDName);
         };
@@ -187,8 +191,36 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             print("Ejecutando Ataque:" + Airheavy.IDName);
         };
 
+        heavy1.AddConnectedAttack(Inputs.light, quick1);
+        heavy1.OnExecute += () => {
+            
+            Stamina -= Airheavy.Cost;
+            _anims.SetTrigger("atk2");
+            print("Ejecutando Ataque:" + heavy1.IDName);
+        };
+
+        quick1.AddConnectedAttack(Inputs.light, quick2);
+        quick1.OnExecute += () =>
+        {
+            Stamina -= Airheavy.Cost;
+            _anims.SetInteger("combat", 4);
+            print("Ejecutando Ataque:" + quick1.IDName);
+
+        };
+
+        quick2.AddConnectedAttack(Inputs.light, quick1);
+        quick2.OnExecute += () =>
+        {
+            Stamina -= Airheavy.Cost;
+            _anims.SetInteger("combat", 5);
+            print("Ejecutando Ataque:" + quick2.IDName);
+
+        };
+
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
         //Acá hace falta un entryPoint Para el primer ataque Pesados
+        //CurrentWeapon.AddEntryPoint(Inputs.strong, heavy1);
+        
 
         //FIN DEL COMBATE.
 
