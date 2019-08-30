@@ -62,7 +62,10 @@ public class Weapon
             }
 
             if (Input.GetButtonDown("StrongAttack"))
-                nextAttack = Inputs.light;
+            {
+                MonoBehaviour.print("Input Light CONFIRMADO");
+                nextAttack = Inputs.strong;
+            }
         }
 
         if (currentDuration < 0)

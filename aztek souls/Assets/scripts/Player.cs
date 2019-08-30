@@ -170,13 +170,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             print("Ejecutando Ataque:" + light2.IDName);
         };
 
-        light3.IDName = "C";
+
         light3.OnExecute += () => {
             // _anims.SetTrigger("atk3");
             Stamina -= light3.Cost;
             _anims.SetInteger("combat", 2);
             print("Ejecutando Ataque:" + light3.IDName);
         };
+
         Airheavy.OnExecute += () => {
             // _anims.SetTrigger("atk3");
             Stamina -= Airheavy.Cost;
@@ -185,6 +186,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
+        //Acá hace falta un entryPoint Para el primer ataque Pesados
 
         //FIN DEL COMBATE.
 
