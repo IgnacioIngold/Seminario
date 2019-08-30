@@ -41,7 +41,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
             _hp = value;
             if (_hp < 0) _hp = 0;
 
-            EnemyHP.text = "Enemy Health: " + _hp;
+            //EnemyHP.text = "Enemy Health: " + _hp;
         }
     }
     bool Attacking = false;
@@ -101,7 +101,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         agent.speed = speed;
         sight.target = Target;
 
-        EnemyHP.text = "Enemy Health: " + _hp;
+        //EnemyHP.text = "Enemy Health: " + _hp;
 
         //Collider
         DamageCollider.enabled = false;
