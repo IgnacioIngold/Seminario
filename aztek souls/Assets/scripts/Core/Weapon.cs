@@ -15,6 +15,8 @@ public class Weapon
     public Attack CurrentAttack = null;
 
     public Dictionary<Inputs, Attack> entryPoints = new Dictionary<Inputs, Attack>();
+    public Func<bool> canContinueAttack = delegate { return false; };
+
     event Action OnBeginAttack = delegate { };
     event Action OnExitAttack = delegate { };
     float currentDuration = 0f;
@@ -44,6 +46,12 @@ public class Weapon
             OnBeginAttack();
         }
 
+        if (!canContinueAttack())
+        {
+            OnExitAttack();
+            return;
+        }
+
         currentDuration = CurrentAttack.AttackDuration;
         CurrentAttack.OnExecute();
     }
@@ -56,14 +64,14 @@ public class Weapon
         {
             if (Input.GetButtonDown("LighAttack"))
             {
-                MonoBehaviour.print("Input Light CONFIRMADO");
+                MonoBehaviour.print("Input LIGHT CONFIRMADO");
                 nextAttack = Inputs.light;
                 return;
             }
 
             if (Input.GetButtonDown("StrongAttack"))
             {
-                MonoBehaviour.print("Input Light CONFIRMADO");
+                MonoBehaviour.print("Input STRONG CONFIRMADO");
                 nextAttack = Inputs.strong;
             }
         }

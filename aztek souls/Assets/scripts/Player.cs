@@ -21,8 +21,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
-    //Rigidbody _rb;                                          // Componente Rigidbody.
-    CharacterController controller;
+    Rigidbody _rb;                                          // Componente Rigidbody.
+    //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
     [SerializeField]
     Weapon CurrentWeapon;
@@ -113,8 +113,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void Awake()
     {
-        //_rb = GetComponent<Rigidbody>();
-        controller = GetComponent<CharacterController>();
+        _rb = GetComponent<Rigidbody>();
+        //controller = GetComponent<CharacterController>();
         _anims = GetComponentInChildren<Animator>();
 
         //INICIO DEL COMBATE.
@@ -122,6 +122,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
         CurrentWeapon = new Weapon(
                         () => {
+                            //On Begin Attack
                             _attacking = true;
 
                             //Bloqueo las animaciones anteriores.
@@ -137,16 +138,18 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
                             Debug.LogWarning("INICIO COMBATE");
                         }, 
-
                         () =>
                         {
+                            //On Exit Attack
                             _attacking = false;
 
                             _canMove = true;
                             _recoverStamina = true;
+                            CurrentWeapon.CurrentAttack = null;
                             Debug.LogWarning("FIN COMBATE");
                         }
                         );
+        CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
 
         //Combo 1
         Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
@@ -219,8 +222,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
         //Acá hace falta un entryPoint Para el primer ataque Pesados
-        //CurrentWeapon.AddEntryPoint(Inputs.strong, heavy1);
-        
+        CurrentWeapon.AddEntryPoint(Inputs.strong, heavy1);
+
 
         //FIN DEL COMBATE.
 
@@ -252,7 +255,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             CurrentWeapon.Update();
             return;
         }
-        if (!_attacking && Input.GetButtonDown("LighAttack"))
+        if (!_attacking && Input.GetButtonDown("LighAttack") || Input.GetButtonDown("StrongAttack"))
         {
             CurrentWeapon.StartAttack();
             return;
@@ -340,13 +343,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
 
         // Update Position
-        //_rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
-        if (!controller.isGrounded)
-        {
-            _dir.y -= 10f;
-        }
+        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
+        //if (!controller.isGrounded)
+        //{
+        //    _dir.y -= 10f;
+        //}
 
-        controller.Move(_dir.normalized * movementSpeed * Time.deltaTime);
+        //controller.Move(_dir.normalized * movementSpeed * Time.deltaTime);
         OnPositionIsUpdated();
     }
 
@@ -374,24 +377,25 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _dir = (FinalPos - transform.position).normalized;
 
         // Hacemos el Roll.
-        //_rb.velocity = (_dir * rollSpeed);
+        _rb.velocity = (_dir * rollSpeed);
 
         float remainingDuration = rollDuration;
         while (remainingDuration > 0)
         {
             remainingDuration -= Time.deltaTime;
 
-            if (!controller.isGrounded)
-            {
-                _rollDir.y -= 10f;
-            }
+            //if (!controller.isGrounded)
+            //{
+            //    _rollDir.y -= 10f;
+            //}
 
-            controller.Move(_rollDir * rollSpeed * Time.deltaTime);
+            //controller.Move(_rollDir * rollSpeed * Time.deltaTime);
 
             OnPositionIsUpdated();
             yield return null;
         }
-        //_rb.velocity = Vector3.zero;
+        //yield return new WaitForSeconds(rollDuration);
+        _rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
         yield return new WaitForSeconds(0.1f);
