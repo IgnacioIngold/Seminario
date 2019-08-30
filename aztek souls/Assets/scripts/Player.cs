@@ -148,8 +148,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //Combo 1
         Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 20f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.5f, Cost = 20f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
         Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 20f, Damage = 20f };
+        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 30f, Damage = 30f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
         light1.OnExecute += () => 
@@ -161,6 +162,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
+        light2.AddConnectedAttack(Inputs.strong, Airheavy);
         light2.OnExecute += () => {
             //_anims.SetTrigger("atk2");
             _anims.SetInteger("combat", 1);
@@ -174,6 +176,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= light3.Cost;
             _anims.SetInteger("combat", 2);
             print("Ejecutando Ataque:" + light3.IDName);
+        };
+        Airheavy.OnExecute += () => {
+            // _anims.SetTrigger("atk3");
+            Stamina -= Airheavy.Cost;
+            _anims.SetInteger("combat", 3);
+            print("Ejecutando Ataque:" + Airheavy.IDName);
         };
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
