@@ -14,6 +14,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public enum enemyState
     {
         idle,
+        think,
+        charge,
         pursue,
         attack,
         dead
@@ -49,20 +51,20 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     [Header("Line Of Sight")]
     [SerializeField] LineOfSight sight = null;
 
-    [Header("Debug")]
-    public Text EnemyHP;
 
-    //Componentes de Unity
+    //----------------Componentes de Unity
     Animator anims;
     NavMeshAgent agent;
 
-    //Componentes Propios
+    //------------------Componentes Propios
     GenericFSM<enemyState> sm;
     State<enemyState> idle;
     public float minDetectionRange;
+    public float MediumRange = 40f;
+    public float HighRange = 60f;
 
 
-    //Propiedades.
+    //----------------------Propiedades.
     /// <summary>
     /// Retorna verdadero si mis puntos de vida son mayores a 0
     /// </summary>
@@ -70,6 +72,15 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool invulnerable => false;
 
     bool targetDetected = false;
+
+#if UNITY_EDITOR
+    [Header("Debug")]
+    public Text EnemyHP;
+    public bool Debug_Gizmos          = false;
+    public bool Debug_LineOFSight     = false;
+    public bool Debug_Attacks         = false;
+    public bool Debug_DetectionRanges = false; 
+#endif
 
     private void Awake()
     {
@@ -87,8 +98,15 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         //State Machine.
         idle = new State<enemyState>("Idle");
         var pursue = new State<enemyState>("Pursue");
+        var charge = new State<enemyState>("Charge");
         var attack = new State<enemyState>("Attack");
         var dead = new State<enemyState>("Dead");
+
+        /*
+         * .OnEnter += (previousState) => { };
+         * .OnUpdate += () => { };
+         * .OnExit += (nextState) => { };
+        */
 
         #region Estados
 
@@ -139,8 +157,32 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
                 agent.Move(sight.dirToTarget * speed * Time.deltaTime);
             }
         };
-       
+
         #endregion
+
+        charge.OnEnter += (previousState) => 
+        {
+            //Activo la animación.
+
+            //Activo la detección.
+
+            //Calculo la dirección a la que me voy a mover.
+        };
+        charge.OnUpdate += () => 
+        {
+            //Me muevo primero
+
+            //Si Collisione con algo, me detengo.
+
+            //Sino...
+                //Voy calculando la distancia en la que me estoy moviendo
+                //Si la distancia es mayor al máximo
+                    //Me detengo.
+        };
+        charge.OnExit += (nextState) => 
+        {
+            // Reseteo el boleano de la colisión.
+        };
 
         #region Attack State
         attack.OnEnter += (x) =>
@@ -176,12 +218,16 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
             .AddTransition(enemyState.dead, dead);
 
         pursue.AddTransition(enemyState.dead, dead)
-            .AddTransition(enemyState.attack, attack)
-            .AddTransition(enemyState.idle, idle);
+              .AddTransition(enemyState.attack, attack)
+              .AddTransition(enemyState.idle, idle);
+
+        charge.AddTransition(enemyState.dead, dead)
+              .AddTransition(enemyState.idle, idle)
+              .AddTransition(enemyState.attack, attack);
 
         attack.AddTransition(enemyState.dead, dead)
-            .AddTransition(enemyState.pursue, pursue)
-            .AddTransition(enemyState.idle, idle); 
+              .AddTransition(enemyState.pursue, pursue)
+              .AddTransition(enemyState.idle, idle); 
         #endregion
 
         sm = new GenericFSM<enemyState>(idle);
@@ -245,33 +291,53 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 #if (UNITY_EDITOR)
     void OnDrawGizmosSelected()
     {
-        var currentPosition = transform.position;
+        if (Debug_Gizmos)
+        {
+            var currentPosition = transform.position;
 
-        Gizmos.color = sight.IsInSight() ? Color.green : Color.red;       //Target In Sight es un bool en una clase Externa.
-        float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
-        if (distanceToTarget > sight.range) distanceToTarget = sight.range;
-        sight.dirToTarget.Normalize();
-        Gizmos.DrawLine(transform.position, transform.position + sight.dirToTarget * distanceToTarget);
+            if (Debug_LineOFSight)
+            {
+                Gizmos.color = sight.IsInSight() ? Color.green : Color.red;       //Target In Sight es un bool en una clase Externa.
+                float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
+                if (distanceToTarget > sight.range) distanceToTarget = sight.range;
+                sight.dirToTarget.Normalize();
+                Gizmos.DrawLine(currentPosition, currentPosition + sight.dirToTarget * distanceToTarget);
 
-        Gizmos.color = Color.white;
-        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-        Gizmos.DrawWireSphere(transform.position, sight.range);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, sight.angle + 1, 0) * transform.forward * sight.range);
+                Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -sight.angle - 1, 0) * transform.forward * sight.range);
 
-        Gizmos.color = Color.red;
-        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-        Gizmos.DrawWireSphere(transform.position, AttackRange);
+                Gizmos.color = Color.gray;
+                Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, minForwardAngle + 1, 0) * transform.forward * sight.range);
+                Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -minForwardAngle - 1, 0) * transform.forward * sight.range);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-        Gizmos.DrawWireSphere(transform.position, minDetectionRange);
+                Gizmos.color = Color.white;
+                Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+                Gizmos.DrawWireSphere(currentPosition, sight.range);
+            }
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, sight.angle + 1, 0) * transform.forward * sight.range);
-        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -sight.angle - 1, 0) * transform.forward * sight.range);
+            if (Debug_Attacks)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+                Gizmos.DrawWireSphere(currentPosition, AttackRange);
+            }
 
-        Gizmos.color = Color.gray;
-        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, minForwardAngle + 1, 0) * transform.forward * sight.range);
-        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -minForwardAngle - 1, 0) * transform.forward * sight.range);
+            if (Debug_DetectionRanges)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+                Gizmos.DrawWireSphere(currentPosition, minDetectionRange);
+
+                Gizmos.color = Color.magenta;
+                Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+                Gizmos.DrawWireSphere(currentPosition, MediumRange);
+
+                Gizmos.color = Color.magenta;
+                Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+                Gizmos.DrawWireSphere(currentPosition, HighRange);
+            }
+        }
     }
 #endif
 }
