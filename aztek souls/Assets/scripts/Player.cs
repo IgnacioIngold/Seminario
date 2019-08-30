@@ -147,28 +147,32 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                         );
 
         //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 2f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.5f, Cost = 2f, Damage = 20f };
-        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 2f, Damage = 20f };
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 1.7f, Cost = 20f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 1.5f, Cost = 20f, Damage = 20f };
+        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 20f, Damage = 20f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
         light1.OnExecute += () => 
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
-            _anims.SetTrigger("atk1");
+           _anims.SetTrigger("atk1");
+            Stamina -= light1.Cost;
             print("Ejecutando Ataque:" + light1.IDName);
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
         light2.OnExecute += () => {
-            _anims.SetTrigger("atk2");
-            
+            //_anims.SetTrigger("atk2");
+            _anims.SetInteger("combat", 1);
+            Stamina -= light2.Cost;
             print("Ejecutando Ataque:" + light2.IDName);
         };
 
         light3.IDName = "C";
         light3.OnExecute += () => {
-            _anims.SetTrigger("atk3");
+            // _anims.SetTrigger("atk3");
+            Stamina -= light3.Cost;
+            _anims.SetInteger("combat", 2);
             print("Ejecutando Ataque:" + light3.IDName);
         };
 

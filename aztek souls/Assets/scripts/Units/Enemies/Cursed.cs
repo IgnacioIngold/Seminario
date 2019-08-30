@@ -67,6 +67,9 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     /// Retorna verdadero si mis puntos de vida son mayores a 0
     /// </summary>
     public bool IsAlive => _hp > 0;
+
+    public bool invulnerable => throw new System.NotImplementedException();
+
     bool targetDetected = false;
 
     private void Awake()
