@@ -20,11 +20,12 @@ public class MainCamBehaviour : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
+        //Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
     }
 
     private void FixedUpdate()
     {
+        MoveCamera();
         RotateCamera(MouseAxis);
     }
 

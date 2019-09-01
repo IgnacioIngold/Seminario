@@ -7,11 +7,12 @@ using Core.Entities;
 using IA.StateMachine.Generic;
 using IA.LineOfSight;
 
-[RequireComponent(typeof(Animator)), RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
     public Transform Target;
     public GameObject OnHitParticle;
+    
 
     //Estados
     public enum enemyState
@@ -48,9 +49,6 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     bool Attacking = false;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
-    [Header("Attacks")]
-    public Collider DamageCollider;
-
     [Header("Line Of Sight")]
     [SerializeField] LineOfSight sight = null;
 
@@ -71,6 +69,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     //------------------Componentes Propios
     GenericFSM<enemyState> sm;
     State<enemyState> idle;
+
+    //-------------------Rangos
     public float minDetectionRange;
     public float MediumRange = 40f;
     public float HighRange = 60f;
@@ -87,7 +87,6 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 
 #if UNITY_EDITOR
     [Header("Debug")]
-    public Text EnemyHP;
     public bool Debug_Gizmos          = false;
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
@@ -102,12 +101,9 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         agent.speed = speed;
         sight.target = Target;
 
-        //EnemyHP.text = "Enemy Health: " + _hp;
-
         //Collider
-        DamageCollider.enabled = false;
         ChargeCollider.enabled = false;
-        GetComponent<CollisionDetection>().OnCollide += () => { stopCharging = true; };
+        //GetComponent<CollisionDetection>().OnCollide += () => { stopCharging = true; };
 
         //State Machine.
         idle = new State<enemyState>("Idle");
@@ -282,7 +278,10 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         sm.Update();
     }
 
-    //Implementación de Ikilleable, permite recibir daño.
+    /// <summary>
+    /// Implementación de Ikilleable, permite recibir daño.
+    /// </summary>
+    /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
     public void GetDamage(params object[] DamageStats)
     {
         float Damage = (float)DamageStats[0];
@@ -290,22 +289,34 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         Health -= Damage;
 
         //Activo Animación de "recibir Daño"
+        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+        Destroy(particle, 3f);
 
         if (!IsAlive)
             sm.Feed(enemyState.dead);
     }
+    /// <summary>
+    /// Retorna las estadísticas de combate de esta Unidad.
+    /// </summary>
+    /// <returns>Un array de objetos, donde cada objeto es una Estadística que afecta el daño.</returns>
+    public object[] GetDamageStats()
+    {
+        return new object[1] { attackDamage };
+    }
+
+    //-----------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------
 
     IEnumerator Attack()
     {
         Attacking = true;
-        DamageCollider.enabled = true;
 
         //Activa Animación.
         anims.SetTrigger("attack");
 
         //Enfriamiento.
         yield return new WaitForSeconds(attackRate);
-        DamageCollider.enabled = false;
         Attacking = false;
 
         //Chequeo si el enemigo esta vivo.
@@ -320,13 +331,6 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
             if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
                 sm.Feed(enemyState.pursue);                  // paso a pursue.
         }
-    }
-    /// <summary>
-    /// Retorna las estadísticas de combate de esta Unidad.
-    /// </summary>
-    public object[] GetDamageStats()
-    {
-        return new object[1] { attackDamage };
     }
 
     //Snippet for Debugg

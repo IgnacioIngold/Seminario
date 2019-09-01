@@ -10,18 +10,19 @@ public interface IPlayerController
 }
 
 //[RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>, CamTrackingTarget
+public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>
 {
     #region Estado
     //Eventos
     public event Action OnDie = delegate { };
     public event Action OnActionHasEnded = delegate { };
-    public event Action OnPositionIsUpdated = delegate { };
+    //public event Action OnPositionIsUpdated = delegate { };
 
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
-    public Collider AttackCollider;
+    public Collider AttackCollider;                         // Collider utilizado para generar daño.
+    public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
@@ -242,7 +243,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     private void Start()
     {
         //Esto es para Updatear la cámara apenas comienza el juego.
-        OnPositionIsUpdated();
+        //OnPositionIsUpdated();
     }
 
     // Update is called once per frame
@@ -344,14 +345,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
 
         // Update Position
-        _rb.MovePosition(transform.position + (_dir.normalized * movementSpeed * Time.deltaTime));
-        //if (!controller.isGrounded)
-        //{
-        //    _dir.y -= 10f;
-        //}
+        var moveDir = _dir.normalized * movementSpeed;
+        _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
 
-        //controller.Move(_dir.normalized * movementSpeed * Time.deltaTime);
-        OnPositionIsUpdated();
+        //OnPositionIsUpdated();
     }
 
     public void Die()
@@ -378,24 +375,16 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _dir = (FinalPos - transform.position).normalized;
 
         // Hacemos el Roll.
-        _rb.velocity = (_dir * rollSpeed);
+        _rb.velocity = new Vector3(_dir.x, _rb.velocity.y, _dir.z) * rollSpeed;
 
-        float remainingDuration = rollDuration;
-        while (remainingDuration > 0)
-        {
-            remainingDuration -= Time.deltaTime;
-
-            //if (!controller.isGrounded)
-            //{
-            //    _rollDir.y -= 10f;
-            //}
-
-            //controller.Move(_rollDir * rollSpeed * Time.deltaTime);
-
-            OnPositionIsUpdated();
-            yield return null;
-        }
-        //yield return new WaitForSeconds(rollDuration);
+        //float remainingDuration = rollDuration;
+        //while (remainingDuration > 0)
+        //{
+        //    remainingDuration -= Time.deltaTime;
+        //    OnPositionIsUpdated();
+        //    yield return null;
+        //}
+        yield return new WaitForSeconds(rollDuration);
         _rb.velocity = Vector3.zero;
 
         // Pequeño Delay para cuando el roll Termina.
@@ -455,6 +444,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Health -= Damage;
             CurrentWeapon.InterruptAttack();
             _attacking = false;
+
+            //Particula de Daño.
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
 
             _myBars.UpdateHeathBar(_hp, maxHp);
             _myBars.UpdateStamina(Stamina, MaxStamina);
