@@ -11,13 +11,13 @@ public class EnemyAnimEventListener : MonoBehaviour
 
     private void AnimEv_OnAttackStart()
     {
-        print("AnimEvent ENEMY ON START ATTACK activado");
+        //print("AnimEvent ENEMY ON START ATTACK activado");
         DamageCollider.enabled = true;
     }
 
     private void AnimEv_OnAttackHasEnded()
     {
-        print("AnimEvent ENEMY ON FINIT ATTACK activado");
+        //print("AnimEvent ENEMY ON FINIT ATTACK activado");
         DamageCollider.enabled = false;
     }
 }

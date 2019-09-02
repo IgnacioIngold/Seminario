@@ -12,12 +12,12 @@ public class PlayerAnimEventListener : MonoBehaviour
     private void AnimEv_OnAttackStart()
     {
         print("AnimEvent PLAYER ON START ATTACK activado");
-        DamageCollider.enabled = false;
+        DamageCollider.enabled = true;
     }
 
     private void AnimEv_OnAttackHasEnded()
     {
         print("AnimEvent PLAYER ON FINIT ATTACK activado");
-        DamageCollider.enabled = true;
+        DamageCollider.enabled = false;
     }
 }

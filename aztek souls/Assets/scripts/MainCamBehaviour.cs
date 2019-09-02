@@ -1,10 +1,6 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
-
-public interface CamTrackingTarget
-{
-    event Action OnPositionIsUpdated;
-}
 
 //Behaviour Adicional para la cámara.
 public class MainCamBehaviour : MonoBehaviour
@@ -13,14 +9,14 @@ public class MainCamBehaviour : MonoBehaviour
     public Transform Target;
     public Transform LocalCam;
     public Vector3 camOffSet = Vector3.zero;
-    public float transitionVelocity;
-    public float RotationSpeed;
+    public float transitionVelocity = 1f;
+    public float RotationSpeed = 30;
+
 
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        //Target.GetComponent<CamTrackingTarget>().OnPositionIsUpdated += MoveCamera;
     }
 
     private void FixedUpdate()
@@ -28,7 +24,6 @@ public class MainCamBehaviour : MonoBehaviour
         MoveCamera();
         RotateCamera(MouseAxis);
     }
-
 
     public void MoveCamera()
     {
@@ -46,4 +41,5 @@ public class MainCamBehaviour : MonoBehaviour
             transform.Rotate(Vector3.up, RotationSpeed * value * Time.deltaTime, Space.Self);
         }
     }
+
 }

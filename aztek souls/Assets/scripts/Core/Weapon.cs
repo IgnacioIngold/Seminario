@@ -18,6 +18,7 @@ public class Weapon
     public Func<bool> canContinueAttack = delegate { return false; };
 
     event Action OnBeginAttack = delegate { };
+    public event Action DuringAttack = delegate { };
     event Action OnExitAttack = delegate { };
     float currentDuration = 0f;
     Inputs nextAttack = Inputs.none;
@@ -60,6 +61,8 @@ public class Weapon
     {
         currentDuration -= Time.deltaTime;
 
+        DuringAttack();
+
         if (nextAttack == Inputs.none)
         {
             if (Input.GetButtonDown("LighAttack"))
@@ -97,7 +100,6 @@ public class Weapon
 
     public void InterruptAttack()
     {
-        CurrentAttack = null;
         MonoBehaviour.print("FIN DE CADENA");
         OnExitAttack();
     }

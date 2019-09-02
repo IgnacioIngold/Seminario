@@ -5,7 +5,7 @@ using System;
 
 public abstract class HitTrigger : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("El collider es desactivado al producirse el primer impacto.")]
     protected Collider col;
     public GameObject Owner;
     protected object[] getOwnerStats()

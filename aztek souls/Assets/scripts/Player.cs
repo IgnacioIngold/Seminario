@@ -15,14 +15,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     #region Estado
     //Eventos
     public event Action OnDie = delegate { };
+    public event Action OnGetHit = delegate { };
     public event Action OnActionHasEnded = delegate { };
     //public event Action OnPositionIsUpdated = delegate { };
 
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
-    public Collider AttackCollider;                         // Collider utilizado para generar daño.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
+    public Collider HitCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
@@ -92,7 +93,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente.
 
     bool _invulnerable = false;                              // Si el jugador puede recibir daño.
-    bool _canMove = true;                                    // PRIVADO: si el jugador puede moverse.
+    bool _clamped = false;                                    // PRIVADO: si el jugador puede moverse.
     bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
 
 
@@ -135,7 +136,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
                             _moving = false;
 
-                            _canMove = false;
+                            _clamped = true;
                             _recoverStamina = false;
 
                             Debug.LogWarning("INICIO COMBATE");
@@ -145,13 +146,40 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                             //On Exit Attack
                             _attacking = false;
 
-                            _canMove = true;
+                            HitCollider.enabled = false;
+                            _clamped = false;
                             _recoverStamina = true;
                             CurrentWeapon.CurrentAttack = null;
                             Debug.LogWarning("FIN COMBATE");
                         }
                         );
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
+        CurrentWeapon.DuringAttack += () => 
+        {
+            float AxisX = Input.GetAxis("Horizontal");
+            float AxisY = Input.GetAxis("Vertical");
+            
+            //Corregir el forward lentamente.
+            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.05f);
+            transform.forward = newForward;
+
+            if (Input.GetButton("Vertical"))
+            {
+                _anims.SetFloat("VelX", AxisY);
+                _anims.SetFloat("VelY", 0);
+
+                //Moverme ligeramente.
+                Vector3 moveDir = (AxisOrientation.forward * AxisY).normalized * (walkSpeed / 3);
+                _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+            }
+
+            if (Stamina > rollCost && Input.GetButtonDown("Roll"))
+            {
+                _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+                CurrentWeapon.InterruptAttack();
+                StartCoroutine(Roll());
+            }
+        };
 
         //Combo 1
         Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
@@ -252,36 +280,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!IsAlive) return;
 
         //Inputs, asi es más responsive.
-        if (_attacking)
-        {
-            CurrentWeapon.Update();
-            return;
-        }
-        if (!_attacking && Input.GetButtonDown("LighAttack") || Input.GetButtonDown("StrongAttack"))
-        {
-            CurrentWeapon.StartAttack();
-            return;
-        }
-
 
         float AxisY = Input.GetAxis("Vertical");
         float AxisX = Input.GetAxis("Horizontal");
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
 
-        bool notMoveInFrame = Input.GetAxisRaw("Vertical") == 0 && Input.GetAxisRaw("Horizontal") == 0;
-
-        if (!_rolling && Stamina > rollCost && !notMoveInFrame && Input.GetButtonDown("Roll"))
-        {
-            _anims.SetTrigger("RollAction");
-            _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-
-            StartCoroutine(Roll());
-        }
-        if (_rolling) transform.forward = _rollDir;
-
-
-        if (_canMove)
+        if (!_clamped)
         {
             if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
             {
@@ -306,11 +311,34 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _moving = false;
         }
 
-        if (notMoveInFrame)
+        if (_rolling) transform.forward = _rollDir;
+        else if(!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
+        {
+            _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+            StartCoroutine(Roll());
+            return;
+        }
+
+        if (_attacking)
+        {
+            CurrentWeapon.Update();
+            return;
+        }
+        else if (!_attacking && Input.GetButtonDown("LighAttack") || Input.GetButtonDown("StrongAttack"))
+        {
+            CurrentWeapon.StartAttack();
+            return;
+        }
+
+
+        if (!_rolling && !_moving)
         {
             _running = false;
             _anims.SetBool("Running", false);
             _recoverStamina = true;
+
+            var vel = _rb.velocity;
+            _rb.velocity =  new Vector3(vel.x * AxisX, _rb.velocity.y, vel.z * AxisY);
         }
 
         if (_recoverStamina && Stamina < MaxStamina)
@@ -323,7 +351,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     private void FixedUpdate()
     {
         if (!IsAlive) return;
-        if (_canMove && _moving) Move();
+        if (!_clamped && _moving) Move();
     }
 
     public void Move()
@@ -347,14 +375,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Update Position
         var moveDir = _dir.normalized * movementSpeed;
         _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
-
-        //OnPositionIsUpdated();
     }
 
     public void Die()
     {
         _anims.SetTrigger("died");
-        _canMove = false;
+        _clamped = true;
 
         //Termina el juego...
     }
@@ -362,20 +388,28 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     IEnumerator Roll()
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
-        _canMove = false;
+        _clamped = true;
         _rolling = true;
         _recoverStamina = false;
+
+        //Chequeo las animaciones.
+        _anims.SetTrigger("RollAction");
+        //if (_attacking)
+        //{
+        //    print("Roll direction is: " + _rollDir.normalized * rollSpeed);
+        //    CurrentWeapon.InterruptAttack();
+        //}
 
         Stamina -= rollCost;
 
         //Calculamos la dirección y el punto final.
-        Vector3 FinalPos = transform.position + (_rollDir * rollSpeed); // Calculo la posición Final.
+        Vector3 FinalPos = transform.position + (_rollDir.normalized * rollSpeed); // Calculo la posición Final.
 
-        //Arreglamos nuestra orientación.
+        //Arreglamos nuestra orientación para cuando termina el roll.
         _dir = (FinalPos - transform.position).normalized;
 
         // Hacemos el Roll.
-        _rb.velocity = new Vector3(_dir.x, _rb.velocity.y, _dir.z) * rollSpeed;
+        _rb.velocity = new Vector3(_rollDir.x, _rb.velocity.y, _rollDir.z) * rollSpeed;
 
         //float remainingDuration = rollDuration;
         //while (remainingDuration > 0)
@@ -393,7 +427,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //End of Roll.
         _rolling = false;
         _recoverStamina = true;
-        _canMove = true;                      // Avisamos que ya nos podemos mover.
+        _clamped = false;                      // Avisamos que ya nos podemos mover.
 
         // Adicional poner el roll en enfriamiento.
     }
@@ -424,7 +458,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     IEnumerator HurtFreeze()
     {
         _anims.SetTrigger("hurted");
-        _canMove = false;
+        _clamped = true;
         
         // Cooldown.
         yield return new WaitForSeconds(1f);
@@ -432,7 +466,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Muerte del Jugador
         if (!IsAlive) Die();
 
-        _canMove = true;
+        _clamped = false;
     }
 
     public void GetDamage(params object[] DamageStats)
@@ -444,6 +478,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Health -= Damage;
             CurrentWeapon.InterruptAttack();
             _attacking = false;
+            OnGetHit();
 
             //Particula de Daño.
             var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
@@ -460,6 +495,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
-        return CurrentWeapon.CurrentAttack.GetDamageStats();
+        if (CurrentWeapon != null)
+        {
+            var stats = CurrentWeapon.CurrentAttack.GetDamageStats();
+            if (stats != null)
+                return stats;
+        }
+
+        return new object[1] { 0 };
     }
 }
