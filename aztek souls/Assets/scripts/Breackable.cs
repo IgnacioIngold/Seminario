@@ -1,19 +1,26 @@
-﻿using System.Collections;
+﻿using Core.Entities;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Breackable : MonoBehaviour
+public class Breackable : MonoBehaviour, IKilleable
 {
     public GameObject BreackObject;
 
+    public bool IsAlive => true;
+
+    public bool invulnerable => true;
+
     private void Awake()
     {
-        StartCoroutine(Breakpott());
+        //StartCoroutine(Breakpott());
     }
     public void Break()
     {
+        Debug.Log("entre");
         Instantiate(BreackObject, transform.position, transform.rotation);
         Destroy(gameObject);
+        
     }
 
     IEnumerator Breakpott()
@@ -23,5 +30,9 @@ public class Breackable : MonoBehaviour
         Break();
 
     }
-   
+
+    public void GetDamage(params object[] DamageStats)
+    {
+        Break();
+    }
 }
