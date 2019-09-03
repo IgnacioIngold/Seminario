@@ -459,6 +459,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         _anims.SetTrigger("hurted");
         _clamped = true;
+        _invulnerable = true;
         
         // Cooldown.
         yield return new WaitForSeconds(1f);
@@ -467,6 +468,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!IsAlive) Die();
 
         _clamped = false;
+        _invulnerable = false;
     }
 
     public void GetDamage(params object[] DamageStats)

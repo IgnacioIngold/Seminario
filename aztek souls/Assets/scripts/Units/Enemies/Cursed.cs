@@ -89,7 +89,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool Debug_Gizmos          = false;
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
-    public bool Debug_DetectionRanges = false; 
+    public bool Debug_DetectionRanges = false;
+    private bool _invulnerable;
 #endif
 
     private void Awake()

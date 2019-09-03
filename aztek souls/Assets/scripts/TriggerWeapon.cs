@@ -25,15 +25,19 @@ public class TriggerWeapon : HitTrigger
     {
         if (col == null)
             col = GetComponent<Collider>();
-
-        col.enabled = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject == Owner) return;
+
+        IDamageable damageableObject = other.GetComponent<IDamageable>();
         IKilleable KilleableObject = other.GetComponent<IKilleable>();
 
-        if (other.gameObject == Owner) return;
+        if (damageableObject != null && KilleableObject == null)
+        {
+            damageableObject.GetDamage(0f);
+        }
 
         if (KilleableObject != null && KilleableObject.IsAlive)
         {
@@ -42,7 +46,5 @@ public class TriggerWeapon : HitTrigger
 
             KilleableObject.GetDamage(getOwnerStats());
         }
-
-        col.enabled = false;
     }
 }
