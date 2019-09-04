@@ -316,8 +316,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         else if(!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
         {
             //Calculamos la dirección y el punto final.
-            _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-            Vector3 FinalPos = transform.position + (_rollDir.normalized * rollSpeed); // Calculo la posición Final.
+            _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
+            Vector3 FinalPos = transform.position + (_rollDir * rollSpeed); // Calculo la posición Final.
 
             //Arreglamos nuestra orientación para cuando termina el roll.
             _dir = (FinalPos - transform.position).normalized;
