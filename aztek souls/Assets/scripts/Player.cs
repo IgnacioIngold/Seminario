@@ -315,7 +315,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (_rolling) transform.forward = _rollDir;
         else if(!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
         {
+            //Calculamos la dirección y el punto final.
             _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+            Vector3 FinalPos = transform.position + (_rollDir.normalized * rollSpeed); // Calculo la posición Final.
+
+            //Arreglamos nuestra orientación para cuando termina el roll.
+            _dir = (FinalPos - transform.position).normalized;
             StartCoroutine(Roll());
             return;
         }
@@ -393,39 +398,20 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rolling = true;
         _recoverStamina = false;
 
-        //Chequeo las animaciones.
+        //FeedBack
         _anims.SetTrigger("RollAction");
         var emission = RollParticle.emission;
         emission.enabled = true;
 
-        //if (_attacking)
-        //{
-        //    print("Roll direction is: " + _rollDir.normalized * rollSpeed);
-        //    CurrentWeapon.InterruptAttack();
-        //}
-
         Stamina -= rollCost;
-
-        //Calculamos la dirección y el punto final.
-        Vector3 FinalPos = transform.position + (_rollDir.normalized * rollSpeed); // Calculo la posición Final.
-
-        //Arreglamos nuestra orientación para cuando termina el roll.
-        _dir = (FinalPos - transform.position).normalized;
 
         // Hacemos el Roll.
         _rb.velocity = new Vector3(_rollDir.x, _rb.velocity.y, _rollDir.z) * rollSpeed;
 
-        //float remainingDuration = rollDuration;
-        //while (remainingDuration > 0)
-        //{
-        //    remainingDuration -= Time.deltaTime;
-        //    OnPositionIsUpdated();
-        //    yield return null;
-        //}
         yield return new WaitForSeconds(rollDuration);
         _rb.velocity = Vector3.zero;
 
-        //Deshabilitamos nuestra particula de roll.
+        //Deshabilitamos la emission de la particula de roll.
         emission.enabled = false;
 
         // Pequeño Delay para cuando el roll Termina.
