@@ -23,6 +23,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
+    public ParticleSystem RollParticle;
     public Collider HitCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
@@ -394,6 +395,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //Chequeo las animaciones.
         _anims.SetTrigger("RollAction");
+        var emission = RollParticle.emission;
+        emission.enabled = true;
+
         //if (_attacking)
         //{
         //    print("Roll direction is: " + _rollDir.normalized * rollSpeed);
@@ -420,6 +424,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //}
         yield return new WaitForSeconds(rollDuration);
         _rb.velocity = Vector3.zero;
+
+        //Deshabilitamos nuestra particula de roll.
+        emission.enabled = false;
 
         // Pequeño Delay para cuando el roll Termina.
         yield return new WaitForSeconds(0.1f);
