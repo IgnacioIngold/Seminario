@@ -391,6 +391,20 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Termina el juego...
     }
 
+    IEnumerator DamageEffect()
+    {
+        //Start -->
+        //Intensity = 0.65f;
+        //Color = rgb(255,0,0); FF0000
+
+        yield return null;
+
+        //Finish -->
+        //Intensity = 0.28f;
+        //Color = rgb(48,48,48); 303030
+
+    }
+
     IEnumerator Roll()
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
