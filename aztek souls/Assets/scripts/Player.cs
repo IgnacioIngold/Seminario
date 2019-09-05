@@ -183,12 +183,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
 
         //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 20f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 20f, Damage = 20f };
-        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 20f, Damage = 20f };
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 15f, Damage = 20f };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 15f, Damage = 20f };
+        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 15f, Damage = 20f };
         Attack quick1 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
         Attack quick2 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
-        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 30f, Damage = 30f };
+        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 25f, Damage = 30f };
         Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 2.2f, Cost = 30f, Damage = 30f };
 
         light1.AddConnectedAttack(Inputs.light, light2);
