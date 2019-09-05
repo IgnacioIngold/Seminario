@@ -9,7 +9,7 @@ namespace Core
 
         public string PauseMenuButton;
         public GameObject PlayerObject;
-        public Cursed[] Enemies;
+        public BigCursed[] Enemies;
         public GameObject PauseMenuPanel;
 
         IPlayerController Player;
@@ -42,7 +42,7 @@ namespace Core
 
             Player.active = !state;
 
-            foreach (Cursed enemy in Enemies)
+            foreach (BigCursed enemy in Enemies)
             {
                 enemy.enabled = !state;
             }
