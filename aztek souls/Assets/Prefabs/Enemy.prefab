@@ -393,14 +393,6 @@ MonoBehaviour:
   OnHitParticle: {fileID: 1814572451649613208, guid: 0b06197c649b6d148a042d07e399dac5,
     type: 3}
   EnemyHealthBar: {fileID: 637597639960286778}
-  MainState: 0
-  MaxHP: 100
-  speed: 5
-  attackRate: 2.667
-  AttackRange: 7
-  attackDamage: 20
-  rotationLerpSpeed: 0.02
-  minForwardAngle: 40
   sight:
     visibles:
       serializedVersion: 2
@@ -413,9 +405,12 @@ MonoBehaviour:
     dirToTarget: {x: 0.069342844, y: 0.022672584, z: -0.99733526}
     angleToTarget: 1.3171527
     distanceToTarget: 154.81253
-  ChargeCollider: {fileID: 0}
-  chargeSpeed: 30
-  maxChargeDistance: 100
+  MaxHP: 100
+  MovementSpeed: 4
+  attackRate: 2.667
+  AttackRange: 7
+  attackDamage: 20
+  rotationLerpSpeed: 0.02
   minDetectionRange: 10
   MediumRange: 12
   HighRange: 35
@@ -423,6 +418,11 @@ MonoBehaviour:
   Debug_LineOFSight: 1
   Debug_Attacks: 1
   Debug_DetectionRanges: 1
+  MainState: 0
+  AttackCollider: {fileID: 0}
+  ChargeCollider: {fileID: 0}
+  chargeSpeed: 30
+  maxChargeDistance: 100
 --- !u!1 &5712393347874588828
 GameObject:
   m_ObjectHideFlags: 0

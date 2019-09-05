@@ -18,10 +18,12 @@ public class BigCursed : BaseUnit
     public enemyState MainState;
     GenericFSM<enemyState> sm;
     State<enemyState> idle;
+    public Collider AttackCollider;
 
     [Header("Estadísticas")]
     bool Attacking = false;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
+
 
     [Header("Charge")]
     public Collider ChargeCollider;
@@ -40,10 +42,13 @@ public class BigCursed : BaseUnit
     /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
     public override void GetDamage(params object[] DamageStats)
     {
-        base.GetDamage();
+        float Damage = (float)DamageStats[0];
+        Health -= Damage;
 
         if (!IsAlive)
             sm.Feed(enemyState.dead);
+
+        base.GetDamage();
     }
     /// <summary>
     /// Retorna las estadísticas de combate de esta Unidad.
@@ -60,6 +65,7 @@ public class BigCursed : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+        OnDie += () => { AttackCollider.enabled = false; };
 
         //State Machine.
         idle = new State<enemyState>("Idle");
@@ -200,6 +206,7 @@ public class BigCursed : BaseUnit
         {
             print("Enemy is dead");
             anims.SetTrigger("died");
+            Die();
             // Posible Spawneo de cosas.
         };
         #endregion

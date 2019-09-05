@@ -97,8 +97,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _clamped = false;                                    // PRIVADO: si el jugador puede moverse.
     bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
 
-
-
     public float rollSpeed = 30f;                            // Velocidad de desplazamiento mientras hago el roll.
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
@@ -488,6 +486,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             CurrentWeapon.InterruptAttack();
             _attacking = false;
             OnGetHit();
+            _rb.velocity /= 3;
 
             //Particula de Daño.
             var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);

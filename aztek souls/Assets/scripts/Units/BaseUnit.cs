@@ -2,10 +2,14 @@
 using UnityEngine.AI;
 using Core.Entities;
 using IA.LineOfSight;
+using System;
+using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
 public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
+    public Action OnDie = delegate { };
+
     [Header("Obligatory Settings")]
     public Transform  Target;
     public GameObject OnHitParticle;
@@ -46,6 +50,8 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     protected Animator anims;
     protected NavMeshAgent agent;
+    protected Collider MainColl;
+    protected Rigidbody rb;
 
     #endregion
 
@@ -66,9 +72,6 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     public virtual void GetDamage(params object[] DamageStats)
     {
-        float Damage = (float)DamageStats[0];
-        Health -= Damage;
-
         var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
         Destroy(particle, 3f);
     }
@@ -143,6 +146,8 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         //Seteos iniciales.
         anims = GetComponentInChildren<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        MainColl = GetComponent<Collider>();
+        rb = GetComponent<Rigidbody>();
 
         agent.speed = MovementSpeed;
         sight.target = Target;
@@ -150,4 +155,33 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         EnemyHealthBar.MaxValue = MaxHP;
         Health = MaxHP;
     }
+
+    //=========================================================================================
+
+    protected void Die()
+    {
+        EnemyHealthBar.FadeDeactivate(3f);
+        agent.enabled = false;
+        rb.isKinematic = true;
+        MainColl.enabled = false;
+
+        StartCoroutine(FallAfterDie(3f));
+        OnDie();
+    }
+
+    IEnumerator FallAfterDie(float delay = 1f)
+    {
+        float fallTime = 10f;
+        yield return new WaitForSeconds(delay);
+
+        while(fallTime > 0)
+        {
+            fallTime -= Time.deltaTime;
+            transform.position += Vector3.down * 0.5f * Time.deltaTime;
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
+    }
+
 }
