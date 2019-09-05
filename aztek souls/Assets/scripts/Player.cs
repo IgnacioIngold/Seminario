@@ -170,7 +170,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _anims.SetFloat("VelY", 0);
 
                 //Moverme ligeramente.
-                Vector3 moveDir = (AxisOrientation.forward * AxisY).normalized * (walkSpeed / 3);
+                Vector3 moveDir = (AxisOrientation.forward * AxisY).normalized * (walkSpeed / 8);
                 _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
             }
 
