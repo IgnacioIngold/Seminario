@@ -504,13 +504,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
-        if (CurrentWeapon != null)
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
             var stats = CurrentWeapon.CurrentAttack.GetDamageStats();
             if (stats != null)
                 return stats;
         }
 
-        return new object[1] { 0 };
+        return new object[1] { 0f };
     }
 }

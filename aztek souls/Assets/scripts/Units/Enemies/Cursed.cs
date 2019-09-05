@@ -12,6 +12,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
 {
     public Transform Target;
     public GameObject OnHitParticle;
+    public FillBar EnemyHealthBar;
 
     //Estados
     public enum enemyState
@@ -26,7 +27,8 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
     public enemyState MainState;
 
     [Header("Estadísticas")]
-    [SerializeField] float _hp;
+    float _hp;
+    public float MaxHP = 100f;
     public float speed;
     public float attackRate;
     public float AttackRange;
@@ -41,8 +43,7 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         {
             _hp = value;
             if (_hp < 0) _hp = 0;
-
-            //EnemyHP.text = "Enemy Health: " + _hp;
+            EnemyHealthBar.UpdateDisplay(_hp);
         }
     }
     bool Attacking = false;
@@ -100,6 +101,9 @@ public class Cursed : MonoBehaviour, IKilleable, IAttacker<object[]>
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         sight.target = Target;
+
+        EnemyHealthBar.MaxValue = MaxHP;
+        Health = MaxHP;
 
         //Collider
         ChargeCollider.enabled = false;
