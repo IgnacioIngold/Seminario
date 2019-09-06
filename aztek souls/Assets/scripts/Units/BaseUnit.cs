@@ -39,7 +39,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public float attackRate = 1f;
     public float AttackRange = 1f;
     public float attackDamage = 1f;
-    public float rotationLerpSpeed = 0.02f;
+    public float rotationLerpSpeed = 0.1f;
 
     public float minDetectionRange = 8f;
     public float MediumRange       = 40f;
