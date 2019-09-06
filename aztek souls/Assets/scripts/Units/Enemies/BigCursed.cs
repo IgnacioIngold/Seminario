@@ -65,7 +65,7 @@ public class BigCursed : BaseUnit
     protected override void Awake()
     {
         base.Awake();
-        OnDie += () => { AttackCollider.enabled = false; };
+        OnDie += () => {  };
 
         //State Machine.
         idle = new State<enemyState>("Idle");
