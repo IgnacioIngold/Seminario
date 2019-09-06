@@ -172,7 +172,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     IEnumerator FallAfterDie(float delay = 1f)
     {
         float fallTime = 10f;
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(delay + 2f);
 
         while(fallTime > 0)
         {
