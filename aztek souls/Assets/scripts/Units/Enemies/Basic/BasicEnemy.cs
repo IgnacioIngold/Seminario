@@ -36,12 +36,22 @@ public class BasicEnemy : BaseUnit
     public override void GetDamage(params object[] DamageStats)
     {
         anims.SetTrigger("GetHit");
+        StopAllCoroutines();
+
         Health -= (float)DamageStats[0];
 
         base.GetDamage(DamageStats);
 
         if (!IsAlive)
+        {
             sm.Feed(BasicEnemyStates.dead);
+            return;
+        }
+
+        if (_targetDetected)
+            sm.Feed(BasicEnemyStates.pursue);
+        else
+            sm.Feed(BasicEnemyStates.idle);
     }
 
     public override object[] GetDamageStats()
@@ -145,8 +155,15 @@ public class BasicEnemy : BaseUnit
         pursue.OnUpdate += () => 
         {
             //Si entro en rango de ataque... pos lo ataco
-            if (sight.distanceToTarget <= AttackRange)
+            float targetDistance = Vector3.Distance(transform.position, _detectedTarget.position);
+            print("Attack Range = " + AttackRange + " TargetDistance = " + targetDistance);
+
+            if (targetDistance <= AttackRange)
+            {
+                print("TIME TO FUCKING KILL");
                 sm.Feed(BasicEnemyStates.attack);
+                return;
+            }
 
             //Correr como si no hubiera un mañana (?
             _viewDirection = (_detectedTarget.position - transform.position).normalized;
@@ -168,6 +185,7 @@ public class BasicEnemy : BaseUnit
         attack.OnExit += (nextState) => 
         {
             Attacking = false;
+            print("Salió del ataque");
         };
 
         think.OnEnter += (previousState) => 
@@ -202,13 +220,14 @@ public class BasicEnemy : BaseUnit
     IEnumerator SimpleAttack()
     {
         var toDamage = sight.target.GetComponent<IKilleable>();
+        print("Empezo la wea ctm");
 
         if (!toDamage.IsAlive)
             sm.Feed(BasicEnemyStates.idle);
 
         transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
 
-        while(toDamage.IsAlive && sight.distanceToTarget < AttackRange)
+        while(Attacking)
         {
             anims.SetTrigger("SimpleAttack");
             yield return null;
@@ -221,26 +240,31 @@ public class BasicEnemy : BaseUnit
             bool knowHowMuchIsLeft = false;
             float remainingTime = 0;
 
-            var currentClip = anims.GetCurrentAnimatorClipInfo(0)[0].clip;
-            print("Current Clip = " + currentClip.name);
-
-            if (!knowHowMuchIsLeft && currentClip.name == "Attack")
+            AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
+            AnimationClip currentClip;
+            if (clipInfo != null && clipInfo.Length > 0)
             {
-                print("currentClip is Correct!");
-                float length = currentClip.length;
-                float normTime = anims.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                float passed = length - (length * normTime);
-                print("TimePassed is = " + passed);
-                remainingTime = passed;
-                knowHowMuchIsLeft = true;
-            }
-            else
-                yield return null;
+                currentClip = clipInfo[0].clip;
+                print("Current Clip = " + currentClip.name);
 
-            if (knowHowMuchIsLeft)
-            {
-                yield return new WaitForSeconds(remainingTime);
-                break;
+                if (!knowHowMuchIsLeft && currentClip.name == "Attack")
+                {
+                    print("currentClip is Correct!");
+                    float length = currentClip.length;
+                    //float normTime = anims.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                    float passed = length - (length * transitionTIme);
+                    print("TimePassed is = " + passed);
+                    remainingTime = passed;
+                    knowHowMuchIsLeft = true;
+                }
+                else
+                    yield return null;
+
+                if (knowHowMuchIsLeft)
+                {
+                    yield return new WaitForSeconds(remainingTime);
+                    break;
+                }
             }
         }
 
