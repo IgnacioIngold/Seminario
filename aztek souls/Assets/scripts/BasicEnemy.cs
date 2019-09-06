@@ -26,6 +26,8 @@ public class BasicEnemy : BaseUnit
 
     private float _alertedTimeRemaining = 0f;
 
+    private Animator _anims;
+
 
     //======================== OVERRIDES & INTERFACES =========================================
 
@@ -44,6 +46,7 @@ public class BasicEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+        _anims = GetComponentInChildren<Animator>();
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
