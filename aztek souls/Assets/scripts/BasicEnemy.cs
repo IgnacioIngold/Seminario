@@ -106,7 +106,11 @@ public class BasicEnemy : BaseUnit
         alerted.OnUpdate += () => 
         {
             if (_alertedTimeRemaining > 0)
+            {
                 _alertedTimeRemaining -= Time.deltaTime;
+
+                transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            }
             else
                 sm.Feed(BasicEnemyStates.pursue);
         };
@@ -114,21 +118,65 @@ public class BasicEnemy : BaseUnit
 
         pursue.OnEnter += (previousState) => 
         {
-            
+            print("pursue");
+            //Calcular la dirección al player
+            _viewDirection = sight.dirToTarget;
+            //Setear Animación.
         };
         pursue.OnUpdate += () => 
         {
-            //Calcular la dirección al player
             //Correr como si no hubiera un mañana (?
+            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+
+            agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
+
             //Si entro en rango de ataque... pos lo ataco
+            //if (sight.distanceToTarget < AttackRange)
+            //    sm.Feed(BasicEnemyStates.attack);
         };
         pursue.OnExit += (nextState) => { };
 
-        attack.OnEnter += (previousState) => { };
-        attack.OnUpdate += () => { };
-        attack.OnExit += (nextState) => { };
+        attack.OnEnter += (previousState) => 
+        {
+            print("Attack");
+            agent.isStopped = true;
+            Attacking = true;
+        };
+        attack.OnUpdate += () => 
+        {
+            var toDamage = sight.target.GetComponent<IKilleable>();
 
-        dead.OnEnter += (previousState) => { }; 
+            if (!toDamage.IsAlive)
+                sm.Feed(BasicEnemyStates.idle);
+
+            float nextAttack = attackRate;
+            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+
+            if (toDamage.IsAlive && sight.distanceToTarget < AttackRange)
+            {
+                nextAttack -= Time.deltaTime;
+
+                if (nextAttack < 0)
+                {
+                    //Setear Animación.
+                }
+
+                return;
+            }
+            else
+            if (toDamage.IsAlive && sight.distanceToTarget > AttackRange)
+                sm.Feed(BasicEnemyStates.pursue);
+        };
+        attack.OnExit += (nextState) => 
+        {
+            Attacking = false;
+        };
+
+        dead.OnEnter += (previousState) => 
+        {
+            //Setear Animación
+            Die();
+        }; 
 
         #endregion
 
