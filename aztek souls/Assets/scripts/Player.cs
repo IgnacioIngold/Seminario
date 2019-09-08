@@ -118,7 +118,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rb = GetComponent<Rigidbody>();
         //controller = GetComponent<CharacterController>();
         _anims = GetComponentInChildren<Animator>();
-        AxisOrientation = Camera.main.GetComponentInParent<Transform>();
+        AxisOrientation = Camera.main.GetComponentInParent<MainCamBehaviour>().getPivotPosition();
 
         //INICIO DEL COMBATE.
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas

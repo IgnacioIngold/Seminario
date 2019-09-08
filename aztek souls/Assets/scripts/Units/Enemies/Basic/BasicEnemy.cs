@@ -277,7 +277,7 @@ public class BasicEnemy : BaseUnit
         float waitTime = Random.Range(2f, 4f);
         yield return new WaitForSeconds(waitTime);
 
-        float watchTime = Random.Range(2f, 4f);
+        float watchTime = Random.Range(4f, 8f);
         while(watchTime > 0)
         {
             watchTime -= Time.deltaTime;
@@ -286,5 +286,17 @@ public class BasicEnemy : BaseUnit
 
         if (toDamage.IsAlive && sight.distanceToTarget > AttackRange)
             sm.Feed(BasicEnemyStates.pursue);
+    }
+
+    private void OnGUI()
+    {
+        GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
+        GUI.color = Color.white;
+        GUILayout.Label("Posición del enemigo",options);
+    }
+
+    private void OnDrawGizmos()
+    {
+        //Posición del enemigo.
     }
 }

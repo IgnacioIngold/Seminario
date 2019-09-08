@@ -6,15 +6,19 @@ using UnityEngine;
 public class MainCamBehaviour : MonoBehaviour
 {
     public string MouseAxis;
-    [SerializeField] Transform Target;
     public Transform LocalCam;
+    [Tooltip("La diferencia de posición global que mantiene la cámara real de su pivot.")]
     public Vector3 camOffSet = Vector3.zero;
     public float transitionVelocity = 1f;
     public float RotationSpeed = 30;
 
+    Transform Target;
+
     private void Awake()
     {
         Target = GameObject.FindGameObjectWithTag("Player").transform;
+        if (camOffSet != Vector3.zero)
+            LocalCam.localPosition = camOffSet;
     }
 
     private void Start()
@@ -44,6 +48,18 @@ public class MainCamBehaviour : MonoBehaviour
             float value = Input.GetAxisRaw(MouseAxis);
             transform.Rotate(Vector3.up, RotationSpeed * value * Time.deltaTime, Space.Self);
         }
+    }
+
+    [ContextMenu("Match Camera Position to Offset")]
+    public void SetInitialPosition()
+    {
+        if (camOffSet != Vector3.zero)
+            LocalCam.localPosition = camOffSet;
+    }
+
+    public Transform getPivotPosition()
+    {
+        return transform;
     }
 
 }
