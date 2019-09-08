@@ -28,9 +28,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _EdgeLength: 2
-    - _Fogdensity: 0.000015294117
-    - _Height: 0.5
-    - __dirty: 1
+    - _Cutoff: 4.07
+    - _EdgeLength: 22.8
+    - _Fogdensity: 0.000052
+    - _Height: 1.62
+    - _TransAmbient: 0.2
+    - _TransDirect: 1
+    - _TransNormalDistortion: 0.1
+    - _TransScattering: 2
+    - _TransShadow: 0.9
+    - _Translucency: 1
+    - __dirty: 0
     m_Colors:
-    - _COlor: {r: 0, g: 0.3018868, b: 0.097312495, a: 0}
+    - _COlor: {r: 0, g: 0.6981132, b: 0.22666013, a: 0}
