@@ -92,7 +92,7 @@ public class Weapon
             else
             {
                 CurrentAttack = null;
-                MonoBehaviour.print("FIN DE CADENA");
+                //MonoBehaviour.print("FIN DE CADENA");
                 OnExitAttack();
             }
         }

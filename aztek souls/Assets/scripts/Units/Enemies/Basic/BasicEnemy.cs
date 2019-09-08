@@ -1,8 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using IA.StateMachine.Generic;
 using Core.Entities;
+using System;
+using Random = UnityEngine.Random;
 
 public enum BasicEnemyStates
 {
@@ -20,6 +22,7 @@ public class BasicEnemy : BaseUnit
     public Collider AttackCollider;
 
     public float AlertedTime = 2f;
+    public float AlertRadius = 10f;
 
     GenericFSM<BasicEnemyStates> sm;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
@@ -28,8 +31,6 @@ public class BasicEnemy : BaseUnit
     private float _alertedTimeRemaining = 0f;
 
     private Animator _anims;
-    private Transform _detectedTarget = null;
-
 
     //======================== OVERRIDES & INTERFACES =========================================
 
@@ -48,8 +49,11 @@ public class BasicEnemy : BaseUnit
             return;
         }
 
-        if (_targetDetected)
+        if (!_targetDetected)
+        {
+            _targetDetected = true;
             sm.Feed(BasicEnemyStates.pursue);
+        }
         else
             sm.Feed(BasicEnemyStates.idle);
     }
@@ -116,10 +120,7 @@ public class BasicEnemy : BaseUnit
             if (!toDamage.IsAlive) return;
 
             if (sight.IsInSight() || sight.distanceToTarget < minDetectionRange)
-            {
                 _targetDetected = true;
-                _detectedTarget = sight.target;
-            }
 
             if (_targetDetected)
                 sm.Feed(BasicEnemyStates.alerted);
@@ -129,10 +130,26 @@ public class BasicEnemy : BaseUnit
         alerted.OnEnter += (previousState) => 
         {
             print("Enemy has been Alerted");
-
-            _viewDirection = (_detectedTarget.position - transform.position).normalized;
-
             _alertedTimeRemaining = AlertedTime;
+
+            EnemyHealthBar.FadeIn();
+
+            if (_alertFriends)
+            {
+                var FriendsToAlert = FindObjectsOfType<BaseUnit>()
+                    .Select(x => Tuple.Create(x, Vector3.Distance(transform.position, x.transform.position)))
+                    .OrderBy(x => x.Item2)
+                    .TakeWhile(x => x.Item2 < AlertRadius)
+                    .Select(x => x.Item1);
+                foreach (BaseUnit Ally in FriendsToAlert)
+                {
+                    if (Ally != this)
+                    {
+                        print("Enemigo alertado: " + Ally.gameObject.name);
+                        Ally.AllyDiscoversEnemy(Target);
+                    }
+                }
+            }
         };
         alerted.OnUpdate += () => 
         {
@@ -154,22 +171,13 @@ public class BasicEnemy : BaseUnit
         };
         pursue.OnUpdate += () => 
         {
-            //Si entro en rango de ataque... pos lo ataco
-            float targetDistance = Vector3.Distance(transform.position, _detectedTarget.position);
-            print("Attack Range = " + AttackRange + " TargetDistance = " + targetDistance);
-
-            if (targetDistance <= AttackRange)
-            {
-                print("TIME TO FUCKING KILL");
-                sm.Feed(BasicEnemyStates.attack);
-                return;
-            }
-
             //Correr como si no hubiera un mañana (?
-            _viewDirection = (_detectedTarget.position - transform.position).normalized;
-            transform.forward = Vector3.Slerp(transform.forward, _viewDirection, rotationLerpSpeed);
+            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
 
-            agent.Move(_viewDirection * MovementSpeed * Time.deltaTime);
+            agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
+
+            if (sight.distanceToTarget <= AttackRange)
+                sm.Feed(BasicEnemyStates.attack);
         };
         pursue.OnExit += (nextState) => 
         { anims.SetBool("Walking", false); };
@@ -177,11 +185,11 @@ public class BasicEnemy : BaseUnit
         attack.OnEnter += (previousState) => 
         {
             print("Attack");
-            agent.isStopped = true;
             Attacking = true;
+            agent.isStopped = true;
             StartCoroutine(SimpleAttack());
         };
-        attack.OnUpdate += () => { };
+        attack.OnUpdate += () => {};
         attack.OnExit += (nextState) => 
         {
             Attacking = false;
@@ -196,7 +204,7 @@ public class BasicEnemy : BaseUnit
         think.OnUpdate += () => { };
         think.OnExit += (nextState) => 
         {
-            print("I´ll go to: " + nextState.ToString());
+            print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
         };
 
         dead.OnEnter += (previousState) => 
@@ -214,27 +222,31 @@ public class BasicEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
+        sight.Update();
         sm.Update();
     }
 
     IEnumerator SimpleAttack()
     {
         var toDamage = sight.target.GetComponent<IKilleable>();
-        print("Empezo la wea ctm");
 
         if (!toDamage.IsAlive)
             sm.Feed(BasicEnemyStates.idle);
 
-        transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+        while(facingTowardsPlayer() <= 0.9f)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            yield return null;
+        }
 
-        while(Attacking)
+        while (Attacking)
         {
             anims.SetTrigger("SimpleAttack");
             yield return null;
 
             var info = anims.GetAnimatorTransitionInfo(0);
             float transitionTIme = info.duration;
-            print("Transition = " + transitionTIme);
+            //print("Transition = " + transitionTIme);
             yield return new WaitForSeconds(transitionTIme);
 
             bool knowHowMuchIsLeft = false;
@@ -245,15 +257,15 @@ public class BasicEnemy : BaseUnit
             if (clipInfo != null && clipInfo.Length > 0)
             {
                 currentClip = clipInfo[0].clip;
-                print("Current Clip = " + currentClip.name);
+                //print("Current Clip = " + currentClip.name);
 
                 if (!knowHowMuchIsLeft && currentClip.name == "Attack")
                 {
-                    print("currentClip is Correct!");
+                    //print("currentClip is Correct!");
                     float length = currentClip.length;
                     //float normTime = anims.GetCurrentAnimatorStateInfo(0).normalizedTime;
                     float passed = length - (length * transitionTIme);
-                    print("TimePassed is = " + passed);
+                    //print("TimePassed is = " + passed);
                     remainingTime = passed;
                     knowHowMuchIsLeft = true;
                 }
@@ -273,30 +285,36 @@ public class BasicEnemy : BaseUnit
 
     IEnumerator thinkAndWatch()
     {
-        var toDamage = _detectedTarget.GetComponent<IKilleable>();
-        float waitTime = Random.Range(2f, 4f);
+        var toDamage = sight.target.GetComponent<IKilleable>();
+        float waitTime = Random.Range(0.5f, 1.5f);
         yield return new WaitForSeconds(waitTime);
 
-        float watchTime = Random.Range(4f, 8f);
+
+        print("Watchtime Started");
+        float watchTime = Random.Range(2f, 4f);
         while(watchTime > 0)
         {
             watchTime -= Time.deltaTime;
             transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+
+            if (sight.distanceToTarget < AttackRange)
+                break;
+
+            yield return null;
         }
 
-        if (toDamage.IsAlive && sight.distanceToTarget > AttackRange)
-            sm.Feed(BasicEnemyStates.pursue);
+        if (toDamage.IsAlive)
+        {
+            if (sight.distanceToTarget < AttackRange)
+                sm.Feed(BasicEnemyStates.attack);
+
+            if (sight.distanceToTarget > AttackRange)
+                sm.Feed(BasicEnemyStates.pursue);
+        }
     }
 
-    private void OnGUI()
+    float facingTowardsPlayer()
     {
-        GUILayoutOption[] options = new GUILayoutOption[] { GUILayout.Width(110f) };
-        GUI.color = Color.white;
-        GUILayout.Label("Posición del enemigo",options);
-    }
-
-    private void OnDrawGizmos()
-    {
-        //Posición del enemigo.
+        return Vector3.Dot(sight.dirToTarget, transform.forward);
     }
 }

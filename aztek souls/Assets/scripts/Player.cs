@@ -139,7 +139,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                             _clamped = true;
                             _recoverStamina = false;
 
-                            Debug.LogWarning("INICIO COMBATE");
+                            //Debug.LogWarning("INICIO COMBATE");
                         }, 
                         () =>
                         {
@@ -150,7 +150,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                             _clamped = false;
                             _recoverStamina = true;
                             CurrentWeapon.CurrentAttack = null;
-                            Debug.LogWarning("FIN COMBATE");
+                            //Debug.LogWarning("FIN COMBATE");
                         }
                         );
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
@@ -194,42 +194,38 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         light1.OnExecute += () => 
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
-           _anims.SetTrigger("atk1");
+            _anims.SetTrigger("atk1");
             _anims.SetInteger("combat", 0);
             Stamina -= light1.Cost;
-            print("Ejecutando Ataque:" + light1.IDName);
+            //print("Ejecutando Ataque:" + light1.IDName);
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
         light2.AddConnectedAttack(Inputs.strong, Airheavy);
         light2.OnExecute += () => {
-            //_anims.SetTrigger("atk2");
             _anims.SetInteger("combat", 1);
             Stamina -= light2.Cost;
-            print("Ejecutando Ataque:" + light2.IDName);
+            //print("Ejecutando Ataque:" + light2.IDName);
         };
 
 
         light3.OnExecute += () => {
-            // _anims.SetTrigger("atk3");
             Stamina -= light3.Cost;
             _anims.SetInteger("combat", 2);
-            print("Ejecutando Ataque:" + light3.IDName);
+            //print("Ejecutando Ataque:" + light3.IDName);
         };
 
         Airheavy.OnExecute += () => {
-            // _anims.SetTrigger("atk3");
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 3);
-            print("Ejecutando Ataque:" + Airheavy.IDName);
+            //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
 
         heavy1.AddConnectedAttack(Inputs.light, quick1);
         heavy1.OnExecute += () => {
-            
             Stamina -= Airheavy.Cost;
             _anims.SetTrigger("atk2");
-            print("Ejecutando Ataque:" + heavy1.IDName);
+            //print("Ejecutando Ataque:" + heavy1.IDName);
         };
 
         quick1.AddConnectedAttack(Inputs.light, quick2);
@@ -237,7 +233,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 4);
-            print("Ejecutando Ataque:" + quick1.IDName);
+            //print("Ejecutando Ataque:" + quick1.IDName);
 
         };
 
@@ -246,7 +242,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 5);
-            print("Ejecutando Ataque:" + quick2.IDName);
+            //print("Ejecutando Ataque:" + quick2.IDName);
 
         };
 

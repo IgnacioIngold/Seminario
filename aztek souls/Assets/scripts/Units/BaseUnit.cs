@@ -11,16 +11,17 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public Action OnDie = delegate { };
 
     [Header("Obligatory Settings")]
-    [SerializeField] protected Transform Target;
+    protected Transform Target;
     public GameObject OnHitParticle;
     public FillBar    EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null;
 
     protected float _hp = 0f;
     protected float _minForwardAngle = 40f;
-    protected bool _invulnerable = false;
     protected bool _targetDetected = false;
+    protected bool _invulnerable = false;
     protected bool _isMoving = false;
+    protected bool _alertFriends = true;
     protected Vector3 _viewDirection = Vector3.zero;
 
     [Header("Estadísticas BASE")]
@@ -74,6 +75,8 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     {
         var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
         Destroy(particle, 3f);
+
+        EnemyHealthBar.FadeIn();
     }
     public virtual object[] GetDamageStats()
     {
@@ -149,10 +152,12 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         MainColl = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
 
+        EnemyHealthBar.SetApha(0f);
+
         Target = GameObject.FindGameObjectWithTag("Player").transform;
         if (Target != null)
         {
-            print("Encontré al jugador");
+            //print("Encontré al jugador");
             sight.target = Target;
         }
 
@@ -166,13 +171,21 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     protected void Die()
     {
-        EnemyHealthBar.FadeDeactivate(3f);
+        EnemyHealthBar.FadeOut(3f);
         agent.enabled = false;
         rb.isKinematic = true;
         MainColl.enabled = false;
 
         StartCoroutine(FallAfterDie(3f));
         OnDie();
+    }
+
+    public void AllyDiscoversEnemy(Transform Enemy)
+    {
+        Target = Enemy;
+        _targetDetected = true;
+        _alertFriends = false;
+        EnemyHealthBar.FadeIn();
     }
 
     IEnumerator FallAfterDie(float delay = 1f)

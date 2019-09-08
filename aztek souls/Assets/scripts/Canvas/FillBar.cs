@@ -15,16 +15,21 @@ public class FillBar : MonoBehaviour
         //print("UpdateDisplay");
         //print("Ammount = " + value + " max Value is: " + MaxValue + " \nFinal Value is: " + Fill.fillAmount);
     }
-    public void FadeDeactivate(float timeInSeconds = 1f)
+    public void SetApha(float alphaValue)
     {
-        StartCoroutine(FadeAndDeactivate(timeInSeconds));
+        BackGround.canvasRenderer.SetAlpha(alphaValue);
+        Fill.canvasRenderer.SetAlpha(alphaValue);
     }
 
-    IEnumerator FadeAndDeactivate(float duration)
+    public void FadeIn(float duration = 1f)
     {
-        Fill.CrossFadeAlpha(0.05f, duration, false);
-        BackGround.CrossFadeAlpha(0.05f, duration, false);
-        yield return new WaitForSeconds(duration + 1f);
-        this.gameObject.SetActive(false);
+        Fill.CrossFadeAlpha(1f, duration, false);
+        BackGround.CrossFadeAlpha(1f, duration, false);
+    }
+
+    public void FadeOut(float duration = 1f)
+    {
+        Fill.CrossFadeAlpha(0f, duration, false);
+        BackGround.CrossFadeAlpha(0f, duration, false);
     }
 }
