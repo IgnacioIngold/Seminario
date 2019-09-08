@@ -8,15 +8,17 @@ namespace Core
         public event Action OnGamePause = delegate { };
 
         public string PauseMenuButton;
-        public GameObject PlayerObject;
-        public BigCursed[] Enemies;
+        public BaseUnit[] Enemies;
         public GameObject PauseMenuPanel;
 
         IPlayerController Player;
 
         private void Awake()
         {
-            Player = PlayerObject.GetComponent<IPlayerController>();
+            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<IPlayerController>();
+
+            //Relleno mi array de enemigos.
+            Enemies = FindObjectsOfType<BaseUnit>();
         }
 
         // Update is called once per frame
@@ -42,7 +44,7 @@ namespace Core
 
             Player.active = !state;
 
-            foreach (BigCursed enemy in Enemies)
+            foreach (BaseUnit enemy in Enemies)
             {
                 enemy.enabled = !state;
             }

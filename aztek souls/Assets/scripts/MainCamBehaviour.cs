@@ -6,12 +6,16 @@ using UnityEngine;
 public class MainCamBehaviour : MonoBehaviour
 {
     public string MouseAxis;
-    public Transform Target;
+    [SerializeField] Transform Target;
     public Transform LocalCam;
     public Vector3 camOffSet = Vector3.zero;
     public float transitionVelocity = 1f;
     public float RotationSpeed = 30;
 
+    private void Awake()
+    {
+        Target = GameObject.FindGameObjectWithTag("Player").transform;
+    }
 
     private void Start()
     {

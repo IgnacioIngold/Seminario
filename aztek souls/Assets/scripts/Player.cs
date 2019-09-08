@@ -21,7 +21,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
-    public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
+    [SerializeField] Transform AxisOrientation;             // Transform que determina la orientación del jugador.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;
     public Collider HitCollider;
@@ -118,6 +118,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rb = GetComponent<Rigidbody>();
         //controller = GetComponent<CharacterController>();
         _anims = GetComponentInChildren<Animator>();
+        AxisOrientation = Camera.main.GetComponentInParent<Transform>();
 
         //INICIO DEL COMBATE.
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas

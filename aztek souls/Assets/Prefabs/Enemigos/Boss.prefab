@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 7144479274148408764}
   - component: {fileID: 4977729587628454839}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
-  OnHitParticle: {fileID: 1814572451649613208, guid: 0b06197c649b6d148a042d07e399dac5,
+  OnHitParticle: {fileID: 1814572451649613208, guid: b5822b5774401fc41b40d32a236aa8d3,
     type: 3}
   EnemyHealthBar: {fileID: 637597639960286778}
   sight:

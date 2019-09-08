@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 7163442870093080255}
   m_Layer: 0
   m_Name: Player-Fix
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _myBars: {fileID: 0}
   AxisOrientation: {fileID: 0}
-  OnHitParticle: {fileID: 1814572451649613208, guid: 0b06197c649b6d148a042d07e399dac5,
+  OnHitParticle: {fileID: 1814572451649613208, guid: b5822b5774401fc41b40d32a236aa8d3,
     type: 3}
   RollParticle: {fileID: 3761758108094176481}
   HitCollider: {fileID: 2185664293185661076}

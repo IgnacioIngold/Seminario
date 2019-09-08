@@ -11,7 +11,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public Action OnDie = delegate { };
 
     [Header("Obligatory Settings")]
-    public Transform  Target;
+    [SerializeField] protected Transform Target;
     public GameObject OnHitParticle;
     public FillBar    EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null;
@@ -149,8 +149,14 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         MainColl = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
 
+        Target = GameObject.FindGameObjectWithTag("Player").transform;
+        if (Target != null)
+        {
+            print("Encontré al jugador");
+            sight.target = Target;
+        }
+
         agent.speed = MovementSpeed;
-        sight.target = Target;
 
         EnemyHealthBar.MaxValue = MaxHP;
         Health = MaxHP;
