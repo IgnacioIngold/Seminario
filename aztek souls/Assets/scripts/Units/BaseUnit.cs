@@ -87,7 +87,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     #region Snippet for Debugg
 
-#if (UNITY_EDITOR)
+#if (UNITY_EDITOR) 
     void OnDrawGizmosSelected()
     {
         if (Debug_Gizmos)

@@ -233,9 +233,11 @@ public class BasicEnemy : BaseUnit
         if (!toDamage.IsAlive)
             sm.Feed(BasicEnemyStates.idle);
 
-        while(facingTowardsPlayer() <= 0.9f)
+        while (facingTowardsPlayer() <= 0.85f)
         {
-            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, 0.2f);
+
+            print("Ángulo es: " + sight.angleToTarget + " y la orientación es: " + facingTowardsPlayer());
             yield return null;
         }
 
@@ -292,7 +294,8 @@ public class BasicEnemy : BaseUnit
 
         print("Watchtime Started");
         float watchTime = Random.Range(2f, 4f);
-        while(watchTime > 0)
+
+        while (watchTime > 0)
         {
             watchTime -= Time.deltaTime;
             transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
