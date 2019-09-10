@@ -23,9 +23,9 @@ namespace IA.StateMachine.Generic
             var transition = current.GetTransition(input);
             if (transition != null)
             {
-                //#if (UNITY_EDITOR)
-                //UnityEngine.MonoBehaviour.print("Transitioning from: " + current.StateName + " to: " + transition.Item2.StateName);
-                //#endif
+//#if (UNITY_EDITOR)
+//                UnityEngine.MonoBehaviour.print("Transitioning from: " + current.StateName + " to: " + transition.Item2.StateName);
+//#endif
 
                 current.Exit(input);
                 transition.Item1(input);

@@ -382,6 +382,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         _anims.SetTrigger("died");
         _clamped = true;
+        _rb.isKinematic = true;
 
         //Termina el juego...
     }
