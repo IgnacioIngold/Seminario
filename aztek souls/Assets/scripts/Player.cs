@@ -22,6 +22,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //Objetos que hay que setear.
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     [SerializeField] Transform AxisOrientation;             // Transform que determina la orientación del jugador.
+    public LayerMask floor;
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;
     public Collider HitCollider;
@@ -97,6 +98,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _clamped = false;                                    // PRIVADO: si el jugador puede moverse.
     bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
 
+    public bool isInStair;
+    public Transform stairOrientation;
     public float rollSpeed = 30f;                            // Velocidad de desplazamiento mientras hago el roll.
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
@@ -175,7 +178,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             if (Stamina > rollCost && Input.GetButtonDown("Roll"))
             {
-                _rollDir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
                 CurrentWeapon.InterruptAttack();
                 StartCoroutine(Roll());
             }
@@ -355,6 +358,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!_clamped && _moving) Move();
     }
 
+    Vector3 moveDiR;
+    float speedR;
+
     public void Move()
     {
         float movementSpeed = walkSpeed;
@@ -374,8 +380,19 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
 
         // Update Position
-        var moveDir = _dir.normalized * movementSpeed;
-        _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+        Vector3 moveDir = _dir.normalized * movementSpeed;
+
+        moveDiR = moveDir;
+        speedR = movementSpeed;
+
+        //Hago un sphereCast basado en el movimiento.
+        Ray ray = new Ray(transform.position + ((moveDiR * 0.1f) + (Vector3.up * 4)), Vector3.down);
+        RaycastHit info;
+        Physics.Raycast(ray, out info, 100f, floor);
+
+        Vector3 realPosToGo = ((info.point - transform.position).normalized) * speedR;
+
+        _rb.velocity = realPosToGo;
     }
 
     public void Die()
@@ -416,9 +433,29 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         Stamina -= rollCost;
 
         // Hacemos el Roll.
-        _rb.velocity = new Vector3(_rollDir.x, _rb.velocity.y, _rollDir.z) * rollSpeed;
+        float left = rollDuration;
 
-        yield return new WaitForSeconds(rollDuration);
+        do
+        {
+            left -= Time.deltaTime;
+            Vector3 normalMove = new Vector3(_rollDir.x, 0, _rollDir.z) * rollSpeed;
+
+            if (stairOrientation != null && isInStair)
+            {
+                float stairf = Vector3.Dot(transform.forward, stairOrientation.forward);
+                Vector3 stairDir = stairOrientation.forward * stairf;
+                Vector3 stairMove = new Vector3(transform.forward.x, stairDir.y, stairDir.z).normalized;
+                _rb.velocity = stairMove * rollSpeed;
+            }
+            else
+                _rb.velocity = normalMove;
+
+            yield return null;
+        } while (left > 0);
+
+        //yield return new WaitForSeconds(rollDuration);
+
+        //Detengo el roll una vez que termine el roll.
         _rb.velocity = Vector3.zero;
 
         //Deshabilitamos la emission de la particula de roll.
