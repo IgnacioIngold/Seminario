@@ -161,9 +161,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             float AxisX = Input.GetAxis("Horizontal");
             float AxisY = Input.GetAxis("Vertical");
-            
+
             //Corregir el forward lentamente.
-            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.05f);
+            _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
+            Vector3 newForward = Vector3.Slerp(transform.forward, _dir, 1f);
             transform.forward = newForward;
 
             if (Input.GetButton("Vertical"))
