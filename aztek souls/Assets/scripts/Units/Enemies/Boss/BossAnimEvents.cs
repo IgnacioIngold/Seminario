@@ -58,6 +58,12 @@ public class BossAnimEvents : MonoBehaviour
         data.Serialize(completePath, false);
     }
 
+    //RunTimeLoad
+    private void Awake()
+    {
+        loadData(Application.dataPath + CompleteDataPath);
+    }
+
     void StartBasicCombo()
     {
         //Inicié el combo básico.
@@ -67,37 +73,50 @@ public class BossAnimEvents : MonoBehaviour
     //Primer ataque básico.
     void RightPunchStart_AE()
     {
-        
+        //Index 1
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[0].localScale;
+        DamageCollider.enabled = true;
     }
     void RighPunchEnd_AE()
     {
-
+        DamageCollider.enabled = false;
     }
 
     //Segundo Ataque Básico.
     void LeftPunchStart()
     {
-
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[1].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[1].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[1].localScale;
+        DamageCollider.enabled = true;
     }
     void LeftPunchEnd()
     {
-
+        DamageCollider.enabled = false;
     }
 
     //Tercer Ataque básico.
     void SwipeDownStart()
     {
-
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[2].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[2].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[2].localScale;
+        DamageCollider.enabled = true;
     }
     void SwipeDownEnd()
     {
-
+        DamageCollider.enabled = false;
     }
 
 
     void EndBasicCombo()
     {
         //Termine el combo básico.
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[0].localScale;
     }
 
     //High Jump.
