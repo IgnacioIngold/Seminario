@@ -131,33 +131,15 @@ namespace IA.LineOfSight
             if (target == null) target = this.target;
 
             positionDiference = target.position - origin.transform.position;
+            positionDiference.y = 0;
             distanceToTarget = positionDiference.magnitude;
-            angleToTarget = Vector3.Angle(origin.transform.forward, positionDiference);
+
+            Vector3 originPos = origin.transform.forward;
+            originPos.y = 0;
+
+            angleToTarget = Vector3.Angle(originPos.normalized, positionDiference.normalized);
 
             dirToTarget = positionDiference.normalized;
         }
     }
-
-    //Snippet for Debugg
-//#if (UNITY_EDITOR)
-//    void OnDrawGizmosSelected()
-//    {
-//        var currentPosition = transform.position;
-
-//        Gizmos.color = targetIsInSight ? Color.green : Color.red;       //Target In Sight es un bool en una clase Externa.
-//        float distanceToTarget = mySight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
-//        if (distanceToTarget > range) distanceToTarget = range;
-//        mySight.dirToTarget.Normalize();
-//        Gizmos.DrawLine(transform.position, transform.position + mySight.dirToTarget * distanceToTarget);
-
-//        Gizmos.color = Color.white;
-//        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-//        Gizmos.DrawWireSphere(transform.position, range);
-
-//        Gizmos.color = Color.yellow;
-//        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, viewAngle + 1, 0) * transform.forward * range);
-//        Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, -viewAngle - 1, 0) * transform.forward * range);
-
-//    }
-//#endif
 }

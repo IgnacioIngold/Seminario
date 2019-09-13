@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: mixamo.com
+    second: LeftPunch
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,7 +35,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: mixamo.com
+      name: LeftPunch
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
@@ -60,17 +60,17 @@ ModelImporter:
       curves: []
       events:
       - time: 0.53787047
-        functionName: AnimEv_OnAttackStart
+        functionName: LeftPunchStart
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: a93829bdfd4f38b48b2397cc9e4e9f48,
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
           type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.65203077
-        functionName: AnimEv_OnAttackHasEnded
+        functionName: LeftPunchEnd
         data: 
-        objectReferenceParameter: {fileID: 11500000, guid: a93829bdfd4f38b48b2397cc9e4e9f48,
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
           type: 3}
         floatParameter: 0
         intParameter: 0
