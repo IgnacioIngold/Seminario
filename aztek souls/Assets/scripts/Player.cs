@@ -550,4 +550,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         return new object[1] { 0f };
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
+        if (_rolling && Damageable != null)
+        {
+            Damageable.GetDamage(2f);
+        }
+    }
 }

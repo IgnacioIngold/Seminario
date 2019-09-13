@@ -200,8 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbbd5c575e27d4742bf104f53e3ba6f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 0}
-  OnHitParticle: {fileID: 1814572451649613208, guid: b5822b5774401fc41b40d32a236aa8d3,
+  OnHitParticle: {fileID: 1814572451649613208, guid: b38592ab13f5b874b962c69e9e4dba58,
     type: 3}
   EnemyHealthBar: {fileID: 8719436053497429364}
   sight:
@@ -232,6 +231,7 @@ MonoBehaviour:
   MainState: 0
   AttackCollider: {fileID: 609346536890294314}
   AlertedTime: 2
+  AlertRadius: 10
 --- !u!1 &609346536890294315
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,11 +317,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: nightshade_j_friedrich
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     - target: {fileID: -4216859302048453862, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -377,6 +372,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7603f12ccdf75a6489530bdfbfa0c2e4, type: 3}
 --- !u!1 &8887071442991250830 stripped

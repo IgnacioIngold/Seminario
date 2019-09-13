@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186770638fd92484ab9cc964f749e1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnHitParticle: {fileID: 1814572451649613208, guid: b5822b5774401fc41b40d32a236aa8d3,
+  OnHitParticle: {fileID: 1814572451649613208, guid: b38592ab13f5b874b962c69e9e4dba58,
     type: 3}
   EnemyHealthBar: {fileID: 637597639960286778}
   sight:
@@ -711,6 +711,11 @@ PrefabInstance:
         type: 3}
       propertyPath: ColorModule.gradient.maxGradient.atime2
       value: 50115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe9ede2eb2f7deb499b5f355355ed794, type: 3}

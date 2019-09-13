@@ -846,7 +846,6 @@ GameObject:
   - component: {fileID: 59013658}
   - component: {fileID: 59013662}
   - component: {fileID: 59013661}
-  - component: {fileID: 59013660}
   - component: {fileID: 59013659}
   m_Layer: 0
   m_Name: HD_Wall_1B (33)
@@ -882,20 +881,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &59013660
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59013657}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &59013661
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1260,7 +1245,7 @@ Transform:
   - {fileID: 1677663691}
   - {fileID: 544596260}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &114848995 stripped
 Transform:
@@ -1459,7 +1444,6 @@ GameObject:
   - component: {fileID: 140625820}
   - component: {fileID: 140625824}
   - component: {fileID: 140625823}
-  - component: {fileID: 140625822}
   - component: {fileID: 140625821}
   m_Layer: 0
   m_Name: HD_Wall_1B (29)
@@ -1495,20 +1479,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &140625822
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 140625819}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &140625823
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1766,7 +1736,7 @@ Transform:
   - {fileID: 1603856508}
   - {fileID: 859254171}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &163603979 stripped
 GameObject:
@@ -3013,7 +2983,6 @@ GameObject:
   - component: {fileID: 240468740}
   - component: {fileID: 240468744}
   - component: {fileID: 240468743}
-  - component: {fileID: 240468742}
   - component: {fileID: 240468741}
   m_Layer: 0
   m_Name: HD_Wall_1B (38)
@@ -3049,20 +3018,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &240468742
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 240468739}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &240468743
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3228,7 +3183,7 @@ PrefabInstance:
     - target: {fileID: 8810540733292271345, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8810540733292271345, guid: 6285299d0eb33e64e8bf136496655b2f,
         type: 3}
@@ -4121,7 +4076,6 @@ GameObject:
   - component: {fileID: 266892082}
   - component: {fileID: 266892086}
   - component: {fileID: 266892085}
-  - component: {fileID: 266892084}
   - component: {fileID: 266892083}
   m_Layer: 0
   m_Name: HD_Wall_2A (1)
@@ -4157,20 +4111,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &266892084
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266892081}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &266892085
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4339,7 +4279,6 @@ GameObject:
   - component: {fileID: 285733076}
   - component: {fileID: 285733080}
   - component: {fileID: 285733079}
-  - component: {fileID: 285733078}
   - component: {fileID: 285733077}
   m_Layer: 0
   m_Name: HD_Wall_2A (24)
@@ -4375,20 +4314,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &285733078
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 285733075}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &285733079
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4515,7 +4440,6 @@ GameObject:
   - component: {fileID: 289855215}
   - component: {fileID: 289855219}
   - component: {fileID: 289855218}
-  - component: {fileID: 289855217}
   - component: {fileID: 289855216}
   m_Layer: 0
   m_Name: HD_Wall_1B (35)
@@ -4551,20 +4475,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &289855217
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 289855214}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &289855218
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5043,7 +4953,6 @@ GameObject:
   - component: {fileID: 329139677}
   - component: {fileID: 329139681}
   - component: {fileID: 329139680}
-  - component: {fileID: 329139679}
   - component: {fileID: 329139678}
   m_Layer: 0
   m_Name: HD_Wall_2A (6)
@@ -5079,20 +4988,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.000009536743}
---- !u!64 &329139679
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329139676}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &329139680
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5722,7 +5617,6 @@ GameObject:
   - component: {fileID: 367048351}
   - component: {fileID: 367048355}
   - component: {fileID: 367048354}
-  - component: {fileID: 367048353}
   - component: {fileID: 367048352}
   m_Layer: 0
   m_Name: HD_Wall_1B (42)
@@ -5758,20 +5652,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &367048353
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 367048350}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &367048354
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6028,7 +5908,6 @@ GameObject:
   - component: {fileID: 387846655}
   - component: {fileID: 387846659}
   - component: {fileID: 387846658}
-  - component: {fileID: 387846657}
   - component: {fileID: 387846656}
   m_Layer: 0
   m_Name: HD_Wall_1B (25)
@@ -6064,20 +5943,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &387846657
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 387846654}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &387846658
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6291,7 +6156,6 @@ GameObject:
   - component: {fileID: 402252197}
   - component: {fileID: 402252201}
   - component: {fileID: 402252200}
-  - component: {fileID: 402252199}
   - component: {fileID: 402252198}
   m_Layer: 0
   m_Name: HD_Wall_1B (44)
@@ -6327,20 +6191,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &402252199
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 402252196}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &402252200
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6398,7 +6248,6 @@ GameObject:
   - component: {fileID: 408600236}
   - component: {fileID: 408600240}
   - component: {fileID: 408600239}
-  - component: {fileID: 408600238}
   - component: {fileID: 408600237}
   m_Layer: 0
   m_Name: HD_Wall_2A (25)
@@ -6434,20 +6283,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &408600238
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408600235}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &408600239
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6989,7 +6824,6 @@ GameObject:
   - component: {fileID: 459587627}
   - component: {fileID: 459587631}
   - component: {fileID: 459587630}
-  - component: {fileID: 459587629}
   - component: {fileID: 459587628}
   m_Layer: 0
   m_Name: HD_Wall_1B (24)
@@ -7025,20 +6859,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &459587629
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 459587626}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &459587630
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7389,7 +7209,6 @@ GameObject:
   - component: {fileID: 471747579}
   - component: {fileID: 471747583}
   - component: {fileID: 471747582}
-  - component: {fileID: 471747581}
   - component: {fileID: 471747580}
   m_Layer: 0
   m_Name: HD_Wall_2A (26)
@@ -7425,20 +7244,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &471747581
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 471747578}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &471747582
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8129,7 +7934,6 @@ GameObject:
   - component: {fileID: 504235725}
   - component: {fileID: 504235729}
   - component: {fileID: 504235728}
-  - component: {fileID: 504235727}
   - component: {fileID: 504235726}
   m_Layer: 0
   m_Name: HD_Wall_1B (43)
@@ -8165,20 +7969,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &504235727
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504235724}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &504235728
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8478,7 +8268,6 @@ GameObject:
   - component: {fileID: 536236685}
   - component: {fileID: 536236689}
   - component: {fileID: 536236688}
-  - component: {fileID: 536236687}
   - component: {fileID: 536236686}
   m_Layer: 0
   m_Name: HD_Wall_2A (35)
@@ -8514,20 +8303,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &536236687
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536236684}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &536236688
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10467,7 +10242,6 @@ GameObject:
   - component: {fileID: 733495868}
   - component: {fileID: 733495872}
   - component: {fileID: 733495871}
-  - component: {fileID: 733495870}
   - component: {fileID: 733495869}
   m_Layer: 0
   m_Name: HD_Wall_2A (21)
@@ -10503,20 +10277,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &733495870
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 733495867}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &733495871
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10847,7 +10607,6 @@ GameObject:
   - component: {fileID: 753531253}
   - component: {fileID: 753531257}
   - component: {fileID: 753531256}
-  - component: {fileID: 753531255}
   - component: {fileID: 753531254}
   m_Layer: 0
   m_Name: HD_Wall_1B (36)
@@ -10883,20 +10642,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &753531255
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 753531252}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &753531256
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11824,7 +11569,6 @@ GameObject:
   - component: {fileID: 798747054}
   - component: {fileID: 798747058}
   - component: {fileID: 798747057}
-  - component: {fileID: 798747056}
   - component: {fileID: 798747055}
   m_Layer: 0
   m_Name: HD_Wall_2A (8)
@@ -11860,20 +11604,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &798747056
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798747053}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &798747057
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11937,7 +11667,6 @@ GameObject:
   - component: {fileID: 820682375}
   - component: {fileID: 820682379}
   - component: {fileID: 820682378}
-  - component: {fileID: 820682377}
   - component: {fileID: 820682376}
   m_Layer: 0
   m_Name: HD_Wall_1B (31)
@@ -11973,20 +11702,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &820682377
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 820682374}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &820682378
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12304,7 +12019,6 @@ GameObject:
   - component: {fileID: 829469994}
   - component: {fileID: 829469998}
   - component: {fileID: 829469997}
-  - component: {fileID: 829469996}
   - component: {fileID: 829469995}
   m_Layer: 0
   m_Name: HD_Wall_2A (32)
@@ -12340,20 +12054,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &829469996
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829469993}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &829469997
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12411,7 +12111,6 @@ GameObject:
   - component: {fileID: 833982064}
   - component: {fileID: 833982068}
   - component: {fileID: 833982067}
-  - component: {fileID: 833982066}
   - component: {fileID: 833982065}
   m_Layer: 0
   m_Name: HD_Wall_2A (30)
@@ -12447,20 +12146,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &833982066
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 833982063}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &833982067
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12783,150 +12468,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 859254170}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &867059880
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4977729587628454836, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_Name
-      value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454836, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 5.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -4.074005
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 58.29
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.7280951
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6854762
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -93.454
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: Target
-      value: 
-      objectReference: {fileID: 294767763}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: sight.target
-      value: 
-      objectReference: {fileID: 294767763}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: ChargeCollider
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: AttackCollider
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6895735466124644833, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_Height
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6895735466124644833, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 2.62
-      objectReference: {fileID: 0}
-    - target: {fileID: 6895735466124644833, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_Radius
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6895735466124644833, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7585152146364562938, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8727174134750542479, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8727174134750542479, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8727174134750542479, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3081875953676916963, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6985680513187609542, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc, type: 3}
 --- !u!1001 &874988313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13374,7 +12915,6 @@ GameObject:
   - component: {fileID: 924484415}
   - component: {fileID: 924484419}
   - component: {fileID: 924484418}
-  - component: {fileID: 924484417}
   - component: {fileID: 924484416}
   m_Layer: 0
   m_Name: HD_Wall_1B (37)
@@ -13410,20 +12950,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &924484417
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924484414}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &924484418
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13481,7 +13007,6 @@ GameObject:
   - component: {fileID: 930130611}
   - component: {fileID: 930130615}
   - component: {fileID: 930130614}
-  - component: {fileID: 930130613}
   - component: {fileID: 930130612}
   m_Layer: 0
   m_Name: HD_Wall_2A (9)
@@ -13517,20 +13042,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &930130613
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930130610}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &930130614
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13682,7 +13193,6 @@ GameObject:
   - component: {fileID: 936282088}
   - component: {fileID: 936282092}
   - component: {fileID: 936282091}
-  - component: {fileID: 936282090}
   - component: {fileID: 936282089}
   m_Layer: 0
   m_Name: HD_Wall_2A (27)
@@ -13718,20 +13228,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &936282090
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 936282087}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &936282091
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14435,7 +13931,6 @@ GameObject:
   - component: {fileID: 967295768}
   - component: {fileID: 967295772}
   - component: {fileID: 967295771}
-  - component: {fileID: 967295770}
   - component: {fileID: 967295769}
   m_Layer: 0
   m_Name: HD_Wall_2A (3)
@@ -14471,20 +13966,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &967295770
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 967295767}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &967295771
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14548,7 +14029,6 @@ GameObject:
   - component: {fileID: 974171270}
   - component: {fileID: 974171274}
   - component: {fileID: 974171273}
-  - component: {fileID: 974171272}
   - component: {fileID: 974171271}
   m_Layer: 0
   m_Name: HD_Wall_2A (22)
@@ -14584,20 +14064,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &974171272
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 974171269}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &974171273
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16554,7 +16020,6 @@ GameObject:
   - component: {fileID: 1078821903}
   - component: {fileID: 1078821907}
   - component: {fileID: 1078821906}
-  - component: {fileID: 1078821905}
   - component: {fileID: 1078821904}
   m_Layer: 0
   m_Name: HD_Wall_2A (31)
@@ -16590,20 +16055,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1078821905
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1078821902}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1078821906
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16831,7 +16282,6 @@ GameObject:
   - component: {fileID: 1096322787}
   - component: {fileID: 1096322791}
   - component: {fileID: 1096322790}
-  - component: {fileID: 1096322789}
   - component: {fileID: 1096322788}
   m_Layer: 0
   m_Name: HD_Wall_1B (26)
@@ -16867,20 +16317,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1096322789
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096322786}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1096322790
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17392,7 +16828,6 @@ GameObject:
   - component: {fileID: 1114671648}
   - component: {fileID: 1114671652}
   - component: {fileID: 1114671651}
-  - component: {fileID: 1114671650}
   - component: {fileID: 1114671649}
   m_Layer: 0
   m_Name: HD_Wall_1B (32)
@@ -17428,20 +16863,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1114671650
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1114671647}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1114671651
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17767,7 +17188,6 @@ GameObject:
   - component: {fileID: 1131586298}
   - component: {fileID: 1131586302}
   - component: {fileID: 1131586301}
-  - component: {fileID: 1131586300}
   - component: {fileID: 1131586299}
   m_Layer: 0
   m_Name: HD_Wall_1B (41)
@@ -17803,20 +17223,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1131586300
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1131586297}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1131586301
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18101,7 +17507,6 @@ GameObject:
   - component: {fileID: 1160311663}
   - component: {fileID: 1160311667}
   - component: {fileID: 1160311666}
-  - component: {fileID: 1160311665}
   - component: {fileID: 1160311664}
   m_Layer: 0
   m_Name: HD_Wall_2A (36)
@@ -18137,20 +17542,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1160311665
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1160311662}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1160311666
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18712,7 +18103,6 @@ GameObject:
   - component: {fileID: 1196463800}
   - component: {fileID: 1196463804}
   - component: {fileID: 1196463803}
-  - component: {fileID: 1196463802}
   - component: {fileID: 1196463801}
   m_Layer: 0
   m_Name: HD_Wall_2A (29)
@@ -18748,20 +18138,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1196463802
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1196463799}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1196463803
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18825,7 +18201,6 @@ GameObject:
   - component: {fileID: 1213339259}
   - component: {fileID: 1213339263}
   - component: {fileID: 1213339262}
-  - component: {fileID: 1213339261}
   - component: {fileID: 1213339260}
   m_Layer: 0
   m_Name: HD_Wall_2A (34)
@@ -18861,20 +18236,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1213339261
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213339258}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1213339262
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19134,7 +18495,7 @@ Transform:
   m_LocalScale: {x: 5.7899, y: 11.153663, z: 5.7899}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1237489150
 PrefabInstance:
@@ -19713,7 +19074,6 @@ GameObject:
   - component: {fileID: 1258714381}
   - component: {fileID: 1258714385}
   - component: {fileID: 1258714384}
-  - component: {fileID: 1258714383}
   - component: {fileID: 1258714382}
   m_Layer: 0
   m_Name: HD_Wall_1B (3)
@@ -19749,20 +19109,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1258714383
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258714380}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1258714384
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20150,7 +19496,6 @@ GameObject:
   - component: {fileID: 1275595623}
   - component: {fileID: 1275595627}
   - component: {fileID: 1275595626}
-  - component: {fileID: 1275595625}
   - component: {fileID: 1275595624}
   m_Layer: 0
   m_Name: HD_Wall_2A (33)
@@ -20186,20 +19531,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1275595625
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275595622}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1275595626
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20437,7 +19768,6 @@ GameObject:
   - component: {fileID: 1286905889}
   - component: {fileID: 1286905893}
   - component: {fileID: 1286905892}
-  - component: {fileID: 1286905891}
   - component: {fileID: 1286905890}
   m_Layer: 0
   m_Name: HD_Wall_1B (45)
@@ -20473,20 +19803,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1286905891
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1286905888}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1286905892
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20563,7 +19879,6 @@ GameObject:
   - component: {fileID: 1304562255}
   - component: {fileID: 1304562259}
   - component: {fileID: 1304562258}
-  - component: {fileID: 1304562257}
   - component: {fileID: 1304562256}
   m_Layer: 0
   m_Name: HD_Wall_1B (27)
@@ -20599,20 +19914,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1304562257
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1304562254}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1304562258
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21368,7 +20669,6 @@ GameObject:
   - component: {fileID: 1354936849}
   - component: {fileID: 1354936853}
   - component: {fileID: 1354936852}
-  - component: {fileID: 1354936851}
   - component: {fileID: 1354936850}
   m_Layer: 0
   m_Name: HD_Wall_1B (28)
@@ -21404,20 +20704,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1354936851
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1354936848}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1354936852
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21670,7 +20956,6 @@ GameObject:
   - component: {fileID: 1377780630}
   - component: {fileID: 1377780634}
   - component: {fileID: 1377780633}
-  - component: {fileID: 1377780632}
   - component: {fileID: 1377780631}
   m_Layer: 0
   m_Name: HD_Wall_2A (38)
@@ -21706,20 +20991,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1377780632
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377780629}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1377780633
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22080,7 +21351,6 @@ GameObject:
   - component: {fileID: 1383644525}
   - component: {fileID: 1383644529}
   - component: {fileID: 1383644528}
-  - component: {fileID: 1383644527}
   - component: {fileID: 1383644526}
   m_Layer: 0
   m_Name: HD_Wall_1B (2)
@@ -22116,20 +21386,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1383644527
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1383644524}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1383644528
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22470,7 +21726,6 @@ GameObject:
   - component: {fileID: 1389883938}
   - component: {fileID: 1389883942}
   - component: {fileID: 1389883941}
-  - component: {fileID: 1389883940}
   - component: {fileID: 1389883939}
   m_Layer: 0
   m_Name: HD_Wall_1B (34)
@@ -22506,20 +21761,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1389883940
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1389883937}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1389883941
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22684,7 +21925,6 @@ GameObject:
   - component: {fileID: 1409542589}
   - component: {fileID: 1409542593}
   - component: {fileID: 1409542592}
-  - component: {fileID: 1409542591}
   - component: {fileID: 1409542590}
   m_Layer: 0
   m_Name: HD_Wall_2A (37)
@@ -22720,20 +21960,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1409542591
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409542588}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1409542592
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -23575,7 +22801,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1482888232
 PrefabInstance:
@@ -23939,7 +23165,6 @@ GameObject:
   - component: {fileID: 1505226854}
   - component: {fileID: 1505226858}
   - component: {fileID: 1505226857}
-  - component: {fileID: 1505226856}
   - component: {fileID: 1505226855}
   m_Layer: 0
   m_Name: HD_Wall_2A (4)
@@ -23975,20 +23200,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &1505226856
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1505226853}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1505226857
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -26074,7 +25285,6 @@ GameObject:
   - component: {fileID: 1630822145}
   - component: {fileID: 1630822149}
   - component: {fileID: 1630822148}
-  - component: {fileID: 1630822147}
   - component: {fileID: 1630822146}
   m_Layer: 0
   m_Name: HD_Wall_2A (7)
@@ -26110,20 +25320,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &1630822147
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630822144}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1630822148
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -26328,7 +25524,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &1635274968
 GameObject:
@@ -27190,7 +26386,6 @@ GameObject:
   - component: {fileID: 1698592695}
   - component: {fileID: 1698592699}
   - component: {fileID: 1698592698}
-  - component: {fileID: 1698592697}
   - component: {fileID: 1698592696}
   m_Layer: 0
   m_Name: HD_Wall_2A (23)
@@ -27226,20 +26421,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &1698592697
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1698592694}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1698592698
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -28287,7 +27468,6 @@ GameObject:
   - component: {fileID: 1760130796}
   - component: {fileID: 1760130800}
   - component: {fileID: 1760130799}
-  - component: {fileID: 1760130798}
   - component: {fileID: 1760130797}
   m_Layer: 0
   m_Name: HD_Wall_1B (30)
@@ -28323,20 +27503,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1760130798
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760130795}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1760130799
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -29771,7 +28937,6 @@ GameObject:
   - component: {fileID: 1893124362}
   - component: {fileID: 1893124366}
   - component: {fileID: 1893124365}
-  - component: {fileID: 1893124364}
   - component: {fileID: 1893124363}
   m_Layer: 0
   m_Name: HD_Wall_1B (39)
@@ -29807,20 +28972,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &1893124364
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1893124361}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1893124365
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -29985,7 +29136,6 @@ GameObject:
   - component: {fileID: 1904992827}
   - component: {fileID: 1904992831}
   - component: {fileID: 1904992830}
-  - component: {fileID: 1904992829}
   - component: {fileID: 1904992828}
   m_Layer: 0
   m_Name: HD_Wall_2A (5)
@@ -30021,20 +29171,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &1904992829
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1904992826}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1904992830
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30092,7 +29228,6 @@ GameObject:
   - component: {fileID: 1919117917}
   - component: {fileID: 1919117921}
   - component: {fileID: 1919117920}
-  - component: {fileID: 1919117919}
   - component: {fileID: 1919117918}
   m_Layer: 0
   m_Name: HD_Wall_2A (28)
@@ -30128,20 +29263,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &1919117919
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1919117916}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1919117920
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -30513,7 +29634,6 @@ GameObject:
   - component: {fileID: 1941660571}
   - component: {fileID: 1941660575}
   - component: {fileID: 1941660574}
-  - component: {fileID: 1941660573}
   - component: {fileID: 1941660572}
   m_Layer: 0
   m_Name: HD_Wall_2A (10)
@@ -30549,20 +29669,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &1941660573
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941660570}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &1941660574
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -31869,7 +30975,6 @@ GameObject:
   - component: {fileID: 2003337361}
   - component: {fileID: 2003337365}
   - component: {fileID: 2003337364}
-  - component: {fileID: 2003337363}
   - component: {fileID: 2003337362}
   m_Layer: 0
   m_Name: HD_Wall_2A (2)
@@ -31905,20 +31010,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000004, y: 8, z: 1.2000006}
   m_Center: {x: -0.0000038146973, y: -0.11842632, z: 0.0000038146973}
---- !u!64 &2003337363
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2003337360}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &2003337364
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32188,7 +31279,6 @@ GameObject:
   - component: {fileID: 2019812349}
   - component: {fileID: 2019812353}
   - component: {fileID: 2019812352}
-  - component: {fileID: 2019812351}
   - component: {fileID: 2019812350}
   m_Layer: 0
   m_Name: HD_Wall_1B (40)
@@ -32224,20 +31314,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.1000013, y: 8.000001, z: 1.2000009}
   m_Center: {x: -0.0000076293945, y: -0.10486366, z: 0.0000038146973}
---- !u!64 &2019812351
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2019812348}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300026, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &2019812352
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32868,7 +31944,6 @@ GameObject:
   - component: {fileID: 2077951105}
   - component: {fileID: 2077951109}
   - component: {fileID: 2077951108}
-  - component: {fileID: 2077951107}
   - component: {fileID: 2077951106}
   m_Layer: 0
   m_Name: HD_Wall_2A (20)
@@ -32904,20 +31979,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1000009, y: 8, z: 1.2000009}
   m_Center: {x: 0.0000076293945, y: -0.11842632, z: -0.0000038146973}
---- !u!64 &2077951107
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2077951104}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300030, guid: ab02f76641b00024bbb1f7ef756067c6, type: 3}
 --- !u!23 &2077951108
 MeshRenderer:
   m_ObjectHideFlags: 0
