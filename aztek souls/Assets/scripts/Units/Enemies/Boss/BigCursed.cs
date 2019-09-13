@@ -88,10 +88,11 @@ public class BigCursed : BaseUnit
         idle = new State<BossStates>("Idle");
         var think = new State<BossStates>("Thinking");
         var pursue = new State<BossStates>("Pursue");
-        var charge = new State<BossStates>("Charge");
         var reposition = new State<BossStates>("Reposition");
-        var JumpAttack = new State<BossStates>("AirAttack");
+        var charge = new State<BossStates>("Charge");
         var BasicCombo = new State<BossStates>("Attack_BasicCombo");
+        var JumpAttack = new State<BossStates>("Attack_SimpleJump");
+        var KillerJump = new State<BossStates>("Attack_KillerJump");
         var dead = new State<BossStates>("Dead");
 
         /*
@@ -155,6 +156,10 @@ public class BigCursed : BaseUnit
                     if (sight.angleToTarget > 45f) sm.Feed(BossStates.reposition);
                     else
                     {
+                        if (sight.distanceToTarget > HighRange)
+                            sm.Feed(BossStates.charge);
+                        if (sight.distanceToTarget > MediumRange)
+                            sm.Feed(BossStates.killerJump);
                         if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
                             sm.Feed(BossStates.pursue);                  // paso a pursue.
                         if (sight.distanceToTarget <= AttackRange)
@@ -168,6 +173,20 @@ public class BigCursed : BaseUnit
             agent.isStopped = false;
             LookTowardsPlayer = false;
         };
+
+        #endregion
+
+        #region KillerJumpState
+
+        KillerJump.OnEnter += (previousState) => 
+        {
+            //Animación we.
+            anims.SetInteger("Attack", 4);
+            anims.SetFloat("Movement", 0f);
+            StartCoroutine(KillerJumpAttack());
+        };
+        KillerJump.OnUpdate += () => { };
+        KillerJump.OnExit += (nextState) =>  { };
 
         #endregion
 
@@ -269,7 +288,16 @@ public class BigCursed : BaseUnit
              .AddTransition(BossStates.pursue, pursue)
              .AddTransition(BossStates.reposition, reposition)
              .AddTransition(BossStates.charge, charge)
+             .AddTransition(BossStates.closeJump, JumpAttack)
+             .AddTransition(BossStates.killerJump, KillerJump)
              .AddTransition(BossStates.basicCombo, BasicCombo);
+
+        JumpAttack.AddTransition(BossStates.dead, dead)
+                  .AddTransition(BossStates.think, think);
+
+        KillerJump.AddTransition(BossStates.dead, dead)
+                  .AddTransition(BossStates.think, think);
+
 
         reposition.AddTransition(BossStates.dead, dead)
                   .AddTransition(BossStates.think, think);
@@ -292,6 +320,11 @@ public class BigCursed : BaseUnit
     }
 
     //=========================================================================================
+
+    IEnumerator KillerJumpAttack()
+    {
+        yield return null;
+    }
 
     IEnumerator AttackCombo()
     {
