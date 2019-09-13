@@ -122,10 +122,32 @@ public class BossAnimEvents : MonoBehaviour
     //High Jump.
     void HighJumpLandStart()
     {
-
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[3].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[3].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[3].localScale;
+        DamageCollider.enabled = true;
     }
+
     void HighJumpLandEnd()
     {
+        DamageCollider.enabled = false;
+    }
 
+    void LowJumpLandStart()
+    {
+        DamageCollider.transform.localPosition = ColliderTransformKeyFrame[4].localPosition;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[4].rotation;
+        DamageCollider.transform.localScale = ColliderTransformKeyFrame[4].localScale;
+        DamageCollider.enabled = true;
+        boss.OnSmashParticle.Clear();
+        var emission = boss.OnSmashParticle.emission;
+        emission.enabled = true;
+        boss.OnSmashParticle.Play();
+    }
+    void LowJumpLandEnd()
+    {
+        DamageCollider.enabled = false;
+        var emission = boss.OnSmashParticle.emission;
+        emission.enabled = false;
     }
 }

@@ -34,11 +34,20 @@ public class BigCursed : BaseUnit
 
     [Header("Charge")]
     public ParticleSystem OnChargeParticle;
+    public ParticleSystem OnSmashParticle;
     ParticleSystem.EmissionModule ChargeEmission;
+    ParticleSystem.EmissionModule SmashEmission;
     public float ChargeDamage = 50f;
     public float chargeSpeed = 30f;
     public float ChargeCollisionForce = 20f;
     public float maxChargeDistance = 100f;
+
+    [Header("Jump")]
+    public float maxJumpDistance = 10f;
+    public bool canPerformSimpleJump = true;
+    public bool canPerformKIllerJump = true;
+    public float SimpleJumpAttackCooldown = 5f;
+    public float killerJumpAttackCooldown = 10f;
 
     //Private:
 
@@ -83,6 +92,7 @@ public class BigCursed : BaseUnit
 
         ChargeEmission = OnChargeParticle.emission;
         ChargeEmission.enabled = false;
+        SmashEmission = OnSmashParticle.emission;
 
         //State Machine.
         idle = new State<BossStates>("Idle");
@@ -133,12 +143,10 @@ public class BigCursed : BaseUnit
         think.OnEnter += (previousState) => 
         {
             print("Thinking...");
+            //StopCoroutine(KillerJumpAttack());
             anims.SetFloat("Movement", 0f);
             agent.isStopped = true;
             LookTowardsPlayer = true;
-
-
-            
         };
         think.OnUpdate += () => 
         {
@@ -156,9 +164,11 @@ public class BigCursed : BaseUnit
                     if (sight.angleToTarget > 45f) sm.Feed(BossStates.reposition);
                     else
                     {
+                        if (canPerformSimpleJump && sight.distanceToTarget < AttackRange)
+                            sm.Feed(BossStates.closeJump);
                         if (sight.distanceToTarget > HighRange)
                             sm.Feed(BossStates.charge);
-                        if (sight.distanceToTarget > MediumRange)
+                        if (canPerformKIllerJump && sight.distanceToTarget > MediumRange)
                             sm.Feed(BossStates.killerJump);
                         if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
                             sm.Feed(BossStates.pursue);                  // paso a pursue.
@@ -176,17 +186,26 @@ public class BigCursed : BaseUnit
 
         #endregion
 
+        #region SimpleJumpAttack
+
+        JumpAttack.OnEnter += (previousState) => 
+        {
+            StartCoroutine(SimpleJumpAttack());
+            LookTowardsPlayer = true;
+        };
+        //JumpAttack.OnUpdate += () => { };
+        JumpAttack.OnExit += (nextState) => { LookTowardsPlayer = false; };
+
+        #endregion
+
         #region KillerJumpState
 
         KillerJump.OnEnter += (previousState) => 
         {
-            //Animación we.
-            anims.SetInteger("Attack", 4);
-            anims.SetFloat("Movement", 0f);
             StartCoroutine(KillerJumpAttack());
+            LookTowardsPlayer = false;
         };
-        KillerJump.OnUpdate += () => { };
-        KillerJump.OnExit += (nextState) =>  { };
+        KillerJump.OnExit += (nextState) => { LookTowardsPlayer = true; };
 
         #endregion
 
@@ -321,9 +340,61 @@ public class BigCursed : BaseUnit
 
     //=========================================================================================
 
+    IEnumerator SimpleJumpAttack()
+    {
+        //Animación we.
+        anims.SetInteger("Attack", 5);
+        anims.SetFloat("Movement", 0f);
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        float remainingTime = getRemainingAnimTime("LowJumpAttack", currentTransitionTime);
+
+        yield return new WaitForSeconds(remainingTime);
+
+        thinkTime = 1f;
+        StartCoroutine(simpleJumpAttackCoolDown());
+        sm.Feed(BossStates.think);
+    }
+
+    IEnumerator simpleJumpAttackCoolDown()
+    {
+        canPerformSimpleJump = false;
+        yield return new WaitForSeconds(SimpleJumpAttackCooldown);
+        canPerformSimpleJump = true;
+    }
+
     IEnumerator KillerJumpAttack()
     {
-        yield return null;
+        //Animación we.
+        anims.SetInteger("Attack", 4);
+        anims.SetFloat("Movement", 0f);
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        float remainingTime = getRemainingAnimTime("HighJumpAttack", currentTransitionTime);
+
+        Vector3 originalPosition = transform.position;
+        float distFromOriginal = maxJumpDistance;
+
+        //do
+        //{
+        //    distFromOriginal -= Vector3.Distance(transform.position, originalPosition);
+        //} while (distFromOriginal > 0);
+
+        yield return new WaitForSeconds(remainingTime);
+
+        thinkTime = 2f;
+        StartCoroutine(JumpAttackCoolDown());
+        sm.Feed(BossStates.think);
+    }
+
+
+    IEnumerator JumpAttackCoolDown()
+    {
+        canPerformKIllerJump = false;
+        yield return new WaitForSeconds(killerJumpAttackCooldown);
+        canPerformKIllerJump = true;
     }
 
     IEnumerator AttackCombo()
@@ -429,12 +500,13 @@ public class BigCursed : BaseUnit
             //Sino...
             //Voy calculando la distancia en la que me estoy moviendo
             distance = Vector3.Distance(transform.position, _initialChargePosition);
+            print("Charging distance" + distance);
 
             //Si la distancia es mayor al máximo
             if (distance > maxChargeDistance)
                 sm.Feed(BossStates.think); //Me detengo.
 
-            yield return new WaitForEndOfFrame();
+            yield return null;
         } while (charging && distance < maxChargeDistance);
     }
 

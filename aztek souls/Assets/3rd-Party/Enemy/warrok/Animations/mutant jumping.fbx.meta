@@ -92,7 +92,23 @@ ModelImporter:
           preInfinity: 3
           postInfinity: 3
           rotationOrder: 4
-      events: []
+      events:
+      - time: 0.5906433
+        functionName: LowJumpLandStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.662768
+        functionName: LowJumpLandEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
