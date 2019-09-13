@@ -140,7 +140,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                             _moving = false;
 
                             _clamped = true;
-                            _recoverStamina = false;
 
                             //Debug.LogWarning("INICIO COMBATE");
                         }, 
@@ -151,7 +150,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
                             HitCollider.enabled = false;
                             _clamped = false;
-                            _recoverStamina = true;
                             CurrentWeapon.CurrentAttack = null;
                             //Debug.LogWarning("FIN COMBATE");
                         }
@@ -297,14 +295,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 {
                     _running = true;
                     _anims.SetBool("Running", true);
-                    _recoverStamina = false;
                 }
 
                 if (_running && Input.GetButtonUp("Run") || _exhausted)
                 {
                     _running = false;
                     _anims.SetBool("Running", false);
-                    _recoverStamina = true;
                 }
             }
             else
@@ -340,11 +336,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             _running = false;
             _anims.SetBool("Running", false);
-            _recoverStamina = true;
 
             var vel = _rb.velocity;
             _rb.velocity =  new Vector3(vel.x * AxisX, _rb.velocity.y, vel.z * AxisY);
         }
+
+        if (_running || _rolling || _attacking)
+            _recoverStamina = false;
+        else
+            _recoverStamina = true;
 
         if (_recoverStamina && Stamina < MaxStamina)
         {
