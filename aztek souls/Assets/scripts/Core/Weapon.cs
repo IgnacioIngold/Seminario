@@ -13,6 +13,7 @@ public enum Inputs
 public class Weapon
 {
     public Attack CurrentAttack = null;
+    Animator anims;
 
     public Dictionary<Inputs, Attack> entryPoints = new Dictionary<Inputs, Attack>();
     public Func<bool> canContinueAttack = delegate { return false; };
@@ -23,10 +24,12 @@ public class Weapon
     float currentDuration = 0f;
     Inputs nextAttack = Inputs.none;
 
-    public Weapon( Action OnBeginAttack, Action OnExitAttack)
+    public Weapon(Animator anims,  Action OnBeginAttack, Action OnExitAttack)
     {
         this.OnBeginAttack += OnBeginAttack;
         this.OnExitAttack += OnExitAttack;
+
+        this.anims = anims;
 
         entryPoints = new Dictionary<Inputs, Attack>();
         entryPoints.Add(Inputs.light, null);
@@ -96,6 +99,11 @@ public class Weapon
                 OnExitAttack();
             }
         }
+    }
+
+    float getCurrentTransitionScaledTime()
+    {
+        return anims.GetAnimatorTransitionInfo(0).duration;
     }
 
     public void InterruptAttack()

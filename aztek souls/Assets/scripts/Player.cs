@@ -126,7 +126,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //INICIO DEL COMBATE.
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        CurrentWeapon = new Weapon(
+        CurrentWeapon = new Weapon(_anims,
                         () => {
                             //On Begin Attack
                             _attacking = true;
@@ -138,18 +138,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                             _anims.SetFloat("VelX", 0);
 
                             _moving = false;
-
                             _clamped = true;
-
                             //Debug.LogWarning("INICIO COMBATE");
                         }, 
                         () =>
                         {
                             //On Exit Attack
                             _attacking = false;
-
-                            HitCollider.enabled = false;
                             _clamped = false;
+                            HitCollider.enabled = false;
                             CurrentWeapon.CurrentAttack = null;
                             //Debug.LogWarning("FIN COMBATE");
                         }
@@ -162,7 +159,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             //Corregir el forward lentamente.
             _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-            Vector3 newForward = Vector3.Slerp(transform.forward, _dir, 1f);
+            Vector3 newForward = Vector3.Slerp(transform.forward, _dir, 0.1f);
             transform.forward = newForward;
 
             if (Input.GetButton("Vertical"))
@@ -212,31 +209,30 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
 
         light3.OnExecute += () => {
-            Stamina -= light3.Cost;
             _anims.SetInteger("combat", 2);
+            Stamina -= light3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
 
         Airheavy.OnExecute += () => {
-            Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 3);
+            Stamina -= Airheavy.Cost;
             //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
 
         heavy1.AddConnectedAttack(Inputs.light, quick1);
         heavy1.OnExecute += () => {
-            Stamina -= Airheavy.Cost;
             _anims.SetTrigger("atk2");
+            Stamina -= Airheavy.Cost;
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
 
         quick1.AddConnectedAttack(Inputs.light, quick2);
         quick1.OnExecute += () =>
         {
-            Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 4);
+            Stamina -= Airheavy.Cost;
             //print("Ejecutando Ataque:" + quick1.IDName);
-
         };
 
         quick2.AddConnectedAttack(Inputs.light, quick1);
@@ -245,7 +241,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick2.IDName);
-
         };
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
@@ -284,7 +279,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
 
-        if (!_clamped)
+        if (!_clamped)  
         {
             if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
             {
@@ -507,17 +502,26 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Cooldown.
         yield return new WaitForSeconds(1f);
 
+
         //Muerte del Jugador
         if (!IsAlive) Die();
-
-        _clamped = false;
-        _invulnerable = false;
+        else
+        {
+            _clamped = false;
+            _invulnerable = false;
+        }
     }
 
     public void GetDamage(params object[] DamageStats)
     {
         if (!_invulnerable)
         {
+            //Permito recuperar estamina.
+            _rolling = false;
+            _attacking = false;
+            _running = false;
+            _recoverStamina = true;
+
             //FeedBack de Daño.
             float Damage = (float)DamageStats[0];
             Health -= Damage;

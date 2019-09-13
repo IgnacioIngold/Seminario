@@ -29,7 +29,6 @@ public class BasicEnemy : BaseUnit
     bool Attacking = false;
 
     private float _alertedTimeRemaining = 0f;
-
     private Animator _anims;
 
     //======================== OVERRIDES & INTERFACES =========================================
@@ -235,7 +234,7 @@ public class BasicEnemy : BaseUnit
 
         while (facingTowardsPlayer() <= 0.85f)
         {
-            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, 0.2f);
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
 
             print("Ángulo es: " + sight.angleToTarget + " y la orientación es: " + facingTowardsPlayer());
             yield return null;
@@ -259,7 +258,6 @@ public class BasicEnemy : BaseUnit
             if (clipInfo != null && clipInfo.Length > 0)
             {
                 currentClip = clipInfo[0].clip;
-                //print("Current Clip = " + currentClip.name);
 
                 if (!knowHowMuchIsLeft && currentClip.name == "Attack")
                 {
