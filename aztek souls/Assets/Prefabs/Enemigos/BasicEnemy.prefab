@@ -160,7 +160,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 3.5
+  m_Speed: 9.7
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -216,15 +216,15 @@ MonoBehaviour:
     angleToTarget: 86.46681
     distanceToTarget: 63.12353
   MaxHP: 100
-  MovementSpeed: 2
-  attackRate: 1
+  MovementSpeed: 4
+  attackRate: 1.5
   AttackRange: 1.8
-  attackDamage: 10
-  rotationLerpSpeed: 0.1
-  minDetectionRange: 2
+  attackDamage: 35
+  rotationLerpSpeed: 0.3
+  minDetectionRange: 3
   MediumRange: 2.5
   HighRange: 5.71
-  Debug_Gizmos: 0
+  Debug_Gizmos: 1
   Debug_LineOFSight: 1
   Debug_Attacks: 1
   Debug_DetectionRanges: 1

@@ -406,7 +406,7 @@ MonoBehaviour:
     dirToTarget: {x: -0.061129577, y: 0.022207651, z: -0.9978828}
     angleToTarget: 6.789603
     distanceToTarget: 23.865648
-  MaxHP: 100
+  MaxHP: 200
   MovementSpeed: 4
   attackRate: 2.667
   AttackRange: 7
@@ -422,9 +422,9 @@ MonoBehaviour:
   MainState: 0
   AttackCollider: {fileID: 8416109423459181925}
   BasicAttackDamages:
-  - 20
-  - 30
   - 40
+  - 45
+  - 50
   Layer_walls: 0
   Layer_Killeable: 0
   OnChargeParticle: {fileID: 3081875952072984755}
