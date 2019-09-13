@@ -424,6 +424,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _clamped = true;
         _rolling = true;
         _recoverStamina = false;
+        _running = false;
+        _anims.SetBool("Running", false);
 
         //FeedBack
         _anims.SetTrigger("RollAction");
