@@ -400,11 +400,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss
       objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454836, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454729, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -459,21 +454,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: BasicAttackDamages.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: Debug_Gizmos
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-        type: 3}
-      propertyPath: Debug_LineOFSight
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -978,12 +958,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &857141565 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 8416109423459181925, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 594436301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209051678
 GameObject:
   m_ObjectHideFlags: 0
