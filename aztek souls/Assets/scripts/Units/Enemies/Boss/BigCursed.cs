@@ -11,6 +11,8 @@ public enum BossStates
         reposition,
         pursue,
         basicCombo,
+        killerJump,
+        closeJump,
         dead
     }
 
@@ -40,6 +42,7 @@ public class BigCursed : BaseUnit
 
     //Private:
 
+    float thinkTime = 0f;
     bool charging = false;
     Vector3 _initialChargePosition;
     Vector3 _chargeDir = Vector3.zero;
@@ -116,10 +119,11 @@ public class BigCursed : BaseUnit
             {
                 if (sight.distanceToTarget > HighRange)
                     sm.Feed(BossStates.charge);
-
-                sm.Feed(BossStates.pursue);
+                else
+                    sm.Feed(BossStates.pursue);
             }
         };
+        idle.OnExit += (x) => { anims.SetFloat("Movement", 0f); };
 
         #endregion
 
@@ -127,26 +131,43 @@ public class BigCursed : BaseUnit
 
         think.OnEnter += (previousState) => 
         {
-            anims.SetBool("isWalking", false);
+            print("Thinking...");
+            anims.SetFloat("Movement", 0f);
+            agent.isStopped = true;
+            LookTowardsPlayer = true;
 
-            //Chequeo si el enemigo esta vivo.
-            var toDamage = sight.target.GetComponent<IKilleable>();
-            if (!toDamage.IsAlive)
-                sm.Feed(BossStates.idle);                        // Si el enemigo no esta Vivo, vuelvo a idle
-            else                                                 // Si esta vivo...
+
+            
+        };
+        think.OnUpdate += () => 
+        {
+            if (thinkTime > 0)
+                thinkTime -= Time.deltaTime;
+            else
             {
-                if (sight.angleToTarget > 45f) sm.Feed(BossStates.reposition);
-                else
+                thinkTime = 0f;
+                //Chequeo si el enemigo esta vivo.
+                var toDamage = sight.target.GetComponent<IKilleable>();
+                if (!toDamage.IsAlive)
+                    sm.Feed(BossStates.idle);                        // Si el enemigo no esta Vivo, vuelvo a idle
+                else                                                 // Si esta vivo...
                 {
-                    if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
-                        sm.Feed(BossStates.pursue);                  // paso a pursue.
-                    if (sight.distanceToTarget <= AttackRange)
-                        sm.Feed(BossStates.pursue);
+                    if (sight.angleToTarget > 45f) sm.Feed(BossStates.reposition);
+                    else
+                    {
+                        if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
+                            sm.Feed(BossStates.pursue);                  // paso a pursue.
+                        if (sight.distanceToTarget <= AttackRange)
+                            sm.Feed(BossStates.pursue);
+                    }
                 }
             }
         };
-        //think.OnUpdate += () => {};
-        //think.OnExit += (nextState) =>  {};
+        think.OnExit += (nextState) =>  
+        {
+            agent.isStopped = false;
+            LookTowardsPlayer = false;
+        };
 
         #endregion
 
@@ -155,6 +176,7 @@ public class BigCursed : BaseUnit
         {
             print("Chasing After Player...");
             anims.SetFloat("Movement", 1f);
+            LookTowardsPlayer = true;
         };
         pursue.OnUpdate += () =>
         {
@@ -174,40 +196,12 @@ public class BigCursed : BaseUnit
         #endregion
 
         #region Charge
-        charge.OnEnter += (previousState) =>
-        {
-            print("Charging");
-            //Activo la animación.
-            anims.SetFloat("Movement", 2f);
-            ChargeEmission.enabled = true;
-
-            charging = true;
-            LookTowardsPlayer = false;
-            attackDamage = ChargeDamage;
-
-            //Guardo la posición inicial.
-            _initialChargePosition = transform.position;
-
-            //Calculo la dirección a la que me voy a mover.
-            _chargeDir = (Target.position - transform.position).normalized;
-        };
-        charge.OnUpdate += () =>
-        {
-            //Me muevo primero
-            agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
-
-            //Sino...
-            //Voy calculando la distancia en la que me estoy moviendo
-            float distance = Vector3.Distance(transform.position, _initialChargePosition);
-            
-            //Si la distancia es mayor al máximo
-            if (distance > maxChargeDistance)
-                sm.Feed(BossStates.think); //Me detengo.
-        };
+        charge.OnEnter += (previousState) => { StartCoroutine(Charge()); };
+        charge.OnUpdate += () => {};
         charge.OnExit += (nextState) =>
         {
+            attackDamage = BasicAttackDamages[0];
             ChargeEmission.enabled = false;
-
             charging = false;
             LookTowardsPlayer = true;
         }; 
@@ -219,8 +213,11 @@ public class BigCursed : BaseUnit
         {
             print("Enemy started AttackMode");
             agent.isStopped = true;
-            anims.SetBool("isWalking", false);
             StartCoroutine(AttackCombo());
+        };
+        BasicCombo.OnExit += (x) =>
+        {
+            agent.isStopped = false;
         };
 
         #endregion
@@ -246,7 +243,8 @@ public class BigCursed : BaseUnit
         dead.OnEnter += (x) =>
         {
             print("Enemy is dead");
-            anims.SetTrigger("died");
+            anims.SetTrigger("Dead");
+            StopAllCoroutines();
             Die();
             // Posible Spawneo de cosas.
         };
@@ -297,47 +295,114 @@ public class BigCursed : BaseUnit
 
     IEnumerator AttackCombo()
     {
-        //Activa Animación.
+        //Inicio el primer ataque.
         anims.SetInteger("Attack",1);
+        anims.SetFloat("Movement", 0f);
         LookTowardsPlayer = false;
         yield return null;
 
-        var info = anims.GetAnimatorTransitionInfo(0);
-        float transitionTIme = info.duration;
-        //print("Transition = " + transitionTIme);
-        yield return new WaitForSeconds(transitionTIme);
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
 
-        bool knowHowMuchIsLeft = false;
-        float remainingTime = 0;
+        float remainingTime = getRemainingAnimTime("RightPunch", currentTransitionTime);
+        anims.SetInteger("Attack", 2);
+        yield return new WaitForSeconds(remainingTime);
+        
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
 
+        remainingTime = getRemainingAnimTime("LeftPunch", currentTransitionTime);
+        anims.SetInteger("Attack", 3);
+        yield return new WaitForSeconds(remainingTime);
+
+        //Inicio el tercer ataque.
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        remainingTime = getRemainingAnimTime("Great Sword Casting", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime + 1f);
+
+        //Cambio a pensar.
+        thinkTime = 2f;
+        sm.Feed(BossStates.think);
+    }
+
+    float getCurrentTransitionScaledTime()
+    {
+        return anims.GetAnimatorTransitionInfo(0).duration;
+    }
+    float getRemainingAnimTime(string ClipName, float transitionPassed = 0f)
+    {
         AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-        AnimationClip currentClip;
+        float AnimTime = 0f;
+
         if (clipInfo != null && clipInfo.Length > 0)
         {
-            currentClip = clipInfo[0].clip;
-            //print("Current Clip = " + currentClip.name);
+            AnimationClip currentClip = clipInfo[0].clip;
+            //print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
 
-            if (!knowHowMuchIsLeft && currentClip.name == "BasicAttack")
+            if (currentClip.name == ClipName)
             {
-                float length = currentClip.length;
-                float passed = length - (length * transitionTIme);
-                remainingTime = passed;
-                knowHowMuchIsLeft = true;
-
-                print("currentClip is Correct!");
-                //float normTime = anims.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                //print("TimePassed is = " + passed);
+                //print("currentClip is Correct!");
+                AnimTime = currentClip.length;
+                float passed = AnimTime - (AnimTime * transitionPassed);
+                return passed;
             }
-            else
-                yield return null;
-
-            if (knowHowMuchIsLeft)
-                yield return new WaitForSeconds(remainingTime);
-
-            yield return new WaitForSeconds(1f);
         }
 
-        sm.Feed(BossStates.think);
+        return AnimTime;
+    }
+
+    IEnumerator Charge()
+    {
+        //Primero me quedo quieto.
+        agent.isStopped = true;
+
+        //Empiezo haciendo un Roar.
+        anims.SetBool("Roar", true);
+        yield return new WaitForEndOfFrame();
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("Roar", currentTransitionTime);
+        anims.SetBool("Roar", false);
+        yield return new WaitForSeconds(remainingTime);
+
+        //Ahora me puedo mover.
+        agent.isStopped = false;
+
+        //Activo la animación.
+        print("Charging");
+        anims.SetFloat("Movement", 2f);
+        ChargeEmission.enabled = true;
+
+        charging = true;
+        LookTowardsPlayer = false;
+        attackDamage = ChargeDamage;
+
+        //Guardo la posición inicial.
+        _initialChargePosition = transform.position;
+
+        //Calculo la dirección a la que me voy a mover.
+        _chargeDir = (Target.position - transform.position).normalized;
+
+        float distance = Vector3.Distance(transform.position, _initialChargePosition);
+
+        //Update
+        do
+        {
+            //Me muevo primero
+            agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
+
+            //Sino...
+            //Voy calculando la distancia en la que me estoy moviendo
+            distance = Vector3.Distance(transform.position, _initialChargePosition);
+
+            //Si la distancia es mayor al máximo
+            if (distance > maxChargeDistance)
+                sm.Feed(BossStates.think); //Me detengo.
+
+            yield return new WaitForEndOfFrame();
+        } while (charging && distance < maxChargeDistance);
     }
 
     //=========================================================================================

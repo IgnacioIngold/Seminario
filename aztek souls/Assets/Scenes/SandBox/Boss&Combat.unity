@@ -593,7 +593,7 @@ PrefabInstance:
     - target: {fileID: 7144479274148408764, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_Constraints
-      value: 116
+      value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 7144479274148408764, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -652,6 +652,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc, type: 3}
+--- !u!4 &709703448 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 805980042818859331, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+    type: 3}
+  m_PrefabInstance: {fileID: 49965412}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &719132406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1262,10 +1268,15 @@ PrefabInstance:
       propertyPath: _myBars
       value: 
       objectReference: {fileID: 781361003}
+    - target: {fileID: 7163442870093080255, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: AxisOrientation
+      value: 
+      objectReference: {fileID: 709703448}
     - target: {fileID: 7163442870093080254, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
         type: 3}
       propertyPath: m_Constraints
-      value: 116
+      value: 112
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 950a79e3d89c3a840b4ef8c02b69a20c, type: 3}
