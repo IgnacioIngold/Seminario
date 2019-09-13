@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class AwakeBoss : MonoBehaviour
@@ -10,7 +8,7 @@ public class AwakeBoss : MonoBehaviour
 
     private void Awake()
     {
-        p = GameObject.FindObjectOfType<Player>();
+        p = FindObjectOfType<Player>();
     }
 
     private void OnTriggerEnter(Collider other)
