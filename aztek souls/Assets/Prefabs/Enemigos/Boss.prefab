@@ -132,7 +132,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4977729587628454729}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 23.117, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -7.9090004, z: 0}
 --- !u!33 &8151754841618597821
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -334,7 +334,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4977729587628454836}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 3
   m_Height: 8
@@ -374,10 +374,10 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 3
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!114 &4977729587628454839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,29 +401,32 @@ MonoBehaviour:
     origin: {fileID: 4977729587628454729}
     range: 40
     angle: 45
-    positionDiference: {x: 10.735141, y: 3.5100002, z: -154.4}
-    dirToTarget: {x: 0.069342844, y: 0.022672584, z: -0.99733526}
-    angleToTarget: 1.3171527
-    distanceToTarget: 154.81253
+    positionDiference: {x: -1.4588969, y: 0.53, z: -23.815119}
+    dirToTarget: {x: -0.061129577, y: 0.022207651, z: -0.9978828}
+    angleToTarget: 6.789603
+    distanceToTarget: 23.865648
   MaxHP: 100
   MovementSpeed: 4
   attackRate: 2.667
   AttackRange: 7
   attackDamage: 20
-  rotationLerpSpeed: 0.02
+  rotationLerpSpeed: 10
   minDetectionRange: 10
-  MediumRange: 12
-  HighRange: 35
-  Debug_Gizmos: 0
+  MediumRange: 10
+  HighRange: 15
+  Debug_Gizmos: 1
   Debug_LineOFSight: 1
-  Debug_Attacks: 1
+  Debug_Attacks: 0
   Debug_DetectionRanges: 1
   MainState: 0
-  AttackCollider: {fileID: 0}
-  BasicAttackDamages: []
+  AttackCollider: {fileID: 8416109423459181925}
+  BasicAttackDamages:
+  - 20
+  - 30
+  - 40
   Layer_walls: 0
   Layer_Killeable: 0
-  OnChargeParticle: {fileID: 0}
+  OnChargeParticle: {fileID: 3081875952072984755}
   ChargeDamage: 50
   chargeSpeed: 20
   ChargeCollisionForce: 3
@@ -566,21 +569,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.73
       objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164664, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: lengthInSec
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
       propertyPath: prewarm
@@ -588,23 +576,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
-      propertyPath: startDelay.scalar
+      propertyPath: useRigidbodyForVelocity
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.atime2
-      value: 50115
+      propertyPath: startDelay.scalar
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
@@ -623,8 +601,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
-      propertyPath: useRigidbodyForVelocity
-      value: 0
+      propertyPath: ShapeModule.type
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
@@ -633,24 +616,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
-      propertyPath: ShapeModule.arc.mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ShapeModule.type
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ShapeModule.radiusThickness
-      value: 1
+      propertyPath: ColorModule.gradient.maxGradient.atime2
+      value: 50115
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe9ede2eb2f7deb499b5f355355ed794, type: 3}
 --- !u!4 &3081875953676916963 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2769617789203337766, guid: fe9ede2eb2f7deb499b5f355355ed794,
+    type: 3}
+  m_PrefabInstance: {fileID: 912732560267299525}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &3081875952072984755 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
     type: 3}
   m_PrefabInstance: {fileID: 912732560267299525}
   m_PrefabAsset: {fileID: 0}
