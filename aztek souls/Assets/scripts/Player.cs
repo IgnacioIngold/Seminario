@@ -108,56 +108,79 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
 
     bool _attacking = false;                                 // Si estoy atacando actualmente.
+    bool _listenToInput = true;
 
-    public bool IsAlive => _hp > 0;                          //Implementación de IKilleable.
+    #endregion
+    
+    //============================================= INTERFACES ================================================================
 
+    public bool IsAlive => _hp > 0;
     public bool active { get => enabled; set => enabled = value; }
     public bool invulnerable => _invulnerable;
 
-    #endregion
+    public void GetDamage(params object[] DamageStats)
+    {
+        if (!_invulnerable)
+        {
+            //Permito recuperar estamina.
+            _rolling = false;
+            _attacking = false;
+            _running = false;
+            _recoverStamina = true;
+
+            //FeedBack de Daño.
+            _anims.SetTrigger("hurted");
+            _listenToInput = false;
+            float Damage = (float)DamageStats[0];
+            Health -= Damage;
+            CurrentWeapon.InterruptAttack();
+            _attacking = false;
+            OnGetHit();
+            _rb.velocity /= 3;
+
+            //Particula de Daño.
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+
+            _myBars.UpdateHeathBar(_hp, maxHp);
+            _myBars.UpdateStamina(Stamina, MaxStamina);
+
+            //Entro al estado de recibir daño.
+            StartCoroutine(HurtFreeze());
+        }
+    }
+    public object[] GetDamageStats()
+    {
+        // Retornar la info del sistema de Daño.
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        {
+            var stats = CurrentWeapon.CurrentAttack.GetDamageStats();
+            if (stats != null)
+                return stats;
+        }
+
+        return new object[1] { 0f };
+    }
+
+    //=========================================================================================================================
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        //controller = GetComponent<CharacterController>();
         _anims = GetComponentInChildren<Animator>();
         AxisOrientation = Camera.main.GetComponentInParent<MainCamBehaviour>().getPivotPosition();
 
-        //INICIO DEL COMBATE.
+        #region Combate
+
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        CurrentWeapon = new Weapon(
-                        () => {
-                            //On Begin Attack
-                            _attacking = true;
+        /*
+         
+        */
+        CurrentWeapon = new Weapon(_anims);
 
-                            //Bloqueo las animaciones anteriores.
-                            StopAllCoroutines();
-                            _anims.SetBool("Running", false);
-                            _anims.SetFloat("VelY", 0);
-                            _anims.SetFloat("VelX", 0);
-
-                            _moving = false;
-
-                            _clamped = true;
-                            _recoverStamina = false;
-
-                            //Debug.LogWarning("INICIO COMBATE");
-                        }, 
-                        () =>
-                        {
-                            //On Exit Attack
-                            _attacking = false;
-
-                            HitCollider.enabled = false;
-                            _clamped = false;
-                            _recoverStamina = true;
-                            CurrentWeapon.CurrentAttack = null;
-                            //Debug.LogWarning("FIN COMBATE");
-                        }
-                        );
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
-        CurrentWeapon.DuringAttack += () => 
+        CurrentWeapon.DuringAttack += () =>
         {
             float AxisX = Input.GetAxis("Horizontal");
             float AxisY = Input.GetAxis("Vertical");
@@ -184,55 +207,74 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             }
         };
 
-        //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 15f, Damage = 20f };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 15f, Damage = 20f };
-        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 15f, Damage = 20f };
-        Attack quick1 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
-        Attack quick2 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f };
-        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 25f, Damage = 30f };
-        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 2.2f, Cost = 30f, Damage = 30f };
+        CurrentWeapon.OnStartAttack += () => { _listenToInput = true; };
+        CurrentWeapon.OnInputConfirmed += () => { _listenToInput = false; };
+        CurrentWeapon.OnEndChain += () => 
+        {
+            //On Exit Combat
+            _listenToInput = true;
+            _attacking = false;
+            _clamped = false;
+            HitCollider.enabled = false;
+            CurrentWeapon.CurrentAttack = null;
+            //Debug.LogWarning("FIN COMBATE");
+        };
 
+        #region Attacks
+        Attack quick1 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack quick2 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 2.2f, Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+
+        //Combo 1
+        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
         light1.AddConnectedAttack(Inputs.light, light2);
-        light1.OnExecute += () => 
+        light1.OnStart += () =>
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
-            _anims.SetTrigger("atk1");
-            _anims.SetInteger("combat", 0);
+            _anims.SetInteger("combat", 1);
             Stamina -= light1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
 
         light2.AddConnectedAttack(Inputs.light, light3);
         light2.AddConnectedAttack(Inputs.strong, Airheavy);
-        light2.OnExecute += () => {
-            _anims.SetInteger("combat", 1);
+        light2.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 3);
             Stamina -= light2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
 
-
-        light3.OnExecute += () => {
+        light3.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 7);
             Stamina -= light3.Cost;
-            _anims.SetInteger("combat", 2);
             //print("Ejecutando Ataque:" + light3.IDName);
         };
 
-        Airheavy.OnExecute += () => {
+        //Combo 2.
+        Airheavy.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 3);
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 3);
             //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
 
         heavy1.AddConnectedAttack(Inputs.light, quick1);
-        heavy1.OnExecute += () => {
+        heavy1.OnStart += () =>
+        {
+            _anims.SetTrigger("atk2");
             Stamina -= Airheavy.Cost;
             _anims.SetTrigger("atk2");
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
 
         quick1.AddConnectedAttack(Inputs.light, quick2);
-        quick1.OnExecute += () =>
+        quick1.OnStart += () =>
         {
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 4);
@@ -241,20 +283,20 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
 
         quick2.AddConnectedAttack(Inputs.light, quick1);
-        quick2.OnExecute += () =>
+        quick2.OnStart += () =>
         {
             Stamina -= Airheavy.Cost;
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick2.IDName);
 
         };
+        #endregion
 
         CurrentWeapon.AddEntryPoint(Inputs.light, light1);
         //Acá hace falta un entryPoint Para el primer ataque Pesados
         CurrentWeapon.AddEntryPoint(Inputs.strong, heavy1);
 
-
-        //FIN DEL COMBATE.
+        #endregion
 
         Health = maxHp;
         Stamina = MaxStamina;
@@ -272,68 +314,65 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Esto es para Updatear la cámara apenas comienza el juego.
         //OnPositionIsUpdated();
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (!IsAlive) return;
 
         //Inputs, asi es más responsive.
-
         float AxisY = Input.GetAxis("Vertical");
         float AxisX = Input.GetAxis("Horizontal");
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
 
-        if (!_clamped)
+        if (_listenToInput)
         {
-            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            if (!_clamped)
             {
-                _moving = true;
-                _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
-
-                if (!_running && Stamina > 0 && !_exhausted && Input.GetButtonDown("Run"))
+                if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
                 {
-                    _running = true;
-                    _anims.SetBool("Running", true);
-                    _recoverStamina = false;
-                }
+                    _moving = true;
+                    _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
 
-                if (_running && Input.GetButtonUp("Run") || _exhausted)
-                {
-                    _running = false;
-                    _anims.SetBool("Running", false);
-                    _recoverStamina = true;
+                    if (!_running && Stamina > 0 && !_exhausted && Input.GetButtonDown("Run"))
+                    {
+                        _running = true;
+                        _anims.SetBool("Running", true);
+                    }
+
+                    if (_running && Input.GetButtonUp("Run") || _exhausted)
+                    {
+                        _running = false;
+                        _anims.SetBool("Running", false);
+                    }
                 }
+                else
+                    _moving = false;
             }
-            else
-                _moving = false;
+
+            if (_rolling) transform.forward = _rollDir;
+            else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
+            {
+                //Calculamos la dirección y el punto final.
+                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
+                Vector3 FinalPos = transform.position + (_rollDir * rollSpeed); // Calculo la posición Final.
+
+                //Arreglamos nuestra orientación para cuando termina el roll.
+                _dir = (FinalPos - transform.position).normalized;
+                StartCoroutine(Roll());
+                return;
+            }
+
+            if (!_attacking )
+            {
+                if (Input.GetButtonDown("LighAttack"))
+                    Attack(Inputs.light);
+                else
+                if (Input.GetButtonDown("StrongAttack"))
+                    Attack(Inputs.strong);
+            } 
         }
 
-        if (_rolling) transform.forward = _rollDir;
-        else if(!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
-        {
-            //Calculamos la dirección y el punto final.
-            _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
-            Vector3 FinalPos = transform.position + (_rollDir * rollSpeed); // Calculo la posición Final.
-
-            //Arreglamos nuestra orientación para cuando termina el roll.
-            _dir = (FinalPos - transform.position).normalized;
-            StartCoroutine(Roll());
-            return;
-        }
-
-        if (_attacking)
-        {
-            CurrentWeapon.Update();
-            return;
-        }
-        else if (!_attacking && Input.GetButtonDown("LighAttack") || Input.GetButtonDown("StrongAttack"))
-        {
-            CurrentWeapon.StartAttack();
-            return;
-        }
-
+        if (_attacking) CurrentWeapon.Update();
 
         if (!_rolling && !_moving)
         {
@@ -341,8 +380,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _anims.SetBool("Running", false);
             _recoverStamina = true;
 
-            var vel = _rb.velocity;
-            _rb.velocity =  new Vector3(vel.x * AxisX, _rb.velocity.y, vel.z * AxisY);
+            Vector3 originalVelocity = _rb.velocity;
+            _rb.velocity =  new Vector3(originalVelocity.x * AxisX, _rb.velocity.y, originalVelocity.z * AxisY);
         }
 
         if (_recoverStamina && Stamina < MaxStamina)
@@ -351,12 +390,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina += rate;
         }
     }
-
     private void FixedUpdate()
     {
         if (!IsAlive) return;
         if (!_clamped && _moving) Move();
     }
+
+    //=========================================================================================================================
 
     Vector3 moveDiR;
     float speedR;
@@ -404,6 +444,24 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Termina el juego...
     }
 
+    public void Attack(Inputs input)
+    {
+        //On Begin Combat
+        _attacking = true;
+
+        //Bloqueo las animaciones anteriores.
+        StopAllCoroutines();
+        _anims.SetBool("Running", false);
+        _anims.SetFloat("VelY", 0);
+        _anims.SetFloat("VelX", 0);
+
+        _moving = false;
+        _clamped = true;
+        //Debug.LogWarning("INICIO COMBATE");
+
+        CurrentWeapon.BegginCombo(input);
+    }
+
     IEnumerator DamageEffect()
     {
         //Start -->
@@ -426,6 +484,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _recoverStamina = false;
         _running = false;
         _anims.SetBool("Running", false);
+        _invulnerable = true;
 
         //FeedBack
         _anims.SetTrigger("RollAction");
@@ -455,8 +514,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             yield return null;
         } while (left > 0);
 
-        //yield return new WaitForSeconds(rollDuration);
-
         //Detengo el roll una vez que termine el roll.
         _rb.velocity = Vector3.zero;
 
@@ -470,6 +527,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rolling = false;
         _recoverStamina = true;
         _clamped = false;                      // Avisamos que ya nos podemos mover.
+        _invulnerable = false;
 
         // Adicional poner el roll en enfriamiento.
     }
@@ -499,54 +557,28 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     IEnumerator HurtFreeze()
     {
-        _anims.SetTrigger("hurted");
         _clamped = true;
         _invulnerable = true;
-        
+
         // Cooldown.
         yield return new WaitForSeconds(1f);
 
         //Muerte del Jugador
         if (!IsAlive) Die();
-
-        _clamped = false;
-        _invulnerable = false;
-    }
-
-    public void GetDamage(params object[] DamageStats)
-    {
-        if (!_invulnerable)
+        else
         {
-            //FeedBack de Daño.
-            float Damage = (float)DamageStats[0];
-            Health -= Damage;
-            CurrentWeapon.InterruptAttack();
-            _attacking = false;
-            OnGetHit();
-            _rb.velocity /= 3;
-
-            //Particula de Daño.
-            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-            Destroy(particle, 3f);
-
-            _myBars.UpdateHeathBar(_hp, maxHp);
-            _myBars.UpdateStamina(Stamina, MaxStamina);
-
-            //Entro al estado de recibir daño.
-            StartCoroutine(HurtFreeze());
+            _clamped = false;
+            _invulnerable = false;
+            _listenToInput = true;
         }
     }
 
-    public object[] GetDamageStats()
+    private void OnCollisionStay(Collision collision)
     {
-        // Retornar la info del sistema de Daño.
-        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        if (_rolling && collision.collider.tag == "DestructibleObject")
         {
-            var stats = CurrentWeapon.CurrentAttack.GetDamageStats();
-            if (stats != null)
-                return stats;
+            IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
+            Damageable.GetDamage(0f);
         }
-
-        return new object[1] { 0f };
     }
 }
