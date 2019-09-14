@@ -94,7 +94,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         {
             var currentPosition = transform.position;
 
-            if (Debug_LineOFSight)
+            if (Debug_LineOFSight && sight.target != null)
             {
                 Gizmos.color = sight.IsInSight() ? Color.green : Color.red;   //Target In Sight es un bool en una clase Externa.
                 float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.

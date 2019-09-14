@@ -52,8 +52,8 @@ public class BossAnimRecieverEditor : Editor
         colliderSetted = inspected.DamageCollider != null;
 
         //Chequear que la carpeta exista y el archivo existe.
-        FolderExists = Directory.Exists(Application.dataPath + BossAnimEvents.DataPath);
-        FileExists = File.Exists(Application.dataPath + BossAnimEvents.CompleteDataPath);
+        FolderExists = Directory.Exists(Application.streamingAssetsPath + BossAnimEvents.DataPath);
+        FileExists = File.Exists(Application.streamingAssetsPath + BossAnimEvents.CompleteDataPath);
     }
 
     public override void OnInspectorGUI()
@@ -83,7 +83,7 @@ public class BossAnimRecieverEditor : Editor
             EditorGUILayout.HelpBox(Advertencies, MessageType.Warning);
             if (GUILayout.Button("Create new DataFile"))
             {
-                Directory.CreateDirectory(Application.dataPath + BossAnimEvents.DataPath);
+                Directory.CreateDirectory(Application.streamingAssetsPath + BossAnimEvents.DataPath);
                 inspected.SaveData();
                 AssetDatabase.Refresh();
 

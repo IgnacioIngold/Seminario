@@ -7,9 +7,9 @@ using Core.Serialization;
 
 public class BossAnimEvents : MonoBehaviour
 {
-    public const string DataPath = "/Resources/Data";
+    public const string DataPath = "/Data";
     public const string FileAndExtention = "BossColliderAnims.json";
-    public const string CompleteDataPath = "/Resources/Data/BossColliderAnims.json";
+    public const string CompleteDataPath = "/Data/BossColliderAnims.json";
 
     public Dictionary<int, TransformValues> ColliderTransformKeyFrame = new Dictionary<int, TransformValues>();
 
@@ -38,7 +38,7 @@ public class BossAnimEvents : MonoBehaviour
 
         ColliderTransformKeyFrame.Clear();
 
-        string completePath = Application.dataPath + CompleteDataPath;
+        string completePath = Application.streamingAssetsPath + CompleteDataPath;
         DataPairContainter data = FullSerialization.Deserialize<DataPairContainter>(completePath, false);
 
         for (int i = 0; i < data.Keys.Count; i++)
@@ -46,7 +46,7 @@ public class BossAnimEvents : MonoBehaviour
     }
     public void SaveData()
     {
-        string completePath = Application.dataPath + CompleteDataPath;
+        string completePath = Application.streamingAssetsPath + CompleteDataPath;
         DataPairContainter data = new DataPairContainter() { Keys = new List<int>(), values = new List<TransformValues>()};
 
         foreach (var pair in ColliderTransformKeyFrame)
@@ -61,7 +61,7 @@ public class BossAnimEvents : MonoBehaviour
     //RunTimeLoad
     private void Awake()
     {
-        loadData(Application.dataPath + CompleteDataPath);
+        loadData(Application.streamingAssetsPath + CompleteDataPath);
     }
 
     void StartBasicCombo()
