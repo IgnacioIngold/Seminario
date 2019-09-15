@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Entities;
 
 public enum Inputs
 {
@@ -10,7 +11,7 @@ public enum Inputs
     none
 }
 [Serializable]
-public class Weapon
+public class Weapon : IAttacker<object[]>
 {
     public Attack CurrentAttack = null;
     Animator _anims;
@@ -24,15 +25,22 @@ public class Weapon
     public event Action OnBegginChain = delegate { };
     public event Action OnEndChain = delegate { };
 
-    public event Action OnStartAttack = delegate { };
     public event Action DuringAttack = delegate { };
-    public event Action OnInputConfirmed = delegate { };
-    public event Action OnEndAttack = delegate { };
+
+    public bool canGetInput = true;
+    public bool LastChainAttack = false;
 
     Attack nextCurrent;
     float currentDuration = 0f;
-    bool _onLastChainAttack = false;
-    Inputs nextAttack = Inputs.none;
+
+    //============================================= INTERFACES ================================================================
+
+    public object[] GetDamageStats()
+    {
+        return CurrentAttack.GetDamageStats();
+    }
+
+    //=========================================================================================================================
 
     public Weapon(Animator anims)
     {
@@ -42,97 +50,6 @@ public class Weapon
         entryPoints.Add(Inputs.light, null);
         entryPoints.Add(Inputs.strong, null);
         entryPoints.Add(Inputs.none, null);
-    }
-
-    public void BegginCombo(Inputs beggining)
-    {
-        if (beggining == Inputs.none)
-        {
-            OnEndChain();
-            return;
-        }
-
-        OnBegginChain();
-        CurrentAttack = entryPoints[beggining];
-        StartAttack();
-    }
-    void StartAttack()
-    {
-        //Si la estamina es menor a 0, el ataque se corta. Esto va a cambiar a ser un modificador.
-        if (!canContinueAttack())
-        {
-            OnEndChain();
-            return;
-        }
-
-        if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
-            _onLastChainAttack = true;
-
-        currentDuration = CurrentAttack.AttackDuration;
-        CurrentAttack.OnStart();
-    }
-    public void Update()
-    {
-        currentDuration -= Time.deltaTime;
-
-        DuringAttack();
-
-        if (!_onLastChainAttack && nextAttack == Inputs.none)
-        {
-            Attack posible;
-            if (Input.GetButtonDown("LighAttack"))
-            {
-                MonoBehaviour.print("Input LIGHT Pedido.");
-                posible = CurrentAttack.getConnectedAttack(Inputs.light);
-
-                if (nextCurrent != null)
-                {
-                    MonoBehaviour.print("Input LIGHT CONFIRMADO.");
-                    nextCurrent = posible;
-                    OnInputConfirmed();
-                }
-                return;
-            }
-
-            if (Input.GetButtonDown("StrongAttack"))
-            {
-                MonoBehaviour.print("Input STRONG Pedido.");
-                posible = CurrentAttack.getConnectedAttack(Inputs.strong);
-
-                if (nextCurrent != null)
-                {
-                    MonoBehaviour.print("Input STRONG CONFIRMADO.");
-                    nextCurrent = posible;
-                    OnInputConfirmed();
-                }
-            }
-        }
-        else
-            OnInputConfirmed();
-
-        if (currentDuration <= 0)
-        {
-            if (_onLastChainAttack)
-            {
-                CurrentAttack = null;
-                OnEndChain();
-                return;
-            }
-
-            if (nextCurrent != null)
-            {
-                CurrentAttack = nextCurrent;
-                nextCurrent = null;
-                nextAttack = Inputs.none;
-                StartAttack();
-            }
-        }
-    }
-
-    public void InterruptAttack()
-    {
-        //MonoBehaviour.print("Ataque Interrumpido.");
-        OnEndChain();
     }
     public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
@@ -146,9 +63,72 @@ public class Weapon
 
         return this;
     }
-    
-    float getCurrentTransitionScaledTime()
+
+    public void BegginCombo(Inputs beggining)
     {
-        return _anims.GetAnimatorTransitionInfo(0).duration;
+        if (beggining == Inputs.none) return;
+
+        CurrentAttack = entryPoints[beggining];
+        OnBegginChain();
+        StartAttack();
+    }
+
+    void StartAttack()
+    {
+        if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
+            LastChainAttack = true;
+
+        currentDuration = CurrentAttack.AttackDuration;
+        CurrentAttack.OnStart();
+    }
+    public void Update()
+    {
+        DuringAttack();
+
+        currentDuration -= Time.deltaTime;
+
+        if (currentDuration <= 0)
+        {
+            if (CurrentAttack != null)
+            {
+                CurrentAttack.OnEnd();
+
+                if (LastChainAttack) OnEndChain();
+
+                if (nextCurrent != null)
+                {
+                    CurrentAttack = nextCurrent;
+                    nextCurrent = null;
+                    StartAttack();
+                    return;
+                }
+            }
+
+        }
+    }
+
+    void EndChainCombo()
+    {
+        OnEndChain();
+        CurrentAttack = null;
+    }
+
+    public void InterruptAttack()
+    {
+        //MonoBehaviour.print("Ataque Interrumpido.");
+        OnEndChain();
+    }
+    public void FeedInput(Inputs input)
+    {
+        if (canContinueAttack() && canGetInput && nextCurrent == null)
+        {
+            Attack posible = CurrentAttack.getConnectedAttack(input);
+
+            if (posible != null)
+            {
+                MonoBehaviour.print("Input CONFIRMADO.");
+                nextCurrent = posible;
+            }
+        }
     }
 }

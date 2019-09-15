@@ -29,8 +29,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
-    [SerializeField]
-    Weapon CurrentWeapon;
+
 
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
@@ -76,7 +75,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             //Display Value
             if (_myBars != null)
-                _myBars.UpdateStamina(Stamina, MaxStamina);
+                _myBars.UpdateStamina(_st, MaxStamina);
         }
     }
     public float MaxStamina = 100f;                          // Estamina máxima del jugador.
@@ -95,7 +94,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente.
 
     bool _invulnerable = false;                              // Si el jugador puede recibir daño.
-    bool _clamped = false;                                    // PRIVADO: si el jugador puede moverse.
+    bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
     bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
 
     public bool isInStair;
@@ -106,12 +105,16 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
     bool _canRoll = true;                                    // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
-
-    bool _attacking = false;                                 // Si estoy atacando actualmente.
     bool _listenToInput = true;
 
+    [Header("Combat")]
+    public List<AnimationClip> AttackClips;
+    public Weapon CurrentWeapon;
+    public bool interruptAllowed = true;
+    bool _attacking = false;                                 // Si estoy atacando actualmente.
+
     #endregion
-    
+
     //============================================= INTERFACES ================================================================
 
     public bool IsAlive => _hp > 0;
@@ -152,9 +155,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
-        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        if (CurrentWeapon != null)
         {
-            var stats = CurrentWeapon.CurrentAttack.GetDamageStats();
+            var stats = CurrentWeapon.GetDamageStats();
             if (stats != null)
                 return stats;
         }
@@ -174,23 +177,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        /*
-         
-        */
         CurrentWeapon = new Weapon(_anims);
 
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
         CurrentWeapon.DuringAttack += () =>
         {
-            float AxisX = Input.GetAxis("Horizontal");
-            float AxisY = Input.GetAxis("Vertical");
-            
-            //Corregir el forward lentamente.
-            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.05f);
-            transform.forward = newForward;
-
             if (Input.GetButton("Vertical"))
             {
+                float AxisY = Input.GetAxis("Vertical");
                 _anims.SetFloat("VelX", AxisY);
                 _anims.SetFloat("VelY", 0);
 
@@ -199,102 +193,151 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
             }
 
-            if (Stamina > rollCost && Input.GetButtonDown("Roll"))
+            if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
             {
-                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
                 CurrentWeapon.InterruptAttack();
                 StartCoroutine(Roll());
             }
         };
 
-        CurrentWeapon.OnStartAttack += () => { _listenToInput = true; };
-        CurrentWeapon.OnInputConfirmed += () => { _listenToInput = false; };
+        CurrentWeapon.OnBegginChain += () => 
+        {
+            _listenToInput = false;
+            _attacking = true;
+            _clamped = true;
+        };
         CurrentWeapon.OnEndChain += () => 
         {
             //On Exit Combat
+            _anims.SetInteger("combat", 0);
             _listenToInput = true;
             _attacking = false;
             _clamped = false;
-            HitCollider.enabled = false;
-            CurrentWeapon.CurrentAttack = null;
-            //Debug.LogWarning("FIN COMBATE");
         };
 
         #region Attacks
-        Attack quick1 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f, ChainIndex = 1, maxChainIndex = 3 };
-        Attack quick2 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 10f, Damage = 15f, ChainIndex = 1, maxChainIndex = 3 };
-        Attack heavy1 = new Attack() { IDName = "D", AttackDuration = 1f, Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
-        Attack Airheavy = new Attack() { IDName = "D", AttackDuration = 2.2f, Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
 
-        //Combo 1
-        Attack light1 = new Attack() { IDName = "A", AttackDuration = 0.7f, Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
-        Attack light2 = new Attack() { IDName = "B", AttackDuration = 0.5f, Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
-        Attack light3 = new Attack() { IDName = "C", AttackDuration = 1f, Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
-        light1.AddConnectedAttack(Inputs.light, light2);
-        light1.OnStart += () =>
+        #region Light
+
+        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
+        L1.OnStart += () =>
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
             _anims.SetInteger("combat", 1);
-            Stamina -= light1.Cost;
+            Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
+        L1.AttackDuration = AttackClips[L1.ID - 1].length;
 
-        light2.AddConnectedAttack(Inputs.light, light3);
-        light2.AddConnectedAttack(Inputs.strong, Airheavy);
-        light2.OnStart += () =>
+        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
+        L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
-            Stamina -= light2.Cost;
+            Stamina -= L2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
+        L2.AttackDuration = AttackClips[L2.ID - 1].length;
 
-        light3.OnStart += () =>
+        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
+        L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
-            Stamina -= light3.Cost;
+            Stamina -= L3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
+        L3.AttackDuration = AttackClips[L3.ID - 1].length;
 
-        //Combo 2.
-        Airheavy.OnStart += () =>
+        Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
+        L4.OnStart += () =>
         {
-            _anims.SetInteger("combat", 3);
-            Stamina -= Airheavy.Cost;
-            _anims.SetInteger("combat", 3);
-            //print("Ejecutando Ataque:" + Airheavy.IDName);
-        };
-
-        heavy1.AddConnectedAttack(Inputs.light, quick1);
-        heavy1.OnStart += () =>
-        {
-            _anims.SetTrigger("atk2");
-            Stamina -= Airheavy.Cost;
-            _anims.SetTrigger("atk2");
-            //print("Ejecutando Ataque:" + heavy1.IDName);
-        };
-
-        quick1.AddConnectedAttack(Inputs.light, quick2);
-        quick1.OnStart += () =>
-        {
-            Stamina -= Airheavy.Cost;
-            _anims.SetInteger("combat", 4);
+            Stamina -= L4.Cost;
+            _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
 
         };
+        L4.AttackDuration = AttackClips[L4.ID - 1].length;
 
-        quick2.AddConnectedAttack(Inputs.light, quick1);
-        quick2.OnStart += () =>
+        Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
+        L5.OnStart += () =>
         {
-            Stamina -= Airheavy.Cost;
-            _anims.SetInteger("combat", 5);
+            Stamina -= L5.Cost;
+            _anims.SetInteger("combat", 9);
             //print("Ejecutando Ataque:" + quick2.IDName);
-
         };
+        L5.AttackDuration = AttackClips[L5.ID - 1].length;
+
         #endregion
 
-        CurrentWeapon.AddEntryPoint(Inputs.light, light1);
-        //Acá hace falta un entryPoint Para el primer ataque Pesados
-        CurrentWeapon.AddEntryPoint(Inputs.strong, heavy1);
+        #region Strong
+
+        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        S1.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 2);
+            Stamina -= S1.Cost;
+            //print("Ejecutando Ataque:" + heavy1.IDName);
+        };
+        S1.AttackDuration = AttackClips[S1.ID - 1].length;
+
+        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        S2.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 4);
+            Stamina -= S2.Cost;
+            //print("Ejecutando Ataque:" + heavy1.IDName);
+        };
+        S2.AttackDuration = AttackClips[S2.ID - 1].length;
+
+        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        S3.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 6);
+            Stamina -= S3.Cost;
+            //print("Ejecutando Ataque:" + Airheavy.IDName);
+        };
+        S3.AttackDuration = AttackClips[S3.ID - 1].length;
+
+        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        S4.OnStart += () =>
+        {
+            Stamina -= S4.Cost;
+            _anims.SetInteger("combat", 8);
+            //print("Ejecutando Ataque:" + S4.IDName);
+        };
+        S4.AttackDuration = AttackClips[S4.ID - 1].length;
+
+        #endregion
+
+        #endregion
+
+        #region Conecciones
+
+        //N1
+        L1.AddConnectedAttack(Inputs.light, L2);
+        L1.AddConnectedAttack(Inputs.strong, S2);
+
+        S1.AddConnectedAttack(Inputs.light, L4);
+        S1.AddConnectedAttack(Inputs.strong, S3);
+
+        //N2
+        L2.AddConnectedAttack(Inputs.light, L3);
+        L2.AddConnectedAttack(Inputs.strong, S4);
+
+        //---> S2 no tiene conecciones.
+
+        L4.AddConnectedAttack(Inputs.light, L5);
+
+        //---> S3 no tiene conecciones.
+
+        //N3
+        //---> L3 no tiene conecciones.
+        //---> S4 no tiene conecciones.
+        //---> L5 no tiene conecciones.
+
+        #endregion
+
+        CurrentWeapon.AddEntryPoint(Inputs.light, L1);
+        CurrentWeapon.AddEntryPoint(Inputs.strong, S1);
 
         #endregion
 
@@ -372,7 +415,17 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             } 
         }
 
-        if (_attacking) CurrentWeapon.Update();
+        if (_attacking)
+        {
+            CurrentWeapon.Update();
+
+            if (Input.GetButtonDown("LighAttack"))
+                CurrentWeapon.FeedInput(Inputs.light);
+            else
+               if (Input.GetButtonDown("StrongAttack"))
+                CurrentWeapon.FeedInput(Inputs.strong);
+
+        }
 
         if (!_rolling && !_moving)
         {
