@@ -7,13 +7,13 @@ public class ActivateTimeline : MonoBehaviour
 {
     public PlayableDirector mytimeline;
     bool HasBeenActive;
-    public GameObject block;
+    //public GameObject block;
     private void OnTriggerEnter(Collider other)
     {
         if(other.GetComponent<Player>() != null && !HasBeenActive)
         {
             mytimeline.Play();
-            block.SetActive(true);
+            //block.SetActive(true);
             HasBeenActive = true;
         }
     }
