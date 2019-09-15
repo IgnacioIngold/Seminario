@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.35784853
-        functionName: AnimEv_OnAttackStart
+        functionName: EnableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
@@ -68,7 +68,39 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.4259056
-        functionName: AnimEv_OnAttackHasEnded
+        functionName: DisableDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.02524698
+        functionName: AllowInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.23819979
+        functionName: DenyInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4270033
+        functionName: AllowGetInput
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5784852
+        functionName: DenyGetInput
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}

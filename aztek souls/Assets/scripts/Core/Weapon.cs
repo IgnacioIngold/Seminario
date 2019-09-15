@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core.Entities;
 
 public enum Inputs
 {
@@ -10,24 +11,39 @@ public enum Inputs
     none
 }
 [Serializable]
-public class Weapon
+public class Weapon : IAttacker<object[]>
 {
     public Attack CurrentAttack = null;
-    Animator anims;
+    Animator _anims;
 
     public Dictionary<Inputs, Attack> entryPoints = new Dictionary<Inputs, Attack>();
+    /// <summary>
+    /// Determina las fuentes por las que la cadena completa puede ser interrumpida.
+    /// </summary>
     public Func<bool> canContinueAttack = delegate { return false; };
 
-    event Action OnBeginAttack = delegate { };
-    public event Action DuringAttack = delegate { };
-    event Action OnExitAttack = delegate { };
-    float currentDuration = 0f;
-    Inputs nextAttack = Inputs.none;
+    public event Action OnBegginChain = delegate { };
+    public event Action OnEndChain = delegate { };
 
-    public Weapon(Animator anims,  Action OnBeginAttack, Action OnExitAttack)
+    public event Action DuringAttack = delegate { };
+
+    public bool canGetInput = true;
+    public bool LastChainAttack = false;
+
+    float currentDuration = 0f;
+
+    //============================================= INTERFACES ================================================================
+
+    public object[] GetDamageStats()
     {
-        this.OnBeginAttack += OnBeginAttack;
-        this.OnExitAttack += OnExitAttack;
+        return CurrentAttack.GetDamageStats();
+    }
+
+    //=========================================================================================================================
+
+    public Weapon(Animator anims)
+    {
+        _anims = anims;
 
         this.anims = anims;
 
@@ -36,82 +52,6 @@ public class Weapon
         entryPoints.Add(Inputs.strong, null);
         entryPoints.Add(Inputs.none, null);
     }
-
-    public void StartAttack()
-    {
-        if (CurrentAttack == null)
-        {
-            if (Input.GetButtonDown("LighAttack"))
-                CurrentAttack = entryPoints[Inputs.light];
-
-            if (Input.GetButtonDown("StrongAttack"))
-                CurrentAttack = entryPoints[Inputs.strong];
-
-            OnBeginAttack();
-        }
-
-        if (!canContinueAttack())
-        {
-            OnExitAttack();
-            return;
-        }
-
-        currentDuration = CurrentAttack.AttackDuration;
-        CurrentAttack.OnExecute();
-    }
-
-    public void Update()
-    {
-        currentDuration -= Time.deltaTime;
-
-        DuringAttack();
-
-        if (nextAttack == Inputs.none)
-        {
-            if (Input.GetButtonDown("LighAttack"))
-            {
-                MonoBehaviour.print("Input LIGHT CONFIRMADO");
-                nextAttack = Inputs.light;
-                return;
-            }
-
-            if (Input.GetButtonDown("StrongAttack"))
-            {
-                MonoBehaviour.print("Input STRONG CONFIRMADO");
-                nextAttack = Inputs.strong;
-            }
-        }
-
-        if (currentDuration < 0)
-        {
-            var nextCurrent = CurrentAttack.getConnectedAttack(nextAttack);
-
-            nextAttack = Inputs.none;
-            if (nextCurrent != null)
-            {
-                CurrentAttack = nextCurrent;
-                StartAttack();
-            }
-            else
-            {
-                CurrentAttack = null;
-                //MonoBehaviour.print("FIN DE CADENA");
-                OnExitAttack();
-            }
-        }
-    }
-
-    float getCurrentTransitionScaledTime()
-    {
-        return anims.GetAnimatorTransitionInfo(0).duration;
-    }
-
-    public void InterruptAttack()
-    {
-        MonoBehaviour.print("FIN DE CADENA");
-        OnExitAttack();
-    }
-
     public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
         if (entryPoints == null)
@@ -123,5 +63,65 @@ public class Weapon
             entryPoints.Add(type, attack);
 
         return this;
+    }
+
+    public void BegginCombo(Inputs beggining)
+    {
+        if (beggining == Inputs.none) return;
+
+        CurrentAttack = entryPoints[beggining];
+        OnBegginChain();
+        StartAttack();
+    }
+
+    void StartAttack()
+    {
+        if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
+            LastChainAttack = true;
+
+        canGetInput = false;
+        currentDuration = CurrentAttack.AttackDuration;
+        CurrentAttack.OnStart();
+    }
+    public void Update()
+    {
+        DuringAttack();
+
+        currentDuration -= Time.deltaTime;
+
+        if (currentDuration <= 0)
+        {
+            if (CurrentAttack != null) CurrentAttack.OnEnd();
+            EndChainCombo();
+        }
+    }
+
+    void EndChainCombo()
+    {
+        OnEndChain();
+        CurrentAttack = null;
+    }
+
+    public void InterruptAttack()
+    {
+        //MonoBehaviour.print("Ataque Interrumpido.");
+        OnEndChain();
+    }
+    public void FeedInput(Inputs input)
+    {
+        if (canContinueAttack() && canGetInput)
+        {
+            Attack posible = CurrentAttack.getConnectedAttack(input);
+
+            if (posible != null)
+            {
+                MonoBehaviour.print("Input CONFIRMADO.");
+
+                CurrentAttack.OnEnd();
+                CurrentAttack = posible;
+                currentDuration = CurrentAttack.AttackDuration;
+                StartAttack();
+            }
+        }
     }
 }

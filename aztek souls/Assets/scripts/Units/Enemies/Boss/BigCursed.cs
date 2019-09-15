@@ -330,6 +330,8 @@ public class BigCursed : BaseUnit
     // Update is called once per frame
     void Update()
     {
+
+        print("CurrentState = " + sm.current.StateName);
         sight.Update();
 
         if (LookTowardsPlayer)
@@ -345,6 +347,7 @@ public class BigCursed : BaseUnit
         //Animación we.
         anims.SetInteger("Attack", 5);
         anims.SetFloat("Movement", 0f);
+        LookTowardsPlayer = false;
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
@@ -369,10 +372,12 @@ public class BigCursed : BaseUnit
         //Animación we.
         anims.SetInteger("Attack", 4);
         anims.SetFloat("Movement", 0f);
+        yield return null;
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
         float remainingTime = getRemainingAnimTime("HighJumpAttack", currentTransitionTime);
+        print("Remaining KillerJump Attack is: " + remainingTime);
 
         Vector3 originalPosition = transform.position;
         float distFromOriginal = maxJumpDistance;
@@ -383,6 +388,9 @@ public class BigCursed : BaseUnit
         //} while (distFromOriginal > 0);
 
         yield return new WaitForSeconds(remainingTime);
+
+        anims.SetInteger("Attack", 0);
+        anims.SetFloat("Movement", 0f);
 
         thinkTime = 2f;
         StartCoroutine(JumpAttackCoolDown());
@@ -443,7 +451,7 @@ public class BigCursed : BaseUnit
         if (clipInfo != null && clipInfo.Length > 0)
         {
             AnimationClip currentClip = clipInfo[0].clip;
-            //print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
+            print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
 
             if (currentClip.name == ClipName)
             {

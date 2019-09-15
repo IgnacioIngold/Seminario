@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 7163442870093080255}
   DamageCollider: {fileID: 2185664293185661076}
 --- !u!1 &4396505241561543038
 GameObject:
@@ -175,6 +176,8 @@ MonoBehaviour:
   rollDuration: 0.5
   rollCost: 20
   RollCoolDown: 0.1
+  interruptAllowed: 1
+  allowGetInput: 1
 --- !u!1001 &21194628525737396
 PrefabInstance:
   m_ObjectHideFlags: 0
