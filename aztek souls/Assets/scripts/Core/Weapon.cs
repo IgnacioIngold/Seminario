@@ -45,7 +45,7 @@ public class Weapon : IAttacker<object[]>
     {
         _anims = anims;
 
-        this.anims = anims;
+        _anims = anims;
 
         entryPoints = new Dictionary<Inputs, Attack>();
         entryPoints.Add(Inputs.light, null);
