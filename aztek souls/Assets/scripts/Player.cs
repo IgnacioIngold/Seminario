@@ -111,6 +111,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
     public bool interruptAllowed = true;
+    public float CombatRotationSpeed = 0.1f;
     bool _attacking = false;                                 // Si estoy atacando actualmente.
 
     #endregion
@@ -182,19 +183,23 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
         CurrentWeapon.DuringAttack += () =>
         {
-            if (Input.GetButton("Vertical"))
-            {
-                float AxisY = Input.GetAxis("Vertical");
-                _anims.SetFloat("VelX", AxisY);
-                _anims.SetFloat("VelY", 0);
+            float AxisX = Input.GetAxis("Horizontal");
+            float AxisY = Input.GetAxis("Vertical");
 
-                //Moverme ligeramente.
-                Vector3 moveDir = (AxisOrientation.forward * AxisY).normalized * (walkSpeed / 8);
-                _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
-            }
+            Vector3 orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+            Vector3 newForward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
+            transform.forward = newForward;
+
+            _anims.SetFloat("VelX", AxisY);
+            _anims.SetFloat("VelY", 0);
+
+            //Moverme ligeramente.
+            Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
+            _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
 
             if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
             {
+                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
                 CurrentWeapon.InterruptAttack();
                 StartCoroutine(Roll());
             }
@@ -417,6 +422,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         if (_attacking)
         {
+            _recoverStamina = false;
             CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
@@ -427,7 +433,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         }
 
-        if (!_rolling && !_moving)
+        if (!_rolling && !_moving && !_attacking)
         {
             _running = false;
             _anims.SetBool("Running", false);

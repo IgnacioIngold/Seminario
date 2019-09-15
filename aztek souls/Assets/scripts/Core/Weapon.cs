@@ -30,7 +30,6 @@ public class Weapon : IAttacker<object[]>
     public bool canGetInput = true;
     public bool LastChainAttack = false;
 
-    Attack nextCurrent;
     float currentDuration = 0f;
 
     //============================================= INTERFACES ================================================================
@@ -78,6 +77,7 @@ public class Weapon : IAttacker<object[]>
         if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
             LastChainAttack = true;
 
+        canGetInput = false;
         currentDuration = CurrentAttack.AttackDuration;
         CurrentAttack.OnStart();
     }
@@ -89,21 +89,8 @@ public class Weapon : IAttacker<object[]>
 
         if (currentDuration <= 0)
         {
-            if (CurrentAttack != null)
-            {
-                CurrentAttack.OnEnd();
-
-                if (LastChainAttack) OnEndChain();
-
-                if (nextCurrent != null)
-                {
-                    CurrentAttack = nextCurrent;
-                    nextCurrent = null;
-                    StartAttack();
-                    return;
-                }
-            }
-
+            if (CurrentAttack != null) CurrentAttack.OnEnd();
+            EndChainCombo();
         }
     }
 
@@ -120,14 +107,18 @@ public class Weapon : IAttacker<object[]>
     }
     public void FeedInput(Inputs input)
     {
-        if (canContinueAttack() && canGetInput && nextCurrent == null)
+        if (canContinueAttack() && canGetInput)
         {
             Attack posible = CurrentAttack.getConnectedAttack(input);
 
             if (posible != null)
             {
                 MonoBehaviour.print("Input CONFIRMADO.");
-                nextCurrent = posible;
+
+                CurrentAttack.OnEnd();
+                CurrentAttack = posible;
+                currentDuration = CurrentAttack.AttackDuration;
+                StartAttack();
             }
         }
     }
