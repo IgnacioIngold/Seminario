@@ -170,7 +170,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             float Damage = (float)DamageStats[1];
 
             //Cálculo el daño real.
-            float resist = myStats.Resistencia * Damage * 0.5f;
+            float resist = myStats.Resistencia * 0.5f;
             Damage -= resist;
 
             print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
@@ -189,7 +189,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _listenToInput = false;
             CurrentWeapon.InterruptAttack();
             _attacking = false;
-            OnGetHit();
+            GetHit();
             _rb.velocity /= 3;
 
             //Particula de Daño.
@@ -565,6 +565,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rb.velocity = realPosToGo;
     }
 
+    public void GetHit()
+    {
+        OnGetHit();
+    }
+
     public void Die()
     {
         _anims.SetTrigger("died");
@@ -590,20 +595,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Debug.LogWarning("INICIO COMBATE");
 
         CurrentWeapon.BegginCombo(input);
-    }
-
-    IEnumerator DamageEffect()
-    {
-        //Start -->
-        //Intensity = 0.65f;
-        //Color = rgb(255,0,0); FF0000
-
-        yield return null;
-
-        //Finish -->
-        //Intensity = 0.28f;
-        //Color = rgb(48,48,48); 303030
-
     }
 
     IEnumerator Roll()
