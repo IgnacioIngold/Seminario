@@ -219,7 +219,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void OnHitConfirmed()
     {
         if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
-            CurrentWeapon.CurrentAttack.OnHit();
+            CurrentWeapon.ConfirmHit();
     }
 
     //=========================================================================================================================
