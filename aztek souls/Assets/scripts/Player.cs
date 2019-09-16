@@ -245,16 +245,23 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             float AxisX = Input.GetAxis("Horizontal");
             float AxisY = Input.GetAxis("Vertical");
 
-            Vector3 orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
-            Vector3 newForward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
-            transform.forward = newForward;
+            Vector3 orientation;
 
-            _anims.SetFloat("VelX", AxisY);
-            _anims.SetFloat("VelY", 0);
+            if (AxisX == 0 && AxisY == 0)
+                orientation = AxisOrientation.forward;
+            else
+            {
+                orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
 
-            //Moverme ligeramente.
-            Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
-            _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+                _anims.SetFloat("VelX", AxisY);
+                _anims.SetFloat("VelY", 0);
+
+                //Moverme ligeramente.
+                Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
+                _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+            }
+
+            transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
 
             if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
             {
@@ -266,8 +273,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         CurrentWeapon.OnBegginChain += () => 
         {
-            transform.forward = AxisOrientation.forward;
-
             _listenToInput = false;
             _attacking = true;
             _clamped = true;
