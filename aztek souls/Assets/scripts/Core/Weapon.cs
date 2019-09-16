@@ -27,9 +27,9 @@ public class Weapon
 
     public event Action DuringAttack = delegate { };
 
-    public bool canGetInput = true;
     public bool LastChainAttack = false;
 
+    bool canGetInput = true;
     float currentDuration = 0f;
 
     public Weapon(Animator anims)
@@ -91,6 +91,16 @@ public class Weapon
     {
         OnEndChain();
         CurrentAttack = null;
+    }
+    public void CanGetInput(bool enabled)
+    {
+        if (enabled)
+        {
+            canGetInput = true;
+            CurrentAttack.OnEnableInput();
+        }
+        else
+            canGetInput = false;
     }
 
     public void InterruptAttack()

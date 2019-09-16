@@ -9,6 +9,7 @@ public class Attack
     public Action OnStart = delegate { };
     public Action OnEnd = delegate { };
     public Action OnHit = delegate { };
+    public Action OnEnableInput = delegate { };
     public Action AttackEffects = delegate { };
 
     public int ID = 0;

@@ -42,12 +42,12 @@ public class PlayerAnimEventListener : MonoBehaviour
 
     private void AllowGetInput()
     {
-        player.CurrentWeapon.canGetInput = true;
+        player.CurrentWeapon.CanGetInput(true);
         player.interruptAllowed = true;
     }
     private void DenyGetInput()
     {
-        player.CurrentWeapon.canGetInput = false;
+        player.CurrentWeapon.CanGetInput(false);
     }
 
     /// <summary>
