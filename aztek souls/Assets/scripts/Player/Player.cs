@@ -92,6 +92,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _myBars.UpdateHeathBar(_hp, BaseHP);
         }
     }
+    public float MaxHealth
+    {
+        get { return BaseHP + (myStats.Vitalidad * 5); }
+    }
     float _hp = 100f;                                        // PRIVADO: valor actual de la vida.
 
     //Estamina.
@@ -576,7 +580,30 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _clamped = true;
         _rb.isKinematic = true;
 
+        StartCoroutine(reduxStaminaTo0(3f));
+
         //Termina el juego...
+    }
+
+    public IEnumerator reduxStaminaTo0(float duration)
+    {
+        float remaining = duration;
+        _recoverStamina = false;
+        float originalStamina = Stamina;
+
+        while (remaining > 0)
+        {
+            remaining -= Time.deltaTime;
+
+            Stamina = (remaining / duration) * originalStamina;
+            yield return null;
+        }
+
+        Stamina = 0;
+
+        yield return new WaitForSeconds(2f);
+
+        _myBars.FadeOut(3f);
     }
 
     public void Attack(Inputs input)

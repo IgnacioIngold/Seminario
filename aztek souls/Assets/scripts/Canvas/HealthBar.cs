@@ -5,6 +5,9 @@ public class HealthBar : MonoBehaviour
     public Image life;
     public Image stamina;
 
+    public Image lifeBackGround;
+    public Image staminaBackGround;
+
     // Update is called once per frame
     public void UpdateHeathBar(float currentHealth, float maxHealth)
     {
@@ -19,4 +22,23 @@ public class HealthBar : MonoBehaviour
 
         stamina.fillAmount = pct;
     }
+
+    public void FadeOut(float timeInSeconds)
+    {
+        life.CrossFadeAlpha(0, timeInSeconds, false);
+        lifeBackGround.CrossFadeAlpha(0, timeInSeconds, false);
+
+        stamina.CrossFadeAlpha(0, timeInSeconds, false);
+        staminaBackGround.CrossFadeAlpha(0, timeInSeconds, false);
+    }
+
+    public void FadeIn(float timeInSeconds)
+    {
+        life.CrossFadeAlpha(1, timeInSeconds, false);
+        lifeBackGround.CrossFadeAlpha(1, timeInSeconds, false);
+
+        stamina.CrossFadeAlpha(1, timeInSeconds, false);
+        staminaBackGround.CrossFadeAlpha(1, timeInSeconds, false);
+    }
+
 }

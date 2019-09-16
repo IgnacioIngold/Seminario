@@ -9,6 +9,8 @@ public class FeedbackEffects : MonoBehaviour
 {
     public Animator UIAnims;
     public RawImage BloodSplatEffect;
+
+    public float LowHealthPercentage = 0.3f;
     public float HitDuration = 1f;
     public float HitShakeMagnitude;
     public float HitShakeRoughness;
@@ -37,9 +39,35 @@ public class FeedbackEffects : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Si la vida es menor a cierto porcentaje
-        //Reduzco el color grading
-            //Saturación [1 -> 0]
+        float normalizedHealth = player.Health / player.MaxHealth;
+        UpdateHP(normalizedHealth);
+    }
+
+    void UpdateHP(float HP)
+    {
+        if (HP > LowHealthPercentage)
+        {
+            _cg.saturation.value = 0;
+            _cg.brightness.value = 0;
+            _cg.contrast.value = 0;
+        }
+
+        if (HP < LowHealthPercentage)
+        {
+            float HAmmount = HP / LowHealthPercentage;
+
+            //Si la vida es menor a cierto porcentaje, Reduzco el color grading
+            _cg.saturation.value = Mathf.Lerp(0, -100, HAmmount);
+            _cg.brightness.value = Mathf.Lerp(0, 80, HAmmount);
+            _cg.contrast.value = Mathf.Lerp(0, 60, HAmmount);
+        }
+
+        if (HP == 0)
+        {
+            _cg.saturation.value = -100;
+            _cg.brightness.value = 80;
+            _cg.contrast.value = 60;
+        }
     }
 
     public void GetHit()
