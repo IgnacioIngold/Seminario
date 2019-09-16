@@ -6,11 +6,11 @@ public class Attack
 {
     Dictionary<Inputs, Attack> ConnectedAttacks = new Dictionary<Inputs, Attack>();
 
-    public Action OnStart = delegate { };
-    public Action OnEnd = delegate { };
-    public Action OnHit = delegate { };
-    public Action OnEnableInput = delegate { };
-    public Action AttackEffects = delegate { };
+    public event Action OnStart = delegate { };
+    public event Action OnEnd = delegate { };
+    public event Action OnHit = delegate { };
+    public event Action OnEnableInput = delegate { };
+    public event Action AttackEffects = delegate { };
 
     public int ID = 0;
     public string Name = "";
