@@ -123,6 +123,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float ExhaustTime = 2f;                           // Tiempo que dura el Estado de "Exhaust".
     [Range(2,10)]
     public float staminaRateDecrease = 5;                    // Reducción de regeneración de stamina al estar exhausto.
+    public float rotationLerpSpeed = 0.1f;
     bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
     bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
@@ -265,6 +266,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         CurrentWeapon.OnBegginChain += () => 
         {
+            transform.forward = AxisOrientation.forward;
+
             _listenToInput = false;
             _attacking = true;
             _clamped = true;
@@ -521,6 +524,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     Vector3 moveDiR;
     float speedR;
+    
 
     public void Move()
     {
@@ -536,7 +540,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
         else
         {
-            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, 0.1f);
+            Vector3 newForward = Vector3.Slerp(transform.forward, AxisOrientation.forward, rotationLerpSpeed);
             transform.forward = newForward;
         }
 
