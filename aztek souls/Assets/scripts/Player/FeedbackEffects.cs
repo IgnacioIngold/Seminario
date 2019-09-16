@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
+using EZCameraShake;
 
 public class FeedbackEffects : MonoBehaviour
 {
     public Animator UIAnims;
     public RawImage BloodSplatEffect;
     public float HitDuration = 1f;
+    public float HitShakeMagnitude;
+    public float HitShakeRoughness;
+    public float HitShakeFadeInTime;
+    public float HitShakeFadeOutTime;
 
     Vignette _vig;
     ChromaticAberration _ca;
@@ -46,6 +51,7 @@ public class FeedbackEffects : MonoBehaviour
     {
         //Necesito una duración.
         float remaining = HitDuration;
+        CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
 
         //Start -->
         //Seteo el Vignette.
