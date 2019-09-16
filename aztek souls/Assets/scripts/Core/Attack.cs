@@ -30,6 +30,26 @@ public class Attack
         ConnectedAttacks.Add(Inputs.none, null);
     }
 
+    public void StartAttack()
+    {
+        OnStart();
+    }
+    public void EndAttack()
+    {
+        OnEnd();
+    }
+    public void EnableInput()
+    {
+        OnEnableInput();
+    }
+    public void Hit()
+    {
+        OnHit();
+    }
+    public void ActivateAttackEffects()
+    {
+        AttackEffects();
+    }
     /// <summary>
     /// Devuelve el siguiente ataque encadenado.
     /// </summary>

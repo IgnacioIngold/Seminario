@@ -72,7 +72,7 @@ public class Weapon
 
         canGetInput = false;
         currentDuration = CurrentAttack.AttackDuration;
-        CurrentAttack.OnStart();
+        CurrentAttack.StartAttack();
     }
     public void Update()
     {
@@ -82,7 +82,7 @@ public class Weapon
 
         if (currentDuration <= 0)
         {
-            if (CurrentAttack != null) CurrentAttack.OnEnd();
+            if (CurrentAttack != null) CurrentAttack.EndAttack();
             EndChainCombo();
         }
     }
@@ -97,10 +97,14 @@ public class Weapon
         if (enabled)
         {
             canGetInput = true;
-            CurrentAttack.OnEnableInput();
+            CurrentAttack.EnableInput();
         }
         else
             canGetInput = false;
+    }
+    public void ConfirmHit()
+    {
+        CurrentAttack.Hit();
     }
 
     public void InterruptAttack()
@@ -118,7 +122,7 @@ public class Weapon
             {
                 MonoBehaviour.print("Input CONFIRMADO.");
 
-                CurrentAttack.OnEnd();
+                CurrentAttack.EndAttack();
                 CurrentAttack = posible;
                 currentDuration = CurrentAttack.AttackDuration;
                 StartAttack();
