@@ -655,6 +655,7 @@ GameObject:
   - component: {fileID: 5496988250582495518}
   - component: {fileID: 220376285608853923}
   - component: {fileID: 7576164248283235013}
+  - component: {fileID: 8105804585927988993}
   m_Layer: 5
   m_Name: BloodSplat
   m_TagString: Untagged
@@ -716,6 +717,25 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!95 &8105804585927988993
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6326369450910684479}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 79abeff5facf3ce4c97668d4955bb8a5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7580124071769003489
 GameObject:
   m_ObjectHideFlags: 0
