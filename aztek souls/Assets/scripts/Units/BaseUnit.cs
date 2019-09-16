@@ -80,8 +80,9 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     }
     public virtual object[] GetDamageStats()
     {
-        return new object[1] { attackDamage };
+        return new object[0];
     }
+    public virtual void OnHitConfirmed() { }
 
     //============================= DEBUGG GIZMOS =============================================
 
@@ -202,5 +203,4 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
         gameObject.SetActive(false);
     }
-
 }

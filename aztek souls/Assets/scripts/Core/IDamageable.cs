@@ -1,4 +1,6 @@
 ﻿/* Determina Comportamiento común para todas los tipos de Unidades. */
+using System;
+
 namespace Core.Entities
 {
     // Todas las unidades que pueden recibir Daño.
@@ -15,6 +17,7 @@ namespace Core.Entities
     //Todas las Unidades que pueden tener estadísticas de combate.
     public interface IAttacker<T>
     {
+        void OnHitConfirmed();
         T GetDamageStats();
     }
 }

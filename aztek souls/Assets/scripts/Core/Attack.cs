@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Entities;
-using UnityEngine;
 
 [Serializable]
-public class Attack : IAttacker<object[]>
+public class Attack
 {
     Dictionary<Inputs, Attack> ConnectedAttacks = new Dictionary<Inputs, Attack>();
 
@@ -19,8 +17,9 @@ public class Attack : IAttacker<object[]>
     public int maxChainIndex;
 
     public float Cost = 0f;
-    public float Damage = 0f;
     public float AttackDuration = 1f;
+
+    public float Damage = 0f;
 
     public Attack()
     {
@@ -29,16 +28,6 @@ public class Attack : IAttacker<object[]>
         ConnectedAttacks.Add(Inputs.strong, null);
         ConnectedAttacks.Add(Inputs.none, null);
     }
-
-    //============================================== INTERFACES =======================================================================================================
-
-    public object[] GetDamageStats()
-    {
-        //Acá retorno todas las estadísticas del ataque.
-        return new object[] { Damage };
-    }
-
-    //=================================================================================================================================================================
 
     /// <summary>
     /// Devuelve el siguiente ataque encadenado.

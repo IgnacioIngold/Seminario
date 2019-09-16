@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Core.Entities;
 
@@ -126,6 +127,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         if (!_invulnerable)
         {
+            IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+            float Damage = (float)DamageStats[1];
+
+            Health -= Damage;
+            Aggresor.OnHitConfirmed();
+
             //Permito recuperar estamina.
             _rolling = false;
             _attacking = false;
@@ -135,8 +142,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //FeedBack de Daño.
             _anims.SetTrigger("hurted");
             _listenToInput = false;
-            float Damage = (float)DamageStats[0];
-            Health -= Damage;
             CurrentWeapon.InterruptAttack();
             _attacking = false;
             OnGetHit();
@@ -158,12 +163,17 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Retornar la info del sistema de Daño.
         if (CurrentWeapon != null)
         {
-            var stats = CurrentWeapon.GetDamageStats();
-            if (stats != null)
-                return stats;
+            object[] combatStats = new object[2] { this, CurrentWeapon.CurrentAttack.Damage };
+            if (combatStats != null)
+                return combatStats;
         }
 
         return new object[1] { 0f };
+    }
+    public void OnHitConfirmed()
+    {
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+            CurrentWeapon.CurrentAttack.OnHit();
     }
 
     //=========================================================================================================================
@@ -233,6 +243,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
+        L1.OnHit += () => { print("Light 1 conecto exitósamente"); };
 
         Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
         L2.OnStart += () =>
@@ -242,6 +253,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light2.IDName);
         };
         L2.AttackDuration = AttackClips[L2.ID - 1].length;
+        L2.OnHit += () => { print("Light 2 conecto exitósamente"); };
 
         Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
         L3.OnStart += () =>
@@ -251,6 +263,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light3.IDName);
         };
         L3.AttackDuration = AttackClips[L3.ID - 1].length;
+        L3.OnHit += () => { print("Light 3 conecto exitósamente"); };
 
         Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
         L4.OnStart += () =>
@@ -642,7 +655,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (_rolling && collision.collider.tag == "DestructibleObject")
         {
             IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
-            Damageable.GetDamage(0f);
+            Damageable.GetDamage(new object[2] { this, 0f});
         }
     }
 
@@ -651,7 +664,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
         if (_rolling && Damageable != null)
         {
-            Damageable.GetDamage(2f);
+            Damageable.GetDamage(new object[2] { this, 0f });
         }
     }
 }

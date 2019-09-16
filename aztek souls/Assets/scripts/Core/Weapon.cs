@@ -11,7 +11,7 @@ public enum Inputs
     none
 }
 [Serializable]
-public class Weapon : IAttacker<object[]>
+public class Weapon
 {
     public Attack CurrentAttack = null;
     Animator _anims;
@@ -31,15 +31,6 @@ public class Weapon : IAttacker<object[]>
     public bool LastChainAttack = false;
 
     float currentDuration = 0f;
-
-    //============================================= INTERFACES ================================================================
-
-    public object[] GetDamageStats()
-    {
-        return CurrentAttack.GetDamageStats();
-    }
-
-    //=========================================================================================================================
 
     public Weapon(Animator anims)
     {

@@ -65,8 +65,11 @@ public class BigCursed : BaseUnit
     /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
     public override void GetDamage(params object[] DamageStats)
     {
-        float Damage = (float)DamageStats[0];
+        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+        float Damage = (float)DamageStats[1];
+
         Health -= Damage;
+        Aggresor.OnHitConfirmed();
 
         if (!IsAlive)
             sm.Feed(BossStates.dead);
@@ -79,7 +82,7 @@ public class BigCursed : BaseUnit
     /// <returns>Un array de objetos, donde cada objeto es una Estadística que afecta el daño.</returns>
     public override object[] GetDamageStats()
     {
-        return new object[1] { attackDamage };
+        return new object[2] { this , attackDamage };
     }
 
     //=========================================================================================

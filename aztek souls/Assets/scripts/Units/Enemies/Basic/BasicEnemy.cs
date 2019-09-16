@@ -38,7 +38,9 @@ public class BasicEnemy : BaseUnit
         anims.SetTrigger("GetHit");
         StopAllCoroutines();
 
-        Health -= (float)DamageStats[0];
+        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+        Aggresor.OnHitConfirmed();
+        Health -= (float)DamageStats[1];
 
         base.GetDamage(DamageStats);
 
@@ -59,7 +61,7 @@ public class BasicEnemy : BaseUnit
 
     public override object[] GetDamageStats()
     {
-        return base.GetDamageStats();
+        return new object[2] { this, attackDamage };
     }
 
     //=========================================================================================
