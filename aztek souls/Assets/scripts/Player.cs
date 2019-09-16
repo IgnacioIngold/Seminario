@@ -10,6 +10,41 @@ public interface IPlayerController
     bool active { get; set; }
 }
 
+[Serializable]
+public struct Stats
+{
+    /// <summary>
+    /// Cada nivel garantiza un punto extra que puede gastarse en adquirir más puntos de las demás stats.
+    /// </summary>
+    public int Nivel;
+    [Tooltip("Influencia el daño generado.")]
+    /// <summary>
+    /// Influencia el daño generado.
+    /// </summary>
+    public int Fuerza;
+    [Tooltip("Sangre acumulada")]
+    /// <summary>
+    /// Sangre acumulada. Se puede intercambiar por puntos para subir de nivel o por puntos de vida.
+    /// Si un enemigo elimina al jugador, este acumulará toda la sangre que se haya conseguido hasta ese punto.
+    /// </summary>
+    public float Sangre;
+    [Tooltip("Influencia la cantidad total de vida.")]
+    /// <summary>
+    /// Influencia la cantidad total de vida.
+    /// </summary>
+    public int Vitalidad;
+    [Tooltip("Influencia la velocidad del roll")]
+    /// <summary>
+    /// Influencia la velocidad del roll
+    /// </summary>
+    public int Agilidad;
+    [Tooltip("Influencia la mitigación de daño recibido.")]
+    /// <summary>
+    /// Influencia la mitigación de daño recibido.
+    /// </summary>
+    public int Resistencia;
+}
+
 //[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>
 {
@@ -31,27 +66,30 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
 
-
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
 
 
     [Header("Main Stats")] //Estados Principales.
-    public float maxHp = 100f;                               // Máxima cantidad de vida posible del jugador.
+    public Stats myStats;
+    public float BaseHP = 100f;                               // Máxima cantidad de vida posible del jugador.
     /// <summary>
     /// Controla el Display de la vida.
     /// </summary>
     public float Health
     {
-        get { return _hp; }
+        get
+        {
+            return _hp;
+        }
         set
         {
             if (value < 0) value = 0;
             _hp = value;
 
             if (_myBars != null)
-                _myBars.UpdateHeathBar(_hp, maxHp);
+                _myBars.UpdateHeathBar(_hp, BaseHP);
         }
     }
     float _hp = 100f;                                        // PRIVADO: valor actual de la vida.
@@ -130,6 +168,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             float Damage = (float)DamageStats[1];
 
+            //Cálculo el daño real.
+            float resist = myStats.Resistencia * Damage * 0.5f;
+            Damage -= resist;
+
+            print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
+
             Health -= Damage;
             Aggresor.OnHitConfirmed();
 
@@ -151,7 +195,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
             Destroy(particle, 3f);
 
-            _myBars.UpdateHeathBar(_hp, maxHp);
+            _myBars.UpdateHeathBar(_hp, BaseHP);
             _myBars.UpdateStamina(Stamina, MaxStamina);
 
             //Entro al estado de recibir daño.
@@ -163,7 +207,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Retornar la info del sistema de Daño.
         if (CurrentWeapon != null)
         {
-            object[] combatStats = new object[2] { this, CurrentWeapon.CurrentAttack.Damage };
+            float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
+            object[] combatStats = new object[2] { this, DañoFinal };
             if (combatStats != null)
                 return combatStats;
         }
@@ -183,6 +228,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
         AxisOrientation = Camera.main.GetComponentInParent<MainCamBehaviour>().getPivotPosition();
+
+        Health = BaseHP + (myStats.Vitalidad * 5);
+        Stamina = MaxStamina;
 
         #region Combate
 
@@ -358,9 +406,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         CurrentWeapon.AddEntryPoint(Inputs.strong, S1);
 
         #endregion
-
-        Health = maxHp;
-        Stamina = MaxStamina;
 
         //Permite tener un Delay
         OnActionHasEnded += () =>

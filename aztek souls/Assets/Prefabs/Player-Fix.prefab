@@ -161,7 +161,13 @@ MonoBehaviour:
     type: 3}
   RollParticle: {fileID: 3761758108094176481}
   HitCollider: {fileID: 2185664293185661076}
-  maxHp: 100
+  myStats:
+    Nivel: 1
+    Fuerza: 5
+    Vitalidad: 5
+    Agilidad: 5
+    Resistencia: 5
+  BaseHP: 100
   MaxStamina: 100
   StaminaRegeneration: 20
   StRecoverDelay: 0.8
@@ -176,8 +182,20 @@ MonoBehaviour:
   rollDuration: 0.5
   rollCost: 20
   RollCoolDown: 0.1
+  AttackClips: []
+  CurrentWeapon:
+    CurrentAttack:
+      ID: 0
+      Name: 
+      ChainIndex: 0
+      maxChainIndex: 0
+      Cost: 0
+      AttackDuration: 1
+      Damage: 0
+    canGetInput: 0
+    LastChainAttack: 0
   interruptAllowed: 1
-  allowGetInput: 1
+  CombatRotationSpeed: 0.1
 --- !u!1001 &21194628525737396
 PrefabInstance:
   m_ObjectHideFlags: 0
