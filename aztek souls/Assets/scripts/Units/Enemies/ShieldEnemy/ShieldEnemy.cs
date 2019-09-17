@@ -89,6 +89,16 @@ public class ShieldEnemy : BaseUnit
          * .OnExit += (nextState) => { };
         */
 
+        /*
+            anims.SetBool("Dead", true);
+            anims.SetTrigger("getDamage");
+            anims.SetFloat("Moving", 1f);
+            anims.SetBool("Blocking", true);
+            anims.SetTrigger("BlockBreak");
+            anims.SetInteger("Attack", 1);
+        */
+
+
         #region Estados
 
         idle.OnEnter += (previousState) => 
