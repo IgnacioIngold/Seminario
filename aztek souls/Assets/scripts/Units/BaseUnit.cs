@@ -95,13 +95,16 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         {
             var currentPosition = transform.position;
 
-            if (Debug_LineOFSight && sight.target != null)
+            if (Debug_LineOFSight)
             {
-                Gizmos.color = sight.IsInSight() ? Color.green : Color.red;   //Target In Sight es un bool en una clase Externa.
-                float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
-                if (distanceToTarget > sight.range) distanceToTarget = sight.range;
-                sight.dirToTarget.Normalize();
-                Gizmos.DrawLine(currentPosition, currentPosition + sight.dirToTarget * distanceToTarget);
+                if (sight.target != null)
+                {
+                    Gizmos.color = sight.IsInSight() ? Color.green : Color.red;   //Target In Sight es un bool en una clase Externa.
+                    float distanceToTarget = sight.positionDiference.magnitude;   //mySight es una instancia de la clase LineOfSight.
+                    if (distanceToTarget > sight.range) distanceToTarget = sight.range;
+                    sight.dirToTarget.Normalize();
+                    Gizmos.DrawLine(currentPosition, currentPosition + sight.dirToTarget * distanceToTarget); 
+                }
 
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(currentPosition, currentPosition + Quaternion.Euler(0, sight.angle + 1, 0) * transform.forward * sight.range);
@@ -179,6 +182,15 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
         StartCoroutine(FallAfterDie(3f));
         OnDie();
+    }
+
+    /// <summary>
+    /// Realiza el producto punto entre el forward de la unidad y la dirección hacia el jugador.
+    /// </summary>
+    /// <returns> 1 si enemigo está mirando hacia el jugador.</returns>
+    protected float facingTowardsPlayer()
+    {
+        return Vector3.Dot(sight.dirToTarget, transform.forward);
     }
 
     public void AllyDiscoversEnemy(Transform Enemy)

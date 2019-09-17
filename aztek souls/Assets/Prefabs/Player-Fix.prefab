@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 7163442870093080253}
   - component: {fileID: 7163442870093080254}
   - component: {fileID: 7163442870093080255}
+  - component: {fileID: 4490144722604578806}
   m_Layer: 0
   m_Name: Player-Fix
   m_TagString: Player
@@ -194,10 +195,29 @@ MonoBehaviour:
       Cost: 0
       AttackDuration: 1
       Damage: 0
-    canGetInput: 0
     LastChainAttack: 0
   interruptAllowed: 1
   CombatRotationSpeed: 0.1
+--- !u!114 &4490144722604578806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7163442870093080248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4b3fb6771917443a3072d44ebaf9d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIAnims: {fileID: 0}
+  BloodSplatEffect: {fileID: 0}
+  LowHealthPercentage: 0.4
+  HitDuration: 1
+  HitShakeMagnitude: 1
+  HitShakeRoughness: 15
+  HitShakeFadeInTime: 0.3
+  HitShakeFadeOutTime: 1
 --- !u!1001 &21194628525737396
 PrefabInstance:
   m_ObjectHideFlags: 0

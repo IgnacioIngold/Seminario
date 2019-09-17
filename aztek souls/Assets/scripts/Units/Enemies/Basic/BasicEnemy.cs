@@ -18,7 +18,6 @@ public enum BasicEnemyStates
 
 public class BasicEnemy : BaseUnit
 {
-    public BasicEnemyStates MainState = BasicEnemyStates.idle;
     public Collider AttackCollider;
 
     public float AlertedTime = 2f;
@@ -29,7 +28,6 @@ public class BasicEnemy : BaseUnit
     bool Attacking = false;
 
     private float _alertedTimeRemaining = 0f;
-    private Animator _anims;
 
     //======================== OVERRIDES & INTERFACES =========================================
 
@@ -69,7 +67,6 @@ public class BasicEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
-        _anims = GetComponentInChildren<Animator>();
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
@@ -102,12 +99,6 @@ public class BasicEnemy : BaseUnit
 
         #endregion
 
-        /*
-         * .OnEnter += (previousState) => { };
-         * .OnUpdate += () => { };
-         * .OnExit += (nextState) => { };
-        */
-
         #region Estados
 
         idle.OnEnter += (previousState) => 
@@ -133,7 +124,7 @@ public class BasicEnemy : BaseUnit
             print("Enemy has been Alerted");
             _alertedTimeRemaining = AlertedTime;
 
-            EnemyHealthBar.FadeIn();
+            //EnemyHealthBar.FadeIn();
 
             if (_alertFriends)
             {
@@ -314,10 +305,5 @@ public class BasicEnemy : BaseUnit
             if (sight.distanceToTarget > AttackRange)
                 sm.Feed(BasicEnemyStates.pursue);
         }
-    }
-
-    float facingTowardsPlayer()
-    {
-        return Vector3.Dot(sight.dirToTarget, transform.forward);
     }
 }
