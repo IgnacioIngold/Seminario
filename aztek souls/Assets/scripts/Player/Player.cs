@@ -54,6 +54,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public event Action OnDie = delegate { };
     public event Action OnGetHit = delegate { };
     public event Action OnActionHasEnded = delegate { };
+    public event Action OnStaminaIsEmpty = delegate { };
     //public event Action OnPositionIsUpdated = delegate { };
 
     //Objetos que hay que setear.
@@ -113,8 +114,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _st = value;
             if (_st < 0)
             {
-                StartCoroutine(exhausted());
                 _st = 0;
+                //StartCoroutine(exhausted());
+                OnStaminaIsEmpty();
             }
             _st = value;
 
@@ -126,12 +128,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float MaxStamina = 100f;                          // Estamina máxima del jugador.
     public float StaminaRegeneration = 2f;                   // Regeneración por segundo de estamina.
     public float StRecoverDelay = 0.8f;                      // Delay de Regeneración de estamina luego de ejectuar una acción.
-    public float ExhaustTime = 2f;                           // Tiempo que dura el Estado de "Exhaust".
+    //public float ExhaustTime = 2f;                           // Tiempo que dura el Estado de "Exhaust".
     [Range(2,10)]
     public float staminaRateDecrease = 5;                    // Reducción de regeneración de stamina al estar exhausto.
     public float rotationLerpSpeed = 0.1f;
     bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
-    bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
+    //bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
     public float walkSpeed = 4f;                             // Velocidad de movimiento del jugador al caminar.
 
@@ -453,13 +455,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     _moving = true;
                     _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
 
-                    if (!_running && Stamina > 0 && !_exhausted && Input.GetButtonDown("Run"))
+                    if (!_running && Stamina > 0 && Input.GetButtonDown("Run"))
                     {
                         _running = true;
                         _anims.SetBool("Running", true);
                     }
 
-                    if (_running && Input.GetButtonUp("Run") || _exhausted)
+                    if (_running && Input.GetButtonUp("Run"))
                     {
                         _running = false;
                         _anims.SetBool("Running", false);
@@ -523,7 +525,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         if (_recoverStamina && Stamina < MaxStamina)
         {
-            float rate = (_exhausted ? StaminaRegeneration / staminaRateDecrease : StaminaRegeneration) * Time.deltaTime;
+            float rate = StaminaRegeneration * Time.deltaTime;
             Stamina += rate;
         }
     }
@@ -589,6 +591,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Termina el juego...
     }
 
+    /// <summary>
+    /// Al morir el jugador, la barra de estamina se reduce gradualmente a 0.
+    /// </summary>
+    /// <param name="duration">El tiempo en segundos que va a durar el Fade Out</param>
+    /// <returns></returns>
     public IEnumerator reduxStaminaTo0(float duration)
     {
         float remaining = duration;
@@ -698,14 +705,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _recoverStamina = true;
     }
 
-    IEnumerator exhausted()
-    {
-        _exhausted = true;
-        //print("Exhausted");
-        yield return new WaitForSeconds(ExhaustTime);
-        //print("Recovered");
-        _exhausted = false;
-    }
+    //IEnumerator exhausted()
+    //{
+    //    _exhausted = true;
+    //    //print("Exhausted");
+    //    yield return new WaitForSeconds(ExhaustTime);
+    //    //print("Recovered");
+    //    _exhausted = false;
+    //}
 
     IEnumerator HurtFreeze()
     {
