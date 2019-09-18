@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class BE_AnimEventListener : MonoBehaviour
 {
     public Collider AttackCollider;
+    public ParticleSystem ableHitmarket;
 
     public void AE_AttackEnable()
     {
@@ -15,5 +17,9 @@ public class BE_AnimEventListener : MonoBehaviour
     {
         //print("AnimEvent basicEnemy ON FINIT ATTACK activado");
         AttackCollider.enabled = false;
+    }
+    public void AE_EnableMarker()
+    {
+        ableHitmarket.Play();
     }
 }
