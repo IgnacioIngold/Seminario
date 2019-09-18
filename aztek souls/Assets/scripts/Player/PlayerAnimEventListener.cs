@@ -7,6 +7,7 @@ public class PlayerAnimEventListener : MonoBehaviour
 {
     public Player player;
     public Collider DamageCollider;
+    public GameObject marker;
     Animator anim;
 
     private void Awake()
@@ -44,10 +45,14 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         player.CurrentWeapon.CanGetInput(true);
         player.interruptAllowed = true;
+        marker.SetActive(true);
+
     }
     private void DenyGetInput()
     {
         player.CurrentWeapon.CanGetInput(false);
+        marker.SetActive(false);
+
     }
 
     /// <summary>
