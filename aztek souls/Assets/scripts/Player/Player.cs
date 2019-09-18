@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Core.Entities;
+using UnityEngine.Playables;
 
 public interface IPlayerController
 {
@@ -70,6 +71,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
 
+    public PlayableDirector StaminaEffect;
 
     [Header("Main Stats")] //Estados Principales.
     public Stats myStats;
@@ -462,10 +464,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                         _running = false;
                         _anims.SetBool("Running", false);
                     }
+                    
                 }
                 else
                     _moving = false;
             }
+           
 
             if (_rolling) transform.forward = _rollDir;
             else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
