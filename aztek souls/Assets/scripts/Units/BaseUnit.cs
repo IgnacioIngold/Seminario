@@ -83,13 +83,14 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         return new object[0];
     }
     public virtual void OnHitConfirmed() { }
+    public virtual void OnHitBlocked() { }
 
     //============================= DEBUGG GIZMOS =============================================
 
     #region Snippet for Debugg
 
 #if (UNITY_EDITOR) 
-    void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if (Debug_Gizmos)
         {
@@ -173,10 +174,37 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     //=========================================================================================
 
+    protected float getCurrentTransitionScaledTime()
+    {
+        return anims.GetAnimatorTransitionInfo(0).duration;
+    }
+    protected float getRemainingAnimTime(string ClipName, float transitionPassed = 0f)
+    {
+        AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
+        float AnimTime = 0f;
+
+        if (clipInfo != null && clipInfo.Length > 0)
+        {
+            AnimationClip currentClip = clipInfo[0].clip;
+            print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
+
+            if (currentClip.name == ClipName)
+            {
+                //print("currentClip is Correct!");
+                AnimTime = currentClip.length;
+                float passed = AnimTime - (AnimTime * transitionPassed);
+                return passed;
+            }
+        }
+
+        return AnimTime;
+    }
+
     protected void Die()
     {
         EnemyHealthBar.FadeOut(3f);
         agent.enabled = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
         MainColl.enabled = false;
 

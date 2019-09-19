@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class PlayerAnimEventListener : MonoBehaviour
 {
     public Player player;
@@ -45,14 +47,18 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         player.CurrentWeapon.CanGetInput(true);
         player.interruptAllowed = true;
-        marker.SetActive(true);
 
     }
     private void DenyGetInput()
     {
         player.CurrentWeapon.CanGetInput(false);
+        if(marker.activeInHierarchy)
         marker.SetActive(false);
 
+    }
+    public void GetHurtEvent()
+    {
+        player.CameraShake.Play();
     }
 
     /// <summary>
@@ -68,4 +74,5 @@ public class PlayerAnimEventListener : MonoBehaviour
 
         return clip.length;
     }
+    
 }

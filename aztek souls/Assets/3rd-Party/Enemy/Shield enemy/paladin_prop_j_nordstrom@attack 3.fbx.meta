@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 745c5f19e795e21459900cf49d210437
+guid: 04fe764f6cbcfca43b4b9d605f539ed1
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Dying
+    second: attack3
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Dying
+      name: attack3
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 106
+      lastFrame: 95
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -58,7 +58,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.28759605
+        functionName: EnableDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.3644347
+        functionName: DisableDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
