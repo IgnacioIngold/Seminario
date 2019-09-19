@@ -53,6 +53,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //Eventos
     public event Action OnDie = delegate { };
     public event Action OnGetHit = delegate { };
+    public event Action OnAttackLanded = delegate { };
     public event Action OnActionHasEnded = delegate { };
     public event Action OnStaminaIsEmpty = delegate { };
     //public event Action OnPositionIsUpdated = delegate { };
@@ -227,7 +228,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void OnHitConfirmed()
     {
         if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        {
             CurrentWeapon.ConfirmHit();
+            OnAttackLanded();
+        }
     }
 
     //=========================================================================================================================
@@ -308,9 +312,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
-        L1.OnHit += () => { print("Light 1 conecto exitósamente"); };
         L1.OnEnableInput += () => { marker.SetActive(true); };
-        
+        L1.OnHit += () => 
+        {
+            print("Light 1 conecto exitósamente");
+        };
 
         Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
         L2.OnStart += () =>
@@ -320,8 +326,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light2.IDName);
         };
         L2.AttackDuration = AttackClips[L2.ID - 1].length;
-        L2.OnHit += () => { print("Light 2 conecto exitósamente"); };
         L2.OnEnableInput += () => { marker.SetActive(true); };
+        L2.OnHit += () => 
+        {
+            print("Light 2 conecto exitósamente");
+        };
 
         Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
         L3.OnStart += () =>
@@ -331,7 +340,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light3.IDName);
         };
         L3.AttackDuration = AttackClips[L3.ID - 1].length;
-        L3.OnHit += () => { print("Light 3 conecto exitósamente"); };
+        L3.OnHit += () => 
+        {
+            print("Light 3 conecto exitósamente");
+        };
 
         Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
         L4.OnStart += () =>
@@ -339,7 +351,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L4.Cost;
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
-
         };
         L4.AttackDuration = AttackClips[L4.ID - 1].length;
         L4.OnEnableInput += () => { marker.SetActive(true); };

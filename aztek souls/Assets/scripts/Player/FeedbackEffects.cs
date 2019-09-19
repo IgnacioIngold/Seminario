@@ -26,6 +26,11 @@ public class FeedbackEffects : MonoBehaviour
     {
         player = GetComponent<Player>();
         player.OnGetHit += GetHit;
+        player.OnAttackLanded += () =>
+        {
+            CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
+        };
+
         var PP = Camera.main.GetComponent<PostProcessVolume>();
 
         if (!PP.profile.TryGetSettings(out _vig))
