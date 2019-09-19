@@ -67,7 +67,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
-
+    public GameObject marker;
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
@@ -309,6 +309,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
         L1.OnHit += () => { print("Light 1 conecto exitósamente"); };
+        L1.OnEnableInput += () => { marker.SetActive(true); };
+        
 
         Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
         L2.OnStart += () =>
@@ -319,6 +321,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
         L2.AttackDuration = AttackClips[L2.ID - 1].length;
         L2.OnHit += () => { print("Light 2 conecto exitósamente"); };
+        L2.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
         L3.OnStart += () =>
@@ -339,6 +342,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         };
         L4.AttackDuration = AttackClips[L4.ID - 1].length;
+        L4.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
         L5.OnStart += () =>
@@ -361,6 +365,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
         S1.AttackDuration = AttackClips[S1.ID - 1].length;
+        S1.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
         S2.OnStart += () =>

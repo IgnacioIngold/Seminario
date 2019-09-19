@@ -45,7 +45,6 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         player.CurrentWeapon.CanGetInput(true);
         player.interruptAllowed = true;
-        marker.SetActive(true);
 
     }
     private void DenyGetInput()
