@@ -153,7 +153,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
     public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
-    bool _canRoll = true;                                    // Si puedo rollear.
+    //bool _canRoll = true;                                    // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
     bool _listenToInput = true;
 
@@ -721,12 +721,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Adicional poner el roll en enfriamiento.
     }
 
-    IEnumerator RollCooldown()
-    {
-        _canRoll = false;
-        yield return new WaitForSeconds(RollCoolDown);
-        _canRoll = true;
-    }
+    //IEnumerator RollCooldown()
+    //{
+    //    _canRoll = false;
+    //    yield return new WaitForSeconds(RollCoolDown);
+    //    _canRoll = true;
+    //}
 
     IEnumerator StaminaRecoverDelay(float Delay)
     {

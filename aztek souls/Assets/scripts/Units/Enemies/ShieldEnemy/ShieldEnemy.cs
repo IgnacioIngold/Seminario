@@ -38,9 +38,9 @@ public class ShieldEnemy : BaseUnit
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
     private bool LookTowardsPlayer = true;
-    private float ThinkTime;
-    private float remainingThinkTime;
-    private bool _blocking;
+    private float ThinkTime = 0;
+    private float remainingThinkTime = 0;
+    private bool _blocking = false;
 #endif
 
 
@@ -271,7 +271,7 @@ public class ShieldEnemy : BaseUnit
 
         attack.OnEnter += (previousState) => 
         {
-            _attacking = true;
+            //_attacking = true;
             agent.isStopped = true;
             rb.velocity = Vector3.zero;
             StartCoroutine(TriCombo());
@@ -279,7 +279,7 @@ public class ShieldEnemy : BaseUnit
         //attack.OnUpdate += () => { };
         attack.OnExit += (nextState) => 
         {
-            _attacking = false;
+            //_attacking = false;
             agent.isStopped = false;
         };
 

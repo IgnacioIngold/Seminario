@@ -22,7 +22,6 @@ public class BigCursed : BaseUnit
     public BossStates MainState;
     GenericFSM<BossStates> sm;
     State<BossStates> idle;
-    public Collider AttackCollider;
 
     [Header("Settings del Boss")]
     public float[] BasicAttackDamages;
