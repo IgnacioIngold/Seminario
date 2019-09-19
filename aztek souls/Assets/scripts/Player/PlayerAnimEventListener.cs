@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class PlayerAnimEventListener : MonoBehaviour
 {
     public Player player;
@@ -54,6 +56,10 @@ public class PlayerAnimEventListener : MonoBehaviour
         marker.SetActive(false);
 
     }
+    public void GetHurtEvent()
+    {
+        player.CameraShake.Play();
+    }
 
     /// <summary>
     /// Retorna la duración del clip actual.
@@ -68,4 +74,5 @@ public class PlayerAnimEventListener : MonoBehaviour
 
         return clip.length;
     }
+    
 }

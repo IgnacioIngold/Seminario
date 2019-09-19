@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
 using EZCameraShake;
 
+
 public class FeedbackEffects : MonoBehaviour
 {
     public Animator UIAnims;
@@ -16,6 +17,7 @@ public class FeedbackEffects : MonoBehaviour
     public float HitShakeRoughness;
     public float HitShakeFadeInTime;
     public float HitShakeFadeOutTime;
+    
 
     Vignette _vig;
     ChromaticAberration _ca;
@@ -26,10 +28,10 @@ public class FeedbackEffects : MonoBehaviour
     {
         player = GetComponent<Player>();
         player.OnGetHit += GetHit;
-        player.OnAttackLanded += () =>
-        {
-            CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
-        };
+        //player.OnAttackLanded += () =>
+        //{
+        //    CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
+        //};
 
         var PP = Camera.main.GetComponent<PostProcessVolume>();
 
@@ -84,7 +86,8 @@ public class FeedbackEffects : MonoBehaviour
     {
         //Necesito una duración.
         float remaining = HitDuration;
-        CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
+        //CameraShaker.Instance.ShakeOnce(HitShakeMagnitude, HitShakeRoughness, HitShakeFadeInTime, HitShakeFadeOutTime);
+        
 
         //Start -->
         //Seteo el Vignette.

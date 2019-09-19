@@ -74,6 +74,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
 
     public PlayableDirector StaminaEffect;
+    public PlayableDirector CameraShake;
 
     [Header("Main Stats")] //Estados Principales.
     public Stats myStats;
