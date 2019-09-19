@@ -5,8 +5,14 @@ using Core.Definitions;
 
 public class LevelExit : MonoBehaviour
 {
-    public GameObject PlayerObject;
-    public SceneWrapp levelWrap;
+    [SerializeField]GameObject PlayerObject;
+    [SerializeField]SceneWrapp levelWrap;
+
+    private void Awake()
+    {
+        PlayerObject = FindObjectOfType<Player>().gameObject;
+        levelWrap = FindObjectOfType<SceneWrapp>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
