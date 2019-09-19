@@ -51,6 +51,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     private void DenyGetInput()
     {
         player.CurrentWeapon.CanGetInput(false);
+        if(marker.activeInHierarchy)
         marker.SetActive(false);
 
     }
