@@ -5,12 +5,15 @@ using IA.StateMachine.Generic;
 using Core.Entities;
 using System;
 using Random = UnityEngine.Random;
+using IA.RandomSelections;
 
 public enum ShieldEnemyStates
 {
     idle,
     alerted,
     block,
+    vulnerable,
+    parry,
     attack,
     pursue,
     think,
@@ -29,6 +32,9 @@ public class ShieldEnemy : BaseUnit
 
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
+    private bool LookTowardsPlayer = true;
+    private float ThinkTime;
+    private float remainingThinkTime;
 #endif
 
 
@@ -36,7 +42,7 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        //Seteo la animación.
+        anims.SetTrigger("getDamage");
         StopAllCoroutines();
 
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
@@ -77,8 +83,10 @@ public class ShieldEnemy : BaseUnit
         //State Machine.
         var idle = new State<ShieldEnemyStates>("Idle");
         var alerted = new State<ShieldEnemyStates>("Alerted");
-        var blocking = new State<ShieldEnemyStates>("Bloquing");
         var pursue = new State<ShieldEnemyStates>("pursue");
+        var blocking = new State<ShieldEnemyStates>("Bloquing");
+        var vulnerable = new State<ShieldEnemyStates>("Vulnerable");
+        var parry = new State<ShieldEnemyStates>("Parrying");
         var attack = new State<ShieldEnemyStates>("Attacking");
         var think = new State<ShieldEnemyStates>("Thinking");
         var dead = new State<ShieldEnemyStates>("Dead");
@@ -93,17 +101,50 @@ public class ShieldEnemy : BaseUnit
             anims.SetBool("Dead", true);
             anims.SetTrigger("getDamage");
             anims.SetFloat("Moving", 1f);
+            anims.SetInteger("Attack", 1);
             anims.SetBool("Blocking", true);
             anims.SetTrigger("BlockBreak");
-            anims.SetInteger("Attack", 1);
+            anims.SetTrigger("Parry");
         */
+        #region Transitions
 
+        idle.AddTransition(ShieldEnemyStates.alerted, alerted)
+            .AddTransition(ShieldEnemyStates.dead, dead);
+
+        alerted.AddTransition(ShieldEnemyStates.think, think)
+               .AddTransition(ShieldEnemyStates.dead, dead);
+
+        pursue.AddTransition(ShieldEnemyStates.pursue, pursue)
+              .AddTransition(ShieldEnemyStates.think, think)
+              .AddTransition(ShieldEnemyStates.dead, dead);
+
+        blocking.AddTransition(ShieldEnemyStates.parry, parry)
+                .AddTransition(ShieldEnemyStates.attack, attack)
+                .AddTransition(ShieldEnemyStates.vulnerable, vulnerable)
+                .AddTransition(ShieldEnemyStates.think, think)
+                .AddTransition(ShieldEnemyStates.dead, dead);
+
+        parry.AddTransition(ShieldEnemyStates.think, think)
+             .AddTransition(ShieldEnemyStates.dead, dead);
+
+        attack.AddTransition(ShieldEnemyStates.dead, dead)
+              .AddTransition(ShieldEnemyStates.think, think);
+
+        think.AddTransition(ShieldEnemyStates.dead, dead)
+             .AddTransition(ShieldEnemyStates.block, blocking)
+             .AddTransition(ShieldEnemyStates.parry, parry)
+             .AddTransition(ShieldEnemyStates.vulnerable, vulnerable)
+             .AddTransition(ShieldEnemyStates.attack, attack)
+             .AddTransition(ShieldEnemyStates.pursue, pursue)
+             .AddTransition(ShieldEnemyStates.idle, idle);
+
+        #endregion
 
         #region Estados
 
         idle.OnEnter += (previousState) => 
         {
-            //Activo la animación si es necesario.
+            anims.SetFloat("Moving", 0f);
         };
         idle.OnUpdate += () => 
         {
@@ -144,7 +185,7 @@ public class ShieldEnemy : BaseUnit
 
         pursue.OnEnter += (previousState) => 
         {
-            //Activo la animación.
+            anims.SetFloat("Moving", 1f);
         };
         pursue.OnUpdate += () => 
         {
@@ -156,26 +197,70 @@ public class ShieldEnemy : BaseUnit
             if (sight.distanceToTarget <= AttackRange)
                 _sm.Feed(ShieldEnemyStates.attack);
         };
-        pursue.OnExit += (nextState) => 
-        {
-            //Desactivo la animación.
-        };
+        //pursue.OnExit += (nextState) => 
+        //{
+        //    //Desactivo la animación. Esto queda así para que otra animación lo sobreescriba.
+        //};
 
         attack.OnEnter += (previousState) => 
         {
             _attacking = true;
             agent.isStopped = true;
-            //Hago la corrutina.
+            rb.velocity = Vector3.zero;
+            StartCoroutine(TriCombo());
         };
-        attack.OnUpdate += () => { };
+        //attack.OnUpdate += () => { };
         attack.OnExit += (nextState) => 
         {
             _attacking = false;
             agent.isStopped = false;
         };
 
-        think.OnEnter += (previousState) => { };
-        think.OnUpdate += () => { };
+        think.OnEnter += (previousState) => 
+        {
+            if (ThinkTime > 0) remainingThinkTime = ThinkTime;
+        };
+        think.OnUpdate += () => 
+        {
+            if (remainingThinkTime > 0)
+                remainingThinkTime -= Time.deltaTime;
+            else
+            {
+                remainingThinkTime = 0;
+                IKilleable target = Target.GetComponent<IKilleable>();
+
+                if (target.IsAlive)
+                {
+                    //Tomo una desición.
+                    float blockImportance = (1 - (Health / MaxHP) * 10);
+                    float pursueImportance = ((Health / MaxHP) * 10);
+                    float AttackImportance = 5f;
+
+                    //Desiciones posibles:
+                    //Perseguir --> se realiza siempre que el enemigo esté más lejos de cierta distancia.
+                    //Atacar --> Su importancia se mantiene.
+                    //Bloquear --> Cuando la vida se va reduciendo su imporancia es mayor.
+
+                    if (sight.distanceToTarget > AttackRange)
+                    {
+                        int decition = RoulleteSelection.Roll(new float[2] { pursueImportance, blockImportance });
+                        print("Distance is bigger than the AttackRange.\nDecition was: " + decition);
+
+                        if (decition == 0) _sm.Feed(ShieldEnemyStates.pursue);
+                        if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
+                    }
+
+                    if (sight.distanceToTarget < AttackRange)
+                    {
+                        int decition = RoulleteSelection.Roll(new float[2] { AttackImportance, blockImportance });
+                        print("Distance is smaller than the AttackRange.\nDecition was: " + decition);
+
+                        if (decition == 0) _sm.Feed(ShieldEnemyStates.pursue);
+                        if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
+                    }
+                }
+            }
+        };
         think.OnExit += (nextState) => 
         {
             print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
@@ -184,7 +269,7 @@ public class ShieldEnemy : BaseUnit
         dead.OnEnter += (previousState) => 
         {
             StopAllCoroutines();
-            //Seteo la animación de muerte.
+            anims.SetBool("Dead", true);
             Die();
         };
 
@@ -196,7 +281,77 @@ public class ShieldEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
+        print("Current State is: " + _sm.current.StateName);
+
         sight.Update();
+
+        if (LookTowardsPlayer)
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+
         _sm.Update();
+    }
+
+    IEnumerator biCombo()
+    {
+        anims.SetFloat("Moving", 0f);
+        LookTowardsPlayer = false;
+
+        //Inicio el primer ataque.
+        anims.SetInteger("Attack", 2);
+        yield return null;
+
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        float remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        //Segundo ataque.
+        anims.SetInteger("Attack", 3);
+        yield return null;
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        remainingTime = getRemainingAnimTime("attack3", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        _sm.Feed(ShieldEnemyStates.think);
+    }
+
+    IEnumerator TriCombo()
+    {
+        anims.SetFloat("Moving", 0f);
+        LookTowardsPlayer = false;
+
+        //Inicio el primer ataque.
+        anims.SetInteger("Attack", 1);
+        yield return null;
+
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        float remainingTime = getRemainingAnimTime("attack1", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        //Segundo ataque.
+        anims.SetInteger("Attack", 2);
+        yield return null;
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        //Tercer ataque.
+        anims.SetInteger("Attack", 3);
+        yield return null;
+
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        remainingTime = getRemainingAnimTime("attack3", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        _sm.Feed(ShieldEnemyStates.think);
     }
 }
