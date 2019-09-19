@@ -18,6 +18,7 @@ namespace Core.Entities
     public interface IAttacker<T>
     {
         void OnHitConfirmed();
+        void OnHitBlocked();
         T GetDamageStats();
     }
 }

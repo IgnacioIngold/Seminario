@@ -83,13 +83,14 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         return new object[0];
     }
     public virtual void OnHitConfirmed() { }
+    public virtual void OnHitBlocked() { }
 
     //============================= DEBUGG GIZMOS =============================================
 
     #region Snippet for Debugg
 
 #if (UNITY_EDITOR) 
-    void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if (Debug_Gizmos)
         {
@@ -203,6 +204,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     {
         EnemyHealthBar.FadeOut(3f);
         agent.enabled = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.isKinematic = true;
         MainColl.enabled = false;
 

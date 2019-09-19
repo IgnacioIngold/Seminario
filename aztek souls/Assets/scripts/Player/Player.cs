@@ -161,7 +161,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public Weapon CurrentWeapon;
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
+    public float ShockDuration = 2f;
     bool _attacking = false;                                 // Si estoy atacando actualmente.
+    bool _shoked;
 
     #endregion
 
@@ -181,6 +183,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //Cálculo el daño real.
             float resist = myStats.Resistencia * 0.5f;
             Damage -= resist;
+            _shoked = false;
+            _anims.SetBool("Disarmed", false);
 
             print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
 
@@ -455,7 +459,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
     void Update()
     {
-        if (!IsAlive) return;
+        if (!IsAlive || _shoked) return;
 
         //Inputs, asi es más responsive.
         float AxisY = Input.GetAxis("Vertical");
@@ -556,7 +560,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     Vector3 moveDiR;
     float speedR;
-    
 
     public void Move()
     {
@@ -731,6 +734,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //    _exhausted = false;
     //}
 
+    IEnumerator Shock()
+    {
+        _shoked = true;
+        _anims.SetBool("Disarmed", true);
+        yield return new WaitForSeconds(ShockDuration);
+        _anims.SetBool("Disarmed", false);
+        _shoked = false;
+    }
+
     IEnumerator HurtFreeze()
     {
         _clamped = true;
@@ -770,5 +782,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void StaminaEffecPlay()
     {
         StaminaEffect.Play();
+    }
+
+    public void OnHitBlocked()
+    {
+        print("Ataque Bloqueado.");
+        CurrentWeapon.InterruptAttack();
+        StartCoroutine(Shock());
     }
 }
