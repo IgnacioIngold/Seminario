@@ -48,7 +48,17 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
+        StopAllCoroutines();
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+
+        bool breakDefenceAttack = (bool)DamageStats[2];
+
+        if (_blocking && breakDefenceAttack)
+        {
+             _sm.Feed(ShieldEnemyStates.vulnerable);
+            return;
+        }
+
         //Confirmar hit o no.
         if (_blocking && sight.angleToTarget < 80)
         {
@@ -60,7 +70,6 @@ public class ShieldEnemy : BaseUnit
         else
         {
             anims.SetTrigger("getDamage");
-            StopAllCoroutines();
 
             Aggresor.OnHitConfirmed();
             //Si no estoy guardando.
@@ -81,7 +90,7 @@ public class ShieldEnemy : BaseUnit
 
     public override object[] GetDamageStats()
     {
-        return new object[2] { this, attackDamage };
+        return new object[3] { this, attackDamage, false };
     }
 
     //=========================================================================================
@@ -137,6 +146,9 @@ public class ShieldEnemy : BaseUnit
                 .AddTransition(ShieldEnemyStates.vulnerable, vulnerable)
                 .AddTransition(ShieldEnemyStates.think, think)
                 .AddTransition(ShieldEnemyStates.dead, dead);
+
+        vulnerable.AddTransition(ShieldEnemyStates.think, think)
+                  .AddTransition(ShieldEnemyStates.dead, dead);
 
         parry.AddTransition(ShieldEnemyStates.think, think)
              .AddTransition(ShieldEnemyStates.dead, dead);
@@ -209,6 +221,10 @@ public class ShieldEnemy : BaseUnit
             rotationLerpSpeed /= 3;
             _blocking = false;
         };
+
+        vulnerable.OnEnter += (previousState) => { StartCoroutine(defenceDestroyed()); };
+        //vulnerable.OnUpdate += () => { };
+        //vulnerable.OnExit += (nextState) => { };
 
 
         parry.OnEnter += (previousState) => 
@@ -354,13 +370,25 @@ public class ShieldEnemy : BaseUnit
         }
     }
 
+    IEnumerator defenceDestroyed()
+    {
+        _blocking = false;
+        anims.SetTrigger("BlockBreak");
+        yield return null;
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("disamed", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
+
+        _sm.Feed(ShieldEnemyStates.think);
+    }
+
     IEnumerator parryBicombo()
     {
         anims.SetBool("Parrying", true);
         LookTowardsPlayer = false;
-        yield return null;
-
         float currentTransitionTime = getCurrentTransitionScaledTime();
+        print("Transicion es: " + currentTransitionTime);
         yield return new WaitForSeconds(currentTransitionTime);
         float remainingTime = getRemainingAnimTime(" parry", currentTransitionTime);
 

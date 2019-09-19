@@ -82,7 +82,7 @@ public class BigCursed : BaseUnit
     /// <returns>Un array de objetos, donde cada objeto es una Estadística que afecta el daño.</returns>
     public override object[] GetDamageStats()
     {
-        return new object[2] { this , attackDamage };
+        return new object[3] { this , attackDamage, false };
     }
 
     //=========================================================================================

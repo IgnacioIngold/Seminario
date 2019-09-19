@@ -164,6 +164,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float ShockDuration = 2f;
     bool _attacking = false;                                 // Si estoy atacando actualmente.
     bool _shoked;
+    bool breakDefence = false;
 
     #endregion
 
@@ -222,7 +223,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (CurrentWeapon != null)
         {
             float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
-            object[] combatStats = new object[2] { this, DañoFinal };
+            object[] combatStats = new object[3] { this, DañoFinal, breakDefence };
             if (combatStats != null)
                 return combatStats;
         }
@@ -377,8 +378,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             _anims.SetInteger("combat", 2);
             Stamina -= S1.Cost;
+            breakDefence = true;
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
+        S1.OnEnd += () => { breakDefence = false; };
         S1.AttackDuration = AttackClips[S1.ID - 1].length;
         S1.OnEnableInput += () => { marker.SetActive(true); };
 
@@ -387,8 +390,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             _anims.SetInteger("combat", 4);
             Stamina -= S2.Cost;
+            breakDefence = true;
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
+        S2.OnEnd += () => { breakDefence = false; };
         S2.AttackDuration = AttackClips[S2.ID - 1].length;
 
         Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
@@ -396,8 +401,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             _anims.SetInteger("combat", 6);
             Stamina -= S3.Cost;
+            breakDefence = true;
             //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
+        S3.OnEnd += () => { breakDefence = false; };
         S3.AttackDuration = AttackClips[S3.ID - 1].length;
 
         Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
@@ -405,8 +412,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             Stamina -= S4.Cost;
             _anims.SetInteger("combat", 8);
+            breakDefence = true;
             //print("Ejecutando Ataque:" + S4.IDName);
         };
+        S4.OnEnd += () => { breakDefence = false; };
         S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion

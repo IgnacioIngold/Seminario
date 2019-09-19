@@ -94,7 +94,7 @@ public class Weapon
     }
     public void CanGetInput(bool enabled)
     {
-        if (enabled)
+        if (enabled && CurrentAttack != null)
         {
             canGetInput = true;
             CurrentAttack.EnableInput();
