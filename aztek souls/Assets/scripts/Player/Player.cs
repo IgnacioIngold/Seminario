@@ -492,17 +492,18 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                         _anims.SetBool("Running", true);
                     }
 
-                    if (_running && Input.GetButtonUp("Run"))
+                    if (_running)
                     {
-                        _running = false;
-                        _anims.SetBool("Running", false);
+                        if (Input.GetButtonUp("Run") || Stamina <= 0)
+                        {
+                            _running = false;
+                            _anims.SetBool("Running", false);
+                        }
                     }
-                    
                 }
                 else
                     _moving = false;
             }
-           
 
             if (_rolling) transform.forward = _rollDir;
             else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
@@ -537,7 +538,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             else
                if (Input.GetButtonDown("StrongAttack"))
                 CurrentWeapon.FeedInput(Inputs.strong);
-
         }
 
         if (!_rolling && !_moving && !_attacking)
