@@ -5,11 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class SE_AnimEventListener : MonoBehaviour
 {
-    Collider coll;
+    public Collider coll;
 
     private void Awake()
     {
-        coll = GetComponent<Collider>();
+        //coll = GetComponent<Collider>();
     }
 
     public void EnableDamage()

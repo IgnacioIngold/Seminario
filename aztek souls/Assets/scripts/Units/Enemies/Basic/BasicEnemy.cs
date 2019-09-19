@@ -59,7 +59,7 @@ public class BasicEnemy : BaseUnit
 
     public override object[] GetDamageStats()
     {
-        return new object[2] { this, attackDamage };
+        return new object[3] { this, attackDamage, false };
     }
 
     //=========================================================================================

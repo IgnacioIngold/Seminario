@@ -13,6 +13,7 @@ public enum ShieldEnemyStates
     alerted,
     block,
     vulnerable,
+    reposition,
     parry,
     attack,
     pursue,
@@ -22,11 +23,15 @@ public enum ShieldEnemyStates
 
 public class ShieldEnemy : BaseUnit
 {
+    public event Action onBlockedHit = delegate { };
+
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
+    public float BlockRange = 3f;
 
     GenericFSM<ShieldEnemyStates> _sm;
     private float _alertedTimeRemaining = 0f;
+    private float _originalRotLerpSpeed = 0f;
 
     private bool _attacking;
 
@@ -35,6 +40,7 @@ public class ShieldEnemy : BaseUnit
     private bool LookTowardsPlayer = true;
     private float ThinkTime;
     private float remainingThinkTime;
+    private bool _blocking;
 #endif
 
 
@@ -42,36 +48,49 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        anims.SetTrigger("getDamage");
         StopAllCoroutines();
-
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        //Confirmar hit o no.
 
-        //Si no estoy guardando.
-        Health -= (float)DamageStats[1];
+        bool breakDefenceAttack = (bool)DamageStats[2];
 
-        base.GetDamage(DamageStats);
-
-        //Aviso que estoy Muerto We.
-        if (!IsAlive)
+        if (_blocking && breakDefenceAttack)
         {
-            _sm.Feed(ShieldEnemyStates.dead);
+             _sm.Feed(ShieldEnemyStates.vulnerable);
             return;
         }
 
-        if (!_targetDetected)
+        //Confirmar hit o no.
+        if (_blocking && sight.angleToTarget < 80)
         {
-            _targetDetected = true;
-            _sm.Feed(ShieldEnemyStates.pursue);
+            Aggresor.OnHitBlocked();
+            onBlockedHit();
+
+            _sm.Feed(ShieldEnemyStates.parry);
         }
         else
-            _sm.Feed(ShieldEnemyStates.idle);
+        {
+            anims.SetTrigger("getDamage");
+
+            Aggresor.OnHitConfirmed();
+            //Si no estoy guardando.
+            Health -= (float)DamageStats[1];
+
+            base.GetDamage(DamageStats);
+
+            //Aviso que estoy Muerto We.
+            if (!IsAlive)
+            {
+                _sm.Feed(ShieldEnemyStates.dead);
+                return;
+            }
+
+            if (_targetDetected) _sm.Feed(ShieldEnemyStates.think);
+        }
     }
 
     public override object[] GetDamageStats()
     {
-        return new object[2] { this, attackDamage };
+        return new object[3] { this, attackDamage, false };
     }
 
     //=========================================================================================
@@ -86,6 +105,7 @@ public class ShieldEnemy : BaseUnit
         var pursue = new State<ShieldEnemyStates>("pursue");
         var blocking = new State<ShieldEnemyStates>("Bloquing");
         var vulnerable = new State<ShieldEnemyStates>("Vulnerable");
+        var reposition = new State<ShieldEnemyStates>("Repositioning");
         var parry = new State<ShieldEnemyStates>("Parrying");
         var attack = new State<ShieldEnemyStates>("Attacking");
         var think = new State<ShieldEnemyStates>("Thinking");
@@ -118,11 +138,17 @@ public class ShieldEnemy : BaseUnit
               .AddTransition(ShieldEnemyStates.think, think)
               .AddTransition(ShieldEnemyStates.dead, dead);
 
+        reposition.AddTransition(ShieldEnemyStates.dead, dead)
+                  .AddTransition(ShieldEnemyStates.think, think);
+
         blocking.AddTransition(ShieldEnemyStates.parry, parry)
                 .AddTransition(ShieldEnemyStates.attack, attack)
                 .AddTransition(ShieldEnemyStates.vulnerable, vulnerable)
                 .AddTransition(ShieldEnemyStates.think, think)
                 .AddTransition(ShieldEnemyStates.dead, dead);
+
+        vulnerable.AddTransition(ShieldEnemyStates.think, think)
+                  .AddTransition(ShieldEnemyStates.dead, dead);
 
         parry.AddTransition(ShieldEnemyStates.think, think)
              .AddTransition(ShieldEnemyStates.dead, dead);
@@ -134,6 +160,7 @@ public class ShieldEnemy : BaseUnit
              .AddTransition(ShieldEnemyStates.block, blocking)
              .AddTransition(ShieldEnemyStates.parry, parry)
              .AddTransition(ShieldEnemyStates.vulnerable, vulnerable)
+             .AddTransition(ShieldEnemyStates.reposition, reposition)
              .AddTransition(ShieldEnemyStates.attack, attack)
              .AddTransition(ShieldEnemyStates.pursue, pursue)
              .AddTransition(ShieldEnemyStates.idle, idle);
@@ -157,7 +184,7 @@ public class ShieldEnemy : BaseUnit
             if (_targetDetected)
                 _sm.Feed(ShieldEnemyStates.alerted);
         };
-        idle.OnExit += (nextState) => { };
+        //idle.OnExit += (nextState) => { };
 
 
         alerted.OnEnter += (previousState) => 
@@ -166,22 +193,47 @@ public class ShieldEnemy : BaseUnit
         };
         alerted.OnUpdate += () => 
         {
-            _alertedTimeRemaining = AlertedTime;
-
-            if (_alertedTimeRemaining > 0)
+            if (_alertedTimeRemaining >= 0)
             {
                 _alertedTimeRemaining -= Time.deltaTime;
                 transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
             }
             else
-                _sm.Feed(ShieldEnemyStates.pursue);
+                _sm.Feed(ShieldEnemyStates.think);
         };
         alerted.OnExit += (nextState) => { };
 
 
-        blocking.OnEnter += (previousState) => { };
-        blocking.OnUpdate += () => { };
-        blocking.OnExit += (nextState) => { };
+        blocking.OnEnter += (previousState) => 
+        {
+            anims.SetBool("Blocking", true);
+            LookTowardsPlayer = true;
+            rotationLerpSpeed *= 3;
+            _blocking = true;
+        };
+        blocking.OnUpdate += () => 
+        {
+            if (sight.distanceToTarget > BlockRange) _sm.Feed(ShieldEnemyStates.think);
+        };
+        blocking.OnExit += (nextState) => 
+        {
+            anims.SetBool("Blocking", false);
+            rotationLerpSpeed /= 3;
+            _blocking = false;
+        };
+
+        vulnerable.OnEnter += (previousState) => { StartCoroutine(defenceDestroyed()); };
+        //vulnerable.OnUpdate += () => { };
+        //vulnerable.OnExit += (nextState) => { };
+
+
+        parry.OnEnter += (previousState) => 
+        {
+            StopAllCoroutines();
+            StartCoroutine(parryBicombo());
+        };
+        //parry.OnUpdate += () => { };
+        parry.OnExit += (nextState) => { };
 
         pursue.OnEnter += (previousState) => 
         {
@@ -192,15 +244,30 @@ public class ShieldEnemy : BaseUnit
             //Correr como si no hubiera un mañana (?
             transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
 
-            agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
+            if (sight.distanceToTarget > AttackRange) agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
 
-            if (sight.distanceToTarget <= AttackRange)
-                _sm.Feed(ShieldEnemyStates.attack);
+            if (sight.distanceToTarget <= AttackRange) _sm.Feed(ShieldEnemyStates.think);
         };
         //pursue.OnExit += (nextState) => 
         //{
         //    //Desactivo la animación. Esto queda así para que otra animación lo sobreescriba.
         //};
+
+        reposition.OnEnter += (previousState) => 
+        {
+            LookTowardsPlayer = true;
+            _originalRotLerpSpeed = rotationLerpSpeed;
+            rotationLerpSpeed *= ((sight.angleToTarget / 360) * 20);
+        };
+        reposition.OnUpdate += () =>
+        {
+            if (sight.angleToTarget < 45) _sm.Feed(ShieldEnemyStates.think);
+        };
+        reposition.OnExit += (nextState) => 
+        {
+            LookTowardsPlayer = false;
+            rotationLerpSpeed = _originalRotLerpSpeed;
+        };
 
         attack.OnEnter += (previousState) => 
         {
@@ -229,12 +296,21 @@ public class ShieldEnemy : BaseUnit
                 remainingThinkTime = 0;
                 IKilleable target = Target.GetComponent<IKilleable>();
 
+                if (sight.angleToTarget > 45f)
+                {
+                    _sm.Feed(ShieldEnemyStates.reposition);
+                    return;
+                }
+
                 if (target.IsAlive)
                 {
                     //Tomo una desición.
-                    float blockImportance = (1 - (Health / MaxHP) * 10);
+                    float blockImportance = (1 - (Health / MaxHP)) * 10;
                     float pursueImportance = ((Health / MaxHP) * 10);
-                    float AttackImportance = 5f;
+                    float AttackImportance = 10f - (blockImportance * 0.8f);
+
+                    print(string.Format("BlockImp: {0} / PursueImp: {1} / AttackImportance: {2}",
+                        blockImportance, pursueImportance, AttackImportance));
 
                     //Desiciones posibles:
                     //Perseguir --> se realiza siempre que el enemigo esté más lejos de cierta distancia.
@@ -244,7 +320,7 @@ public class ShieldEnemy : BaseUnit
                     if (sight.distanceToTarget > AttackRange)
                     {
                         int decition = RoulleteSelection.Roll(new float[2] { pursueImportance, blockImportance });
-                        print("Distance is bigger than the AttackRange.\nDecition was: " + decition);
+                        print("Distance is bigger than the AttackRange.\nDecition was: " + (decition == 0 ? "pursue" : "block"));
 
                         if (decition == 0) _sm.Feed(ShieldEnemyStates.pursue);
                         if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
@@ -253,9 +329,9 @@ public class ShieldEnemy : BaseUnit
                     if (sight.distanceToTarget < AttackRange)
                     {
                         int decition = RoulleteSelection.Roll(new float[2] { AttackImportance, blockImportance });
-                        print("Distance is smaller than the AttackRange.\nDecition was: " + decition);
+                        print("Distance is smaller than the AttackRange.\nDecition was: " + (decition == 0 ? "Attack" : "block"));
 
-                        if (decition == 0) _sm.Feed(ShieldEnemyStates.pursue);
+                        if (decition == 0) _sm.Feed(ShieldEnemyStates.attack);
                         if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
                     }
                 }
@@ -281,40 +357,58 @@ public class ShieldEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
-        print("Current State is: " + _sm.current.StateName);
+        if (IsAlive)
+        {
+            print("Current State is: " + _sm.current.StateName);
 
-        sight.Update();
+            sight.Update();
 
-        if (LookTowardsPlayer)
-            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+            if (LookTowardsPlayer && _targetDetected)
+                transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
 
-        _sm.Update();
+            _sm.Update();
+        }
     }
 
-    IEnumerator biCombo()
+    IEnumerator defenceDestroyed()
     {
-        anims.SetFloat("Moving", 0f);
-        LookTowardsPlayer = false;
-
-        //Inicio el primer ataque.
-        anims.SetInteger("Attack", 2);
+        _blocking = false;
+        anims.SetTrigger("BlockBreak");
         yield return null;
-
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("disamed", currentTransitionTime);
+        yield return new WaitForSeconds(remainingTime);
 
-        float remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        _sm.Feed(ShieldEnemyStates.think);
+    }
+
+    IEnumerator parryBicombo()
+    {
+        anims.SetBool("Parrying", true);
+        LookTowardsPlayer = false;
+        float currentTransitionTime = getCurrentTransitionScaledTime();
+        print("Transicion es: " + currentTransitionTime);
+        yield return new WaitForSeconds(currentTransitionTime);
+        float remainingTime = getRemainingAnimTime(" parry", currentTransitionTime);
+
+        anims.SetInteger("Attack", 2);                   //  <---- Primer Ataque
+        yield return new WaitForSeconds(remainingTime);
+        currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        anims.SetInteger("Attack", 3);
         yield return new WaitForSeconds(remainingTime);
 
         //Segundo ataque.
-        anims.SetInteger("Attack", 3);
-        yield return null;
         currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
         remainingTime = getRemainingAnimTime("attack3", currentTransitionTime);
         yield return new WaitForSeconds(remainingTime);
 
+        anims.SetBool("Parrying", false);
         _sm.Feed(ShieldEnemyStates.think);
     }
 
@@ -331,21 +425,18 @@ public class ShieldEnemy : BaseUnit
         yield return new WaitForSeconds(currentTransitionTime);
 
         float remainingTime = getRemainingAnimTime("attack1", currentTransitionTime);
+        anims.SetInteger("Attack", 2);
         yield return new WaitForSeconds(remainingTime);
 
         //Segundo ataque.
-        anims.SetInteger("Attack", 2);
-        yield return null;
         currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
         remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        anims.SetInteger("Attack", 3);
         yield return new WaitForSeconds(remainingTime);
 
         //Tercer ataque.
-        anims.SetInteger("Attack", 3);
-        yield return null;
-
         currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
@@ -353,5 +444,14 @@ public class ShieldEnemy : BaseUnit
         yield return new WaitForSeconds(remainingTime);
 
         _sm.Feed(ShieldEnemyStates.think);
+    }
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        Gizmos.color = Color.cyan;
+        Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+        Gizmos.DrawWireSphere(transform.position, BlockRange);
     }
 }
