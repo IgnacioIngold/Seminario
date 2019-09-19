@@ -240,6 +240,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         Health = BaseHP + (myStats.Vitalidad * 5);
         Stamina = MaxStamina;
+        OnStaminaIsEmpty += StaminaEffecPlay;
 
         #region Combate
 
@@ -749,5 +750,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             Damageable.GetDamage(new object[2] { this, 0f });
         }
+    }
+    public void StaminaEffecPlay()
+    {
+        StaminaEffect.Play();
     }
 }
