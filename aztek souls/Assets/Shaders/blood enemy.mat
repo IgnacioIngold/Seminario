@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fire
-  m_Shader: {fileID: 4800000, guid: 5dbcb0c9d7d3e98479e6905e021244bf, type: 3}
+  m_Name: blood enemy
+  m_Shader: {fileID: 4800000, guid: 65c6a341b0297a24e8fe5ca7f831cf89, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
@@ -20,15 +20,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 47a783cc353b7194bb77ad4c02d94f94, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3929b73fc706dea4cb283f1f9d7a301b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample1:
-        m_Texture: {fileID: 2800000, guid: a17446cc00514484ab1e31d5872db88a, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _ramppat:
-        m_Texture: {fileID: 2800000, guid: 8a794f4103045f548818c9d9f4d02960, type: 3}
+        m_Texture: {fileID: 2800000, guid: cb6d427e02b5bcb43aaa6663d50f5a36, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -36,8 +32,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - __dirty: 1
-    - _speed: -0.02
+    - _Power: 1.77
+    - _Smooth: 0
+    - __dirty: 0
+    - _met: 2
+    - _speedNoise: 0.25
     m_Colors:
-    - _distorcion: {r: 0, g: 0, b: 0, a: 0}
-    - _idstorcion2: {r: 2, g: 2, b: 0, a: 0}
+    - _ColorPartcle: {r: 0.0595413, g: 0.5471698, b: 0, a: 0}
