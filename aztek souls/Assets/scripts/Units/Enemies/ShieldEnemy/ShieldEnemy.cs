@@ -34,13 +34,13 @@ public class ShieldEnemy : BaseUnit
     private float _originalRotLerpSpeed = 0f;
 
     private bool _attacking;
-
-#if(UNITY_EDITOR)
-    [SerializeField] ShieldEnemyStates current;
     private bool LookTowardsPlayer = true;
     private float ThinkTime = 0;
     private float remainingThinkTime = 0;
     private bool _blocking = false;
+
+#if(UNITY_EDITOR)
+    [SerializeField] ShieldEnemyStates current;
 #endif
 
 
@@ -447,6 +447,7 @@ public class ShieldEnemy : BaseUnit
         _sm.Feed(ShieldEnemyStates.think);
     }
 
+#if(UNITY_EDITOR)
     protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
@@ -455,4 +456,5 @@ public class ShieldEnemy : BaseUnit
         Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
         Gizmos.DrawWireSphere(transform.position, BlockRange);
     }
+#endif
 }
