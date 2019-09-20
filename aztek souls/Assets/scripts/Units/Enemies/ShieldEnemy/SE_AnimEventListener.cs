@@ -6,6 +6,7 @@ using UnityEngine;
 public class SE_AnimEventListener : MonoBehaviour
 {
     public Collider coll;
+    public ParticleSystem marker;
 
     private void Awake()
     {
@@ -20,5 +21,9 @@ public class SE_AnimEventListener : MonoBehaviour
     public void DisableDamage()
     {
         coll.enabled = false;
+    }
+    public void hiteable()
+    {
+        marker.Play();
     }
 }
