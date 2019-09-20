@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 public class HealthBar : MonoBehaviour
 {
     public Image life;
@@ -7,6 +9,9 @@ public class HealthBar : MonoBehaviour
 
     public Image lifeBackGround;
     public Image staminaBackGround;
+
+    public TextMeshProUGUI BloodAmmount;
+    public Image BloodAmmountBackGround;
 
     // Update is called once per frame
     public void UpdateHeathBar(float currentHealth, float maxHealth)
@@ -23,6 +28,11 @@ public class HealthBar : MonoBehaviour
         stamina.fillAmount = pct;
     }
 
+    public void UpdateBloodAmmount(int Ammount)
+    {
+        BloodAmmount.text = Ammount.ToString();
+    }
+
     public void FadeOut(float timeInSeconds)
     {
         life.CrossFadeAlpha(0, timeInSeconds, false);
@@ -30,6 +40,9 @@ public class HealthBar : MonoBehaviour
 
         stamina.CrossFadeAlpha(0, timeInSeconds, false);
         staminaBackGround.CrossFadeAlpha(0, timeInSeconds, false);
+
+        BloodAmmount.CrossFadeAlpha(0, timeInSeconds, false);
+        BloodAmmountBackGround.CrossFadeAlpha(0, timeInSeconds, false);
     }
 
     public void FadeIn(float timeInSeconds)
@@ -39,6 +52,8 @@ public class HealthBar : MonoBehaviour
 
         stamina.CrossFadeAlpha(1, timeInSeconds, false);
         staminaBackGround.CrossFadeAlpha(1, timeInSeconds, false);
-    }
 
+        BloodAmmount.CrossFadeAlpha(1, timeInSeconds, false);
+        BloodAmmountBackGround.CrossFadeAlpha(1, timeInSeconds, false);
+    }
 }

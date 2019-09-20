@@ -185,7 +185,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 val = 0;
 
             myStats.Sangre = val;
-            //Updateo el Canvas!!
+            if (_myBars != null)
+                _myBars.UpdateBloodAmmount((int)val);
         }
     }
 
@@ -320,6 +321,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         Health = BaseHP + (myStats.Vitalidad * 5);
         Stamina = MaxStamina;
+        Blood = myStats.Sangre;
+
         OnStaminaIsEmpty += StaminaEffecPlay;
         OnFeastBlood += FeastBloodEfect;
 
@@ -557,6 +560,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     _clamped = true;
                     if (Blood > 0)
                     {
+                        _anims.SetBool("ConsummingBlood", true);
                         Health += consumeBloodRate * Time.deltaTime;
                         Blood -= consumeBloodRate * Time.deltaTime;
                     }
@@ -564,12 +568,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     if (Blood <= 0 || !_canHeal)
                     {
                         print("NO puedes curarte más...");
+                        _anims.SetBool("ConsummingBlood", false);
                         _clamped = false;
                     }
                 }
 
                 if (Input.GetButtonUp("FeedBlood"))
                 {
+                    _anims.SetBool("ConsummingBlood", false);
                     _clamped = false;
                 }
             }
