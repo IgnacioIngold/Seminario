@@ -17470,7 +17470,7 @@ PrefabInstance:
     - target: {fileID: 4668271041496302404, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.72
+      value: -7.44
       objectReference: {fileID: 0}
     - target: {fileID: 4668271041496302404, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}
@@ -17541,6 +17541,11 @@ PrefabInstance:
         type: 3}
       propertyPath: Debug_LineOFSight
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037282081297051893, guid: 1b7e8c8915029354184300718e1f6007,
+        type: 3}
+      propertyPath: sight.range
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b7e8c8915029354184300718e1f6007, type: 3}
@@ -31806,7 +31811,7 @@ PrefabInstance:
     - target: {fileID: 8656725598884969302, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -49.999878
+      value: -49.999756
       objectReference: {fileID: 0}
     - target: {fileID: 106929361441585301, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
