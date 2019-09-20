@@ -17,8 +17,9 @@ namespace Core.Entities
     //Todas las Unidades que pueden tener estadísticas de combate.
     public interface IAttacker<T>
     {
-        void OnHitConfirmed();
-        void OnHitBlocked();
+        void OnHitConfirmed(T data);
+        void OnHitBlocked(T data);
+        void OnKillConfirmed(T data);
         T GetDamageStats();
     }
 }

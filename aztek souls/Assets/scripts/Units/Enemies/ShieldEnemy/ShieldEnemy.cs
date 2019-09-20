@@ -59,10 +59,18 @@ public class ShieldEnemy : BaseUnit
             return;
         }
 
+        //Aviso que estoy Muerto We.
+        if (!IsAlive)
+        {
+            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+            _sm.Feed(ShieldEnemyStates.dead);
+            return;
+        }
+
         //Confirmar hit o no.
         if (_blocking && sight.angleToTarget < 80)
         {
-            Aggresor.OnHitBlocked();
+            Aggresor.OnHitBlocked(null);
             onBlockedHit();
 
             _sm.Feed(ShieldEnemyStates.parry);
@@ -71,18 +79,11 @@ public class ShieldEnemy : BaseUnit
         {
             anims.SetTrigger("getDamage");
 
-            Aggresor.OnHitConfirmed();
+            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
             //Si no estoy guardando.
             Health -= (float)DamageStats[1];
 
             base.GetDamage(DamageStats);
-
-            //Aviso que estoy Muerto We.
-            if (!IsAlive)
-            {
-                _sm.Feed(ShieldEnemyStates.dead);
-                return;
-            }
 
             if (_targetDetected) _sm.Feed(ShieldEnemyStates.think);
         }

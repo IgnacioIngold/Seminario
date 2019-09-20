@@ -56,6 +56,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public event Action OnAttackLanded = delegate { };
     public event Action OnActionHasEnded = delegate { };
     public event Action OnStaminaIsEmpty = delegate { };
+    public event Action OnFeastBlood = delegate { };
+    public event Action OnConsumeBlood = delegate { };
+    public event Action OnHealthHitMax = delegate { };
     //public event Action OnPositionIsUpdated = delegate { };
 
     //Objetos que hay que setear.
@@ -90,11 +93,22 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
         set
         {
-            if (value < 0) value = 0;
-            _hp = value;
+            float val = value;
+            if (val < 0) val = 0;
+            else
+            if (val > MaxHealth)
+            {
+                OnHealthHitMax();
+                _canHeal = false;
+                val = MaxHealth;
+            }
+            else
+                _canHeal = true;
+
+            _hp = val;
 
             if (_myBars != null)
-                _myBars.UpdateHeathBar(_hp, BaseHP);
+                _myBars.UpdateHeathBar(_hp, MaxHealth);
         }
     }
     public float MaxHealth
@@ -102,6 +116,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         get { return BaseHP + (myStats.Vitalidad * 5); }
     }
     float _hp = 100f;                                        // PRIVADO: valor actual de la vida.
+    bool _canHeal = false;
 
     //Estamina.
     float _st = 100f;                                        // PRIVADO: valor actual de la estamina.
@@ -157,6 +172,24 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
     bool _listenToInput = true;
 
+    [Header("Blood System")]
+    public float consumeBloodRate = 10f;
+    public float Blood
+    {
+        get { return myStats.Sangre; }
+        set
+        {
+            float val = value;
+            if (val < 0)
+                val = 0;
+
+            myStats.Sangre = val;
+            //Updateo el Canvas!!
+        }
+    }
+
+
+
     [Header("Combat")]
     public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
@@ -191,33 +224,44 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
 
             Health -= Damage;
-            Aggresor.OnHitConfirmed();
 
-            //Permito recuperar estamina.
-            _rolling = false;
-            _attacking = false;
-            _running = false;
-            _recoverStamina = true;
+            if (IsAlive)
+            {
+                Aggresor.OnHitConfirmed(new object[0]);
 
-            //FeedBack de Daño.
-            _anims.SetTrigger("hurted");
-            _listenToInput = false;
-            CurrentWeapon.InterruptAttack();
-            _attacking = false;
-            GetHit();
-            _rb.velocity /= 3;
+                //Permito recuperar estamina.
+                _rolling = false;
+                _attacking = false;
+                _running = false;
+                _recoverStamina = true;
 
-            //Particula de Daño.
-            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-            Destroy(particle, 3f);
+                //FeedBack de Daño.
+                _anims.SetTrigger("hurted");
+                _listenToInput = false;
+                CurrentWeapon.InterruptAttack();
+                _attacking = false;
+                GetHit();
+                _rb.velocity /= 3;
 
-            _myBars.UpdateHeathBar(_hp, BaseHP);
-            _myBars.UpdateStamina(Stamina, MaxStamina);
+                //Particula de Daño.
+                var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+                Destroy(particle, 3f);
 
-            //Entro al estado de recibir daño.
-            StartCoroutine(HurtFreeze());
+                _myBars.UpdateHeathBar(_hp, MaxHealth);
+                _myBars.UpdateStamina(Stamina, MaxStamina);
+
+                //Entro al estado de recibir daño.
+                StartCoroutine(HurtFreeze());
+            }
+            if (!IsAlive)
+            {
+                Aggresor.OnKillConfirmed(new object[] { myStats.Sangre });
+                myStats.Sangre = 0;
+                Die();
+            }
         }
     }
+
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
@@ -231,13 +275,38 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         return new object[1] { 0f };
     }
-    public void OnHitConfirmed()
+    public void OnHitBlocked(object[] data)
+    {
+        print("Ataque Bloqueado.");
+        CurrentWeapon.InterruptAttack();
+        StartCoroutine(Shock());
+    }
+    public void OnHitConfirmed(object[] data)
     {
         if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
+            FeedBlood((float)data[0]);
             CurrentWeapon.ConfirmHit();
             OnAttackLanded();
         }
+    }
+    /// <summary>
+    /// Confirma al agresor, que su víctima ha muerto.
+    /// </summary>
+    /// <param name="data"></param>
+    public void OnKillConfirmed(object[] data)
+    {
+        OnHitConfirmed(data);
+    }
+
+    /// <summary>
+    /// Como vampiro XD
+    /// </summary>
+    /// <param name="blood">Cantidad de sangre Obtenida.</param>
+    public void FeedBlood(float blood)
+    {
+        Blood += blood;
+        OnFeastBlood();
     }
 
     //=========================================================================================================================
@@ -479,6 +548,31 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         if (_listenToInput)
         {
+            if (_canHeal)
+            {
+                if (Input.GetButton("FeedBlood"))
+                {
+                    _clamped = true;
+                    if (Blood > 0)
+                    {
+                        Health += consumeBloodRate * Time.deltaTime;
+                        Blood -= consumeBloodRate * Time.deltaTime;
+                    }
+
+                    if (Blood <= 0 || !_canHeal)
+                    {
+                        print("NO puedes curarte más...");
+                        _clamped = false;
+                    }
+                }
+
+                if (Input.GetButtonUp("FeedBlood"))
+                {
+                    _clamped = false;
+                }
+            }
+            
+
             if (!_clamped)
             {
                 if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
@@ -619,6 +713,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         StartCoroutine(reduxStaminaTo0(3f));
 
         //Termina el juego...
+        //Tengo que decirle a algún Mánager quién es el enemigo que me mató, y luego marcarlo como mi killer.
+        //Al volver a matarlo, nos devuelve la sangre que perdimos.
     }
 
     /// <summary>
@@ -761,15 +857,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Cooldown.
         yield return new WaitForSeconds(1f);
 
-
-        //Muerte del Jugador
-        if (!IsAlive) Die();
-        else
-        {
-            _clamped = false;
-            _invulnerable = false;
-            _listenToInput = true;
-        }
+        _clamped = false;
+        _invulnerable = false;
+        _listenToInput = true;
     }
 
     private void OnCollisionStay(Collision collision)
@@ -792,12 +882,5 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void StaminaEffecPlay()
     {
         StaminaEffect.Play();
-    }
-
-    public void OnHitBlocked()
-    {
-        print("Ataque Bloqueado.");
-        CurrentWeapon.InterruptAttack();
-        StartCoroutine(Shock());
     }
 }

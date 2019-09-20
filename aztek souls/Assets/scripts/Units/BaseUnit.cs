@@ -16,6 +16,10 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public FillBar    EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null;
 
+    [Header("Recompensas")]
+    public float BloodPerHit = 100f;
+    public float BloodForKill = 300f;
+
     protected float _hp = 0f;
     protected float _minForwardAngle = 40f;
     protected bool _targetDetected = false;
@@ -82,8 +86,9 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     {
         return new object[0];
     }
-    public virtual void OnHitConfirmed() { }
-    public virtual void OnHitBlocked() { }
+    public virtual void OnHitBlocked(object[] data) { }
+    public virtual void OnHitConfirmed(object[] data) { }
+    public virtual void OnKillConfirmed(object[] data) { }
 
     //============================= DEBUGG GIZMOS =============================================
 

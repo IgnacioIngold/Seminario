@@ -37,24 +37,27 @@ public class BasicEnemy : BaseUnit
         StopAllCoroutines();
 
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        Aggresor.OnHitConfirmed();
         Health -= (float)DamageStats[1];
 
         base.GetDamage(DamageStats);
 
         if (!IsAlive)
         {
+            //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
+            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
             sm.Feed(BasicEnemyStates.dead);
-            return;
-        }
-
-        if (!_targetDetected)
-        {
-            _targetDetected = true;
-            sm.Feed(BasicEnemyStates.pursue);
         }
         else
-            sm.Feed(BasicEnemyStates.idle);
+        {
+            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+            if (!_targetDetected)
+            {
+                _targetDetected = true;
+                sm.Feed(BasicEnemyStates.pursue);
+            }
+            else
+                sm.Feed(BasicEnemyStates.idle);
+        }
     }
 
     public override object[] GetDamageStats()

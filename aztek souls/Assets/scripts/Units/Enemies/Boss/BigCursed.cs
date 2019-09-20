@@ -68,12 +68,17 @@ public class BigCursed : BaseUnit
         float Damage = (float)DamageStats[1];
 
         Health -= Damage;
-        Aggresor.OnHitConfirmed();
 
         if (!IsAlive)
+        {
+            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
             sm.Feed(BossStates.dead);
-
-        base.GetDamage();
+        }
+        else
+        {
+            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+            base.GetDamage();
+        }
     }
     /// <summary>
     /// Retorna las estadísticas de combate de esta Unidad.
