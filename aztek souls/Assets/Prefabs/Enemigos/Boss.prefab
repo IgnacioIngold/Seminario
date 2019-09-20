@@ -406,6 +406,8 @@ MonoBehaviour:
     dirToTarget: {x: -0.061129577, y: 0.022207651, z: -0.9978828}
     angleToTarget: 6.789603
     distanceToTarget: 23.865648
+  BloodPerHit: 100
+  BloodForKill: 2000
   MaxHP: 200
   MovementSpeed: 4
   attackRate: 2.667
@@ -420,7 +422,6 @@ MonoBehaviour:
   Debug_Attacks: 0
   Debug_DetectionRanges: 1
   MainState: 0
-  AttackCollider: {fileID: 8416109423459181925}
   BasicAttackDamages:
   - 40
   - 45
@@ -502,8 +503,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blocks: []
   boss: {fileID: 4977729587628454839}
   DamageCollider: {fileID: 8416109423459181925}
+  FadeOut: {fileID: 0}
 --- !u!1001 &217092432564255809
 PrefabInstance:
   m_ObjectHideFlags: 0

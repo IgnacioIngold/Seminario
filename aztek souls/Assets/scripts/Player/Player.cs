@@ -67,6 +67,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public LayerMask floor;
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;
+    public ParticleSystem FeastBlood;
     public Collider HitCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
@@ -320,6 +321,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         Health = BaseHP + (myStats.Vitalidad * 5);
         Stamina = MaxStamina;
         OnStaminaIsEmpty += StaminaEffecPlay;
+        OnFeastBlood += FeastBloodEfect;
 
         #region Combate
 
@@ -881,5 +883,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void StaminaEffecPlay()
     {
         StaminaEffect.Play();
+    }
+    public void FeastBloodEfect()
+    {
+        FeastBlood.Play();
     }
 }
