@@ -209,12 +209,14 @@ MonoBehaviour:
       m_Bits: 1
     target: {fileID: 0}
     origin: {fileID: 609346536399887382}
-    range: 15
+    range: 20
     angle: 45
     positionDiference: {x: -3.2242317, y: 9.508, z: -62.32}
     dirToTarget: {x: -0.051078126, y: 0.15062529, z: -0.9872705}
     angleToTarget: 86.46681
     distanceToTarget: 63.12353
+  BloodPerHit: 100
+  BloodForKill: 300
   MaxHP: 100
   MovementSpeed: 4
   attackRate: 1.5
