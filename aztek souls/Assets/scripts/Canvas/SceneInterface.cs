@@ -1,24 +1,33 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Core
 {
     public class SceneInterface : MonoBehaviour
     {
         public event Action OnGamePause = delegate { };
+        public event Action OnEnableDisableLevelUpPanel = delegate { };
 
         public string PauseMenuButton;
+        public string LevelUpMenuButton;
         public BaseUnit[] Enemies;
+        public Image FadeBackGround;
         public GameObject PauseMenuPanel;
+        public LevelUpPanel LevelUpPanel;
 
-        IPlayerController Player;
+        Player Player;
+        MainCamBehaviour mainCamB;
 
         private void Awake()
         {
-            Player = GameObject.FindGameObjectWithTag("Player").GetComponent<IPlayerController>();
+            Player = FindObjectOfType<Player>();
+            mainCamB = Camera.main.GetComponentInParent<MainCamBehaviour>();
 
             //Relleno mi array de enemigos.
             Enemies = FindObjectsOfType<BaseUnit>();
+
+            LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
         }
 
         // Update is called once per frame
@@ -29,33 +38,57 @@ namespace Core
                     PauseEverything(true);
                 else
                     PauseEverything(false);
+
+            if (Input.GetButtonDown(LevelUpMenuButton))
+                if (!Context.LevelupPanel)
+                    EnableDisableLevelUpPanel(true);
+                else
+                    EnableDisableLevelUpPanel(false);
         }
 
-
-        void PauseEverything(bool state)
+        public void EnableDisableLevelUpPanel(bool active)
         {
-            Context.Paused = state;
-            Time.timeScale = state ? 0 : 1;
+            Player.active = !active;
+            mainCamB.EnableRotation(!active);
+            EnableDisableEnemies(!active);
 
-            Cursor.visible = state;
-            Cursor.lockState = state ? CursorLockMode.None : CursorLockMode.Locked;
+            LevelUpPanel.gameObject.SetActive(active);
+            LevelUpPanel.LoadData();
 
-            PauseMenuPanel.SetActive(state);
+            Cursor.visible = active;
+            Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
 
-            Player.active = !state;
+            OnEnableDisableLevelUpPanel();
+        }
 
-            foreach (BaseUnit enemy in Enemies)
-            {
-                enemy.enabled = !state;
-            }
+        void PauseEverything(bool paused)
+        {
+            Context.Paused = paused;
+            Time.timeScale = paused ? 0 : 1;
+
+            Cursor.visible = paused;
+            Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
+
+            PauseMenuPanel.SetActive(paused);
+
+            Player.active = !paused;
+
+            EnableDisableEnemies(!paused);
 
             OnGamePause();
+        }
+
+        void EnableDisableEnemies(bool state)
+        {
+            foreach (BaseUnit enemy in Enemies)
+                enemy.enabled = state;
         }
     }
 
     public static class Context
     {
         public static bool Paused = false;
+        public static bool LevelupPanel = false;
     }
 }
 

@@ -13,6 +13,7 @@ public class MainCamBehaviour : MonoBehaviour
     public float RotationSpeed = 30;
 
     Transform Target;
+    bool _canRotate = true;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class MainCamBehaviour : MonoBehaviour
     private void FixedUpdate()
     {
         MoveCamera();
-        RotateCamera(MouseAxis);
+        if (_canRotate) RotateCamera(MouseAxis);
     }
 
     public void MoveCamera()
@@ -55,6 +56,11 @@ public class MainCamBehaviour : MonoBehaviour
     {
         if (camOffSet != Vector3.zero)
             LocalCam.localPosition = camOffSet;
+    }
+
+    public void EnableRotation(bool enable)
+    {
+        _canRotate = enable;
     }
 
     public Transform getPivotPosition()

@@ -265,7 +265,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public object[] GetDamageStats()
     {
         // Retornar la info del sistema de Daño.
-        if (CurrentWeapon != null)
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
             float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
             object[] combatStats = new object[3] { this, DañoFinal, breakDefence };
@@ -571,7 +571,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     _clamped = false;
                 }
             }
-            
 
             if (!_clamped)
             {
