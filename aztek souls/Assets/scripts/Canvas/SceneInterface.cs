@@ -17,6 +17,7 @@ namespace Core
 
         Player Player;
         MainCamBehaviour mainCamB;
+        bool LevelUpPanelWasOpened = false;
 
         private void Awake()
         {
@@ -33,39 +34,69 @@ namespace Core
         // Update is called once per frame
         void Update()
         {
+            if (Context.Paused || Context.LevelupPanel)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+
+                FadeBackGround.gameObject.SetActive(true);
+            }
+
+            if (!Context.Paused && !Context.LevelupPanel)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+
+                FadeBackGround.gameObject.SetActive(false);
+            }
+
             if (Input.GetButtonDown(PauseMenuButton))
                 if (!Context.Paused)
+                {
                     PauseEverything(true);
+                    if (Context.LevelupPanel) EnableDisableLevelUpPanel(false);
+                }
                 else
+                {
                     PauseEverything(false);
+                    if (LevelUpPanelWasOpened) EnableDisableLevelUpPanel(true);
+                }
 
-            if (Input.GetButtonDown(LevelUpMenuButton))
-                if (!Context.LevelupPanel)
-                    EnableDisableLevelUpPanel(true);
-                else
-                    EnableDisableLevelUpPanel(false);
+
+            if (!Context.Paused)
+            {
+                if (Input.GetButtonDown(LevelUpMenuButton))
+                    if (!Context.LevelupPanel)
+                    {
+                        LevelUpPanelWasOpened = true;
+                        EnableDisableLevelUpPanel(true, true);
+                    }
+                    else
+                    {
+                        LevelUpPanelWasOpened = false;
+                        EnableDisableLevelUpPanel(false, true);
+                    }
+            }
+            else
+                EnableDisableLevelUpPanel(false);
         }
 
-        public void EnableDisableLevelUpPanel(bool active)
+        public void EnableDisableLevelUpPanel(bool active, bool loadData = false)
         {
+            Context.LevelupPanel = active;
+
             Player.active = !active;
             mainCamB.EnableRotation(!active);
             EnableDisableEnemies(!active);
 
             LevelUpPanel.gameObject.SetActive(active);
-            LevelUpPanel.LoadData();
-
-            Cursor.visible = active;
-            Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
+            if(loadData) LevelUpPanel.LoadData();
         }
 
         void PauseEverything(bool paused)
         {
             Context.Paused = paused;
             Time.timeScale = paused ? 0 : 1;
-
-            Cursor.visible = paused;
-            Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
 
             PauseMenuPanel.SetActive(paused);
 

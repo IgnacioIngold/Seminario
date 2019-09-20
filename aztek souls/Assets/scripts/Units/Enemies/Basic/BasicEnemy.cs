@@ -33,30 +33,33 @@ public class BasicEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        anims.SetTrigger("GetHit");
-        StopAllCoroutines();
-
-        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        Health -= (float)DamageStats[1];
-
-        base.GetDamage(DamageStats);
-
-        if (!IsAlive)
+        if (IsAlive)
         {
-            //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
-            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-            sm.Feed(BasicEnemyStates.dead);
-        }
-        else
-        {
-            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-            if (!_targetDetected)
+            anims.SetTrigger("GetHit");
+            StopAllCoroutines();
+
+            IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+            Health -= (float)DamageStats[1];
+
+            base.GetDamage(DamageStats);
+
+            if (!IsAlive)
             {
-                _targetDetected = true;
-                sm.Feed(BasicEnemyStates.pursue);
+                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
+                Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                sm.Feed(BasicEnemyStates.dead);
             }
             else
-                sm.Feed(BasicEnemyStates.idle);
+            {
+                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+                if (!_targetDetected)
+                {
+                    _targetDetected = true;
+                    sm.Feed(BasicEnemyStates.pursue);
+                }
+                else
+                    sm.Feed(BasicEnemyStates.idle);
+            }
         }
     }
 
