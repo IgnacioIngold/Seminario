@@ -25,13 +25,18 @@ public class ShieldEnemy : BaseUnit
 {
     public event Action onBlockedHit = delegate { };
 
+    [Header("Parry")]
+    public float BlockRange = 3f;
+    public float ParryCoolDown = 3f;
+    private bool _canParry = false;
+
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
-    public float BlockRange = 3f;
 
     GenericFSM<ShieldEnemyStates> _sm;
     private float _alertedTimeRemaining = 0f;
     private float _originalRotLerpSpeed = 0f;
+
 
     private bool _attacking;
     private bool LookTowardsPlayer = true;
@@ -48,14 +53,14 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        StopAllCoroutines();
+        StopCoroutine(TriCombo());
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
 
         bool breakDefenceAttack = (bool)DamageStats[2];
 
         if (_blocking && breakDefenceAttack)
         {
-             _sm.Feed(ShieldEnemyStates.vulnerable);
+            _sm.Feed(ShieldEnemyStates.vulnerable);
             return;
         }
 
@@ -73,7 +78,10 @@ public class ShieldEnemy : BaseUnit
             Aggresor.OnHitBlocked(null);
             onBlockedHit();
 
-            _sm.Feed(ShieldEnemyStates.parry);
+            if (_canParry)
+                _sm.Feed(ShieldEnemyStates.parry);
+            else
+                _sm.Feed(ShieldEnemyStates.think);
         }
         else
         {
@@ -369,6 +377,13 @@ public class ShieldEnemy : BaseUnit
 
             _sm.Update();
         }
+    }
+
+    IEnumerator StartParryCoolDown()
+    {
+        _canParry = false;
+        yield return new WaitForSeconds(ParryCoolDown);
+        _canParry = true;
     }
 
     IEnumerator defenceDestroyed()

@@ -1025,6 +1025,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -203655887218126122, guid: 7e66b475abee6aa4aad91cba59c8889e,
         type: 3}
+    - target: {fileID: 7163442870093080254, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 707757720772101554, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
         type: 3}
       propertyPath: m_LocalRotation.x

@@ -212,7 +212,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     public void GetDamage(params object[] DamageStats)
     {
-        if (!_invulnerable)
+        if (!_invulnerable && IsAlive)
         {
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             float Damage = (float)DamageStats[1];
@@ -881,9 +881,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     private void OnCollisionEnter(Collision collision)
     {
         IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
-        if (_rolling && Damageable != null)
+        IKilleable killeable = collision.gameObject.GetComponent<IKilleable>();
+        if (_rolling && Damageable != null && killeable == null)
         {
-            Damageable.GetDamage(new object[2] { this, 0f });
+            Damageable.GetDamage(new object[3] { this, 0f, false });
         }
     }
     public void StaminaEffecPlay()
