@@ -7,7 +7,6 @@ namespace Core
     public class SceneInterface : MonoBehaviour
     {
         public event Action OnGamePause = delegate { };
-        public event Action OnEnableDisableLevelUpPanel = delegate { };
 
         public string PauseMenuButton;
         public string LevelUpMenuButton;
@@ -27,6 +26,7 @@ namespace Core
             //Relleno mi array de enemigos.
             Enemies = FindObjectsOfType<BaseUnit>();
 
+            LevelUpPanel.OnAccept += () => { EnableDisableLevelUpPanel(false); };
             LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
         }
 
@@ -57,8 +57,6 @@ namespace Core
 
             Cursor.visible = active;
             Cursor.lockState = active ? CursorLockMode.None : CursorLockMode.Locked;
-
-            OnEnableDisableLevelUpPanel();
         }
 
         void PauseEverything(bool paused)
