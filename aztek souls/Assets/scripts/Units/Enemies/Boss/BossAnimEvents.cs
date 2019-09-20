@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Core.Serialization;
+using UnityEngine.Playables;
 
 public class BossAnimEvents : MonoBehaviour
 {
@@ -12,9 +13,12 @@ public class BossAnimEvents : MonoBehaviour
     public const string CompleteDataPath = "/Data/BossColliderAnims.json";
 
     public Dictionary<int, TransformValues> ColliderTransformKeyFrame = new Dictionary<int, TransformValues>();
+    public List<GameObject> blocks = new List<GameObject>();
 
     public BigCursed boss;
     public Collider DamageCollider;
+    public PlayableDirector FadeOut;
+
 
     [Serializable]
     public struct DataPairContainter
@@ -149,5 +153,15 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.enabled = false;
         var emission = boss.OnSmashParticle.emission;
         emission.enabled = false;
+    }
+    void unlockpassages()
+    {
+        foreach (var item in blocks)
+        {
+            item.GetComponent<BoxCollider>().enabled = false;
+            item.SetActive(false);
+            
+        }
+        FadeOut.Play();
     }
 }
