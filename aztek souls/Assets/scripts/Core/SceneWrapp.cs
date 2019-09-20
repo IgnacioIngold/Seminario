@@ -11,8 +11,10 @@ namespace Core.Definitions
     {
         public void ChangeToScene(int index)
         {
-            SceneManager.LoadScene(index);
+            Context.Paused = false;
+            Context.LevelupPanel = false;
             Time.timeScale = 1;
+            SceneManager.LoadScene(index);
         }
 
         public void CloseGame()
