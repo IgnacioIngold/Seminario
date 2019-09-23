@@ -53,18 +53,37 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        if (IsAlive)
+        StopCoroutine(TriCombo());
+        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+
+        bool breakDefenceAttack = (bool)DamageStats[2];
+
+        if (_blocking && breakDefenceAttack)
         {
-            StopCoroutine(TriCombo());
-            IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+            _sm.Feed(ShieldEnemyStates.vulnerable);
+            return;
+        }
 
-            bool breakDefenceAttack = (bool)DamageStats[2];
+        //Confirmar hit o no.
+        if (_blocking && sight.angleToTarget < 80)
+        {
+            Aggresor.OnHitBlocked(null);
+            onBlockedHit();
 
-            if (_blocking && breakDefenceAttack)
-            {
-                _sm.Feed(ShieldEnemyStates.vulnerable);
-                return;
-            }
+            if (_canParry)
+                _sm.Feed(ShieldEnemyStates.parry);
+            else
+                _sm.Feed(ShieldEnemyStates.think);
+        }
+        else
+        {
+            anims.SetTrigger("getDamage");
+
+            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+            //Si no estoy guardando.
+            Health -= (float)DamageStats[1];
+
+            base.GetDamage(DamageStats);
 
             //Aviso que estoy Muerto We.
             if (!IsAlive)
@@ -74,28 +93,10 @@ public class ShieldEnemy : BaseUnit
                 return;
             }
 
-            //Confirmar hit o no.
-            if (_blocking && sight.angleToTarget < 80)
+            if (!_targetDetected)
             {
-                Aggresor.OnHitBlocked(null);
-                onBlockedHit();
-
-                if (_canParry)
-                    _sm.Feed(ShieldEnemyStates.parry);
-                else
-                    _sm.Feed(ShieldEnemyStates.think);
-            }
-            else
-            {
-                anims.SetTrigger("getDamage");
-
-                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-                //Si no estoy guardando.
-                Health -= (float)DamageStats[1];
-
-                base.GetDamage(DamageStats);
-
-                if (_targetDetected) _sm.Feed(ShieldEnemyStates.think);
+                _targetDetected = true;
+                _sm.Feed(ShieldEnemyStates.alerted);
             }
         }
     }

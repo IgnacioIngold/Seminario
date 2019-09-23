@@ -31,20 +31,14 @@ public class TriggerWeapon : HitTrigger
     {
         if (other.gameObject == Owner) return;
 
-        IKilleable KilleableObject = other.GetComponent<IKilleable>();
-        if (KilleableObject != null && KilleableObject.IsAlive)
+        IDamageable KilleableObject = other.GetComponent<IDamageable>();
+        if (KilleableObject != null)
         {
             if (debugThisUnit)
                 print("Colisiono con algo we: " + other.gameObject.name);
 
             KilleableObject.GetDamage(getOwnerStats());
             return;
-        }
-
-        IDamageable damageableObject = other.GetComponent<IDamageable>();
-        if (damageableObject != null)
-        {
-            damageableObject.GetDamage(0f);
         }
     }
 }
