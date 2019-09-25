@@ -103,7 +103,7 @@ public class BossAnimRecieverEditor : Editor
             {
                 var current = inspected.DamageCollider.transform;
                 current.localPosition = inspected.ColliderTransformKeyFrame[selectedIndex].localPosition;
-                current.localRotation = inspected.ColliderTransformKeyFrame[selectedIndex].rotation;
+                current.localRotation = inspected.ColliderTransformKeyFrame[selectedIndex].LocalRotation;
                 current.localScale = inspected.ColliderTransformKeyFrame[selectedIndex].localScale;
             }
         }
@@ -135,7 +135,7 @@ public class BossAnimRecieverEditor : Editor
                 BossAnimEvents.TransformValues serializedValues = new BossAnimEvents.TransformValues()
                 {
                     localPosition = inspected.DamageCollider.transform.localPosition,
-                    rotation = inspected.DamageCollider.transform.rotation,
+                    LocalRotation = inspected.DamageCollider.transform.localRotation,
                     localScale = inspected.DamageCollider.transform.localScale
                 };
 

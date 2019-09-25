@@ -31,7 +31,7 @@ public class BossAnimEvents : MonoBehaviour
     public struct TransformValues
     {
         public Vector3 localPosition;
-        public Quaternion rotation;
+        public Quaternion LocalRotation;
         public Vector3 localScale;
     }
 
@@ -78,7 +78,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         //Index 1
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[0].localScale;
         DamageCollider.enabled = true;
     }
@@ -91,7 +91,7 @@ public class BossAnimEvents : MonoBehaviour
     void SecondBasicStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[1].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[1].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[1].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[1].localScale;
         DamageCollider.enabled = true;
     }
@@ -104,7 +104,7 @@ public class BossAnimEvents : MonoBehaviour
     void ThirdBasicStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[2].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[2].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[2].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[2].localScale;
         DamageCollider.enabled = true;
     }
@@ -118,7 +118,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         //Termine el combo básico.
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[0].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[0].localScale;
     }
 
@@ -126,7 +126,7 @@ public class BossAnimEvents : MonoBehaviour
     void HighJumpLandStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[3].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[3].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[3].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[3].localScale;
         DamageCollider.enabled = true;
     }
@@ -139,7 +139,7 @@ public class BossAnimEvents : MonoBehaviour
     void LowJumpLandStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[4].localPosition;
-        DamageCollider.transform.rotation = ColliderTransformKeyFrame[4].rotation;
+        DamageCollider.transform.rotation = ColliderTransformKeyFrame[4].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[4].localScale;
         DamageCollider.enabled = true;
         boss.OnSmashParticle.Clear();
