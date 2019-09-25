@@ -10,6 +10,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     public Player player;
     public Collider DamageCollider;
     public GameObject marker;
+    public ParticleSystem tail;
     Animator anim;
 
     private void Awake()
@@ -56,9 +57,16 @@ public class PlayerAnimEventListener : MonoBehaviour
         marker.SetActive(false);
 
     }
+
     public void GetHurtEvent()
     {
         player.CameraShake.Play();
+    }
+    public void playTails()
+    {
+        if (tail.isPlaying)
+            tail.Stop();
+        tail.Play();
     }
 
     /// <summary>
