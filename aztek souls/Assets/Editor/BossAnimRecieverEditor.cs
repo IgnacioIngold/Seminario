@@ -45,8 +45,6 @@ public class BossAnimRecieverEditor : Editor
 
     private void CheckRelevantData()
     {
-        selectedIndex = inspected.ColliderTransformKeyFrame.Count;
-
         //Chequear que el collider y el Observador esten seteados.
         AEReciever = inspected.boss != null;
         colliderSetted = inspected.DamageCollider != null;
@@ -94,8 +92,23 @@ public class BossAnimRecieverEditor : Editor
         #endregion
 
         EditorGUI.BeginDisabledGroup(!colliderSetted || !AEReciever);
+
         GUILayout.Space(10f);
-        GUILayout.BeginHorizontal();                          //Inicio grupo Horizontal.
+
+        selectedIndex = EditorGUILayout.IntField("Setting Index:", selectedIndex);
+
+        if (GUILayout.Button("Load TargetCollider Setting"))
+        {
+            if (selectedIndex < inspected.ColliderTransformKeyFrame.Count)
+            {
+                var current = inspected.DamageCollider.transform;
+                current.localPosition = inspected.ColliderTransformKeyFrame[selectedIndex].localPosition;
+                current.localRotation = inspected.ColliderTransformKeyFrame[selectedIndex].rotation;
+                current.localScale = inspected.ColliderTransformKeyFrame[selectedIndex].localScale;
+            }
+        }
+
+        GUILayout.Space(5f);
 
             GUI.color = Color.green;
             if (GUILayout.Button("Copy Target Collider Settings") && colliderSetted)
@@ -141,10 +154,6 @@ public class BossAnimRecieverEditor : Editor
                 }
             }
             GUI.color = Color.grey;
-
-            selectedIndex = EditorGUILayout.IntField(selectedIndex);
-
-        GUILayout.EndHorizontal();                              //Fin Grupo Horizontal.
         GUILayout.Space(10f);
 
         if (GUILayout.Button("Save Data"))
