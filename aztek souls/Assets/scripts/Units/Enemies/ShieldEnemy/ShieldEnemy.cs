@@ -53,50 +53,54 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetDamage(params object[] DamageStats)
     {
-        StopCoroutine(TriCombo());
         IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+        float damage = (float)DamageStats[1];
 
-        bool breakDefenceAttack = (bool)DamageStats[2];
-
-        if (_blocking && breakDefenceAttack)
+        if (damage > 0)
         {
-            _sm.Feed(ShieldEnemyStates.vulnerable);
-            return;
-        }
+            StopCoroutine(TriCombo());
+            bool breakDefenceAttack = (bool)DamageStats[2];
 
-        //Confirmar hit o no.
-        if (_blocking && sight.angleToTarget < 80)
-        {
-            Aggresor.OnHitBlocked(null);
-            onBlockedHit();
-
-            if (_canParry)
-                _sm.Feed(ShieldEnemyStates.parry);
-            else
-                _sm.Feed(ShieldEnemyStates.think);
-        }
-        else
-        {
-            anims.SetTrigger("getDamage");
-
-            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-            //Si no estoy guardando.
-            Health -= (float)DamageStats[1];
-
-            base.GetDamage(DamageStats);
-
-            //Aviso que estoy Muerto We.
-            if (!IsAlive)
+            if (_blocking && breakDefenceAttack)
             {
-                Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-                _sm.Feed(ShieldEnemyStates.dead);
+                _sm.Feed(ShieldEnemyStates.vulnerable);
                 return;
             }
 
-            if (!_targetDetected)
+            //Confirmar hit o no.
+            if (_blocking && sight.angleToTarget < 80)
             {
-                _targetDetected = true;
-                _sm.Feed(ShieldEnemyStates.alerted);
+                Aggresor.OnHitBlocked(null);
+                onBlockedHit();
+
+                if (_canParry)
+                    _sm.Feed(ShieldEnemyStates.parry);
+                else
+                    _sm.Feed(ShieldEnemyStates.think);
+            }
+            else
+            {
+                anims.SetTrigger("getDamage");
+
+                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+                //Si no estoy guardando.
+                Health -= (float)DamageStats[1];
+
+                base.GetDamage(DamageStats);
+
+                //Aviso que estoy Muerto We.
+                if (!IsAlive)
+                {
+                    Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                    _sm.Feed(ShieldEnemyStates.dead);
+                    return;
+                }
+
+                if (!_targetDetected)
+                {
+                    _targetDetected = true;
+                    _sm.Feed(ShieldEnemyStates.alerted);
+                }
             }
         }
     }

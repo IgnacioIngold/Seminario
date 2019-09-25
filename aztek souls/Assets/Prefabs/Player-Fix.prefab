@@ -242,21 +242,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
-        type: 3}
-      propertyPath: EmissionModule.rateOverDistance.scalar
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
-        type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
-        type: 3}
-      propertyPath: EmissionModule.enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3782811992114350341, guid: 7f880324d766660418bd579a7b410ad3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -310,6 +295,21 @@ PrefabInstance:
     - target: {fileID: 3782811992114350341, guid: 7f880324d766660418bd579a7b410ad3,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
+        type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
+        type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3782811990528514389, guid: 7f880324d766660418bd579a7b410ad3,
+        type: 3}
+      propertyPath: EmissionModule.enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3782811990528514392, guid: 7f880324d766660418bd579a7b410ad3,
@@ -433,6 +433,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: tail
       objectReference: {fileID: 0}
+    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
+        type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 5722331968865628151, guid: 9b8b01bb47e86cd4a969698711747633,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -487,21 +502,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
-        type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
-        type: 3}
-      propertyPath: looping
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3590765092522400202, guid: 9b8b01bb47e86cd4a969698711747633,
-        type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b8b01bb47e86cd4a969698711747633, type: 3}

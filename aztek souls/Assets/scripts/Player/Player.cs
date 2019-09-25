@@ -878,8 +878,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (_rolling && collision.collider.tag == "DestructibleObject")
         {
             IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
-            IKilleable killeable = collision.gameObject.GetComponent<IKilleable>();
-            if (_rolling && Damageable != null && killeable == null)
+            if (_rolling && Damageable != null)
             {
                 Damageable.GetDamage(new object[3] { this, 0f, false });
             }
@@ -889,8 +888,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     private void OnCollisionEnter(Collision collision)
     {
         IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
-        IKilleable killeable = collision.gameObject.GetComponent<IKilleable>();
-        if (_rolling && Damageable != null && killeable == null)
+        if (_rolling && Damageable != null)
         {
             Damageable.GetDamage(new object[3] { this, 0f, false });
         }
