@@ -258,11 +258,13 @@ public class BigCursed : BaseUnit
         {
             print("Enemy started AttackMode");
             agent.isStopped = true;
+            LookTowardsPlayer = false;
             StartCoroutine(AttackCombo());
         };
         BasicCombo.OnExit += (x) =>
         {
             agent.isStopped = false;
+            LookTowardsPlayer = true;
         };
 
         #endregion
@@ -417,7 +419,6 @@ public class BigCursed : BaseUnit
         //Inicio el primer ataque.
         anims.SetInteger("Attack",1);
         anims.SetFloat("Movement", 0f);
-        LookTowardsPlayer = false;
         yield return null;
 
         float currentTransitionTime = getCurrentTransitionScaledTime();
@@ -432,6 +433,7 @@ public class BigCursed : BaseUnit
 
         remainingTime = getRemainingAnimTime("Armature|RightPunch", currentTransitionTime);
         anims.SetInteger("Attack", 3);
+        LookTowardsPlayer = true;
         yield return new WaitForSeconds(remainingTime);
 
         //Inicio el tercer ataque.
@@ -439,6 +441,7 @@ public class BigCursed : BaseUnit
         yield return new WaitForSeconds(currentTransitionTime);
 
         remainingTime = getRemainingAnimTime("Armature|PunchDown", currentTransitionTime);
+        LookTowardsPlayer = false;
         yield return new WaitForSeconds(remainingTime + 1f);
 
         //Cambio a pensar.

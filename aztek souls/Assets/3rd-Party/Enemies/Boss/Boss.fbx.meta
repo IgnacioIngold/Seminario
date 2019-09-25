@@ -148,7 +148,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.42700326
+        functionName: HighJumpLandStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.47749725
+        functionName: HighJumpLandEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -177,7 +193,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.4731065
+        functionName: FirstBasicStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.53457737
+        functionName: FirstBasicEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -225,17 +257,33 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 1
       loopBlend: 1
-      loopBlendOrientation: 0
+      loopBlendOrientation: 1
       loopBlendPositionY: 1
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.40175632
+        functionName: ThirdBasicStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.4665203
+        functionName: ThirdBasicEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -254,17 +302,33 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.18002196
+        functionName: SecondBasicStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.3172338
+        functionName: SecondBasicEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -322,7 +386,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.54555434
+        functionName: LowJumpLandStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.726674
+        functionName: LowJumpLandEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
