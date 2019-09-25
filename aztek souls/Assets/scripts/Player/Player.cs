@@ -366,6 +366,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         CurrentWeapon.OnBegginChain += () => 
         {
+            _rolling = false;
+            _moving = false;
+            _running = false;
+
             _listenToInput = false;
             _attacking = true;
             _clamped = true;
