@@ -17,7 +17,7 @@ public class BossAnimEvents : MonoBehaviour
 
     public BigCursed boss;
     public Collider DamageCollider;
-    public PlayableDirector FadeOut;
+    //public PlayableDirector FadeOut;
 
 
     [Serializable]
@@ -162,6 +162,6 @@ public class BossAnimEvents : MonoBehaviour
             item.SetActive(false);
             
         }
-        FadeOut.Play();
+        //FadeOut.Play();
     }
 }

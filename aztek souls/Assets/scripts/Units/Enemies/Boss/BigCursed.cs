@@ -358,7 +358,7 @@ public class BigCursed : BaseUnit
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("LowJumpAttack", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("Armature|SimpleJump", currentTransitionTime);
 
         yield return new WaitForSeconds(remainingTime);
 
@@ -383,7 +383,7 @@ public class BigCursed : BaseUnit
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("HighJumpAttack", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("Armature|JumpAttack", currentTransitionTime);
         print("Remaining KillerJump Attack is: " + remainingTime);
 
         Vector3 originalPosition = transform.position;
@@ -423,14 +423,14 @@ public class BigCursed : BaseUnit
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("RightPunch", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("Armature|LeftPunchSwipp", currentTransitionTime);
         anims.SetInteger("Attack", 2);
         yield return new WaitForSeconds(remainingTime);
         
         currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("LeftPunch", currentTransitionTime);
+        remainingTime = getRemainingAnimTime("Armature|RightPunch", currentTransitionTime);
         anims.SetInteger("Attack", 3);
         yield return new WaitForSeconds(remainingTime);
 
@@ -438,7 +438,7 @@ public class BigCursed : BaseUnit
         currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("Great Sword Casting", currentTransitionTime);
+        remainingTime = getRemainingAnimTime("Armature|PunchDown", currentTransitionTime);
         yield return new WaitForSeconds(remainingTime + 1f);
 
         //Cambio a pensar.
@@ -456,7 +456,7 @@ public class BigCursed : BaseUnit
         yield return new WaitForEndOfFrame();
         float currentTransitionTime = getCurrentTransitionScaledTime();
         yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime("Roar", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime("Armature|Roar", currentTransitionTime);
         anims.SetBool("Roar", false);
         yield return new WaitForSeconds(remainingTime);
 
