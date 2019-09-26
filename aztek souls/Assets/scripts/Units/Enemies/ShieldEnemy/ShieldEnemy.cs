@@ -28,7 +28,7 @@ public class ShieldEnemy : BaseUnit
     [Header("Parry")]
     public float BlockRange = 3f;
     public float ParryCoolDown = 3f;
-    private bool _canParry = false;
+    private bool _canParry = true;
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
