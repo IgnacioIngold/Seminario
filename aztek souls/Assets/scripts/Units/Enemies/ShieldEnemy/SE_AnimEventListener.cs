@@ -7,6 +7,7 @@ public class SE_AnimEventListener : MonoBehaviour
 {
     public Collider coll;
     public ParticleSystem marker;
+    public ParticleSystem ShieldSparks;
 
     private void Awake()
     {
@@ -21,6 +22,10 @@ public class SE_AnimEventListener : MonoBehaviour
     public void DisableDamage()
     {
         coll.enabled = false;
+    }
+    public void Parryed()
+    {
+        ShieldSparks.Play();
     }
     public void hiteable()
     {

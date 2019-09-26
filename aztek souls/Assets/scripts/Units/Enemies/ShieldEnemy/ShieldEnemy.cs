@@ -408,7 +408,7 @@ public class ShieldEnemy : BaseUnit
 
     IEnumerator parryBicombo()
     {
-        anims.SetBool("Parrying", true);
+        anims.SetTrigger("Parry");
         LookTowardsPlayer = false;
         float currentTransitionTime = getCurrentTransitionScaledTime();
         print("Transicion es: " + currentTransitionTime);

@@ -157,7 +157,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         foreach (var item in blocks)
         {
-            item.GetComponent<BoxCollider>().enabled = false;
+            
             item.SetActive(false);
             
         }

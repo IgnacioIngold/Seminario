@@ -90,7 +90,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.9915255
+        functionName: unlockpassages
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
