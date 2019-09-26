@@ -777,6 +777,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         CurrentWeapon.BegginCombo(input);
     }
 
+    //A futuro we.
+    //public void LevelUp()
+    //{
+    //    Health = BaseHP + myStats.Vitalidad * 5;
+    //}
+
     IEnumerator Roll()
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.

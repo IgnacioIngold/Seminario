@@ -73,16 +73,16 @@ public class LevelUpPanel : MonoBehaviour
         Btn_StrIncrease.interactable = enoughBloodForLevelUp;
         Btn_DefIncrease.interactable = enoughBloodForLevelUp;
 
-        Btn_VitDecrease.interactable = _vitExtraPoints > 0 && enoughBloodForLevelUp;
-        Btn_StrDecrease.interactable = _strExtraPoints > 0 && enoughBloodForLevelUp;
-        Btn_DefDecrease.interactable = _defExtraPoints > 0 && enoughBloodForLevelUp;
+        Btn_VitDecrease.interactable = _vitExtraPoints > 0;
+        Btn_StrDecrease.interactable = _strExtraPoints > 0;
+        Btn_DefDecrease.interactable = _defExtraPoints > 0;
     }
 
     public void LoadData()
     {
         level = source.myStats.Nivel;
         blood = (int)source.myStats.Sangre;
-        BloodForLevelUp = (int)source.myStats.bloodForLevelUp;
+        BloodForLevelUp = source.myStats.bloodForLevelUp;
 
         _vitBloodPaid = new Stack<int>();
         _strBloodPaid = new Stack<int>();
