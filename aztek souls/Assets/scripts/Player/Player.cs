@@ -44,6 +44,11 @@ public struct Stats
     /// Influencia la mitigación de daño recibido.
     /// </summary>
     public int Resistencia;
+
+    /// <summary>
+    /// Esto es temporal, y va a volar a futuro.
+    /// </summary>
+    public int bloodForLevelUp;
 }
 
 //[RequireComponent(typeof(Rigidbody))]

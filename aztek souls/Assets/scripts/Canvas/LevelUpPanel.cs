@@ -55,6 +55,7 @@ public class LevelUpPanel : MonoBehaviour
     private void Awake()
     {
         source = FindObjectOfType<Player>();
+        source.myStats.bloodForLevelUp = 1000;
 
         originalAmmount = BloodForLevelUp;
     }
@@ -66,25 +67,22 @@ public class LevelUpPanel : MonoBehaviour
         BloodToLvlUp.text = BloodForLevelUp.ToString();
 
         //Los botones de incrementar se activan solo si hay suficiente sangre para subir de nivel.
-        bool enoughBloodForLevelUp = blood > BloodForLevelUp;
-        EnableIncreaseButtons(enoughBloodForLevelUp);
+        bool enoughBloodForLevelUp = blood >= BloodForLevelUp;
+
+        Btn_VitIncrease.interactable = enoughBloodForLevelUp;
+        Btn_StrIncrease.interactable = enoughBloodForLevelUp;
+        Btn_DefIncrease.interactable = enoughBloodForLevelUp;
 
         Btn_VitDecrease.interactable = _vitExtraPoints > 0 && enoughBloodForLevelUp;
         Btn_StrDecrease.interactable = _strExtraPoints > 0 && enoughBloodForLevelUp;
         Btn_DefDecrease.interactable = _defExtraPoints > 0 && enoughBloodForLevelUp;
     }
 
-    void EnableIncreaseButtons(bool enable)
-    {
-        Btn_VitIncrease.interactable = enable;
-        Btn_StrIncrease.interactable = enable;
-        Btn_DefIncrease.interactable = enable;
-    }
-
     public void LoadData()
     {
         level = source.myStats.Nivel;
         blood = (int)source.myStats.Sangre;
+        BloodForLevelUp = (int)source.myStats.bloodForLevelUp;
 
         _vitBloodPaid = new Stack<int>();
         _strBloodPaid = new Stack<int>();
@@ -110,9 +108,14 @@ public class LevelUpPanel : MonoBehaviour
             //Añado los cambios al Player.
             source.myStats.Nivel = level;
             source.Blood = blood;
+            source.myStats.bloodForLevelUp = BloodForLevelUp;
             source.myStats.Vitalidad = source.myStats.Vitalidad + _vitExtraPoints;
             source.myStats.Fuerza = source.myStats.Fuerza + _strExtraPoints;
             source.myStats.Resistencia = source.myStats.Resistencia + _defExtraPoints;
+
+            _vitExtraPoints = 0;
+            _strExtraPoints = 0;
+            _defExtraPoints = 0;
         }
 
         OnAccept();
