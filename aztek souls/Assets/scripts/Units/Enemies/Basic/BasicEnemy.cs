@@ -26,6 +26,7 @@ public class BasicEnemy : BaseUnit
 
     [Header("BerserkTime")]
     public float berserkModeTime = 4f;
+    public float vulnerableTime = 4f;
     public CountDownTimer BerserkCoolDown;
     public float incommingDamageReduction = 0.3f;
     public float outGoingDamageIncreace = 0.5f;
@@ -47,8 +48,11 @@ public class BasicEnemy : BaseUnit
         if (IsAlive && damage > 0)
         {
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+            bool breakStance = (bool)DamageStats[2];
 
-            if (canBlock)
+            if (canBlock && breakStance) StartCoroutine(vulnerableToAttacks());
+
+            if (canBlock && !breakStance)
             {
                 damage *= incommingDamageReduction;
                 Aggresor.OnHitBlocked(new object[] { 2 });
@@ -56,18 +60,15 @@ public class BasicEnemy : BaseUnit
                 return;
             }
 
-            if (!canBlock)
+            if (BersekrMode)
+                damage *= incommingDamageReduction;
+            else
             {
-                if (BersekrMode)
-                    damage *= incommingDamageReduction;
-                else
-                {
-                    anims.SetTrigger("GetHit");
-                    StopAllCoroutines();
-                }
-
-                base.GetDamage(DamageStats);
+                anims.SetTrigger("GetHit");
+                StopAllCoroutines();
             }
+
+            base.GetDamage(DamageStats);
 
             Health -= damage;
             onGetHit();
@@ -99,6 +100,17 @@ public class BasicEnemy : BaseUnit
             damage += (attackDamage * outGoingDamageIncreace);
 
         return new object[3] { this, damage, false };
+    }
+
+    IEnumerator vulnerableToAttacks()
+    {
+        canBlock = false;
+
+        BersekrMode = false;
+        StopCoroutine(BlockAndBerserk());
+
+        yield return new WaitForSeconds(vulnerableTime);
+        canBlock = true;
     }
 
     //=========================================================================================
