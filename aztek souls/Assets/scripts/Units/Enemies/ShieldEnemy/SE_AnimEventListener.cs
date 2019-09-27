@@ -25,6 +25,7 @@ public class SE_AnimEventListener : MonoBehaviour
     }
     public void Parryed()
     {
+        Debug.Log("Entre");
         ShieldSparks.Play();
     }
     public void hiteable()
