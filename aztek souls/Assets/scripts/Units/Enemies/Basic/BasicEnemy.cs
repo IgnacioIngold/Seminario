@@ -42,6 +42,7 @@ public class BasicEnemy : BaseUnit
 
     //======================== OVERRIDES & INTERFACES =========================================
 
+    int recieved = 0;
     public override void GetDamage(params object[] DamageStats)
     {
         float damage = (float)DamageStats[1];
@@ -50,14 +51,18 @@ public class BasicEnemy : BaseUnit
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             bool breakStance = (bool)DamageStats[2];
 
-            if (canBlock && breakStance) StartCoroutine(vulnerableToAttacks());
-
-            if (canBlock && !breakStance)
+            if (canBlock || recieved >= 3)
             {
-                damage *= incommingDamageReduction;
-                Aggresor.OnHitBlocked(new object[] { 2 });
-                StartCoroutine(BlockAndBerserk());
-                return;
+                recieved = 0;
+
+                if (breakStance) StartCoroutine(vulnerableToAttacks());
+                else
+                {
+                    damage *= incommingDamageReduction;
+                    Aggresor.OnHitBlocked(new object[] { 2 });
+                    StartCoroutine(BlockAndBerserk());
+                    return;
+                }
             }
 
             if (BersekrMode)
@@ -70,6 +75,7 @@ public class BasicEnemy : BaseUnit
 
             base.GetDamage(DamageStats);
 
+            recieved++;
             Health -= damage;
             onGetHit();
 
@@ -294,6 +300,7 @@ public class BasicEnemy : BaseUnit
 
         //Inicio el primer ataque.
         LookTowardsPlayer = false;
+        canBlock = false;
         anims.SetTrigger("SimpleAttack");
         yield return null;
 
