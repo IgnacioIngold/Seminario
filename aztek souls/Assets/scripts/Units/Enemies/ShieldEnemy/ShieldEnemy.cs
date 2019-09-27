@@ -71,7 +71,7 @@ public class ShieldEnemy : BaseUnit
             //Confirmar hit o no.
             if (_blocking && sight.angleToTarget < 80)
             {
-                Aggresor.OnHitBlocked(null);
+                Aggresor.OnHitBlocked(new object[] { 1 });
                 onBlockedHit();
 
                 if (_canParry)

@@ -318,7 +318,7 @@ PrefabInstance:
     - target: {fileID: 4977729587628454836, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4977729587628454839, guid: 7b00cb1e6acfe3a479c7d2d7f6d468dc,
         type: 3}
@@ -863,7 +863,7 @@ PrefabInstance:
     - target: {fileID: 609346536399887383, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 609346536399887382, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}
@@ -924,6 +924,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 609346536399887384, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+        type: 3}
+      propertyPath: BerserkCoolDown.Presition
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 609346536399887384, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+        type: 3}
+      propertyPath: BerserkCoolDown.CoolDown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 609346536399887384, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+        type: 3}
+      propertyPath: DamageReduction
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 609346536399887384, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+        type: 3}
+      propertyPath: BerserkCoolDown.isReady
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 609346536399887389, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}

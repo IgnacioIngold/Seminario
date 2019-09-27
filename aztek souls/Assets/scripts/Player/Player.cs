@@ -284,9 +284,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
     public void OnHitBlocked(object[] data)
     {
+        int blockTipe = (int)data[0];
         print("Ataque Bloqueado.");
         CurrentWeapon.InterruptAttack();
-        StartCoroutine(Shock());
+
+        if (blockTipe == 1)
+        {
+            StartCoroutine(Shock());
+        }
     }
     public void OnHitConfirmed(object[] data)
     {

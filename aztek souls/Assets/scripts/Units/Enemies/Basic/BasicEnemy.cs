@@ -25,8 +25,10 @@ public class BasicEnemy : BaseUnit
     public float AlertRadius = 10f;
 
     [Header("BerserkTime")]
+    public float berserkModeTime = 4f;
     public CountDownTimer BerserkCoolDown;
-    public float DamageReduction = 0.8f;
+    public float incommingDamageReduction = 0.3f;
+    public float outGoingDamageIncreace = 0.5f;
     public bool canBlock = true;
 
     GenericFSM<BasicEnemyStates> sm;
@@ -35,50 +37,68 @@ public class BasicEnemy : BaseUnit
 
     private float _alertedTimeRemaining = 0f;
     private bool LookTowardsPlayer = true;
+    private bool BersekrMode;
 
     //======================== OVERRIDES & INTERFACES =========================================
 
     public override void GetDamage(params object[] DamageStats)
     {
-        if (IsAlive)
+        float damage = (float)DamageStats[1];
+        if (IsAlive && damage > 0)
         {
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-            float damage = (float)DamageStats[1];
 
-            if (damage > 0)
+            if (canBlock)
             {
-                anims.SetTrigger("GetHit");
-                StopAllCoroutines();
+                damage *= incommingDamageReduction;
+                Aggresor.OnHitBlocked(new object[] { 2 });
+                StartCoroutine(BlockAndBerserk());
+                return;
+            }
 
-                Health -= damage;
-                onGetHit();
-
-                base.GetDamage(DamageStats);
-
-                if (!IsAlive)
-                {
-                    //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
-                    Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-                    sm.Feed(BasicEnemyStates.dead);
-                }
+            if (!canBlock)
+            {
+                if (BersekrMode)
+                    damage *= incommingDamageReduction;
                 else
                 {
-                    Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-                    if (!_targetDetected)
-                    {
-                        _targetDetected = true;
-                        sm.Feed(BasicEnemyStates.pursue);
-                    }
-                    else
-                        sm.Feed(BasicEnemyStates.idle);
+                    anims.SetTrigger("GetHit");
+                    StopAllCoroutines();
                 }
+
+                base.GetDamage(DamageStats);
+            }
+
+            Health -= damage;
+            onGetHit();
+
+            if (!IsAlive)
+            {
+                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
+                Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                sm.Feed(BasicEnemyStates.dead);
+            }
+            else
+            {
+                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
+                if (!_targetDetected)
+                {
+                    _targetDetected = true;
+                    sm.Feed(BasicEnemyStates.pursue);
+                }
+                else
+                    sm.Feed(BasicEnemyStates.idle);
             }
         }
     }
 
     public override object[] GetDamageStats()
     {
-        return new object[3] { this, attackDamage, false };
+        float damage = attackDamage;
+        if (BersekrMode)
+            damage += (attackDamage * outGoingDamageIncreace);
+
+        return new object[3] { this, damage, false };
     }
 
     //=========================================================================================
@@ -88,6 +108,14 @@ public class BasicEnemy : BaseUnit
         base.Awake();
 
         BerserkCoolDown.SetMonoObject(this);
+        BerserkCoolDown.OnTimeStart += () => 
+        {
+            canBlock = false;
+        };
+        BerserkCoolDown.OnTimesUp += () => 
+        {
+            canBlock = true;
+        };
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
@@ -99,9 +127,11 @@ public class BasicEnemy : BaseUnit
 
         #region Transiciones
         idle.AddTransition(BasicEnemyStates.dead, dead)
+            .AddTransition(BasicEnemyStates.attack, attack)
             .AddTransition(BasicEnemyStates.alerted, alerted);
 
         alerted.AddTransition(BasicEnemyStates.dead, dead)
+               .AddTransition(BasicEnemyStates.attack, attack)
                .AddTransition(BasicEnemyStates.pursue, pursue);
 
         pursue.AddTransition(BasicEnemyStates.dead, dead)
@@ -251,8 +281,8 @@ public class BasicEnemy : BaseUnit
             sm.Feed(BasicEnemyStates.idle);
 
         //Inicio el primer ataque.
-        anims.SetTrigger("SimpleAttack");
         LookTowardsPlayer = false;
+        anims.SetTrigger("SimpleAttack");
         yield return null;
 
         float currentTransitionTime = getCurrentTransitionDuration();
@@ -263,6 +293,30 @@ public class BasicEnemy : BaseUnit
 
         LookTowardsPlayer = true;
         sm.Feed(BasicEnemyStates.think);
+    }
+
+    IEnumerator BlockAndBerserk()
+    {
+        canBlock = false;
+        BersekrMode = true;
+
+        LookTowardsPlayer = true;
+        anims.SetTrigger("block&Berserk");
+        yield return null;
+
+        float currentTransitionTime = getCurrentTransitionDuration();
+        yield return new WaitForSeconds(currentTransitionTime);
+
+        float remainingTime = getRemainingAnimTime();
+        yield return new WaitForSeconds(remainingTime);
+        LookTowardsPlayer = true;
+        sm.Feed(BasicEnemyStates.attack);
+
+        yield return new WaitForSeconds(berserkModeTime);
+
+        canBlock = true;
+        BersekrMode = false;
+        BerserkCoolDown.StartCount();
     }
 
     IEnumerator thinkAndWatch()

@@ -7,11 +7,14 @@ namespace Utility.Timers
 	[Serializable]
 	public class CountDownTimer : Timer
 	{
+        public event Action OnTimeStart = delegate { };
+        public event Action OnTimesUp = delegate { };
+
 		public float CoolDown;
 		MonoBehaviour _mono;
 
-		//Constructores
-		public CountDownTimer(MonoBehaviour MonoObject, float Presition = 0.01f)
+        //Constructores
+        public CountDownTimer(MonoBehaviour MonoObject, float Presition = 0.01f)
 		{
 			this.Presition = Presition;
 			_mono = MonoObject;
@@ -31,7 +34,6 @@ namespace Utility.Timers
 			if (isReady)
 			{
 				isReady = false;
-				Time = CoolDown;
 				_mono.StartCoroutine(CountDown());
 			}
 		}
@@ -40,7 +42,6 @@ namespace Utility.Timers
 			if (isReady)
 			{
 				isReady = false;
-				Time = CoolDown;
 				_mono.StartCoroutine(CountDown(From));
 			}
 		}
@@ -48,7 +49,6 @@ namespace Utility.Timers
 		public override void Reset()
 		{
 			isReady = true;
-			Time = CoolDown;
 			_mono.StopCoroutine(CountDown());
 		}
 		public override void Pause()
@@ -65,11 +65,7 @@ namespace Utility.Timers
             if (From == -1) Time = CoolDown;
             else Time = From;
 
-            //while ( Time > 0)
-			//{
-			//	Time -= Presition;
-			//	yield return new WaitForSeconds(Presition);
-			//}
+            OnTimeStart();
             yield return new WaitForSeconds(Time);
 
 			isReady = true;

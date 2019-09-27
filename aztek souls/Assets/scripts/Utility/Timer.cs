@@ -5,8 +5,6 @@ namespace Utility.Timers
 {
 	public abstract class Timer
 	{
-		public Action OnTimesUp = delegate { };
-
 		public bool isReady = true;
 		[SerializeField]
 		protected float Time;
