@@ -21,6 +21,10 @@ namespace Utility.Timers
 			this.CoolDown = CoolDown;
 			return this;
 		}
+        public void SetMonoObject(MonoBehaviour MonoObject)
+        {
+            _mono = MonoObject;
+        }
 
 		public override void StartCount()
 		{
@@ -45,38 +49,29 @@ namespace Utility.Timers
 		{
 			isReady = true;
 			Time = CoolDown;
-			_mono.StopAllCoroutines();
+			_mono.StopCoroutine(CountDown());
 		}
 		public override void Pause()
 		{
-			_mono.StopAllCoroutines();
-		}
+            _mono.StopCoroutine(CountDown());
+        }
 		public override void Continue()
 		{
 			_mono.StartCoroutine(CountDown(Time));
 		}
 
-		IEnumerator CountDown()
+		IEnumerator CountDown(float From = -1)
 		{
-			while( Time > 0)
-			{
-				Time -= Presition;
-				yield return new WaitForSeconds(Presition);
-			}
+            if (From == -1) Time = CoolDown;
+            else Time = From;
 
-			isReady = true;
-			Time = CoolDown;
-			OnTimesUp();
-		}
-		IEnumerator CountDown(float From)
-		{
-			Time = From;
-			while ( Time > 0)
-			{
-				Time -= Presition;
-				yield return new WaitForSeconds(Presition);
-			}
-			
+            //while ( Time > 0)
+			//{
+			//	Time -= Presition;
+			//	yield return new WaitForSeconds(Presition);
+			//}
+            yield return new WaitForSeconds(Time);
+
 			isReady = true;
 			Time = CoolDown;
 			OnTimesUp();

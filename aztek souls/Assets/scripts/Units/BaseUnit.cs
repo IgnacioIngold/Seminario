@@ -227,15 +227,6 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         OnDie();
     }
 
-    /// <summary>
-    /// Realiza el producto punto entre el forward de la unidad y la dirección hacia el jugador.
-    /// </summary>
-    /// <returns> 1 si enemigo está mirando hacia el jugador.</returns>
-    protected float facingTowardsPlayer()
-    {
-        return Vector3.Dot(sight.dirToTarget, transform.forward);
-    }
-
     public void AllyDiscoversEnemy(Transform Enemy)
     {
         Target = Enemy;

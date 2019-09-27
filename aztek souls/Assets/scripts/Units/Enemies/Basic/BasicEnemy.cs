@@ -5,6 +5,7 @@ using IA.StateMachine.Generic;
 using Core.Entities;
 using System;
 using Random = UnityEngine.Random;
+using Utility.Timers;
 
 public enum BasicEnemyStates
 {
@@ -18,16 +19,22 @@ public enum BasicEnemyStates
 
 public class BasicEnemy : BaseUnit
 {
-    public Collider AttackCollider;
+    public event Action onGetHit = delegate { };
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
+
+    [Header("BerserkTime")]
+    public CountDownTimer BerserkCoolDown;
+    public float DamageReduction = 0.8f;
+    public bool canBlock = true;
 
     GenericFSM<BasicEnemyStates> sm;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
     bool Attacking = false;
 
     private float _alertedTimeRemaining = 0f;
+    private bool LookTowardsPlayer = true;
 
     //======================== OVERRIDES & INTERFACES =========================================
 
@@ -44,6 +51,7 @@ public class BasicEnemy : BaseUnit
                 StopAllCoroutines();
 
                 Health -= damage;
+                onGetHit();
 
                 base.GetDamage(DamageStats);
 
@@ -78,6 +86,8 @@ public class BasicEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+
+        BerserkCoolDown.SetMonoObject(this);
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
@@ -226,6 +236,10 @@ public class BasicEnemy : BaseUnit
     void Update()
     {
         sight.Update();
+
+        if (LookTowardsPlayer && _targetDetected)
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+
         sm.Update();
     }
 
@@ -236,54 +250,18 @@ public class BasicEnemy : BaseUnit
         if (!toDamage.IsAlive)
             sm.Feed(BasicEnemyStates.idle);
 
-        while (facingTowardsPlayer() <= 0.85f)
-        {
-            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+        //Inicio el primer ataque.
+        anims.SetTrigger("SimpleAttack");
+        LookTowardsPlayer = false;
+        yield return null;
 
-            print("Ángulo es: " + sight.angleToTarget + " y la orientación es: " + facingTowardsPlayer());
-            yield return null;
-        }
+        float currentTransitionTime = getCurrentTransitionDuration();
+        yield return new WaitForSeconds(currentTransitionTime);
 
-        while (Attacking)
-        {
-            anims.SetTrigger("SimpleAttack");
-            yield return null;
+        float remainingTime = getRemainingAnimTime();
+        yield return new WaitForSeconds(remainingTime);
 
-            var info = anims.GetAnimatorTransitionInfo(0);
-            float transitionTIme = info.duration;
-            //print("Transition = " + transitionTIme);
-            yield return new WaitForSeconds(transitionTIme);
-
-            bool knowHowMuchIsLeft = false;
-            float remainingTime = 0;
-
-            AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-            AnimationClip currentClip;
-            if (clipInfo != null && clipInfo.Length > 0)
-            {
-                currentClip = clipInfo[0].clip;
-
-                if (!knowHowMuchIsLeft && currentClip.name == "Attack")
-                {
-                    //print("currentClip is Correct!");
-                    float length = currentClip.length;
-                    //float normTime = anims.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                    float passed = length - (length * transitionTIme);
-                    //print("TimePassed is = " + passed);
-                    remainingTime = passed;
-                    knowHowMuchIsLeft = true;
-                }
-                else
-                    yield return null;
-
-                if (knowHowMuchIsLeft)
-                {
-                    yield return new WaitForSeconds(remainingTime);
-                    break;
-                }
-            }
-        }
-
+        LookTowardsPlayer = true;
         sm.Feed(BasicEnemyStates.think);
     }
 
@@ -292,7 +270,6 @@ public class BasicEnemy : BaseUnit
         var toDamage = sight.target.GetComponent<IKilleable>();
         float waitTime = Random.Range(0.5f, 1.5f);
         yield return new WaitForSeconds(waitTime);
-
 
         print("Watchtime Started");
         float watchTime = Random.Range(2f, 4f);
