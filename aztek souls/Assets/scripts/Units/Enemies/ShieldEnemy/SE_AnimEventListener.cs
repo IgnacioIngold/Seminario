@@ -17,6 +17,7 @@ public class SE_AnimEventListener : MonoBehaviour
         //coll = GetComponent<Collider>();
         Owner = GetComponentInParent<ShieldEnemy>();
         Owner.OnDie += () => { coll.enabled = false; };
+        Owner.onGetHit += () => { coll.enabled = false; };
     }
 
     public void EnableDamage()

@@ -24,6 +24,7 @@ public enum ShieldEnemyStates
 public class ShieldEnemy : BaseUnit
 {
     public event Action onBlockedHit = delegate { };
+    public event Action onGetHit = delegate { };
 
     [Header("Parry")]
     public float BlockRange = 3f;
@@ -81,6 +82,7 @@ public class ShieldEnemy : BaseUnit
             else
             {
                 anims.SetTrigger("getDamage");
+                onGetHit();
 
                 Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
                 //Si no estoy guardando.
