@@ -410,16 +410,12 @@ public class ShieldEnemy : BaseUnit
 
     IEnumerator parryBicombo()
     {
-        anims.SetTrigger("Parry");
+        anims.SetBool("Parrying", true);
         LookTowardsPlayer = false;
         float currentTransitionTime = getCurrentTransitionDuration();
-        float remainingTime = 0;
-
-        if (currentTransitionTime > 0)
-            yield return new WaitForSeconds(currentTransitionTime);
-
         print("Transicion es: " + currentTransitionTime);
-        remainingTime = getRemainingAnimTime();
+        yield return new WaitForSeconds(currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
 
         anims.SetInteger("Attack", 2);                   //  <---- Primer Ataque
         yield return new WaitForSeconds(remainingTime);
