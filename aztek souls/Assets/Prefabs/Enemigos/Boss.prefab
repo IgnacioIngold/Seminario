@@ -394,7 +394,6 @@ MonoBehaviour:
   blocks: []
   boss: {fileID: 4977729587628454839}
   DamageCollider: {fileID: 8416109423459181925}
-  FadeOut: {fileID: 0}
 --- !u!1001 &217092432564255809
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -406,6 +405,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Smash
+      objectReference: {fileID: 0}
+    - target: {fileID: 8023904554134525428, guid: 3647c5d4abb434b4f91c739ad11b5767,
+        type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8023904552531641764, guid: 3647c5d4abb434b4f91c739ad11b5767,
         type: 3}
@@ -462,11 +466,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8023904554134525428, guid: 3647c5d4abb434b4f91c739ad11b5767,
-        type: 3}
-      propertyPath: EmissionModule.enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3647c5d4abb434b4f91c739ad11b5767, type: 3}
 --- !u!4 &7807525172925381093 stripped
@@ -492,6 +491,61 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BossChargeParticle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: useRigidbodyForVelocity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.46226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.3700962
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.25075653
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime2
+      value: 50115
+      objectReference: {fileID: 0}
+    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2769617789203337766, guid: fe9ede2eb2f7deb499b5f355355ed794,
         type: 3}
@@ -553,61 +607,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.73
       objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: prewarm
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: useRigidbodyForVelocity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: startDelay.scalar
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.46226418
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.3700962
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.25075653
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ShapeModule.type
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: EmissionModule.rateOverDistance.scalar
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.atime2
-      value: 50115
-      objectReference: {fileID: 0}
-    - target: {fileID: 2769617790805164662, guid: fe9ede2eb2f7deb499b5f355355ed794,
-        type: 3}
-      propertyPath: ShapeModule.radiusThickness
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe9ede2eb2f7deb499b5f355355ed794, type: 3}
 --- !u!4 &3081875953676916963 stripped
@@ -634,11 +633,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Anim + Mesh
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: fe50f39e96cba1b42b40612555fa54b0,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 32acf808db69a1740873bf0355263a05, type: 2}
     - target: {fileID: -4216859302048453862, guid: fe50f39e96cba1b42b40612555fa54b0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -729,6 +723,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: fe50f39e96cba1b42b40612555fa54b0,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 32acf808db69a1740873bf0355263a05, type: 2}
     m_RemovedComponents:
     - {fileID: -6057140222963153312, guid: fe50f39e96cba1b42b40612555fa54b0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fe50f39e96cba1b42b40612555fa54b0, type: 3}
