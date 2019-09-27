@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +10,13 @@ public class SE_AnimEventListener : MonoBehaviour
     public ParticleSystem marker;
     public ParticleSystem ShieldSparks;
 
+    ShieldEnemy Owner;
+
     private void Awake()
     {
         //coll = GetComponent<Collider>();
+        Owner = GetComponentInParent<ShieldEnemy>();
+        Owner.OnDie += () => { coll.enabled = false; };
     }
 
     public void EnableDamage()

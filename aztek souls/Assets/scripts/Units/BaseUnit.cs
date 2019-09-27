@@ -179,30 +179,40 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     //=========================================================================================
 
-    protected float getCurrentTransitionScaledTime()
+    /// <summary>
+    /// Retorna la duración de la Transición al siguiente estado de la Animación.
+    /// </summary>
+    /// <returns>Float: el tiempo de la transición.</returns>
+    protected float getCurrentTransitionDuration()
     {
         return anims.GetAnimatorTransitionInfo(0).duration;
     }
-    protected float getRemainingAnimTime(string ClipName, float transitionPassed = 0f)
+    /// <summary>
+    /// Retorna el tiempo de Animación restante del estado Actual del Animator.
+    /// </summary>
+    /// <returns>Float: tiempo de Animación restante del estado actual.</returns>
+    protected float getRemainingAnimTime()
     {
-        AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-        float AnimTime = 0f;
+        //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
+        //float AnimTime = 0f;
 
-        if (clipInfo != null && clipInfo.Length > 0)
-        {
-            AnimationClip currentClip = clipInfo[0].clip;
-            print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
+        var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
 
-            if (currentClip.name == ClipName)
-            {
-                //print("currentClip is Correct!");
-                AnimTime = currentClip.length;
-                float passed = AnimTime - (AnimTime * transitionPassed);
-                return passed;
-            }
-        }
+        //if (clipInfo != null && clipInfo.Length > 0)
+        //{
+        //    AnimationClip currentClip = clipInfo[0].clip;
+        //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
 
-        return AnimTime;
+        //    if (currentClip.name == ClipName)
+        //    {
+        //        //print("currentClip is Correct!");
+        //        AnimTime = currentClip.length;
+        //        float passed = AnimTime - (AnimTime * transitionPassed);
+        //        return passed;
+        //    }
+        //}
+
+        return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
     }
 
     protected void Die()

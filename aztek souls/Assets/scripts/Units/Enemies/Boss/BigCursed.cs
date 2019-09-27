@@ -34,8 +34,8 @@ public class BigCursed : BaseUnit
     [Header("Charge")]
     public ParticleSystem OnChargeParticle;
     public ParticleSystem OnSmashParticle;
-    ParticleSystem.EmissionModule ChargeEmission;
-    ParticleSystem.EmissionModule SmashEmission;
+    public ParticleSystem.EmissionModule ChargeEmission;
+    public ParticleSystem.EmissionModule SmashEmission;
     public float ChargeDamage = 50f;
     public float chargeSpeed = 30f;
     public float ChargeCollisionForce = 20f;
@@ -172,15 +172,36 @@ public class BigCursed : BaseUnit
                     else
                     {
                         if (canPerformSimpleJump && sight.distanceToTarget < AttackRange)
+                        {
+                            print("Decidí hacer un salto corto.");
                             sm.Feed(BossStates.closeJump);
+                            return;
+                        }
                         if (sight.distanceToTarget > HighRange)
+                        {
+                            print("Decidí hacer un Charge.");
                             sm.Feed(BossStates.charge);
+                            return;
+                        }
                         if (canPerformKIllerJump && sight.distanceToTarget > MediumRange)
+                        {
+                            print("Decidí hacer un Killer Jump.");
                             sm.Feed(BossStates.killerJump);
-                        if (sight.distanceToTarget > AttackRange)        // si esta visible pero fuera del rango de ataque...
+                            return;
+                        }
+                        // si esta visible pero fuera del rango de ataque...
+                        if (sight.distanceToTarget > AttackRange)
+                        {
+                            print("Decidí perseguir al enemigo.");
                             sm.Feed(BossStates.pursue);                  // paso a pursue.
+                            return;
+                        }
                         if (sight.distanceToTarget <= AttackRange)
-                            sm.Feed(BossStates.pursue);
+                        {
+                            print("Decidí Atacar.");
+                            sm.Feed(BossStates.basicCombo);
+                            return;
+                        }
                     }
                 }
             }
@@ -219,7 +240,7 @@ public class BigCursed : BaseUnit
         #region Pursue State
         pursue.OnEnter += (x) =>
         {
-            print("Chasing After Player...");
+            //print("Chasing After Player...");
             anims.SetFloat("Movement", 1f);
             LookTowardsPlayer = true;
         };
@@ -357,14 +378,20 @@ public class BigCursed : BaseUnit
         anims.SetInteger("Attack", 5);
         anims.SetFloat("Movement", 0f);
         LookTowardsPlayer = false;
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        yield return null;
+        float currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("Armature|SimpleJump", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
+
+#if UNITY_EDITOR
+        if(Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos", currentTransitionTime, remainingTime)); 
+#endif
 
         yield return new WaitForSeconds(remainingTime);
 
         thinkTime = 1f;
+        anims.SetInteger("Attack", 0);
         StartCoroutine(simpleJumpAttackCoolDown());
         sm.Feed(BossStates.think);
     }
@@ -382,23 +409,20 @@ public class BigCursed : BaseUnit
         anims.SetInteger("Attack", 4);
         anims.SetFloat("Movement", 0f);
         yield return null;
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("Armature|JumpAttack", currentTransitionTime);
-        print("Remaining KillerJump Attack is: " + remainingTime);
+        float remainingTime = getRemainingAnimTime();
 
-        Vector3 originalPosition = transform.position;
-        float distFromOriginal = maxJumpDistance;
-
-        //do
-        //{
-        //    distFromOriginal -= Vector3.Distance(transform.position, originalPosition);
-        //} while (distFromOriginal > 0);
-
-        yield return new WaitForSeconds(remainingTime);
+#if(UNITY_EDITOR)
+        if(Debug_Attacks) print("Remaining KillerJump Attack is: " + remainingTime);
+#endif
+        //Vector3 originalPosition = transform.position;
+        //float distFromOriginal = maxJumpDistance;
 
         anims.SetInteger("Attack", 0);
+        yield return new WaitForSeconds(remainingTime);
+
         anims.SetFloat("Movement", 0f);
 
         thinkTime = 2f;
@@ -418,31 +442,55 @@ public class BigCursed : BaseUnit
     {
         //Inicio el primer ataque.
         anims.SetInteger("Attack",1);
+        print("Ataque seteado a 1");
         anims.SetFloat("Movement", 0f);
         yield return null;
 
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
+
+#if UNITY_EDITOR
+        if(Debug_Attacks) print(string.Format("En transición, la duración es de {0} segundos", currentTransitionTime));
+#endif
+
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("Armature|LeftPunchSwipp", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
+
+#if UNITY_EDITOR
+        if (Debug_Attacks) print(string.Format("La transición duró {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 1)); 
+#endif
+
         anims.SetInteger("Attack", 2);
         yield return new WaitForSeconds(remainingTime);
-        
-        currentTransitionTime = getCurrentTransitionScaledTime();
-        yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("Armature|RightPunch", currentTransitionTime);
+        currentTransitionTime = getCurrentTransitionDuration();
+        if(currentTransitionTime > 0) yield return new WaitForSeconds(currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
+
+#if UNITY_EDITOR
+        if (Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 2)); 
+#endif
+
         anims.SetInteger("Attack", 3);
-        LookTowardsPlayer = true;
         yield return new WaitForSeconds(remainingTime);
 
         //Inicio el tercer ataque.
-        currentTransitionTime = getCurrentTransitionScaledTime();
-        yield return new WaitForSeconds(currentTransitionTime);
+        currentTransitionTime = getCurrentTransitionDuration();
+        if (currentTransitionTime > 0) yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("Armature|PunchDown", currentTransitionTime);
-        LookTowardsPlayer = false;
-        yield return new WaitForSeconds(remainingTime + 1f);
+        remainingTime = getRemainingAnimTime();
+
+#if UNITY_EDITOR
+        if (Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 3)); 
+#endif
+
+        anims.SetInteger("Attack", 0);
+
+#if UNITY_EDITOR
+        if (Debug_Attacks) print("Ataque reseteado"); 
+#endif
+
+        yield return new WaitForSeconds(remainingTime);
 
         //Cambio a pensar.
         thinkTime = 2f;
@@ -457,9 +505,9 @@ public class BigCursed : BaseUnit
         //Empiezo haciendo un Roar.
         anims.SetBool("Roar", true);
         yield return new WaitForEndOfFrame();
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime("Armature|Roar", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
         anims.SetBool("Roar", false);
         yield return new WaitForSeconds(remainingTime);
 

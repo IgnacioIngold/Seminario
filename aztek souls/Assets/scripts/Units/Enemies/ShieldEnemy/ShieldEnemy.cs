@@ -398,9 +398,9 @@ public class ShieldEnemy : BaseUnit
         _blocking = false;
         anims.SetTrigger("BlockBreak");
         yield return null;
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime("disamed", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
         yield return new WaitForSeconds(remainingTime);
 
         _sm.Feed(ShieldEnemyStates.think);
@@ -410,25 +410,29 @@ public class ShieldEnemy : BaseUnit
     {
         anims.SetTrigger("Parry");
         LookTowardsPlayer = false;
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
+        float remainingTime = 0;
+
+        if (currentTransitionTime > 0)
+            yield return new WaitForSeconds(currentTransitionTime);
+
         print("Transicion es: " + currentTransitionTime);
-        yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime(" parry", currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
 
         anims.SetInteger("Attack", 2);                   //  <---- Primer Ataque
         yield return new WaitForSeconds(remainingTime);
-        currentTransitionTime = getCurrentTransitionScaledTime();
+        currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
         anims.SetInteger("Attack", 3);
         yield return new WaitForSeconds(remainingTime);
 
         //Segundo ataque.
-        currentTransitionTime = getCurrentTransitionScaledTime();
+        currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("attack3", currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
         yield return new WaitForSeconds(remainingTime);
 
         anims.SetBool("Parrying", false);
@@ -444,26 +448,26 @@ public class ShieldEnemy : BaseUnit
         anims.SetInteger("Attack", 1);
         yield return null;
 
-        float currentTransitionTime = getCurrentTransitionScaledTime();
+        float currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime("attack1", currentTransitionTime);
+        float remainingTime = getRemainingAnimTime();
         anims.SetInteger("Attack", 2);
         yield return new WaitForSeconds(remainingTime);
 
         //Segundo ataque.
-        currentTransitionTime = getCurrentTransitionScaledTime();
+        currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("attack2", currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
         anims.SetInteger("Attack", 3);
         yield return new WaitForSeconds(remainingTime);
 
         //Tercer ataque.
-        currentTransitionTime = getCurrentTransitionScaledTime();
+        currentTransitionTime = getCurrentTransitionDuration();
         yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime("attack3", currentTransitionTime);
+        remainingTime = getRemainingAnimTime();
         yield return new WaitForSeconds(remainingTime);
 
         _sm.Feed(ShieldEnemyStates.think);
