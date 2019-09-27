@@ -31,7 +31,7 @@ public class BasicEnemy : BaseUnit
     public float incommingDamageReduction = 0.3f;
     public float outGoingDamageIncreace = 0.5f;
     public bool canBlock = true;
-
+    private bool isVulnerableToAttacks;
     GenericFSM<BasicEnemyStates> sm;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
     bool Attacking = false;
@@ -75,7 +75,7 @@ public class BasicEnemy : BaseUnit
 
             base.GetDamage(DamageStats);
 
-            recieved++;
+            if(!isVulnerableToAttacks) recieved++;
             Health -= damage;
             onGetHit();
 
@@ -111,12 +111,14 @@ public class BasicEnemy : BaseUnit
     IEnumerator vulnerableToAttacks()
     {
         canBlock = false;
+        isVulnerableToAttacks = true;
 
         BersekrMode = false;
         StopCoroutine(BlockAndBerserk());
 
         yield return new WaitForSeconds(vulnerableTime);
         canBlock = true;
+        isVulnerableToAttacks = false;
     }
 
     //=========================================================================================
