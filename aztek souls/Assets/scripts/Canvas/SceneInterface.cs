@@ -26,9 +26,11 @@ namespace Core
 
             //Relleno mi array de enemigos.
             Enemies = FindObjectsOfType<BaseUnit>();
-
-            LevelUpPanel.OnAccept += () => { EnableDisableLevelUpPanel(false); };
-            LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
+            if (LevelUpPanel != null)
+            {
+                LevelUpPanel.OnAccept += () => { EnableDisableLevelUpPanel(false); };
+                LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
+            }
         }
 
         // Update is called once per frame
