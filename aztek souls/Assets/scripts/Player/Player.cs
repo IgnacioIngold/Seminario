@@ -180,6 +180,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     [Header("Blood System")]
     public float consumeBloodRate = 10f;
+    public float HealthGainedBySeconds = 10f;
     public float Blood
     {
         get { return myStats.Sangre; }
@@ -575,7 +576,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     if (Blood > 0)
                     {
                         _anims.SetBool("ConsummingBlood", true);
-                        Health += consumeBloodRate * Time.deltaTime;
+                        Health += HealthGainedBySeconds * Time.deltaTime;
                         Blood -= consumeBloodRate * Time.deltaTime;
                     }
 
