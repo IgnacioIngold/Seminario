@@ -5,32 +5,34 @@ namespace IA.StateMachine.Generic
 {
     public class GenericFSM<T>
     {
-        public State<T> current;
+        public T currentState;
+        private State<T> _current;
 
         public GenericFSM(State<T> initialState)
         {
-            current = initialState;
-            current.Enter(default(T));
+            _current = initialState;
+            _current.Enter(default(T));
         }
 
         public void Update()
         {
-            current.Update();
+            _current.Update();
         }
 
         public void Feed(T input)
         {
-            var transition = current.GetTransition(input);
+            var transition = _current.GetTransition(input);
             if (transition != null)
             {
 //#if (UNITY_EDITOR)
 //                UnityEngine.MonoBehaviour.print("Transitioning from: " + current.StateName + " to: " + transition.Item2.StateName);
 //#endif
 
-                current.Exit(input);
+                _current.Exit(input);
                 transition.Item1(input);
-                current = transition.Item2;
-                current.Enter(input);
+                _current = transition.Item2;
+                _current.Enter(input);
+                currentState = input;
             }
         }
     }
