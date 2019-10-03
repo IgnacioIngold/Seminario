@@ -19,7 +19,9 @@ public enum BossStates
 public class BigCursed : BaseUnit
 {
     //Estados
-    public BossStates MainState;
+#if UNITY_EDITOR
+    public BossStates CurrentState;
+#endif
     GenericFSM<BossStates> sm;
     State<BossStates> idle;
 
@@ -360,8 +362,10 @@ public class BigCursed : BaseUnit
     // Update is called once per frame
     void Update()
     {
+#if UNITY_EDITOR
+        CurrentState = sm.currentState; 
+#endif
 
-        print("CurrentState = " + sm.current.StateName);
         sight.Update();
 
         if (LookTowardsPlayer)

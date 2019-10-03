@@ -21,6 +21,11 @@ public class BasicEnemy : BaseUnit
 {
     public event Action onGetHit = delegate { };
 
+#if UNITY_EDITOR
+    public BasicEnemyStates CurrentState; 
+#endif
+    GenericFSM<BasicEnemyStates> sm;
+
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
 
@@ -32,7 +37,6 @@ public class BasicEnemy : BaseUnit
     public float outGoingDamageIncreace = 0.5f;
     public bool canBlock = true;
     private bool isVulnerableToAttacks;
-    GenericFSM<BasicEnemyStates> sm;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
     bool Attacking = false;
 
@@ -285,6 +289,10 @@ public class BasicEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
+#if UNITY_EDITOR
+        CurrentState = sm.currentState; 
+#endif
+
         sight.Update();
 
         if (LookTowardsPlayer && _targetDetected)

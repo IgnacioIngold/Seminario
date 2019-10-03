@@ -375,7 +375,9 @@ public class ShieldEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
-        print("Current State is: " + _sm.current.StateName);
+#if UNITY_EDITOR
+        current = _sm.currentState; 
+#endif
 
         if (IsAlive)
         {
