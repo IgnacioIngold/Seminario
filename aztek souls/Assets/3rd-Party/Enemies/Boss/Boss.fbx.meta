@@ -224,6 +224,14 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0
+        functionName: StartBasicCombo
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -282,6 +290,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0.0021953923
+        functionName: StartThirdAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.40175632
         functionName: ThirdBasicStart
         data: 
@@ -292,6 +308,14 @@ ModelImporter:
         messageOptions: 0
       - time: 0.4665203
         functionName: ThirdBasicEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.916318
+        functionName: EndBasicCombo
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
           type: 3}
@@ -474,7 +498,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: StartSecondAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 685b2069c3b4c17409343fae96339b11,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -484,7 +516,7 @@ ModelImporter:
       takeName: Armature|RightPunch
       internalID: 0
       firstFrame: 10
-      lastFrame: 30
+      lastFrame: 26
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -493,12 +525,12 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
+      keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000

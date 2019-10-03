@@ -27,6 +27,7 @@ public class BigCursed : BaseUnit
 
     [Header("Settings del Boss")]
     public float[] BasicAttackDamages;
+    public int AttackPhase = 0;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
     [Header("Layers")]
@@ -280,9 +281,19 @@ public class BigCursed : BaseUnit
         BasicCombo.OnEnter += (x) =>
         {
             print("Enemy started AttackMode");
+            SetAttackState(1);
             agent.isStopped = true;
             LookTowardsPlayer = false;
-            StartCoroutine(AttackCombo());
+            //StartCoroutine(AttackCombo());
+        };
+        BasicCombo.OnUpdate += () =>
+        {
+            //Seteo el primer ataque.
+            if (AttackPhase == 0)
+            {
+                thinkTime = 2f;
+                sm.Feed(BossStates.think);
+            }
         };
         BasicCombo.OnExit += (x) =>
         {
@@ -392,10 +403,10 @@ public class BigCursed : BaseUnit
         if(Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos", currentTransitionTime, remainingTime)); 
 #endif
 
+        anims.SetInteger("Attack", 0);
         yield return new WaitForSeconds(remainingTime);
 
         thinkTime = 1f;
-        anims.SetInteger("Attack", 0);
         StartCoroutine(simpleJumpAttackCoolDown());
         sm.Feed(BossStates.think);
     }
@@ -442,63 +453,14 @@ public class BigCursed : BaseUnit
         canPerformKIllerJump = true;
     }
 
-    IEnumerator AttackCombo()
+    /// <summary>
+    /// Permite Sincronizar el parámetro del animator y del boss simultáneamente.
+    /// </summary>
+    /// <param name="stateID">ID del estado.</param>
+    public void SetAttackState(int stateID)
     {
-        //Inicio el primer ataque.
-        anims.SetInteger("Attack",1);
-        print("Ataque seteado a 1");
-        anims.SetFloat("Movement", 0f);
-        yield return null;
-
-        float currentTransitionTime = getCurrentTransitionDuration();
-
-#if UNITY_EDITOR
-        if(Debug_Attacks) print(string.Format("En transición, la duración es de {0} segundos", currentTransitionTime));
-#endif
-
-        yield return new WaitForSeconds(currentTransitionTime);
-
-        float remainingTime = getRemainingAnimTime();
-
-#if UNITY_EDITOR
-        if (Debug_Attacks) print(string.Format("La transición duró {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 1)); 
-#endif
-
-        anims.SetInteger("Attack", 2);
-        yield return new WaitForSeconds(remainingTime);
-
-        currentTransitionTime = getCurrentTransitionDuration();
-        if(currentTransitionTime > 0) yield return new WaitForSeconds(currentTransitionTime);
-        remainingTime = getRemainingAnimTime();
-
-#if UNITY_EDITOR
-        if (Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 2)); 
-#endif
-
-        anims.SetInteger("Attack", 3);
-        yield return new WaitForSeconds(remainingTime);
-
-        //Inicio el tercer ataque.
-        currentTransitionTime = getCurrentTransitionDuration();
-        if (currentTransitionTime > 0) yield return new WaitForSeconds(currentTransitionTime);
-
-        remainingTime = getRemainingAnimTime();
-
-#if UNITY_EDITOR
-        if (Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos, el ataque es el numero {2}!!", currentTransitionTime, remainingTime, 3)); 
-#endif
-
-        anims.SetInteger("Attack", 0);
-
-#if UNITY_EDITOR
-        if (Debug_Attacks) print("Ataque reseteado"); 
-#endif
-
-        yield return new WaitForSeconds(remainingTime);
-
-        //Cambio a pensar.
-        thinkTime = 2f;
-        sm.Feed(BossStates.think);
+        AttackPhase = stateID;
+        anims.SetInteger("Attack", stateID);
     }
 
     IEnumerator Charge()

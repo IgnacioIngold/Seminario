@@ -38,7 +38,6 @@ public class BasicEnemy : BaseUnit
     public bool canBlock = true;
     private bool isVulnerableToAttacks;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
-    bool Attacking = false;
 
     private float _alertedTimeRemaining = 0f;
     private bool LookTowardsPlayer = true;
@@ -252,14 +251,12 @@ public class BasicEnemy : BaseUnit
         attack.OnEnter += (previousState) => 
         {
             print("Attack");
-            Attacking = true;
             agent.isStopped = true;
             StartCoroutine(SimpleAttack());
         };
         attack.OnUpdate += () => {};
         attack.OnExit += (nextState) => 
         {
-            Attacking = false;
             print("Salió del ataque");
         };
 

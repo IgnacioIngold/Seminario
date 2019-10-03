@@ -68,12 +68,14 @@ public class BossAnimEvents : MonoBehaviour
         loadData(Application.streamingAssetsPath + CompleteDataPath);
     }
 
-    void StartBasicCombo()
-    {
-        //Inicié el combo básico.
-    }
+    #region BasicCombo
 
     //Primer ataque básico.
+    void StartBasicCombo()
+    {
+        //Debug.LogWarning("Empezó el combo");
+        //Inicié el combo básico.
+    }
     void FirstBasicStart()
     {
         //Index 1
@@ -87,7 +89,13 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.enabled = false;
     }
 
+
     //Segundo Ataque Básico.
+    void StartSecondAttack()
+    {
+        //Debug.LogWarning("StartSecond Attack event Run");
+        boss.SetAttackState(2);
+    }
     void SecondBasicStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[1].localPosition;
@@ -101,6 +109,11 @@ public class BossAnimEvents : MonoBehaviour
     }
 
     //Tercer Ataque básico.
+    void StartThirdAttack()
+    {
+        //print("Start Third Attack event Run");
+        boss.SetAttackState(3);
+    }
     void ThirdBasicStart()
     {
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[2].localPosition;
@@ -120,11 +133,15 @@ public class BossAnimEvents : MonoBehaviour
 
     void EndBasicCombo()
     {
+        //Debug.LogWarning("Terminó el combo");
         //Termine el combo básico.
+        boss.SetAttackState(0);
+
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
         DamageCollider.transform.localRotation = ColliderTransformKeyFrame[0].LocalRotation;
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[0].localScale;
-    }
+    } 
+    #endregion
 
     //High Jump.
     void HighJumpLandStart()
@@ -163,7 +180,6 @@ public class BossAnimEvents : MonoBehaviour
     }
     void unlockpassages()
     {
-      
         DeathACtions.Play();
     }
 }
