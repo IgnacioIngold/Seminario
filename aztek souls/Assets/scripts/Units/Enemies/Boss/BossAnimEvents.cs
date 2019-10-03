@@ -13,7 +13,7 @@ public class BossAnimEvents : MonoBehaviour
     public const string CompleteDataPath = "/Data/BossColliderAnims.json";
 
     public Dictionary<int, TransformValues> ColliderTransformKeyFrame = new Dictionary<int, TransformValues>();
-    public List<GameObject> blocks = new List<GameObject>();
+    public PlayableDirector DeathACtions;
 
     public BigCursed boss;
     public Collider DamageCollider;
@@ -163,10 +163,7 @@ public class BossAnimEvents : MonoBehaviour
     }
     void unlockpassages()
     {
-        foreach (var item in blocks)
-        {
-            item.SetActive(false);
-        }
-        //FadeOut.Play();
+      
+        DeathACtions.Play();
     }
 }
