@@ -17,7 +17,6 @@ public class FeedbackEffects : MonoBehaviour
     public float HitShakeRoughness;
     public float HitShakeFadeInTime;
     public float HitShakeFadeOutTime;
-    
 
     Vignette _vig;
     ChromaticAberration _ca;
@@ -52,29 +51,29 @@ public class FeedbackEffects : MonoBehaviour
 
     void UpdateHP(float HP)
     {
-        //if (HP > LowHealthPercentage)
-        //{
-        //    _cg.saturation.value = 0;
-        //    _cg.brightness.value = 0;
-        //    _cg.contrast.value = 0;
-        //}
+        if (HP > LowHealthPercentage)
+        {
+            _cg.saturation.value = 0;
+            _cg.brightness.value = 0;
+            _cg.contrast.value = 0;
+        }
 
-        //if (HP < LowHealthPercentage)
-        //{
-        //    float HAmmount = HP / LowHealthPercentage;
+        if (HP < LowHealthPercentage)
+        {
+            float HAmmount = HP / LowHealthPercentage;
 
-        //    //Si la vida es menor a cierto porcentaje, Reduzco el color grading
-        //    _cg.saturation.value = Mathf.Lerp(0, -100, HAmmount);
-        //    _cg.brightness.value = Mathf.Lerp(0, 80, HAmmount);
-        //    _cg.contrast.value = Mathf.Lerp(0, 60, HAmmount);
-        //}
+            //Si la vida es menor a cierto porcentaje, Reduzco el color grading
+            _cg.saturation.value = Mathf.Lerp(0, -100, HAmmount);
+            _cg.brightness.value = Mathf.Lerp(0, 80, HAmmount);
+            _cg.contrast.value = Mathf.Lerp(0, 60, HAmmount);
+        }
 
-        //if (HP == 0)
-        //{
-        //    _cg.saturation.value = -100;
-        //    _cg.brightness.value = 80;
-        //    _cg.contrast.value = 60;
-        //}
+        if (HP == 0)
+        {
+            _cg.saturation.value = -100;
+            _cg.brightness.value = 80;
+            _cg.contrast.value = 60;
+        }
     }
 
     public void GetHit()
