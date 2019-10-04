@@ -3,31 +3,34 @@ using Core.Entities;
 using System.Collections.Generic;
 using System;
 
-public abstract class HitTrigger : MonoBehaviour
+//[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
+public class TriggerWeapon : MonoBehaviour
 {
     [SerializeField, Tooltip("El collider es desactivado al producirse el primer impacto.")]
     protected Collider col;
     public GameObject Owner;
-    protected object[] getOwnerStats()
-    {
-        return Owner.GetComponent<IAttacker<object[]>>() != null ?
-            Owner.GetComponent<IAttacker<object[]>>().GetDamageStats()
-            : new object[1];
-    }
-}
-
-//[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
-public class TriggerWeapon : HitTrigger
-{
     public bool debugThisUnit;
 
-    private void Awake()
+    IAttacker<object[]> _owner;
+
+    void Awake()
     {
+        var getted = Owner.TryGetComponent(out _owner);
+        if (getted)
+            Debug.LogWarning("Encontrado. " + Owner.gameObject.name);
+        else
+            Debug.LogWarning("No encontrado");
+
         if (col == null)
             col = GetComponent<Collider>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    object[] getOwnerStats()
+    {
+        return _owner.GetDamageStats();
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == Owner) return;
 
@@ -35,7 +38,7 @@ public class TriggerWeapon : HitTrigger
         if (KilleableObject != null)
         {
             if (debugThisUnit)
-                print("Colisiono con algo we: " + other.gameObject.name);
+                print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name));
 
             KilleableObject.GetDamage(getOwnerStats());
             return;

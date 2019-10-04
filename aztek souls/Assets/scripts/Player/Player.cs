@@ -70,6 +70,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
     [SerializeField] Transform AxisOrientation;             // Transform que determina la orientación del jugador.
     public LayerMask floor;
+    public GameObject marker;                               // Índicador de ventana de Input.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;
     public ParticleSystem FeastBlood;
@@ -77,7 +78,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     Rigidbody _rb;                                          // Componente Rigidbody.
     //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
-    public GameObject marker;
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
@@ -222,6 +222,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         {
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             float Damage = (float)DamageStats[1];
+            print("Daño recibido es: " + (float)DamageStats[1]);
 
             //Cálculo el daño real.
             float resist = myStats.Resistencia * 0.5f;
@@ -235,7 +236,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             if (IsAlive)
             {
-                Aggresor.OnHitConfirmed(new object[0]);
+                Aggresor.OnHitConfirmed(new object[1] { 0f });
 
                 //Permito recuperar estamina.
                 _rolling = false;
@@ -259,7 +260,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _myBars.UpdateStamina(Stamina, MaxStamina);
 
                 //Entro al estado de recibir daño.
-                StartCoroutine(HurtFreeze());
+                if (!_invulnerable) StartCoroutine(HurtFreeze());
             }
             if (!IsAlive)
             {
@@ -296,6 +297,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
     public void OnHitConfirmed(object[] data)
     {
+        if (data.Count() < 1) return;
+
         if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
             FeedBlood((float)data[0]);
@@ -318,8 +321,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     /// <param name="blood">Cantidad de sangre Obtenida.</param>
     public void FeedBlood(float blood)
     {
-        Blood += blood;
-        OnFeastBlood();
+        if (blood > 0)
+        {
+            Blood += blood;
+            OnFeastBlood();
+        }
     }
 
     //=========================================================================================================================
@@ -407,10 +413,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
+        print(L1.AttackDuration);
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
-            print("Light 1 conecto exitósamente");
+            //print("Light 1 conecto exitósamente");
         };
 
         Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
