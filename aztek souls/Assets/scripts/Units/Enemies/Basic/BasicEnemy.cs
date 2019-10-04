@@ -21,6 +21,8 @@ public class BasicEnemy : BaseUnit
 {
     public event Action onGetHit = delegate { };
 
+    public ParticleSystem VulnerableMark;
+
 #if UNITY_EDITOR
     public BasicEnemyStates CurrentState; 
 #endif
@@ -30,22 +32,20 @@ public class BasicEnemy : BaseUnit
     public float AlertRadius = 10f;
 
     [Header("BerserkTime")]
-    public float berserkModeTime = 4f;
-    public float vulnerableTime = 4f;
-    public CountDownTimer BerserkCoolDown;
+    public float vulnerableTime = 1.5f;
     public float incommingDamageReduction = 0.3f;
-    public float outGoingDamageIncreace = 0.5f;
     public bool canBlock = true;
-    private bool isVulnerableToAttacks;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
 
+
+    private bool isVulnerableToAttacks = false;
     private float _alertedTimeRemaining = 0f;
     private bool LookTowardsPlayer = true;
-    private bool BersekrMode;
+    //private bool BersekrMode;
 
     //======================== OVERRIDES & INTERFACES =========================================
 
-    int recieved = 0;
+    //int recieved = 0;
     public override void GetDamage(params object[] DamageStats)
     {
         float damage = (float)DamageStats[1];
@@ -54,59 +54,56 @@ public class BasicEnemy : BaseUnit
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             bool breakStance = (bool)DamageStats[2];
 
-            if (canBlock || recieved >= 3)
+            if (canBlock)
             {
-                recieved = 0;
+                //recieved = 0;
 
                 if (breakStance) StartCoroutine(vulnerableToAttacks());
                 else
                 {
                     damage *= incommingDamageReduction;
                     Aggresor.OnHitBlocked(new object[] { 2 });
-                    StartCoroutine(BlockAndBerserk());
+                    StartCoroutine(Block());
                     return;
                 }
             }
 
-            if (BersekrMode)
-                damage *= incommingDamageReduction;
-            else
-            {
-                anims.SetTrigger("GetHit");
-                StopAllCoroutines();
-            }
+            anims.SetTrigger("GetHit");
+            StopAllCoroutines();
 
             base.GetDamage(DamageStats);
 
-            if(!isVulnerableToAttacks) recieved++;
+            //if(!isVulnerableToAttacks) recieved++;
             Health -= damage;
             onGetHit();
 
             if (!IsAlive)
             {
-                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado.
+                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
                 Aggresor.OnKillConfirmed(new object[] { BloodForKill });
                 sm.Feed(BasicEnemyStates.dead);
+                return;
+            }
+
+            var hitConfirmData = new object[1] { 0 };
+            if (isVulnerableToAttacks) hitConfirmData = new object[] { BloodPerHit };
+            Aggresor.OnHitConfirmed(hitConfirmData);
+
+            if (!_targetDetected)
+            {
+                _targetDetected = true;
+                sm.Feed(BasicEnemyStates.pursue);
             }
             else
-            {
-                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-                if (!_targetDetected)
-                {
-                    _targetDetected = true;
-                    sm.Feed(BasicEnemyStates.pursue);
-                }
-                else
-                    sm.Feed(BasicEnemyStates.idle);
-            }
+                sm.Feed(BasicEnemyStates.idle);
         }
     }
 
     public override object[] GetDamageStats()
     {
         float damage = attackDamage;
-        if (BersekrMode)
-            damage += (attackDamage * outGoingDamageIncreace);
+        //if (BersekrMode)
+        //    damage += (attackDamage * outGoingDamageIncreace);
 
         return new object[3] { this, damage, false };
     }
@@ -116,8 +113,8 @@ public class BasicEnemy : BaseUnit
         canBlock = false;
         isVulnerableToAttacks = true;
 
-        BersekrMode = false;
-        StopCoroutine(BlockAndBerserk());
+        //BersekrMode = false;
+        StopCoroutine(Block());
 
         yield return new WaitForSeconds(vulnerableTime);
         canBlock = true;
@@ -130,15 +127,15 @@ public class BasicEnemy : BaseUnit
     {
         base.Awake();
 
-        BerserkCoolDown.SetMonoObject(this);
-        BerserkCoolDown.OnTimeStart += () => 
-        {
-            canBlock = false;
-        };
-        BerserkCoolDown.OnTimesUp += () => 
-        {
-            canBlock = true;
-        };
+        //BerserkCoolDown.SetMonoObject(this);
+        //BerserkCoolDown.OnTimeStart += () => 
+        //{
+        //    canBlock = false;
+        //};
+        //BerserkCoolDown.OnTimesUp += () => 
+        //{
+        //    canBlock = true;
+        //};
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
@@ -177,7 +174,6 @@ public class BasicEnemy : BaseUnit
 
         idle.OnEnter += (previousState) => 
         {
-            print("Idle");
             //Seteo la animación inicial.
         };
         idle.OnUpdate += () => 
@@ -298,6 +294,12 @@ public class BasicEnemy : BaseUnit
         sm.Update();
     }
 
+    public void SetVulnerabity(bool vulnerable)
+    {
+        isVulnerableToAttacks = vulnerable;
+        VulnerableMark.Play();
+    }
+
     IEnumerator SimpleAttack()
     {
         var toDamage = sight.target.GetComponent<IKilleable>();
@@ -321,13 +323,12 @@ public class BasicEnemy : BaseUnit
         sm.Feed(BasicEnemyStates.think);
     }
 
-    IEnumerator BlockAndBerserk()
+    IEnumerator Block()
     {
         canBlock = false;
-        BersekrMode = true;
 
         LookTowardsPlayer = true;
-        anims.SetTrigger("block&Berserk");
+        anims.SetTrigger("block");
         yield return null;
 
         float currentTransitionTime = getCurrentTransitionDuration();
@@ -336,13 +337,9 @@ public class BasicEnemy : BaseUnit
         float remainingTime = getRemainingAnimTime();
         yield return new WaitForSeconds(remainingTime);
         LookTowardsPlayer = true;
-        sm.Feed(BasicEnemyStates.attack);
-
-        yield return new WaitForSeconds(berserkModeTime);
 
         canBlock = true;
-        BersekrMode = false;
-        BerserkCoolDown.StartCount();
+        sm.Feed(BasicEnemyStates.attack);
     }
 
     IEnumerator thinkAndWatch()

@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class BE_AnimEventListener : MonoBehaviour
 {
+    public BasicEnemy owner;
     public Collider AttackCollider;
-    public ParticleSystem ableHitmarket;
+    
+
+    private void Awake()
+    {
+        owner = GetComponentInParent<BasicEnemy>();
+    }
 
     public void AE_AttackEnable()
     {
@@ -20,6 +26,6 @@ public class BE_AnimEventListener : MonoBehaviour
     }
     public void AE_EnableMarker()
     {
-        ableHitmarket.Play();
+        owner.SetVulnerabity(true);
     }
 }
