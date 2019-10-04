@@ -59,6 +59,38 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0.028540066
+        functionName: AllowInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.030690538
+        functionName: DenyGetInput
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.21514818
+        functionName: DenyInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.31355932
+        functionName: playTails
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.37211856
         functionName: EnableDamage
         data: 
@@ -75,22 +107,6 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.028540066
-        functionName: AllowInterrupt
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.21514818
-        functionName: DenyInterrupt
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 0.45773876
         functionName: AllowGetInput
         data: 
@@ -100,22 +116,6 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.5708013
-        functionName: DenyGetInput
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.31355932
-        functionName: playTails
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0
         functionName: DenyGetInput
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
