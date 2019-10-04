@@ -54,58 +54,66 @@ public class BasicEnemy : BaseUnit
             IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
             bool breakStance = (bool)DamageStats[2];
 
+            StopCoroutine(thinkAndWatch());
+            StopCoroutine(SimpleAttack());
+
+            print("I can block: " + canBlock);
+
             if (canBlock)
             {
-                //recieved = 0;
+                anims.SetTrigger("block");
+                StartCoroutine(Block());
+                Aggresor.OnHitBlocked(new object[] { 2 });
 
-                if (breakStance) StartCoroutine(vulnerableToAttacks());
+                float damageReduced = damage * incommingDamageReduction;
+                object[] damageStat = new object[] {Aggresor, damageReduced, breakStance };
+                Health -= damageReduced;
+                base.GetDamage(damageStat);
+            }
+            else
+            {
+                anims.SetTrigger("GetHit");
+                base.GetDamage(DamageStats);
+
+                Health -= damage;
+                onGetHit();
+
+                //damage *= incommingDamageReduction;
+
+                if (!IsAlive)
+                {
+                    //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
+                    Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                    sm.Feed(BasicEnemyStates.dead);
+                    return;
+                }
                 else
                 {
-                    damage *= incommingDamageReduction;
-                    Aggresor.OnHitBlocked(new object[] { 2 });
-                    StartCoroutine(Block());
-                    return;
+                    var hitConfirmData = new object[1] { 0f };
+                    if (isVulnerableToAttacks) hitConfirmData = new object[] { BloodPerHit };
+                    Aggresor.OnHitConfirmed(hitConfirmData);
+
+                    if (!_targetDetected)
+                    {
+                        _targetDetected = true;
+                        sm.Feed(BasicEnemyStates.pursue);
+                    }
+                    else
+                        sm.Feed(BasicEnemyStates.idle);
+
+                    LookTowardsPlayer = true;
+                    sm.Feed(BasicEnemyStates.think);
                 }
             }
 
-            anims.SetTrigger("GetHit");
-            StopAllCoroutines();
-
-            base.GetDamage(DamageStats);
-
-            //if(!isVulnerableToAttacks) recieved++;
-            Health -= damage;
-            onGetHit();
-
-            if (!IsAlive)
-            {
-                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
-                Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-                sm.Feed(BasicEnemyStates.dead);
-                return;
-            }
-
-            var hitConfirmData = new object[1] { 0 };
-            if (isVulnerableToAttacks) hitConfirmData = new object[] { BloodPerHit };
-            Aggresor.OnHitConfirmed(hitConfirmData);
-
-            if (!_targetDetected)
-            {
-                _targetDetected = true;
-                sm.Feed(BasicEnemyStates.pursue);
-            }
-            else
-                sm.Feed(BasicEnemyStates.idle);
+            //StopAllCoroutines();
+            ////if(!isVulnerableToAttacks) recieved++;
         }
     }
 
     public override object[] GetDamageStats()
     {
-        float damage = attackDamage;
-        //if (BersekrMode)
-        //    damage += (attackDamage * outGoingDamageIncreace);
-
-        return new object[3] { this, damage, false };
+        return new object[3] { this, attackDamage, false };
     }
 
     IEnumerator vulnerableToAttacks()
@@ -114,7 +122,7 @@ public class BasicEnemy : BaseUnit
         isVulnerableToAttacks = true;
 
         //BersekrMode = false;
-        StopCoroutine(Block());
+        //StopCoroutine(Block());
 
         yield return new WaitForSeconds(vulnerableTime);
         canBlock = true;
@@ -126,16 +134,6 @@ public class BasicEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
-
-        //BerserkCoolDown.SetMonoObject(this);
-        //BerserkCoolDown.OnTimeStart += () => 
-        //{
-        //    canBlock = false;
-        //};
-        //BerserkCoolDown.OnTimesUp += () => 
-        //{
-        //    canBlock = true;
-        //};
 
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
@@ -191,7 +189,7 @@ public class BasicEnemy : BaseUnit
 
         alerted.OnEnter += (previousState) => 
         {
-            print("Enemy has been Alerted");
+            //print("Enemy has been Alerted");
             _alertedTimeRemaining = AlertedTime;
 
             //EnemyHealthBar.FadeIn();
@@ -227,7 +225,7 @@ public class BasicEnemy : BaseUnit
 
         pursue.OnEnter += (previousState) => 
         {
-            print("pursue");
+            //print("pursue");
             //Setear Animación.
             anims.SetBool("Walking", true);
         };
@@ -246,25 +244,25 @@ public class BasicEnemy : BaseUnit
 
         attack.OnEnter += (previousState) => 
         {
-            print("Attack");
+            //print("Attack");
             agent.isStopped = true;
             StartCoroutine(SimpleAttack());
         };
         attack.OnUpdate += () => {};
         attack.OnExit += (nextState) => 
         {
-            print("Salió del ataque");
+            //print("Salió del ataque");
         };
 
         think.OnEnter += (previousState) => 
         {
-            print("Thinking");
+            //print("Thinking");
             StartCoroutine(thinkAndWatch());
         };
         think.OnUpdate += () => { };
         think.OnExit += (nextState) => 
         {
-            print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
+            //print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
         };
 
         dead.OnEnter += (previousState) => 
@@ -297,6 +295,7 @@ public class BasicEnemy : BaseUnit
     public void SetVulnerabity(bool vulnerable)
     {
         isVulnerableToAttacks = vulnerable;
+        StartCoroutine(vulnerableToAttacks());
         VulnerableMark.Play();
     }
 
@@ -309,7 +308,6 @@ public class BasicEnemy : BaseUnit
 
         //Inicio el primer ataque.
         LookTowardsPlayer = false;
-        canBlock = false;
         anims.SetTrigger("SimpleAttack");
         yield return null;
 
@@ -325,10 +323,7 @@ public class BasicEnemy : BaseUnit
 
     IEnumerator Block()
     {
-        canBlock = false;
-
         LookTowardsPlayer = true;
-        anims.SetTrigger("block");
         yield return null;
 
         float currentTransitionTime = getCurrentTransitionDuration();
@@ -338,7 +333,6 @@ public class BasicEnemy : BaseUnit
         yield return new WaitForSeconds(remainingTime);
         LookTowardsPlayer = true;
 
-        canBlock = true;
         sm.Feed(BasicEnemyStates.attack);
     }
 
@@ -348,7 +342,7 @@ public class BasicEnemy : BaseUnit
         float waitTime = Random.Range(0.5f, 1.5f);
         yield return new WaitForSeconds(waitTime);
 
-        print("Watchtime Started");
+        //print("Watchtime Started");
         float watchTime = Random.Range(2f, 4f);
 
         while (watchTime > 0)
