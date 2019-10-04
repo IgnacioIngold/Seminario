@@ -53,9 +53,8 @@ public class PlayerAnimEventListener : MonoBehaviour
     private void DenyGetInput()
     {
         player.CurrentWeapon.CanGetInput(false);
-        if(marker.activeInHierarchy)
-        marker.SetActive(false);
 
+        if (marker.activeInHierarchy) marker.SetActive(false);
     }
 
     public void GetHurtEvent()
@@ -68,19 +67,4 @@ public class PlayerAnimEventListener : MonoBehaviour
             tail.Stop();
         tail.Play();
     }
-
-    /// <summary>
-    /// Retorna la duración del clip actual.
-    /// </summary>
-    public float getAnimTime()
-    {
-        AnimationClip clip = anim.GetCurrentAnimatorClipInfo(0)[0].clip;
-        print("Attack Clip: " + clip + " ClipGetted: " + clip.name);
-
-        //print("currentClip is Correct!");
-        //float passed = AnimTime - (AnimTime * transitionPassed);
-
-        return clip.length;
-    }
-    
 }
