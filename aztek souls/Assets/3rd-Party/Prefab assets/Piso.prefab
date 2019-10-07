@@ -87,6 +87,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 591678931392449553}
+  - component: {fileID: 4832165132895777023}
   m_Layer: 0
   m_Name: Piso
   m_TagString: Untagged
@@ -109,3 +110,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4832165132895777023
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5855446286188205604}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.013991, y: 0.1529913, z: 5.963249}
+  m_Center: {x: -3.0058763, y: -0.20730686, z: 2.9750524}
