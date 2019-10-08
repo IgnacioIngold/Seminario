@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 1d6824f538f5e794080409283967d767
+guid: c14f8cc49fb617348bad7808e03a4662
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: 1827226128182048838
-    second: Die
+    second: WalkForward
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,18 +35,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Die
+      name: WalkForward
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 70
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
