@@ -17,6 +17,7 @@ public class BossAnimEvents : MonoBehaviour
 
     public BigCursed boss;
     public Collider DamageCollider;
+    public ParticleSystem marker;
     //public PlayableDirector FadeOut;
 
 
@@ -113,6 +114,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         //print("Start Third Attack event Run");
         boss.SetAttackState(3);
+        marker.Play();
     }
     void ThirdBasicStart()
     {
