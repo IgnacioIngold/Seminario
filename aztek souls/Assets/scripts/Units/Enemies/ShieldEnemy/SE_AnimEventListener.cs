@@ -31,11 +31,19 @@ public class SE_AnimEventListener : MonoBehaviour
     }
     public void Parryed()
     {
-        Debug.Log("Entre");
+       
         ShieldSparks.Play();
     }
+    
     public void hiteable()
     {
         marker.Play();
     }
+    public void EndAtk(int index)
+    {
+       //1= primer ataque
+       //2 =segundo
+       //3 = tercero
+    }
+   
 }

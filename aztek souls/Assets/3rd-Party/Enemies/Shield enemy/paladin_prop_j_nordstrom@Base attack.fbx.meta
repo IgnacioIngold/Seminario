@@ -5,7 +5,13 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: attack2
+    second: attack/Start-Up
+  - first:
+      74: 2678574130856746809
+    second: attack/Active
+  - first:
+      74: 1109930654323146929
+    second: Attack/Recovery
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,10 +41,92 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: attack2
+      name: attack/Start-Up
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
+      lastFrame: 15
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: hiteable
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: attack/Active
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 16
+      lastFrame: 23
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0
+        functionName: EnableDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9980277
+        functionName: DisableDamage
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attack/Recovery
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 24
       lastFrame: 45
       wrapMode: 0
       orientationOffsetY: 0
@@ -59,28 +147,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.35565314
-        functionName: EnableDamage
+      - time: 0.8698875
+        functionName: EndAtk
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
         floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.47310647
-        functionName: DisableDamage
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.47457626
-        functionName: hiteable
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
+        intParameter: 2
         messageOptions: 0
       transformMask: []
       maskType: 3
