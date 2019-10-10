@@ -28,6 +28,8 @@ namespace Core
             Enemies = FindObjectsOfType<BaseUnit>();
             if (LevelUpPanel != null)
             {
+                LevelUpPanel.SetAndLoad();
+
                 LevelUpPanel.OnAccept += () => { EnableDisableLevelUpPanel(false); };
                 LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
             }

@@ -52,9 +52,10 @@ public class LevelUpPanel : MonoBehaviour
     int _strExtraPoints = 0;
     int _defExtraPoints = 0;
 
-    private void Awake()
+    public void SetAndLoad()
     {
         source = FindObjectOfType<Player>();
+        print("Source Setted: " + source);
         source.myStats.bloodForLevelUp = 1000;
 
         originalAmmount = BloodForLevelUp;
