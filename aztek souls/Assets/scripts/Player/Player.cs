@@ -71,7 +71,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     #region Variables de Inspector.
 
-    public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
+    public StatusBars _myBars;                               // Display de la vida y la estamina del jugador.
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     public LayerMask floor;                                 // Máscara de collisiones para el piso.
     public GameObject marker;                               // Índicador de ventana de Input.
@@ -113,7 +113,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _hp = val;
 
             if (_myBars != null)
-                _myBars.UpdateHeathBar(_hp, MaxHealth);
+                _myBars.m_UpdateHeathBar(_hp, MaxHealth);
         }
     }
     public float MaxHealth
@@ -142,7 +142,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //StartCoroutine(exhausted());
                 OnStaminaIsEmpty();
             }
-            _st = value;
+            if (_st > MaxStamina)
+                _st = MaxStamina;
 
             //Display Value
             if (_myBars != null)
@@ -150,7 +151,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //if (!_myBars.staminaBarIsVisible)
                 //    _myBars.Fade(HealthBar.InfoComponent.StaminaBar, HealthBar.FadeAction.FadeIn, 1f);
 
-                _myBars.UpdateStamina(_st, MaxStamina);
+                _myBars.m_UpdateStamina(_st, MaxStamina);
             }
         }
     }
@@ -211,7 +212,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             myStats.Sangre = val;
             if (_myBars != null)
-                _myBars.UpdateBloodAmmount((int)val);
+                _myBars.m_UpdateBloodAmmount((int)val);
         }
     } 
 
@@ -289,8 +290,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
                 Destroy(particle, 3f);
 
-                _myBars.UpdateHeathBar(_hp, MaxHealth);
-                _myBars.UpdateStamina(Stamina, MaxStamina);
+                _myBars.m_UpdateHeathBar(_hp, MaxHealth);
+                _myBars.m_UpdateStamina(Stamina, MaxStamina);
 
                 //Entro al estado de recibir daño.
                 if (!_invulnerable) StartCoroutine(HurtFreeze());
@@ -373,7 +374,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         Stamina = MaxStamina;
         Blood = myStats.Sangre;
 
-        //_myBars.TurnOffAll();
+        _myBars.m_TurnOffAll();
 
         OnStaminaIsEmpty += StaminaEffecPlay;
         OnFeastBlood += FeastBloodEfect;
@@ -602,11 +603,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         if (!IsAlive || _shoked) return;
 
-        //if (_st == MaxStamina && _myBars.staminaBarIsVisible)
-        //    _myBars.DelayedFade(HealthBar.InfoComponent.StaminaBar, HealthBar.FadeAction.FadeOut, 2f, 2f);
+        if (_st == MaxStamina && _myBars.staminaBarIsVisible)
+            _myBars.m_DelayedFade(StatusBars.InfoComponent.StaminaBar, StatusBars.FadeType.FadeOut, 2f, 2f);
 
-        //if (_hp == MaxHealth && _myBars.healthBarIsVisible)
-        //    _myBars.DelayedFade(HealthBar.InfoComponent.HealthBar, HealthBar.FadeAction.FadeOut, 2f, 2f);
+        if (_hp == MaxHealth && _myBars.healthBarIsVisible)
+            _myBars.m_DelayedFade(StatusBars.InfoComponent.HealthBar, StatusBars.FadeType.FadeOut, 2f, 2f);
 
         //Inputs, asi es más responsive.
         float AxisY = Input.GetAxis("Vertical");
@@ -809,7 +810,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         yield return new WaitForSeconds(2f);
 
-        _myBars.FadeAll( HealthBar.FadeAction.FadeOut, 3f);
+        _myBars.m_FadeAll( StatusBars.FadeType.FadeOut, 3f);
     }
 
     public void Attack(Inputs input)
