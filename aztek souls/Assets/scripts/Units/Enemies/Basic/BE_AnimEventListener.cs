@@ -14,18 +14,51 @@ public class BE_AnimEventListener : MonoBehaviour
         owner = GetComponentInParent<BasicEnemy>();
     }
 
-    public void AE_AttackEnable()
-    {
-        //print("AnimEvent basicEnemy ON START ATTACK activado");
-        AttackCollider.enabled = true;
-    }
-    public void AE_AttackDisable()
-    {
-        //print("AnimEvent basicEnemy ON FINIT ATTACK activado");
-        AttackCollider.enabled = false;
-    }
-    public void AE_EnableMarker()
+    //============================= Attack ==================================================
+
+    public void AttackStartUp()
     {
         owner.SetVulnerabity(true);
+        owner.LookTowardsPlayer = true;
+    }
+
+    public void Attack_ActivePhase()
+    {
+        //print("AnimEvent basicEnemy ON START ATTACK activado");
+        if (owner.isAttacking)
+        {
+            AttackCollider.enabled = true;
+            owner.LookTowardsPlayer = false;
+        }
+    }
+    public void Attack_ActivePhaseEnd()
+    {
+        //print("AnimEvent basicEnemy ON FINIT ATTACK activado");
+        if (owner.isAttacking)
+            AttackCollider.enabled = false;
+    }
+
+    public void AttackRecovery()
+    {
+        owner.SetVulnerabity(false);
+        owner.LookTowardsPlayer = true;
+    }
+
+    public void AttackFinished()
+    {
+        if (owner.isAttacking)
+            owner.FeedFSM(BasicEnemyStates.think);
+    }
+
+    //============================== BLOCK ====================================================
+
+    public void BlockStart()
+    {
+        //Esto por ahora no sirve we.
+    }
+
+    public void BlockEnd()
+    {
+        owner.EndBLockingPhase();
     }
 }

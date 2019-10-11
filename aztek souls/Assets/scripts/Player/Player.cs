@@ -72,6 +72,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     #region Variables de Inspector.
 
     public StatusBars _myBars;                               // Display de la vida y la estamina del jugador.
+    public LevelUpPanel levelUpPanel;
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     public LayerMask floor;                                 // Máscara de collisiones para el piso.
     public GameObject marker;                               // Índicador de ventana de Input.
@@ -376,7 +377,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         _myBars.m_TurnOffAll();
 
-        FindObjectOfType<LevelUpPanel>().OnAccept += () =>
+        levelUpPanel.OnAccept += () =>
         {
             _myBars.m_UpdateHeathBar(_hp, MaxHealth);
             _myBars.m_UpdateStamina(_st, MaxStamina);
@@ -455,7 +456,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
-        print(L1.AttackDuration);
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {

@@ -66,7 +66,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: AE_EnableMarker
+        functionName: AttackStartUp
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
           type: 3}
@@ -103,7 +103,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: AE_AttackEnable
+        functionName: Attack_ActivePhase
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
           type: 3}
@@ -111,7 +111,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: AE_AttackDisable
+        functionName: Attack_ActivePhaseEnd
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
           type: 3}
@@ -146,7 +146,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: AttackRecovery
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9226882
+        functionName: AttackFinished
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

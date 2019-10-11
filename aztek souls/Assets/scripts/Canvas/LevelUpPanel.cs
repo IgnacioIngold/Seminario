@@ -55,7 +55,7 @@ public class LevelUpPanel : MonoBehaviour
     public void SetAndLoad()
     {
         source = FindObjectOfType<Player>();
-        print("Source Setted: " + source);
+        //print("Source Setted: " + source);
         source.myStats.bloodForLevelUp = 1000;
 
         originalAmmount = BloodForLevelUp;
