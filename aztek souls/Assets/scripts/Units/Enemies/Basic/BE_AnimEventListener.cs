@@ -49,16 +49,4 @@ public class BE_AnimEventListener : MonoBehaviour
         if (owner.isAttacking)
             owner.FeedFSM(BasicEnemyStates.think);
     }
-
-    //============================== BLOCK ====================================================
-
-    public void BlockStart()
-    {
-        //Esto por ahora no sirve we.
-    }
-
-    public void BlockEnd()
-    {
-        owner.EndBLockingPhase();
-    }
 }

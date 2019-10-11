@@ -45,11 +45,18 @@ public class BasicEnemy : BaseUnit
     public float AlertRadius = 10f;
     public bool isAttacking;
 
+    [Header("Blocking")]
+    public bool canBlock = true;
+    public bool isVulnerableToAttacks = false;
+    public bool isBlocking = false;
+    public float blockDuration = 1.467f;
+    public float blockExtraTimePerHit = 0.7f;
+    float blockTime = 0f;
+
+
     [Header("BerserkTime")]
     public float vulnerableTime = 1.5f;
     public float incommingDamageReduction = 0.3f;
-    public bool canBlock = true;
-    public bool isVulnerableToAttacks = false;
     Vector3 _lastEnemyPositionKnow = Vector3.zero;
 
 
@@ -73,6 +80,7 @@ public class BasicEnemy : BaseUnit
             if (!isVulnerableToAttacks && _targetDetected)
             {
                 print("BLOQUEO");
+
                 sm.Feed(BasicEnemyStates.blocking);
                 Aggresor.OnHitBlocked(new object[] { 2 });
 
@@ -161,7 +169,8 @@ public class BasicEnemy : BaseUnit
 
         block.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.attack, attack)
-             .AddTransition(BasicEnemyStates.think, think);
+             .AddTransition(BasicEnemyStates.think, think)
+             .AddTransition(BasicEnemyStates.blocking, block);
 
 
         think.AddTransition(BasicEnemyStates.dead, dead)
@@ -286,12 +295,35 @@ public class BasicEnemy : BaseUnit
         block.OnEnter += (previousState) =>
         {
             anims.SetBool("Blocking", true);
+            isBlocking = true;
             LookTowardsPlayer = true;
+
+            blockTime = blockDuration;
         };
-        //block.OnUpdate += () => { };
+        block.OnUpdate += () => 
+        {
+            blockTime -= Time.deltaTime;
+
+            if (blockTime <= 0)
+            {
+                if (!IsAlive)
+                    sm.Feed(BasicEnemyStates.dead);
+
+                var toDamage = sight.target.GetComponent<IKilleable>();
+
+                if (sight.distanceToTarget < AttackRange)
+                    sm.Feed(BasicEnemyStates.attack);
+                else
+                    sm.Feed(BasicEnemyStates.think);
+            }
+        };
         block.OnExit += (nextState) =>
         {
-            LookTowardsPlayer = true;
+            if (nextState != BasicEnemyStates.blocking)
+            {
+                LookTowardsPlayer = true;
+                isBlocking = false;
+            }
             anims.SetBool("Blocking", false);
         };
 
@@ -346,16 +378,6 @@ public class BasicEnemy : BaseUnit
 
         if (isVulnerableToAttacks)
             VulnerableMark.Play();
-    }
-
-    public void EndBLockingPhase()
-    {
-        var toDamage = sight.target.GetComponent<IKilleable>();
-
-        if (sight.distanceToTarget < AttackRange)
-            sm.Feed(BasicEnemyStates.attack);
-        else
-            sm.Feed(BasicEnemyStates.think);
     }
 
     IEnumerator thinkAndWatch()
