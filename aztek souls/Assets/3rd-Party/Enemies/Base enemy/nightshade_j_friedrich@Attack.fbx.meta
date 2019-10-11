@@ -73,6 +73,14 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0
+        functionName: PlaySound
+        data: Rhythm
+        objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -113,6 +121,14 @@ ModelImporter:
       - time: 1
         functionName: Attack_ActivePhaseEnd
         data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: PlaySound
+        data: Attack
         objectReferenceParameter: {fileID: 11500000, guid: 4a0115a98ba575c47b1faa50ba6a7c3f,
           type: 3}
         floatParameter: 0

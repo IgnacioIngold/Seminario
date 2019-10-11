@@ -19,13 +19,7 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
-    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
-      copied configuration does not match position in animation file:\n\t'LeftUpLeg'
-      : position error = 117.516518 mm\n\t'LeftLeg' : position error = 382.819244
-      mm\n\t'LeftFoot' : position error = 385.147919 mm\n\t'LeftToeBase' : position
-      error = 165.605331 mm\n\t'RightUpLeg' : position error = 117.516518 mm\n\t'RightLeg'
-      : position error = 382.819244 mm\n\t'RightFoot' : position error = 385.147919
-      mm\n\t'RightToeBase' : position error = 165.605331 mm\n"
+    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -64,7 +58,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.08292683
+        functionName: PlaySound
+        data: Steps
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.28780487
+        functionName: PlaySound
+        data: Steps
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

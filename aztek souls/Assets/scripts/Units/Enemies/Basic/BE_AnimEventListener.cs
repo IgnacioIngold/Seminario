@@ -7,15 +7,21 @@ public class BE_AnimEventListener : MonoBehaviour
 {
     public BasicEnemy owner;
     public Collider AttackCollider;
+    audioManager _AM;
     
 
     private void Awake()
     {
         owner = GetComponentInParent<BasicEnemy>();
+        _AM = GetComponent<audioManager>();
     }
 
     //============================= Attack ==================================================
 
+    void PlaySound(string Source)
+    {
+        _AM.Play(Source);
+    }
     public void AttackStartUp()
     {
         owner.SetVulnerabity(true);

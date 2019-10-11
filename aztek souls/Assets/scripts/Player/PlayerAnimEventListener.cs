@@ -12,16 +12,22 @@ public class PlayerAnimEventListener : MonoBehaviour
     public GameObject marker;
     public ParticleSystem tail;
     Animator anim;
+    audioManager _AM;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        _AM = GetComponent<audioManager>();
     }
 
     //Eventos de Animación.
 
     //Globales.
 
+    void PlaySound(String source)
+    {
+        _AM.Play(source);
+    }
     private void AllowInterrupt()
     {
         player.interruptAllowed = true;

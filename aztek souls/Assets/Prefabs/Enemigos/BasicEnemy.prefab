@@ -232,11 +232,17 @@ MonoBehaviour:
   Debug_DetectionRanges: 1
   VulnerableMark: {fileID: 6355333868495538482}
   CurrentState: 0
+  LookTowardsPlayer: 1
   AlertedTime: 2
   AlertRadius: 10
+  isAttacking: 0
+  canBlock: 1
+  isVulnerableToAttacks: 0
+  isBlocking: 0
+  blockDuration: 1.467
+  blockExtraTimePerHit: 0.7
   vulnerableTime: 4
   incommingDamageReduction: 0.3
-  canBlock: 1
 --- !u!1 &609346536890294315
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,6 +303,49 @@ MonoBehaviour:
   col: {fileID: 609346536890294314}
   Owner: {fileID: 609346536399887383}
   debugThisUnit: 0
+--- !u!114 &100881341138478268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8887071442991250830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c05185866652784ba90282b01c8261c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Steps
+    clip: {fileID: 8300000, guid: 9a7519c8687ba1540b91a5b1d2be5726, type: 3}
+    volume: 0.5
+    pitch: 1
+    Loop: 0
+    source: {fileID: 0}
+  - name: Attack
+    clip: {fileID: 8300000, guid: 4dbc6cbdce1d72f46b88415bfc6bc682, type: 3}
+    volume: 0.5
+    pitch: 1
+    Loop: 0
+    source: {fileID: 0}
+  - name: Death
+    clip: {fileID: 8300000, guid: 5ab86afbaf8721d4f9774305c9ccff7d, type: 3}
+    volume: 0.5
+    pitch: 1
+    Loop: 0
+    source: {fileID: 0}
+  - name: Rhythm
+    clip: {fileID: 8300000, guid: aa62cb58310fba74da86d2125e7c9703, type: 3}
+    volume: 1
+    pitch: 1.5
+    Loop: 0
+    source: {fileID: 0}
+  - name: Hurted
+    clip: {fileID: 8300000, guid: 7b069c456dd599e42ba5d1f36f7622db, type: 3}
+    volume: 0.5
+    pitch: 1
+    Loop: 0
+    source: {fileID: 0}
 --- !u!114 &609346536748742399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,11 +372,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: nightshade_j_friedrich
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     - target: {fileID: -4216859302048453862, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -383,6 +427,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7603f12ccdf75a6489530bdfbfa0c2e4, type: 3}
 --- !u!1 &8887071442991250830 stripped
@@ -557,6 +606,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: circle
       objectReference: {fileID: 0}
+    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
+        type: 3}
+      propertyPath: ColorModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.ctime1
+      value: 14842
+      objectReference: {fileID: 0}
     - target: {fileID: 1821274765474441743, guid: 51e501eee2f58e3418d726cdb7ac0338,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -626,16 +685,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.57274395
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
-        type: 3}
-      propertyPath: ColorModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
-        type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.ctime1
-      value: 14842
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51e501eee2f58e3418d726cdb7ac0338, type: 3}

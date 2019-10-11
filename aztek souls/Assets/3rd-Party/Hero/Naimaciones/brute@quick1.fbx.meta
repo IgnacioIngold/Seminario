@@ -59,8 +59,24 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
+      - time: 0
+        functionName: DenyGetInput
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.035126235
         functionName: AllowInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.3379293
+        functionName: playTails
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
@@ -83,24 +99,16 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6212953
-        functionName: DisableDamage
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.34322032
-        functionName: playTails
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
       - time: 0.51291555
         functionName: AllowGetInput
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.6212953
+        functionName: DisableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
@@ -115,9 +123,9 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0
-        functionName: DenyGetInput
-        data: 
+      - time: 0.41219512
+        functionName: PlaySound
+        data: Slash
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
