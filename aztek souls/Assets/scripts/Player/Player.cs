@@ -376,6 +376,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         _myBars.m_TurnOffAll();
 
+        FindObjectOfType<LevelUpPanel>().OnAccept += () =>
+        {
+            _myBars.m_UpdateHeathBar(_hp, MaxHealth);
+            _myBars.m_UpdateStamina(_st, MaxStamina);
+        };
+
         OnStaminaIsEmpty += StaminaEffecPlay;
         OnFeastBlood += FeastBloodEfect;
 
@@ -732,8 +738,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
 
     //=========================================================================================================================
-
-    
 
     public void Move()
     {
