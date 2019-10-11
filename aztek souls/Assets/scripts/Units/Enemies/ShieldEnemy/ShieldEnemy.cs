@@ -49,7 +49,6 @@ public class ShieldEnemy : BaseUnit
     [SerializeField] ShieldEnemyStates current;
 #endif
 
-
     //======================== OVERRIDES & INTERFACES =========================================
 
     public override void GetDamage(params object[] DamageStats)
