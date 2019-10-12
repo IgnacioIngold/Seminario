@@ -24,20 +24,20 @@ namespace Core
             Player = FindObjectOfType<Player>();
             mainCamB = Camera.main.GetComponentInParent<MainCamBehaviour>();
 
+            Action EnableG = () => { EnableGameplay(true); };
+            LevelUpPanel.OnAccept += EnableG;
+            LevelUpPanel.OnCancel += EnableG;
+
             //Relleno mi array de enemigos.
             Enemies = FindObjectsOfType<BaseUnit>();
             if (LevelUpPanel != null)
-            {
                 LevelUpPanel.SetAndLoad();
-
-                LevelUpPanel.OnAccept += () => { EnableDisableLevelUpPanel(false); };
-                LevelUpPanel.OnCancel += () => { EnableDisableLevelUpPanel(false); };
-            }
         }
 
         // Update is called once per frame
         void Update()
         {
+            //Muestro o oculto el cursor.
             if (Context.Paused || Context.LevelupPanel)
             {
                 Cursor.visible = true;
@@ -54,47 +54,47 @@ namespace Core
                 FadeBackGround.gameObject.SetActive(false);
             }
 
+            //Pausa.
             if (Input.GetButtonDown(PauseMenuButton))
-                if (!Context.Paused)
-                {
-                    PauseEverything(true);
-                    if (Context.LevelupPanel) EnableDisableLevelUpPanel(false);
-                }
-                else
-                {
-                    PauseEverything(false);
-                    if (LevelUpPanelWasOpened) EnableDisableLevelUpPanel(true);
-                }
-
-
-            if (!Context.Paused)
             {
-                if (Input.GetButtonDown(LevelUpMenuButton))
-                    if (!Context.LevelupPanel)
-                    {
-                        LevelUpPanelWasOpened = true;
-                        EnableDisableLevelUpPanel(true, true);
-                    }
-                    else
-                    {
-                        LevelUpPanelWasOpened = false;
-                        EnableDisableLevelUpPanel(false, true);
-                    }
+                Context.Paused = !Context.Paused;
+                PauseEverything(Context.Paused);
+
+                if (Context.Paused && LevelUpPanelWasOpened)
+                    EnableDisableLevelUpPanel(false, false);
+                else if(!Context.Paused && LevelUpPanelWasOpened)
+                    EnableDisableLevelUpPanel(true, false);
             }
-            else
-                EnableDisableLevelUpPanel(false);
+
+            //Level Up Panel.
+            if (Input.GetButtonDown(LevelUpMenuButton) && !Context.Paused)
+            {
+                Context.LevelupPanel = !Context.LevelupPanel;
+                LevelUpPanelWasOpened = Context.LevelupPanel;
+
+                EnableDisableLevelUpPanel(Context.LevelupPanel);
+            }
         }
 
-        public void EnableDisableLevelUpPanel(bool active, bool loadData = false)
+        /// <summary>
+        /// Activa o Desactiva el Panel de Lvl Up.
+        /// </summary>
+        /// <param name="enable">True para habiltar, False para deshabilitar.</param>
+        /// <param name="resetData">Si queremos que se reinicien todos los datos o no.</param>
+        public void EnableDisableLevelUpPanel(bool enable, bool resetData = true)
         {
-            Context.LevelupPanel = active;
+            EnableGameplay(!enable);
 
-            Player.active = !active;
-            mainCamB.EnableRotation(!active);
-            EnableDisableEnemies(!active);
-
-            LevelUpPanel.gameObject.SetActive(active);
-            if(loadData) LevelUpPanel.LoadData();
+            if (enable)
+            {
+                if (resetData) LevelUpPanel.OpenAndLoad(); 
+                else LevelUpPanel.Open();
+            }
+            else
+            {
+                if (resetData) LevelUpPanel.CancelAndClose(); 
+                else LevelUpPanel.Close();
+            }
         }
 
         void PauseEverything(bool paused)
@@ -104,17 +104,18 @@ namespace Core
 
             PauseMenuPanel.SetActive(paused);
 
-            Player.active = !paused;
-
-            EnableDisableEnemies(!paused);
+            EnableGameplay(!paused);
 
             OnGamePause();
         }
 
-        void EnableDisableEnemies(bool state)
+        void EnableGameplay(bool enabled)
         {
+            Player.active = enabled;
+            mainCamB.EnableRotation(enabled);
+
             foreach (BaseUnit enemy in Enemies)
-                enemy.enabled = state;
+                enemy.enabled = enabled;
         }
     }
 
