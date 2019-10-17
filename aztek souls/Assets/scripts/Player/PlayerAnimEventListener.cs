@@ -13,6 +13,8 @@ public class PlayerAnimEventListener : MonoBehaviour
     public ParticleSystem tail;
     Animator anim;
     audioManager _AM;
+   
+
 
     private void Awake()
     {
@@ -73,4 +75,5 @@ public class PlayerAnimEventListener : MonoBehaviour
             tail.Stop();
         tail.Play();
     }
+   
 }

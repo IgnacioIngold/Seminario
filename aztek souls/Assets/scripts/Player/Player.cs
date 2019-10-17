@@ -81,7 +81,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public ParticleSystem FeastBlood;                       // Partícula que emite cuando recibe sangre.
     public PlayableDirector StaminaEffect;                  // Efecto que se reproduce al reducirse la estamina por debajo de cierto punto.
     public PlayableDirector CameraShake;                    // Efecto "Sacudón" que se reproduce al recibir daño.
-
+    public GameObject BloodConsume;                         // Efecto curacion.
     #endregion
 
     [Header("Main Stats")] //Estados Principales.
@@ -631,6 +631,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     if (Blood > 0)
                     {
                         _anims.SetBool("ConsummingBlood", true);
+                        BloodConsume.SetActive(true);
                         Health += HealthGainedBySeconds * Time.deltaTime;
                         Blood -= consumeBloodRate * Time.deltaTime;
                     }
@@ -639,6 +640,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     {
                         print("NO puedes curarte más...");
                         _anims.SetBool("ConsummingBlood", false);
+                        BloodConsume.SetActive(false);
                         _clamped = false;
                     }
                 }
@@ -646,6 +648,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 if (Input.GetButtonUp("FeedBlood"))
                 {
                     _anims.SetBool("ConsummingBlood", false);
+                    BloodConsume.SetActive(false);
                     _clamped = false;
                 }
             }
