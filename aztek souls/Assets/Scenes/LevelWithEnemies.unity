@@ -2773,6 +2773,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 19.992268
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
 --- !u!1 &188425614
@@ -6993,6 +6997,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 334d02345cc1cb44baff16df3273a9b7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 334d02345cc1cb44baff16df3273a9b7, type: 3}
 --- !u!1 &343946493 stripped
@@ -8384,6 +8392,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.7793982
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6b4ded83b0a1d1544a53f911d0fa3fe5, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b4ded83b0a1d1544a53f911d0fa3fe5, type: 3}
 --- !u!1 &396075130
@@ -9670,7 +9682,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -9777,7 +9789,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -13394,7 +13406,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -14174,7 +14186,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -14852,6 +14864,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100026, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
       propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300022, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300024, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300030, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300032, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300034, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300006, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300008, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300014, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300016, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300018, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300020, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300028, guid: 69560b8489478d14ead5ab6d3c4b0ec7, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -16027,7 +16091,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -20795,7 +20859,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -21549,7 +21613,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -24266,6 +24330,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
       propertyPath: m_LocalScale.x
       value: 19.992268
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
@@ -29826,7 +29894,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -32930,6 +32998,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 33.288696
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8056c5f13717b9408a67167af32435b, type: 3}
 --- !u!1001 &1527333125
@@ -33539,7 +33611,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
@@ -46877,7 +46949,7 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
