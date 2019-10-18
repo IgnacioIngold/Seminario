@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Core.Entities;
 using UnityEngine.Playables;
+using Core;
+using Core.Entities;
 
 public interface IPlayerController
 {
@@ -28,7 +29,7 @@ public struct Stats
     /// Sangre acumulada. Se puede intercambiar por puntos para subir de nivel o por puntos de vida.
     /// Si un enemigo elimina al jugador, este acumulará toda la sangre que se haya conseguido hasta ese punto.
     /// </summary>
-    public float Sangre;
+    public int Sangre;
     [Tooltip("Influencia la cantidad total de vida.")]
     /// <summary>
     /// Influencia la cantidad total de vida.
@@ -52,7 +53,7 @@ public struct Stats
 }
 
 //[RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>
+public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, HitResult>
 {
     #region Eventos.
 
@@ -68,14 +69,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     #endregion
 
-
     #region Variables de Inspector.
 
     public StatusBars _myBars;                               // Display de la vida y la estamina del jugador.
     public LevelUpPanel levelUpPanel;
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     public LayerMask floor;                                 // Máscara de collisiones para el piso.
-    public GameObject marker;                               // Índicador de ventana de Input.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;                     // Partícula que emite cuando rollea.
     public ParticleSystem FeastBlood;                       // Partícula que emite cuando recibe sangre.
@@ -202,12 +201,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     [Header("Blood System")]
     public float consumeBloodRate = 10f;
     public float HealthGainedBySeconds = 10f;
-    public float Blood
+    public int Blood
     {
         get { return myStats.Sangre; }
         set
         {
-            float val = value;
+            int val = value;
             if (val < 0)
                 val = 0;
 
@@ -251,27 +250,31 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public bool active { get => enabled; set => enabled = value; }
     public bool invulnerable => _invulnerable;
 
-    public void GetDamage(params object[] DamageStats)
+    /// <summary>
+    /// Permite Aplicar daño a esta entidad.
+    /// </summary>
+    /// <param name="EntryData"> Estadísticas de Entrada.</param>
+    /// <returns>Estadísticas de Salida. </returns>
+    public HitResult Hit(HitData EntryData)
     {
+        HitResult hitResult = HitResult.Empty();
+
         if (!_invulnerable && IsAlive)
         {
-            IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-            float Damage = (float)DamageStats[1];
-            print("Daño recibido es: " + (float)DamageStats[1]);
+            print("Daño recibido es: " + EntryData.Damage);
 
-            //Cálculo el daño real.
-            float resist = myStats.Resistencia * 0.5f;
-            Damage -= resist;
+            float RealDamage = EntryData.Damage - (myStats.Resistencia * 0.5f);
+
             _shoked = false;
             _anims.SetBool("Disarmed", false);
+            print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", EntryData.Damage, (myStats.Resistencia * 0.5f), RealDamage));
 
-            print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
-
-            Health -= Damage;
+            Health -= RealDamage;
+            hitResult.HitConnected = true;
 
             if (IsAlive)
             {
-                Aggresor.OnHitConfirmed(new object[1] { 0f });
+                GetHit();
 
                 //Permito recuperar estamina.
                 _rolling = false;
@@ -284,7 +287,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _listenToInput = false;
                 CurrentWeapon.InterruptAttack();
                 _attacking = false;
-                GetHit();
                 _rb.velocity /= 3;
 
                 //Particula de Daño.
@@ -297,64 +299,156 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //Entro al estado de recibir daño.
                 if (!_invulnerable) StartCoroutine(HurtFreeze());
             }
-            if (!IsAlive)
+            else
             {
-                Aggresor.OnKillConfirmed(new object[] { myStats.Sangre });
+                hitResult.HitConnected = true;
+                hitResult.TargetEliminated = true;
                 myStats.Sangre = 0;
                 Die();
             }
         }
+
+        return hitResult;
     }
 
-    public object[] GetDamageStats()
-    {
-        // Retornar la info del sistema de Daño.
-        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
-        {
-            float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
-            object[] combatStats = new object[3] { this, DañoFinal, breakDefence };
-            if (combatStats != null)
-                return combatStats;
-        }
 
-        return new object[1] { 0f };
-    }
-    public void OnHitBlocked(object[] data)
-    {
-        int blockTipe = (int)data[0];
-        print("Ataque Bloqueado.");
-        CurrentWeapon.InterruptAttack();
+    //public void GetDamage(params object[] DamageStats)
+    //{
+    //    if (!_invulnerable && IsAlive)
+    //    {
+    //        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+    //        float Damage = (float)DamageStats[1];
 
-        if (blockTipe == 1)
+    //        //Cálculo el daño real.
+    //        float resist = myStats.Resistencia * 0.5f;
+    //        Damage -= resist;
+    //        _shoked = false;
+    //        _anims.SetBool("Disarmed", false);
+
+    //        print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
+
+    //        Health -= Damage;
+
+    //        if (IsAlive)
+    //        {
+    //            Aggresor.OnHitConfirmed(new object[1] { 0f });
+
+    //            //Permito recuperar estamina.
+    //            _rolling = false;
+    //            _attacking = false;
+    //            _running = false;
+    //            _recoverStamina = true;
+
+    //            //FeedBack de Daño.
+    //            _anims.SetTrigger("hurted");
+    //            _listenToInput = false;
+    //            CurrentWeapon.InterruptAttack();
+    //            _attacking = false;
+    //            GetHit();
+    //            _rb.velocity /= 3;
+
+    //            //Particula de Daño.
+    //            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+    //            Destroy(particle, 3f);
+
+    //            _myBars.m_UpdateHeathBar(_hp, MaxHealth);
+    //            _myBars.m_UpdateStamina(Stamina, MaxStamina);
+
+    //            //Entro al estado de recibir daño.
+    //            if (!_invulnerable) StartCoroutine(HurtFreeze());
+    //        }
+    //        if (!IsAlive)
+    //        {
+    //            Aggresor.OnKillConfirmed(new object[] { myStats.Sangre });
+    //            myStats.Sangre = 0;
+    //            Die();
+    //        }
+    //    }
+    //}
+
+    //public object[] GetDamageStats()
+    //{
+    //    // Retornar la info del sistema de Daño.
+    //    if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+    //    {
+    //        float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
+    //        object[] combatStats = new object[3] { this, DañoFinal, breakDefence };
+    //        if (combatStats != null)
+    //            return combatStats;
+    //    }
+
+    //    return new object[1] { 0f };
+    //}
+
+    //public void OnHit(object[] HitData)
+    //{
+    //    
+    //}
+
+    public void FeedHitResult(HitResult result)
+    {
+        if (result.HitBlocked)
         {
+            print("Ataque Bloqueado.");
+            CurrentWeapon.InterruptAttack();
             StartCoroutine(Shock());
         }
-    }
-    public void OnHitConfirmed(object[] data)
-    {
-        if (data.Count() < 1) return;
-
-        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        else if (result.HitConnected && CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
-            FeedBlood((float)data[0]);
+            //Esto se llama cuando un Hit Conecta.
+
+            FeedBlood(result.bloodEarned);
             CurrentWeapon.ConfirmHit();
             OnAttackLanded();
         }
+
     }
+
+    //public void OnHitBlocked(object[] data)
+    //{
+
+    //}
+    //public void OnHitConfirmed(object[] data)
+    //{
+
+
+    //}
+    ///// <summary>
+    ///// Confirma al agresor, que su víctima ha muerto.
+    ///// </summary>
+    ///// <param name="data"></param>
+    //public void OnKillConfirmed(object[] data)
+    //{
+    //    OnHitConfirmed(data);
+    //}
+
     /// <summary>
-    /// Confirma al agresor, que su víctima ha muerto.
+    /// Retorna las estadísticas de combate de esta Entidad.
     /// </summary>
-    /// <param name="data"></param>
-    public void OnKillConfirmed(object[] data)
+    /// <returns></returns>
+    public HitData GetDamageStats()
     {
-        OnHitConfirmed(data);
+        //Crear una nueva instancia de HitData.
+        HitData returnValue;
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        {
+            returnValue = new HitData()
+            {
+                Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
+                BreakDefence = breakDefence
+            };
+        }
+        else
+            returnValue = HitData.Empty();
+
+        return returnValue;
     }
 
     /// <summary>
     /// Como vampiro XD
     /// </summary>
     /// <param name="blood">Cantidad de sangre Obtenida.</param>
-    public void FeedBlood(float blood)
+    public void FeedBlood(int blood)
     {
         if (blood > 0)
         {
@@ -456,7 +550,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         L1.AttackDuration = AttackClips[L1.ID - 1].length;
-        L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
             //print("Light 1 conecto exitósamente");
@@ -470,7 +563,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + light2.IDName);
         };
         L2.AttackDuration = AttackClips[L2.ID - 1].length;
-        L2.OnEnableInput += () => { marker.SetActive(true); };
         L2.OnHit += () => 
         {
             print("Light 2 conecto exitósamente");
@@ -497,7 +589,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
         L4.AttackDuration = AttackClips[L4.ID - 1].length;
-        L4.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
         L5.OnStart += () =>
@@ -522,7 +613,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
         S1.OnEnd += () => { breakDefence = false; };
         S1.AttackDuration = AttackClips[S1.ID - 1].length;
-        S1.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
         S2.OnStart += () =>
@@ -949,20 +1039,28 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         if (_rolling && collision.collider.tag == "DestructibleObject")
         {
-            IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
+            IDamageable<HitData, HitResult> Damageable = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
             if (_rolling && Damageable != null)
             {
-                Damageable.GetDamage(new object[3] { this, 0f, false });
+                //Creo una nueva instancia de HitData.
+                HitData data = new HitData() { Damage = 0f, BreakDefence = false };
+
+                //Realizo el ataque.
+                Damageable.Hit(data);
             }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        IDamageable Damageable = collision.gameObject.GetComponent<IDamageable>();
+        IDamageable<HitData, HitResult> Damageable = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
         if (_rolling && Damageable != null)
         {
-            Damageable.GetDamage(new object[3] { this, 0f, false });
+            //Creo una nueva instancia de HitData.
+            HitData data = new HitData() { Damage = 0f, BreakDefence = false };
+
+            //Realizo el ataque.
+            Damageable.Hit(data);
         }
     }
     public void StaminaEffecPlay()

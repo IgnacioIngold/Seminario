@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
-using Core.Entities;
 using System.Collections.Generic;
 using System;
+using Core;
+using Core.Entities;
 
 //[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
 public class TriggerWeapon : MonoBehaviour
@@ -11,7 +12,7 @@ public class TriggerWeapon : MonoBehaviour
     public GameObject Owner;
     public bool debugThisUnit;
 
-    IAttacker<object[]> _owner;
+    IDamageable<HitData, HitResult> _owner;
 
     void Awake()
     {
@@ -25,7 +26,7 @@ public class TriggerWeapon : MonoBehaviour
             col = GetComponent<Collider>();
     }
 
-    object[] getOwnerStats()
+    HitData getOwnerStats()
     {
         return _owner.GetDamageStats();
     }
