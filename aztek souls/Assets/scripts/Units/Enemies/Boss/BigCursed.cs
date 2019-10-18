@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Core.Entities;
 using IA.StateMachine.Generic;
+using Core;
+using Core.Entities;
 
 public enum BossStates
     {
@@ -62,34 +63,46 @@ public class BigCursed : BaseUnit
     //============================== INTERFACES ===============================================
 
     /// <summary>
-    /// Implementación de Ikilleable, permite recibir daño.
+    /// Permite recibir daño e Informar al agresor del resultado de su ataque.
     /// </summary>
     /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
-    public override void GetDamage(params object[] DamageStats)
+    public override HitResult Hit(HitData HitInfo)
     {
-        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        float Damage = (float)DamageStats[1];
+        HitResult result = HitResult.Empty();
+        Health -= HitInfo.Damage;
 
-        Health -= Damage;
-
-        if (!IsAlive)
+        if (IsAlive)
         {
-            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-            sm.Feed(BossStates.dead);
+            result.bloodEarned = BloodPerHit;
+            result.HitConnected = true;
+
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+            EnemyHealthBar.FadeIn();
         }
         else
         {
-            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-            base.GetDamage();
+            result.TargetEliminated = true;
+            result.bloodEarned = BloodForKill;
+            sm.Feed(BossStates.dead);
         }
+        return result;
     }
     /// <summary>
     /// Retorna las estadísticas de combate de esta Unidad.
     /// </summary>
-    /// <returns>Un array de objetos, donde cada objeto es una Estadística que afecta el daño.</returns>
-    public override object[] GetDamageStats()
+    /// <returns>Una estructura que contiene las stats involucradas en el ataque.</returns>
+    public override HitData GetDamageStats()
     {
-        return new object[3] { this , attackDamage, false };
+        return new HitData() { Damage = attackDamage, BreakDefence = false };
+    }
+    /// <summary>
+    /// Informa a esta entidad del resultado del lanzamiento y conección de un ataque.
+    /// </summary>
+    /// <param name="result">Resultado del ataque lanzado.</param>
+    public override void FeedHitResult(HitResult result)
+    {
+        print(string.Format("{0} ha conectado un ataque.", gameObject.name));
     }
 
     //=========================================================================================
@@ -221,7 +234,7 @@ public class BigCursed : BaseUnit
 
         JumpAttack.OnEnter += (previousState) => 
         {
-            StartCoroutine(SimpleJumpAttack());
+            //StartCoroutine(SimpleJumpAttack());
             LookTowardsPlayer = true;
         };
         //JumpAttack.OnUpdate += () => { };
@@ -233,7 +246,7 @@ public class BigCursed : BaseUnit
 
         KillerJump.OnEnter += (previousState) => 
         {
-            StartCoroutine(KillerJumpAttack());
+            //StartCoroutine(KillerJumpAttack());
             LookTowardsPlayer = false;
         };
         KillerJump.OnExit += (nextState) => { LookTowardsPlayer = true; };
@@ -265,7 +278,7 @@ public class BigCursed : BaseUnit
         #endregion
 
         #region Charge
-        charge.OnEnter += (previousState) => { StartCoroutine(Charge()); };
+        charge.OnEnter += (previousState) => { /*StartCoroutine(Charge());*/ };
         charge.OnUpdate += () => {};
         charge.OnExit += (nextState) =>
         {
@@ -387,29 +400,29 @@ public class BigCursed : BaseUnit
 
     //=========================================================================================
 
-    IEnumerator SimpleJumpAttack()
-    {
-        //Animación we.
-        anims.SetInteger("Attack", 5);
-        anims.SetFloat("Movement", 0f);
-        LookTowardsPlayer = false;
-        yield return null;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+//    IEnumerator SimpleJumpAttack()
+//    {
+//        //Animación we.
+//        anims.SetInteger("Attack", 5);
+//        anims.SetFloat("Movement", 0f);
+//        LookTowardsPlayer = false;
+//        yield return null;
+//        float currentTransitionTime = getCurrentTransitionDuration();
+//        yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime();
+//        float remainingTime = getRemainingAnimTime();
 
-#if UNITY_EDITOR
-        if(Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos", currentTransitionTime, remainingTime)); 
-#endif
+//#if UNITY_EDITOR
+//        if(Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos", currentTransitionTime, remainingTime)); 
+//#endif
 
-        anims.SetInteger("Attack", 0);
-        yield return new WaitForSeconds(remainingTime);
+//        anims.SetInteger("Attack", 0);
+//        yield return new WaitForSeconds(remainingTime);
 
-        thinkTime = 1f;
-        StartCoroutine(simpleJumpAttackCoolDown());
-        sm.Feed(BossStates.think);
-    }
+//        thinkTime = 1f;
+//        StartCoroutine(simpleJumpAttackCoolDown());
+//        sm.Feed(BossStates.think);
+//    }
 
     IEnumerator simpleJumpAttackCoolDown()
     {
@@ -418,32 +431,32 @@ public class BigCursed : BaseUnit
         canPerformSimpleJump = true;
     }
 
-    IEnumerator KillerJumpAttack()
-    {
-        //Animación we.
-        anims.SetInteger("Attack", 4);
-        anims.SetFloat("Movement", 0f);
-        yield return null;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+//    IEnumerator KillerJumpAttack()
+//    {
+//        //Animación we.
+//        anims.SetInteger("Attack", 4);
+//        anims.SetFloat("Movement", 0f);
+//        yield return null;
+//        float currentTransitionTime = getCurrentTransitionDuration();
+//        yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime();
+//        float remainingTime = getRemainingAnimTime();
 
-#if(UNITY_EDITOR)
-        if(Debug_Attacks) print("Remaining KillerJump Attack is: " + remainingTime);
-#endif
-        //Vector3 originalPosition = transform.position;
-        //float distFromOriginal = maxJumpDistance;
+//#if(UNITY_EDITOR)
+//        if(Debug_Attacks) print("Remaining KillerJump Attack is: " + remainingTime);
+//#endif
+//        //Vector3 originalPosition = transform.position;
+//        //float distFromOriginal = maxJumpDistance;
 
-        anims.SetInteger("Attack", 0);
-        yield return new WaitForSeconds(remainingTime);
+//        anims.SetInteger("Attack", 0);
+//        yield return new WaitForSeconds(remainingTime);
 
-        anims.SetFloat("Movement", 0f);
+//        anims.SetFloat("Movement", 0f);
 
-        thinkTime = 2f;
-        StartCoroutine(JumpAttackCoolDown());
-        sm.Feed(BossStates.think);
-    }
+//        thinkTime = 2f;
+//        StartCoroutine(JumpAttackCoolDown());
+//        sm.Feed(BossStates.think);
+//    }
 
 
     IEnumerator JumpAttackCoolDown()
@@ -463,64 +476,64 @@ public class BigCursed : BaseUnit
         anims.SetInteger("Attack", stateID);
     }
 
-    IEnumerator Charge()
-    {
-        //Primero me quedo quieto.
-        agent.isStopped = true;
+    //IEnumerator Charge()
+    //{
+    //    //Primero me quedo quieto.
+    //    agent.isStopped = true;
 
-        //Empiezo haciendo un Roar.
-        anims.SetBool("Roar", true);
-        yield return new WaitForEndOfFrame();
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime();
-        anims.SetBool("Roar", false);
-        yield return new WaitForSeconds(remainingTime);
+    //    //Empiezo haciendo un Roar.
+    //    anims.SetBool("Roar", true);
+    //    yield return new WaitForEndOfFrame();
+    //    float currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
+    //    float remainingTime = getRemainingAnimTime();
+    //    anims.SetBool("Roar", false);
+    //    yield return new WaitForSeconds(remainingTime);
 
-        //Ahora me puedo mover.
-        agent.isStopped = false;
+    //    //Ahora me puedo mover.
+    //    agent.isStopped = false;
 
-        //Activo la animación.
-        print("Charging");
-        anims.SetFloat("Movement", 2f);
-        ChargeEmission.enabled = true;
+    //    //Activo la animación.
+    //    print("Charging");
+    //    anims.SetFloat("Movement", 2f);
+    //    ChargeEmission.enabled = true;
 
-        charging = true;
-        LookTowardsPlayer = false;
-        attackDamage = ChargeDamage;
+    //    charging = true;
+    //    LookTowardsPlayer = false;
+    //    attackDamage = ChargeDamage;
 
-        //Guardo la posición inicial.
-        _initialChargePosition = transform.position;
+    //    //Guardo la posición inicial.
+    //    _initialChargePosition = transform.position;
 
-        //Calculo la dirección a la que me voy a mover.
-        _chargeDir = (Target.position - transform.position).normalized;
+    //    //Calculo la dirección a la que me voy a mover.
+    //    _chargeDir = (Target.position - transform.position).normalized;
 
-        float distance = Vector3.Distance(transform.position, _initialChargePosition);
+    //    float distance = Vector3.Distance(transform.position, _initialChargePosition);
 
-        //Update
-        do
-        {
-            //Me muevo primero
-            agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
+    //    //Update
+    //    do
+    //    {
+    //        //Me muevo primero
+    //        agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
 
-            //Sino...
-            //Voy calculando la distancia en la que me estoy moviendo
-            distance = Vector3.Distance(transform.position, _initialChargePosition);
-            print("Charging distance" + distance);
+    //        //Sino...
+    //        //Voy calculando la distancia en la que me estoy moviendo
+    //        distance = Vector3.Distance(transform.position, _initialChargePosition);
+    //        print("Charging distance" + distance);
 
-            //Si la distancia es mayor al máximo
-            if (distance > maxChargeDistance)
-                sm.Feed(BossStates.think); //Me detengo.
+    //        //Si la distancia es mayor al máximo
+    //        if (distance > maxChargeDistance)
+    //            sm.Feed(BossStates.think); //Me detengo.
 
-            yield return null;
-        } while (charging && distance < maxChargeDistance);
-    }
+    //        yield return null;
+    //    } while (charging && distance < maxChargeDistance);
+    //}
 
     //=========================================================================================
 
-    //Detectamos collisiones con otros cuerpos.
     private void OnCollisionEnter(Collision collision)
     {
+        //Detectamos collisiones con otros cuerpos.
         if (collision.gameObject.layer == Layer_Killeable)
         {
             if (!charging) return;
@@ -529,9 +542,10 @@ public class BigCursed : BaseUnit
             if (killeable != null && killeable.IsAlive && !killeable.invulnerable)
             {
                 //print("EL colisionador choco con algo KILLEABLE: " + collision.gameObject.name);
-                 sm.Feed(BossStates.think);
+                sm.Feed(BossStates.think);
 
-                killeable.GetDamage(GetDamageStats());
+                var Target = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
+                Target.Hit(GetDamageStats());
                 collision.rigidbody.AddForce(_chargeDir * ChargeCollisionForce, ForceMode.Impulse);
                 return;
             }

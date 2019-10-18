@@ -35,13 +35,13 @@ public class TriggerWeapon : MonoBehaviour
     {
         if (other.gameObject == Owner) return;
 
-        IDamageable KilleableObject = other.GetComponent<IDamageable>();
-        if (KilleableObject != null)
+        IDamageable<HitData, HitResult> Target = other.GetComponent<IDamageable<HitData, HitResult>>();
+        if (Target != null)
         {
             if (debugThisUnit)
                 print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name));
 
-            KilleableObject.GetDamage(getOwnerStats());
+            _owner.FeedHitResult(Target.Hit(getOwnerStats()));
             return;
         }
     }

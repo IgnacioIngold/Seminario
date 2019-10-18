@@ -1,12 +1,13 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
-using Core.Entities;
-using IA.LineOfSight;
-using System;
+﻿using System;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+using IA.LineOfSight;
+using Core.Entities;
+using Core;
 
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
-public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
+public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     public Action OnDie = delegate { };
 
@@ -17,8 +18,8 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     [SerializeField] protected LineOfSight sight = null;
 
     [Header("Recompensas")]
-    public float BloodPerHit = 100f;
-    public float BloodForKill = 300f;
+    public int BloodPerHit = 100;
+    public int BloodForKill = 300;
 
     protected float _hp = 0f;
     protected float _minForwardAngle = 40f;
@@ -50,7 +51,6 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public float MediumRange       = 40f;
     public float HighRange         = 60f;
 
-
     #region Componentes de Unity
 
     protected Animator anims;
@@ -67,7 +67,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
     public bool Debug_DetectionRanges = false;
-#endif 
+#endif
     #endregion
 
     //============================== INTERFACES ===============================================
@@ -75,20 +75,16 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool IsAlive => _hp > 0;
     public bool invulnerable => _invulnerable;
 
-    public virtual void GetDamage(params object[] DamageStats)
+    public virtual HitData GetDamageStats() { return HitData.Empty(); }
+    public virtual HitResult Hit(HitData EntryData)
     {
-        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-        Destroy(particle, 3f);
+        //var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+        //Destroy(particle, 3f);
 
-        EnemyHealthBar.FadeIn();
+        //EnemyHealthBar.FadeIn();
+        return HitResult.Empty();
     }
-    public virtual object[] GetDamageStats()
-    {
-        return new object[0];
-    }
-    public virtual void OnHitBlocked(object[] data) { }
-    public virtual void OnHitConfirmed(object[] data) { }
-    public virtual void OnKillConfirmed(object[] data) { }
+    public virtual void FeedHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
 
@@ -179,41 +175,41 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
 
     //=========================================================================================
 
-    /// <summary>
-    /// Retorna la duración de la Transición al siguiente estado de la Animación.
-    /// </summary>
-    /// <returns>Float: el tiempo de la transición.</returns>
-    protected float getCurrentTransitionDuration()
-    {
-        return anims.GetAnimatorTransitionInfo(0).duration;
-    }
-    /// <summary>
-    /// Retorna el tiempo de Animación restante del estado Actual del Animator.
-    /// </summary>
-    /// <returns>Float: tiempo de Animación restante del estado actual.</returns>
-    protected float getRemainingAnimTime()
-    {
-        //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-        //float AnimTime = 0f;
+    ///// <summary>
+    ///// Retorna la duración de la Transición al siguiente estado de la Animación.
+    ///// </summary>
+    ///// <returns>Float: el tiempo de la transición.</returns>
+    //protected float getCurrentTransitionDuration()
+    //{
+    //    return anims.GetAnimatorTransitionInfo(0).duration;
+    //}
+    ///// <summary>
+    ///// Retorna el tiempo de Animación restante del estado Actual del Animator.
+    ///// </summary>
+    ///// <returns>Float: tiempo de Animación restante del estado actual.</returns>
+    //protected float getRemainingAnimTime()
+    //{
+    //    //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
+    //    //float AnimTime = 0f;
 
-        var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
+    //    var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
 
-        //if (clipInfo != null && clipInfo.Length > 0)
-        //{
-        //    AnimationClip currentClip = clipInfo[0].clip;
-        //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
+    //    //if (clipInfo != null && clipInfo.Length > 0)
+    //    //{
+    //    //    AnimationClip currentClip = clipInfo[0].clip;
+    //    //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
 
-        //    if (currentClip.name == ClipName)
-        //    {
-        //        //print("currentClip is Correct!");
-        //        AnimTime = currentClip.length;
-        //        float passed = AnimTime - (AnimTime * transitionPassed);
-        //        return passed;
-        //    }
-        //}
+    //    //    if (currentClip.name == ClipName)
+    //    //    {
+    //    //        //print("currentClip is Correct!");
+    //    //        AnimTime = currentClip.length;
+    //    //        float passed = AnimTime - (AnimTime * transitionPassed);
+    //    //        return passed;
+    //    //    }
+    //    //}
 
-        return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
-    }
+    //    return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
+    //}
 
     protected void Die()
     {

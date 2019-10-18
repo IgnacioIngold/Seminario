@@ -6,6 +6,7 @@ using Core.Entities;
 using System;
 using Random = UnityEngine.Random;
 using Utility.Timers;
+using Core;
 
 public enum BasicEnemyStates
 {
@@ -65,13 +66,14 @@ public class BasicEnemy : BaseUnit
     //======================== OVERRIDES & INTERFACES =========================================
 
     //int recieved = 0;
-    public override void GetDamage(params object[] DamageStats)
+    public override HitResult Hit(HitData HitInfo)
     {
-        float damage = (float)DamageStats[1];
+        HitResult result = HitResult.Empty();
+        float damage = HitInfo.Damage;
         if (IsAlive && damage > 0)
         {
-            IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-            bool breakStance = (bool)DamageStats[2];
+            //        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+            bool breakStance = HitInfo.BreakDefence;
 
             StopAllCoroutines();
 
@@ -82,18 +84,16 @@ public class BasicEnemy : BaseUnit
                 print("BLOQUEO");
 
                 sm.Feed(BasicEnemyStates.blocking);
-                Aggresor.OnHitBlocked(new object[] { 2 });
+                result.HitBlocked = true;
 
                 float damageReduced = damage * incommingDamageReduction;
-                object[] damageStat = new object[] {Aggresor, damageReduced, breakStance };
                 Health -= damageReduced;
-                base.GetDamage(damageStat);
+
                 OnBlockHit();
             }
             else
             {
                 anims.SetTrigger("GetHit");
-                base.GetDamage(DamageStats);
 
                 Health -= damage;
                 OnGetHit();
@@ -101,14 +101,14 @@ public class BasicEnemy : BaseUnit
                 if (!IsAlive)
                 {
                     //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
-                    Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                    result.TargetEliminated = true;
+                    result.bloodEarned = BloodForKill;
                     sm.Feed(BasicEnemyStates.dead);
                 }
                 else
                 {
-                    var hitConfirmData = new object[1] { 0f };
-                    if (isVulnerableToAttacks) hitConfirmData = new object[] { BloodPerHit };
-                    Aggresor.OnHitConfirmed(hitConfirmData);
+                    result.HitConnected = true;
+                    result.bloodEarned = BloodPerHit;
 
                     if (!_targetDetected)
                     {
@@ -123,13 +123,22 @@ public class BasicEnemy : BaseUnit
                 }
             }
 
-            ////if(!isVulnerableToAttacks) recieved++;
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+            EnemyHealthBar.FadeIn();
         }
+
+        return result;
     }
 
-    public override object[] GetDamageStats()
+    public override void FeedHitResult(HitResult result)
     {
-        return new object[3] { this, attackDamage, false };
+        print("El enemigo conectó un Hit");
+    }
+
+    public override HitData GetDamageStats()
+    {
+        return new HitData() { Damage = attackDamage};
     }
 
     //=========================================================================================

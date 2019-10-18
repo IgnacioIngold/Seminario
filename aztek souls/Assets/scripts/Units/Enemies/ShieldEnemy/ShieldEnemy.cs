@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using IA.StateMachine.Generic;
 using Core.Entities;
+using Core;
 using System;
 using Random = UnityEngine.Random;
 using IA.RandomSelections;
@@ -51,64 +52,70 @@ public class ShieldEnemy : BaseUnit
 
     //======================== OVERRIDES & INTERFACES =========================================
 
-    public override void GetDamage(params object[] DamageStats)
+
+    public override HitResult Hit(HitData HitInfo)
     {
-        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        float damage = (float)DamageStats[1];
+        //IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
+        //float damage = (float)DamageStats[1];
+        HitResult result = HitResult.Empty();
 
-        if (damage > 0)
+        if (HitInfo.Damage > 0)
         {
-            StopCoroutine(TriCombo());
-            bool breakDefenceAttack = (bool)DamageStats[2];
+            //StopCoroutine(TriCombo());
 
-            if (_blocking && breakDefenceAttack)
+            //Si el enemigo no me había detectado.
+            if (!_targetDetected) _targetDetected = true;
+            //TODO: chequear que el enemigo pase a Alerted despues de recibir el daño.
+
+            if (_blocking)
             {
-                _sm.Feed(ShieldEnemyStates.vulnerable);
-                return;
-            }
+                if (sight.angleToTarget < 80 && !HitInfo.BreakDefence)
+                {
+                    result.HitBlocked = true;
+                    onBlockedHit();
 
-            //Confirmar hit o no.
-            if (_blocking && sight.angleToTarget < 80)
-            {
-                Aggresor.OnHitBlocked(new object[] { 1 });
-                onBlockedHit();
-
-                if (_canParry)
-                    _sm.Feed(ShieldEnemyStates.parry);
-                else
-                    _sm.Feed(ShieldEnemyStates.think);
+                    if (_canParry)
+                        _sm.Feed(ShieldEnemyStates.parry);
+                    else
+                        _sm.Feed(ShieldEnemyStates.think);
+                }
+                else if(sight.angleToTarget > 80 || HitInfo.BreakDefence)
+                    _sm.Feed(ShieldEnemyStates.vulnerable);
             }
             else
             {
                 anims.SetTrigger("getDamage");
                 onGetHit();
 
-                Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-                //Si no estoy guardando.
-                Health -= (float)DamageStats[1];
+                result.HitConnected = true;
+                result.bloodEarned = BloodPerHit;
+                //Si no estoy bloqueando.
+                Health -= HitInfo.Damage;
 
-                base.GetDamage(DamageStats);
+                var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+                Destroy(particle, 3f);
+                EnemyHealthBar.FadeIn();
 
                 //Aviso que estoy Muerto We.
                 if (!IsAlive)
                 {
-                    Aggresor.OnKillConfirmed(new object[] { BloodForKill });
+                    result.TargetEliminated = true;
+                    result.bloodEarned = BloodForKill;
                     _sm.Feed(ShieldEnemyStates.dead);
-                    return;
-                }
-
-                if (!_targetDetected)
-                {
-                    _targetDetected = true;
-                    _sm.Feed(ShieldEnemyStates.alerted);
                 }
             }
         }
+        return result;
     }
 
-    public override object[] GetDamageStats()
+    public override void FeedHitResult(HitResult result)
     {
-        return new object[3] { this, attackDamage, false };
+        print(string.Format("{0} ha conectado un ataque.", gameObject.name));
+    }
+
+    public override HitData GetDamageStats()
+    {
+        return new HitData() { Damage = attackDamage, BreakDefence = false };
     }
 
     //=========================================================================================
@@ -240,7 +247,7 @@ public class ShieldEnemy : BaseUnit
             _blocking = false;
         };
 
-        vulnerable.OnEnter += (previousState) => { StartCoroutine(defenceDestroyed()); };
+        vulnerable.OnEnter += (previousState) => { /*StartCoroutine(defenceDestroyed()); */};
         //vulnerable.OnUpdate += () => { };
         //vulnerable.OnExit += (nextState) => { };
 
@@ -248,7 +255,7 @@ public class ShieldEnemy : BaseUnit
         parry.OnEnter += (previousState) => 
         {
             StopAllCoroutines();
-            StartCoroutine(parryBicombo());
+            //StartCoroutine(parryBicombo());
         };
         //parry.OnUpdate += () => { };
         parry.OnExit += (nextState) => { };
@@ -292,7 +299,7 @@ public class ShieldEnemy : BaseUnit
             //_attacking = true;
             agent.isStopped = true;
             rb.velocity = Vector3.zero;
-            StartCoroutine(TriCombo());
+            //StartCoroutine(TriCombo());
         };
         //attack.OnUpdate += () => { };
         attack.OnExit += (nextState) => 
@@ -396,81 +403,81 @@ public class ShieldEnemy : BaseUnit
         _canParry = true;
     }
 
-    IEnumerator defenceDestroyed()
-    {
-        _blocking = false;
-        anims.SetTrigger("BlockBreak");
-        yield return null;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime();
-        yield return new WaitForSeconds(remainingTime);
+    //IEnumerator defenceDestroyed()
+    //{
+    //    _blocking = false;
+    //    anims.SetTrigger("BlockBreak");
+    //    yield return null;
+    //    float currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
+    //    float remainingTime = getRemainingAnimTime();
+    //    yield return new WaitForSeconds(remainingTime);
 
-        _sm.Feed(ShieldEnemyStates.think);
-    }
+    //    _sm.Feed(ShieldEnemyStates.think);
+    //}
 
-    IEnumerator parryBicombo()
-    {
-        anims.SetBool("Parrying", true);
-        LookTowardsPlayer = false;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        print("Transicion es: " + currentTransitionTime);
-        yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime();
+    //IEnumerator parryBicombo()
+    //{
+    //    anims.SetBool("Parrying", true);
+    //    LookTowardsPlayer = false;
+    //    float currentTransitionTime = getCurrentTransitionDuration();
+    //    print("Transicion es: " + currentTransitionTime);
+    //    yield return new WaitForSeconds(currentTransitionTime);
+    //    float remainingTime = getRemainingAnimTime();
 
-        anims.SetInteger("Attack", 2);                   //  <---- Primer Ataque
-        yield return new WaitForSeconds(remainingTime);
-        currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+    //    anims.SetInteger("Attack", 2);                   //  <---- Primer Ataque
+    //    yield return new WaitForSeconds(remainingTime);
+    //    currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime();
-        anims.SetInteger("Attack", 3);
-        yield return new WaitForSeconds(remainingTime);
+    //    remainingTime = getRemainingAnimTime();
+    //    anims.SetInteger("Attack", 3);
+    //    yield return new WaitForSeconds(remainingTime);
 
-        //Segundo ataque.
-        currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+    //    //Segundo ataque.
+    //    currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime();
-        yield return new WaitForSeconds(remainingTime);
+    //    remainingTime = getRemainingAnimTime();
+    //    yield return new WaitForSeconds(remainingTime);
 
-        anims.SetBool("Parrying", false);
-        _sm.Feed(ShieldEnemyStates.think);
-    }
+    //    anims.SetBool("Parrying", false);
+    //    _sm.Feed(ShieldEnemyStates.think);
+    //}
 
-    IEnumerator TriCombo()
-    {
-        anims.SetFloat("Moving", 0f);
-        LookTowardsPlayer = false;
+    //IEnumerator TriCombo()
+    //{
+    //    anims.SetFloat("Moving", 0f);
+    //    LookTowardsPlayer = false;
 
-        //Inicio el primer ataque.
-        anims.SetInteger("Attack", 1);
-        yield return null;
+    //    //Inicio el primer ataque.
+    //    anims.SetInteger("Attack", 1);
+    //    yield return null;
 
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+    //    float currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
 
-        float remainingTime = getRemainingAnimTime();
-        anims.SetInteger("Attack", 2);
-        yield return new WaitForSeconds(remainingTime);
+    //    float remainingTime = getRemainingAnimTime();
+    //    anims.SetInteger("Attack", 2);
+    //    yield return new WaitForSeconds(remainingTime);
 
-        //Segundo ataque.
-        currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+    //    //Segundo ataque.
+    //    currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime();
-        anims.SetInteger("Attack", 3);
-        yield return new WaitForSeconds(remainingTime);
+    //    remainingTime = getRemainingAnimTime();
+    //    anims.SetInteger("Attack", 3);
+    //    yield return new WaitForSeconds(remainingTime);
 
-        //Tercer ataque.
-        currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+    //    //Tercer ataque.
+    //    currentTransitionTime = getCurrentTransitionDuration();
+    //    yield return new WaitForSeconds(currentTransitionTime);
 
-        remainingTime = getRemainingAnimTime();
-        yield return new WaitForSeconds(remainingTime);
+    //    remainingTime = getRemainingAnimTime();
+    //    yield return new WaitForSeconds(remainingTime);
 
-        _sm.Feed(ShieldEnemyStates.think);
-    }
+    //    _sm.Feed(ShieldEnemyStates.think);
+    //}
 
 #if(UNITY_EDITOR)
     protected override void OnDrawGizmosSelected()

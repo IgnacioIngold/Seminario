@@ -53,7 +53,7 @@ public struct Stats
 }
 
 //[RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, HitResult>
+public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, HitResult>, IKilleable
 {
     #region Eventos.
 
@@ -397,7 +397,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         {
             //Esto se llama cuando un Hit Conecta.
 
-            FeedBlood(result.bloodEarned);
+            if (result.TargetEliminated)
+                FeedBlood(result.bloodEarned);
             CurrentWeapon.ConfirmHit();
             OnAttackLanded();
         }
@@ -723,7 +724,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
                         _anims.SetBool("ConsummingBlood", true);
                         BloodConsume.SetActive(true);
                         Health += HealthGainedBySeconds * Time.deltaTime;
-                        Blood -= consumeBloodRate * Time.deltaTime;
+                        Blood -= (int)(consumeBloodRate * Time.deltaTime);
                     }
 
                     if (Blood <= 0 || !_canHeal)

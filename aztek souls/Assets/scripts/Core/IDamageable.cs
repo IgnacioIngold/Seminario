@@ -10,15 +10,12 @@ namespace Core.Entities
         EntryHitData GetDamageStats();
         void FeedHitResult(ExitHitData result);
     }
-    //Todas las unidades que pueden recibir Daño y tienen 2 estados Básicos: vivos o muertos.
-    //public interface IKilleable<EntryHitData, ExitHitData> : IDamageable<EntryHitData>
-    //{
-    //    //bool IsAlive { get; }
-    //    //bool invulnerable { get; }
-
-    //    ExitHitData Hit(EntryHitData EntryData);
-    //    EntryHitData GetDamageStats();
-    //}
+    //Todas las unidades tienen 2 estados Básicos: vivos o muertos.
+    public interface IKilleable
+    {
+        bool IsAlive { get; }
+        bool invulnerable { get; }
+    }
     ////Todas las Unidades que pueden tener estadísticas de combate.
     //public interface IAttacker<>
     //{
