@@ -7,12 +7,10 @@ using Core;
 public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
 {
     public GameObject BreackObject;
-    
+
     public void Break()
     {
-        Debug.Log("entre");
         Instantiate(BreackObject, transform.position, transform.rotation);
-        
         Destroy(gameObject);
     }
 

@@ -60,7 +60,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0.28759605
-        functionName: EnableDamage
+        functionName: Stage_Active
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -68,7 +68,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.3644347
-        functionName: DisableDamage
+        functionName: Stage_EndActive
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -76,6 +76,22 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.81854045
+        functionName: ChangeAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: Stage_StartUp
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 1
         functionName: EndAtk
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,

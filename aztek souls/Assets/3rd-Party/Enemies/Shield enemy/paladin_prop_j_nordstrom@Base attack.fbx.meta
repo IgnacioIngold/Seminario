@@ -65,13 +65,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: hiteable
+      - time: 0.07522124
+        functionName: MarkVulnerable
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
         floatParameter: 0
         intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: Stage_StartUp
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 2
         messageOptions: 0
       transformMask: []
       maskType: 3
@@ -103,7 +111,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: EnableDamage
+        functionName: Stage_Active
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -111,7 +119,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.9980277
-        functionName: DisableDamage
+        functionName: Stage_EndActive
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -148,6 +156,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0.8698875
+        functionName: ChangeAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 0.99612397
         functionName: EndAtk
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,

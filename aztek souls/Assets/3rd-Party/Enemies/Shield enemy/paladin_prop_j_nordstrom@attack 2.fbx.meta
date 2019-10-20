@@ -64,7 +64,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: Stage_StartUp
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -95,7 +103,7 @@ ModelImporter:
       curves: []
       events:
       - time: 0
-        functionName: EnableDamage
+        functionName: Stage_Active
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -103,7 +111,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: DisableDamage
+        functionName: Stage_EndActive
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
           type: 3}
@@ -146,6 +154,22 @@ ModelImporter:
           type: 3}
         floatParameter: 0
         intParameter: 1
+        messageOptions: 0
+      - time: 0
+        functionName: Stage_Recovery
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.2364341
+        functionName: ChangeAttack
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 79a9665cb4a16da428665bbb22917d70,
+          type: 3}
+        floatParameter: 0
+        intParameter: 2
         messageOptions: 0
       transformMask: []
       maskType: 3
