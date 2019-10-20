@@ -78,7 +78,7 @@ public class ShieldEnemy : BaseUnit
             if (!_targetDetected) _targetDetected = true;
             //TODO: chequear que el enemigo pase a Alerted despues de recibir el daño.
 
-            if (_blocking)
+            if (_blocking) //Si estoy bloqueando...
             {
                 if (sight.angleToTarget < 80 && !HitInfo.BreakDefence)
                 {
@@ -93,13 +93,14 @@ public class ShieldEnemy : BaseUnit
                 else if(sight.angleToTarget > 80 || HitInfo.BreakDefence)
                     _sm.Feed(ShieldEnemyStates.vulnerable);
             }
-            else
+            else //Si no estoy bloqueando...
             {
                 anims.SetTrigger("getDamage");
                 onGetHit();
 
                 result.HitConnected = true;
                 result.bloodEarned = BloodPerHit;
+
                 //Si no estoy bloqueando.
                 Health -= HitInfo.Damage;
 
@@ -107,13 +108,15 @@ public class ShieldEnemy : BaseUnit
                 Destroy(particle, 3f);
                 EnemyHealthBar.FadeIn();
 
-                //Aviso que estoy Muerto We.
+                //Si mi vida es menor a 0...
                 if (!IsAlive)
                 {
-                    result.TargetEliminated = true;
-                    result.bloodEarned = BloodForKill;
-                    _sm.Feed(ShieldEnemyStates.dead);
+                    result.TargetEliminated = true;    // Aviso que estoy muerto.
+                    result.bloodEarned = BloodForKill; // Obtengo la recompenza.
+                    _sm.Feed(ShieldEnemyStates.dead);  // Paso al estado de muerte.
                 }
+                else
+                    _sm.Feed(ShieldEnemyStates.think); //Por default paso a think.
             }
         }
         return result;
@@ -172,7 +175,7 @@ public class ShieldEnemy : BaseUnit
     public void AttackEnded(int index)
     {
         //Si el ataque termino, y se trata del 3ero yendo para idle...
-        if (index == 0)
+        if (index == 3)
             _sm.Feed(ShieldEnemyStates.think);
     }
 
@@ -220,7 +223,7 @@ public class ShieldEnemy : BaseUnit
             anims.SetInteger("Attack", 1);
             anims.SetBool("Blocking", true);
             anims.SetTrigger("BlockBreak");
-            anims.SetTrigger("Parry");
+            anims.SetBool("Parrying");
         */
         #region Transitions
 
