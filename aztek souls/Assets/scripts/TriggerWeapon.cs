@@ -26,22 +26,17 @@ public class TriggerWeapon : MonoBehaviour
             col = GetComponent<Collider>();
     }
 
-    HitData getOwnerStats()
-    {
-        return _owner.GetDamageStats();
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == Owner) return;
 
-        IDamageable<HitData, HitResult> Target = other.GetComponent<IDamageable<HitData, HitResult>>();
+        IDamageable<HitData, HitResult> Target = other.GetComponentInParent<IDamageable<HitData, HitResult>>();
         if (Target != null)
         {
             if (debugThisUnit)
                 print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name));
 
-            _owner.FeedHitResult(Target.Hit(getOwnerStats()));
+            _owner.FeedHitResult(Target.Hit(_owner.GetDamageStats()));
             return;
         }
     }

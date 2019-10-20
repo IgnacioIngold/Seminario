@@ -221,7 +221,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     #region Combate
 
     [Header("Combat")]
-    public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
@@ -311,80 +310,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         return hitResult;
     }
 
-
-    //public void GetDamage(params object[] DamageStats)
-    //{
-    //    if (!_invulnerable && IsAlive)
-    //    {
-    //        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-    //        float Damage = (float)DamageStats[1];
-
-    //        //Cálculo el daño real.
-    //        float resist = myStats.Resistencia * 0.5f;
-    //        Damage -= resist;
-    //        _shoked = false;
-    //        _anims.SetBool("Disarmed", false);
-
-    //        print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", (float)DamageStats[1], resist, Damage));
-
-    //        Health -= Damage;
-
-    //        if (IsAlive)
-    //        {
-    //            Aggresor.OnHitConfirmed(new object[1] { 0f });
-
-    //            //Permito recuperar estamina.
-    //            _rolling = false;
-    //            _attacking = false;
-    //            _running = false;
-    //            _recoverStamina = true;
-
-    //            //FeedBack de Daño.
-    //            _anims.SetTrigger("hurted");
-    //            _listenToInput = false;
-    //            CurrentWeapon.InterruptAttack();
-    //            _attacking = false;
-    //            GetHit();
-    //            _rb.velocity /= 3;
-
-    //            //Particula de Daño.
-    //            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-    //            Destroy(particle, 3f);
-
-    //            _myBars.m_UpdateHeathBar(_hp, MaxHealth);
-    //            _myBars.m_UpdateStamina(Stamina, MaxStamina);
-
-    //            //Entro al estado de recibir daño.
-    //            if (!_invulnerable) StartCoroutine(HurtFreeze());
-    //        }
-    //        if (!IsAlive)
-    //        {
-    //            Aggresor.OnKillConfirmed(new object[] { myStats.Sangre });
-    //            myStats.Sangre = 0;
-    //            Die();
-    //        }
-    //    }
-    //}
-
-    //public object[] GetDamageStats()
-    //{
-    //    // Retornar la info del sistema de Daño.
-    //    if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
-    //    {
-    //        float DañoFinal = myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage;
-    //        object[] combatStats = new object[3] { this, DañoFinal, breakDefence };
-    //        if (combatStats != null)
-    //            return combatStats;
-    //    }
-
-    //    return new object[1] { 0f };
-    //}
-
-    //public void OnHit(object[] HitData)
-    //{
-    //    
-    //}
-
     public void FeedHitResult(HitResult result)
     {
         if (result.HitBlocked)
@@ -404,24 +329,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         }
 
     }
-
-    //public void OnHitBlocked(object[] data)
-    //{
-
-    //}
-    //public void OnHitConfirmed(object[] data)
-    //{
-
-
-    //}
-    ///// <summary>
-    ///// Confirma al agresor, que su víctima ha muerto.
-    ///// </summary>
-    ///// <param name="data"></param>
-    //public void OnKillConfirmed(object[] data)
-    //{
-    //    OnHitConfirmed(data);
-    //}
 
     /// <summary>
     /// Retorna las estadísticas de combate de esta Entidad.
@@ -550,7 +457,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = AttackClips[L1.ID - 1].length;
+        //L1.AttackDuration = AttackClips[L1.ID - 1].length;
         L1.OnHit += () => 
         {
             //print("Light 1 conecto exitósamente");
@@ -563,7 +470,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Stamina -= L2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = AttackClips[L2.ID - 1].length;
+        //L2.AttackDuration = AttackClips[L2.ID - 1].length;
         L2.OnHit += () => 
         {
             print("Light 2 conecto exitósamente");
@@ -576,7 +483,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Stamina -= L3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = AttackClips[L3.ID - 1].length;
+        //L3.AttackDuration = AttackClips[L3.ID - 1].length;
         L3.OnHit += () => 
         {
             print("Light 3 conecto exitósamente");
@@ -589,7 +496,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
-        L4.AttackDuration = AttackClips[L4.ID - 1].length;
+        //L4.AttackDuration = AttackClips[L4.ID - 1].length;
 
         Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
         L5.OnStart += () =>
@@ -598,7 +505,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 9);
             //print("Ejecutando Ataque:" + quick2.IDName);
         };
-        L5.AttackDuration = AttackClips[L5.ID - 1].length;
+        //L5.AttackDuration = AttackClips[L5.ID - 1].length;
 
         #endregion
 
@@ -613,7 +520,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
         S1.OnEnd += () => { breakDefence = false; };
-        S1.AttackDuration = AttackClips[S1.ID - 1].length;
+        //S1.AttackDuration = AttackClips[S1.ID - 1].length;
 
         Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
         S2.OnStart += () =>
@@ -624,7 +531,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
         S2.OnEnd += () => { breakDefence = false; };
-        S2.AttackDuration = AttackClips[S2.ID - 1].length;
+        //S2.AttackDuration = AttackClips[S2.ID - 1].length;
 
         Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
         S3.OnStart += () =>
@@ -635,7 +542,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
         S3.OnEnd += () => { breakDefence = false; };
-        S3.AttackDuration = AttackClips[S3.ID - 1].length;
+        //S3.AttackDuration = AttackClips[S3.ID - 1].length;
 
         Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
         S4.OnStart += () =>
@@ -646,7 +553,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + S4.IDName);
         };
         S4.OnEnd += () => { breakDefence = false; };
-        S4.AttackDuration = AttackClips[S4.ID - 1].length;
+        //S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion
 

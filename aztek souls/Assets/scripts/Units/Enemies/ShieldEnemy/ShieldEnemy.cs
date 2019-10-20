@@ -43,7 +43,7 @@ public class ShieldEnemy : BaseUnit
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
 
-    [Header("Attack && Ritmo")]
+    [Header("Attack & Ritmo")]
     public ParticleSystem marker;
     public int CurrentAttackID = 0;
     public AttackStage CurrentStage;
@@ -66,14 +66,10 @@ public class ShieldEnemy : BaseUnit
 
     public override HitResult Hit(HitData HitInfo)
     {
-        //IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        //float damage = (float)DamageStats[1];
         HitResult result = HitResult.Empty();
 
-        if (HitInfo.Damage > 0)
+        if (HitInfo.Damage > 0 && IsAlive)
         {
-            //StopCoroutine(TriCombo());
-
             //Si el enemigo no me había detectado.
             if (!_targetDetected) _targetDetected = true;
             //TODO: chequear que el enemigo pase a Alerted despues de recibir el daño.
