@@ -2608,14 +2608,14 @@ Transform:
   - {fileID: 1393641750}
   - {fileID: 212710706}
   - {fileID: 1305793443}
+  - {fileID: 573620567}
   - {fileID: 456002130}
   - {fileID: 1335388119}
   - {fileID: 2109205167}
-  - {fileID: 573620567}
-  - {fileID: 2039309030}
-  - {fileID: 1744193007}
   - {fileID: 2008853489}
   - {fileID: 50751174}
+  - {fileID: 2039309030}
+  - {fileID: 1744193007}
   m_Father: {fileID: 1172182809}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29986,6 +29986,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 1530440873, guid: c3ff16c0320d61541a042c6c000a2b4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9108182208082019406, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}

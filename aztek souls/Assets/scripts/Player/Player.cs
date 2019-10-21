@@ -356,6 +356,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             float AxisY = Input.GetAxis("Vertical");
 
             Vector3 orientation;
+            _rb.velocity = new Vector3(0, 0, 0);
 
             if (AxisX == 0 && AxisY == 0)
                 orientation = AxisOrientation.forward;
@@ -367,8 +368,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _anims.SetFloat("VelY", 0);
 
                 //Moverme ligeramente.
-                Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
-                _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+                //Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
+                //_rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
             }
 
             transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);

@@ -21,6 +21,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     //Eventos de Animación.
 
     //Globales.
+    
 
     private void AllowInterrupt()
     {
