@@ -157,7 +157,6 @@ public class BossAnimEvents : MonoBehaviour
         boss.SmashEmission.enabled = true;
         boss.OnSmashParticle.Play();
     }
-
     void HighJumpLandEnd()
     {
         DamageCollider.enabled = false;
@@ -180,6 +179,7 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.enabled = false;
         boss.SmashEmission.enabled = false;
     }
+
     void unlockpassages()
     {
         DeathACtions.Play();
