@@ -11,6 +11,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     public Collider DamageCollider;
     public GameObject marker;
     public ParticleSystem tail;
+    public List<ParticleSystem> MyParticles = new List<ParticleSystem>();
     Animator anim;
 
     private void Awake()
@@ -70,5 +71,9 @@ public class PlayerAnimEventListener : MonoBehaviour
         if (tail.isPlaying)
             tail.Stop();
         tail.Play();
+    }
+    public void PlayMyParticles(int Index)
+    {
+        MyParticles[Index].Play();
     }
 }
