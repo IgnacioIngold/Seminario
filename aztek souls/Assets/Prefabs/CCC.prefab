@@ -6439,6 +6439,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -203655887218126122, guid: 7e66b475abee6aa4aad91cba59c8889e,
         type: 3}
+    - target: {fileID: 7163442870093080255, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: FeastBlood
+      value: 
+      objectReference: {fileID: 3251008217936140606, guid: 88511ca908b44404184b931d00019259,
+        type: 3}
     - target: {fileID: 7163442870093080254, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
         type: 3}
       propertyPath: m_CollisionDetection
@@ -7343,6 +7349,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 0.98949116
+      objectReference: {fileID: 0}
+    - target: {fileID: 7940936010879841849, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5283359184660115090, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 950a79e3d89c3a840b4ef8c02b69a20c, type: 3}
