@@ -704,7 +704,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             movementSpeed = runSpeed;
             Stamina -= runCost * Time.deltaTime;
             if (_dir != Vector3.zero)
-                transform.forward = _dir;
+                transform.forward =  _dir;
         }
         else
         {
@@ -924,5 +924,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void FeastBloodEfect()
     {
         FeastBlood.Play();
+    }
+    public void Step(int force)
+    {
+        _rb.AddForce(transform.forward * force,ForceMode.Impulse);
+        print("hola");
     }
 }

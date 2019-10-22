@@ -21,7 +21,10 @@ public class PlayerAnimEventListener : MonoBehaviour
     //Eventos de Animación.
 
     //Globales.
-    
+    void StepPerform(int forceApply)
+    {
+        player.Step(forceApply);
+    }
 
     private void AllowInterrupt()
     {
