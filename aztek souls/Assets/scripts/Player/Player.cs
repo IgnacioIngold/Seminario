@@ -620,6 +620,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         float AxisX = Input.GetAxis("Horizontal");
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            _anims.SetLayerWeight(1, 1);
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            _anims.SetLayerWeight(0, 1);
+        }
 
         if (_listenToInput)
         {
