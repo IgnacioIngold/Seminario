@@ -10995,7 +10995,7 @@ PrefabInstance:
     - target: {fileID: 4668271041496302404, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 4668271041496302404, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}
@@ -11104,11 +11104,6 @@ PrefabInstance:
       objectReference: {fileID: 600293344}
     - target: {fileID: 2037282081297051893, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}
-      propertyPath: MaxHP
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037282081297051893, guid: 1b7e8c8915029354184300718e1f6007,
-        type: 3}
       propertyPath: LightColor.a
       value: 1
       objectReference: {fileID: 0}
@@ -11116,6 +11111,11 @@ PrefabInstance:
         type: 3}
       propertyPath: HeavyColor.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037282081297051893, guid: 1b7e8c8915029354184300718e1f6007,
+        type: 3}
+      propertyPath: BlockLerpSpeed
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6249441697177469530, guid: 1b7e8c8915029354184300718e1f6007,
         type: 3}

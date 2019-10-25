@@ -39,12 +39,17 @@ public class ShieldEnemy : BaseUnit
     public float BlockRange = 3f;
     public float ParryCoolDown = 3f;
     private bool _canParry = true;
+    public float BlockLerpSpeed = 3f;
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
 
     [Header("Attack & Ritmo")]
     public float CriticDamageMultiplier = 2;
+    public bool Disarmed;
+    public float DisarmedTime = 4f;
+    float currentDisarmedTime = 0f;
+
 
     public int CurrentAttackID = 0;
     public AttackStage CurrentStage;
@@ -60,8 +65,6 @@ public class ShieldEnemy : BaseUnit
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
     private bool _parrying;
-
-    
 #endif
 
     //======================== OVERRIDES & INTERFACES =========================================
@@ -77,12 +80,14 @@ public class ShieldEnemy : BaseUnit
             {
                 _targetDetected = true;
                 SetVulnerabity(true);
+                if (!VulnerableMarker.gameObject.activeSelf)
+                    VulnerableMarker.gameObject.SetActive(true);
             }
 
-            //TODO: chequear que el enemigo pase a Alerted despues de recibir el daño.
-
-            if (_blocking) //Si estoy bloqueando...
+            if (_blocking && !Disarmed) //Si estoy bloqueando...
             {
+                print("Estoy bloqueando");
+
                 if (sight.angleToTarget < 80 && !HitInfo.BreakDefence)
                 {
                     result.HitBlocked = true;
@@ -237,8 +242,10 @@ public class ShieldEnemy : BaseUnit
 
         //Vulnerabilidad
         var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
+        var SecondaryVulnerability = new Inputs[] { Inputs.strong, Inputs.light, Inputs.light };
         vulnerabilityCombos = new Dictionary<int, Inputs[]>();
         vulnerabilityCombos.Add(1, MainVulnerability);
+        vulnerabilityCombos.Add(2, SecondaryVulnerability);
 
         #region State Machine.
 
@@ -349,9 +356,12 @@ public class ShieldEnemy : BaseUnit
         blocking.OnEnter += (previousState) =>
         {
             anims.SetBool("Blocking", true);
+            anims.SetFloat("Moving", 0f);
             LookTowardsPlayer = true;
-            _rotationLerpSpeed *= 3;
+            _originalRotLerpSpeed = _rotationLerpSpeed;
+            _rotationLerpSpeed = BlockLerpSpeed;
             _blocking = true;
+            SetVulnerabity(true, 2);
         };
         blocking.OnUpdate += () =>
         {
@@ -359,18 +369,30 @@ public class ShieldEnemy : BaseUnit
         };
         blocking.OnExit += (nextState) =>
         {
+            if (nextState == ShieldEnemyStates.vulnerable)
+            {
+                Debug.LogWarning("Voy a vulnerable");
+            }
+
             anims.SetBool("Blocking", false);
-            _rotationLerpSpeed /= 3;
+            _rotationLerpSpeed = _originalRotLerpSpeed;
             _blocking = false;
         };
 
         vulnerable.OnEnter += (previousState) =>
         {
             _blocking = false;
-            anims.SetTrigger("BlockBreak");
+            Disarmed = true;
+            currentDisarmedTime = DisarmedTime;
+            SetVulnerabity(true, 1);
+
+            anims.SetBool("Disarmed",true);
         };
         //vulnerable.OnUpdate += () => { };
-        //vulnerable.OnExit += (nextState) => { };
+        vulnerable.OnExit += (nextState) => 
+        {
+            anims.SetBool("Disarmed", false);
+        };
 
 
         parry.OnEnter += (previousState) =>
@@ -504,6 +526,17 @@ public class ShieldEnemy : BaseUnit
         current = _sm.currentState;
 #endif
 
+        if (Disarmed)
+        {
+            if (currentDisarmedTime > 0)
+                currentDisarmedTime -= Time.deltaTime;
+            else if(currentDisarmedTime <= 0)
+            {
+                Disarmed = false;
+                _sm.Feed(ShieldEnemyStates.think);
+            }
+        }
+
         if (comboVulnerabilityCountDown > 0)
             comboVulnerabilityCountDown -= Time.deltaTime;
         else if (comboVulnerabilityCountDown <= 0)
@@ -533,11 +566,14 @@ public class ShieldEnemy : BaseUnit
             _sm.Feed(ShieldEnemyStates.dead);
     }
 
-    public override void SetVulnerabity(bool vulnerable)
+    public override void SetVulnerabity(bool vulnerable, int combo = 1)
     {
-        _blocking = false;
+        base.SetVulnerabity(vulnerable, combo);
+    }
 
-        base.SetVulnerabity(vulnerable);
+    public void SetState(ShieldEnemyStates nextState)
+    {
+        _sm.Feed(nextState);
     }
 
     IEnumerator StartParryCoolDown()

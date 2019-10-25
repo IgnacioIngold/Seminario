@@ -64,10 +64,10 @@ public class SE_AnimEventListener : MonoBehaviour
 
     //================================= Ritmo ====================================================
 
-    // Marcamos cuando esta vulnerable.
-    public void MarkVulnerable()
+    public void StartVulnerability()
     {
-        //marker.Play();
+        // Marcamos cuando esta vulnerable.
+        Owner.SetVulnerabity(true);
     }
 
     //================================= Attaques =================================================

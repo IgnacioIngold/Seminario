@@ -212,22 +212,28 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
     /// </summary>
     /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
-    public virtual void SetVulnerabity(bool vulnerable)
+    public virtual void SetVulnerabity(bool vulnerable, int Combo = 1)
     {
         comboVulnerabilityCountDown = vulnerableTime;
-
+        isVulnerableToAttacks = vulnerable;
         ConfirmButtonHit();
 
         //Muestro el siguiente ataque.
-        ShowNextVulnerability(0);
+        ShowNextVulnerability(0, Combo);
     }
 
-    protected void ShowNextVulnerability(int index)
+    protected void ShowNextVulnerability(int index, int combo = 1)
     {
         if (index < vulnerabilityCombos[1].Length)
         {
-            var nextAttackType = vulnerabilityCombos[1][index];
+            var nextAttackType = vulnerabilityCombos[combo][index];
             var ParticleSystem = VulnerableMarker.main;
+
+            if (!VulnerableMarker.gameObject.activeSelf)
+            {
+                print("No estaba activado we");
+                VulnerableMarker.gameObject.SetActive(true);
+            }
 
             if (nextAttackType == Inputs.light)
                 ParticleSystem.startColor = LightColor;

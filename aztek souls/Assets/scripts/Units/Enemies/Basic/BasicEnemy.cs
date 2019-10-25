@@ -452,9 +452,8 @@ public class BasicEnemy : BaseUnit
         sm.Update();
     }
 
-    public override void SetVulnerabity(bool vulnerable)
+    public override void SetVulnerabity(bool vulnerable, int combo = 1)
     {
-        isVulnerableToAttacks = vulnerable;
         canBlock = !vulnerable;
 
         base.SetVulnerabity(vulnerable);
