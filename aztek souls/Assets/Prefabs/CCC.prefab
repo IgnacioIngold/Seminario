@@ -8370,6 +8370,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.w
       value: 0.98949116
       objectReference: {fileID: 0}
+    - target: {fileID: 3761758109681061041, guid: 950a79e3d89c3a840b4ef8c02b69a20c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 950a79e3d89c3a840b4ef8c02b69a20c, type: 3}
 --- !u!4 &9108182208082019411 stripped
@@ -8385,10 +8390,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8407269639489368618}
     m_Modifications:
-    - target: {fileID: 805980042818859329, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}
-      propertyPath: m_Name
-      value: CamPivot
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.9199998
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.1466246
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.2980955
+      objectReference: {fileID: 0}
+    - target: {fileID: 805980044348616987, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 805980042818859331, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}
@@ -8445,6 +8480,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 805980042818859329, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
+        type: 3}
+      propertyPath: m_Name
+      value: CamPivot
+      objectReference: {fileID: 0}
     - target: {fileID: 2270405088496856461, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -8464,41 +8504,6 @@ PrefabInstance:
         type: 3}
       propertyPath: camOffSet.y
       value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.9199998
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.1466246
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616964, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 2.2980955
-      objectReference: {fileID: 0}
-    - target: {fileID: 805980044348616987, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
-        type: 3}
-      propertyPath: m_Layer
-      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 805980044348616965, guid: 5c5613b6f1dc2414ebe11b39210c3c3c,
         type: 3}

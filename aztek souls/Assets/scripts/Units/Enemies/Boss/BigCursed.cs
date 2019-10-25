@@ -67,7 +67,6 @@ public class BigCursed : BaseUnit
     bool charging = false;
     Vector3 _initialChargePosition;
     Vector3 _chargeDir = Vector3.zero;
-    private bool LookTowardsPlayer = true;
 
     //============================== INTERFACES ===============================================
 
@@ -449,7 +448,7 @@ public class BigCursed : BaseUnit
         sight.Update();
 
         if (LookTowardsPlayer)
-            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed * Time.deltaTime);
 
         sm.Update();
     }

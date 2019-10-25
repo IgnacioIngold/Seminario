@@ -31,6 +31,7 @@ namespace Core
     {
         public float Damage;
         public bool BreakDefence;
+        public Inputs AttackType;
 
         public static HitData Empty()
         {

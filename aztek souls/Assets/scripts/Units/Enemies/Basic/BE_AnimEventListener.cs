@@ -24,7 +24,6 @@ public class BE_AnimEventListener : MonoBehaviour
     }
     public void AttackStartUp()
     {
-        owner.SetVulnerabity(true);
         owner.LookTowardsPlayer = true;
     }
 
@@ -46,8 +45,7 @@ public class BE_AnimEventListener : MonoBehaviour
 
     public void AttackRecovery()
     {
-        owner.SetVulnerabity(false);
-        owner.LookTowardsPlayer = true;
+        //owner.LookTowardsPlayer = true;
     }
 
     public void AttackFinished()

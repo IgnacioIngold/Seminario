@@ -10,7 +10,9 @@ public class TriggerWeapon : MonoBehaviour
     [SerializeField, Tooltip("El collider es desactivado al producirse el primer impacto.")]
     protected Collider col;
     public GameObject Owner;
+
     public bool debugThisUnit;
+    public bool debugOwnerStats;
 
     IDamageable<HitData, HitResult> _owner;
 
@@ -37,6 +39,13 @@ public class TriggerWeapon : MonoBehaviour
                 print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name));
 
             _owner.FeedHitResult(Target.Hit(_owner.GetDamageStats()));
+
+            if (debugOwnerStats)
+            {
+                var stats = _owner.GetDamageStats();
+                print(string.Format("El daño del owner es {0}, puede romper defenza {1}, tipo de ataque {2}.", stats.Damage, stats.BreakDefence, stats.AttackType.ToString()));
+            }
+
             return;
         }
     }

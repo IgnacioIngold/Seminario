@@ -222,6 +222,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
     [Header("Combat")]
     public Weapon CurrentWeapon;
+    //public List<Attack> Attacks = new List<Attack>();
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
     public float ShockDuration = 2f;
@@ -340,10 +341,16 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         HitData returnValue;
         if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
+            //var info = _anims.GetCurrentAnimatorClipInfo(0);
+            //var animationLenght = info[0].clip.length; //La duración de la animación.
+            //var stateInfo =_anims.GetCurrentAnimatorStateInfo(0);
+            //var AnimationTime = stateInfo.normalizedTime; //El timepo escalado en el que esta la animación actual.
+
             returnValue = new HitData()
             {
                 Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
-                BreakDefence = breakDefence
+                BreakDefence = breakDefence,
+                AttackType = CurrentWeapon.CurrentAttack.attackType
             };
         }
         else
@@ -378,6 +385,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         Blood = myStats.Sangre;
 
         _myBars.m_TurnOffAll();
+        BloodConsume.SetActive(false);
 
         levelUpPanel.OnAccept += () =>
         {
@@ -449,7 +457,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3, attackType = Inputs.light };
         L1.OnStart += () =>
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
@@ -458,12 +466,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + light1.IDName);
         };
         //L1.AttackDuration = AttackClips[L1.ID - 1].length;
-        L1.OnHit += () => 
-        {
-            //print("Light 1 conecto exitósamente");
-        };
+        //L1.OnHit += () => 
+        //{
+        //    //print("Light 1 conecto exitósamente");
+        //};
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3, attackType = Inputs.light };
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
@@ -471,12 +479,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + light2.IDName);
         };
         //L2.AttackDuration = AttackClips[L2.ID - 1].length;
-        L2.OnHit += () => 
-        {
-            print("Light 2 conecto exitósamente");
-        };
+        //L2.OnHit += () => 
+        //{
+        //    print("Light 2 conecto exitósamente");
+        //};
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3, attackType = Inputs.light };
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
@@ -489,7 +497,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Light 3 conecto exitósamente");
         };
 
-        Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3, attackType = Inputs.light };
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
@@ -498,7 +506,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         //L4.AttackDuration = AttackClips[L4.ID - 1].length;
 
-        Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3, attackType = Inputs.light };
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
@@ -511,48 +519,50 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Strong
 
-        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3, attackType = Inputs.strong };
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
             Stamina -= S1.Cost;
             breakDefence = true;
-            //print("Ejecutando Ataque:" + heavy1.IDName);
+            print("Ejecutando Ataque:" + S1.Name);
         };
         S1.OnEnd += () => { breakDefence = false; };
         //S1.AttackDuration = AttackClips[S1.ID - 1].length;
 
-        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3, attackType = Inputs.strong };
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
             Stamina -= S2.Cost;
             breakDefence = true;
-            //print("Ejecutando Ataque:" + heavy1.IDName);
+            print("Ejecutando Ataque:" + S2.Name);
         };
         S2.OnEnd += () => { breakDefence = false; };
         //S2.AttackDuration = AttackClips[S2.ID - 1].length;
 
-        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3, attackType = Inputs.strong };
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
             Stamina -= S3.Cost;
             breakDefence = true;
-            //print("Ejecutando Ataque:" + Airheavy.IDName);
+            print("Ejecutando Ataque:" + S3.Name);
         };
         S3.OnEnd += () => { breakDefence = false; };
         //S3.AttackDuration = AttackClips[S3.ID - 1].length;
 
-        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3, attackType = Inputs.strong };
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
             _anims.SetInteger("combat", 8);
             breakDefence = true;
-            //print("Ejecutando Ataque:" + S4.IDName);
+            print("Ejecutando Ataque:" + S4.Name);
         };
-        S4.OnEnd += () => { breakDefence = false; };
+        S4.OnEnd += () => {
+            breakDefence = false;
+        };
         //S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion

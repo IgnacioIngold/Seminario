@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using IA.LineOfSight;
@@ -16,6 +17,23 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public GameObject OnHitParticle;
     public FillBar    EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null;
+
+    //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
+    [Header("Sistema de Ritmo")]
+    public float ComboBonus;
+    public ParticleSystem VulnerableMarker;
+    public ParticleSystem ButtonHitConfirm;
+    public Color LightColor;
+    public Color HeavyColor;
+    public Dictionary<int, Inputs[]> vulnerabilityCombos;
+    public float comboVulnerabilityCountDown = 0f;
+    public bool isVulnerableToAttacks = false;
+    protected int _attacksRecieved = 0;
+
+    [Header("Vulnerability")]
+    public float vulnerableTime = 1.5f;
+    public float incommingDamageReduction = 0.3f;
+    public float ComboWindow = 1f;
 
     [Header("Recompensas")]
     public int BloodPerHit = 100;
@@ -45,11 +63,15 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public float attackRate = 1f;
     public float AttackRange = 1f;
     public float attackDamage = 1f;
-    public float rotationLerpSpeed = 0.1f;
+    protected float _rotationLerpSpeed = 0.1f;
+    public float NormalRotationLerpSeed = 0.1f;
+    public float AttackRotationLerpSpeed = 10f;
 
     public float minDetectionRange = 8f;
     public float MediumRange       = 40f;
     public float HighRange         = 60f;
+
+    public bool LookTowardsPlayer = true;
 
     #region Componentes de Unity
 
@@ -76,14 +98,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public bool invulnerable => _invulnerable;
 
     public virtual HitData GetDamageStats() { return HitData.Empty(); }
-    public virtual HitResult Hit(HitData EntryData)
-    {
-        //var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-        //Destroy(particle, 3f);
-
-        //EnemyHealthBar.FadeIn();
-        return HitResult.Empty();
-    }
+    public virtual HitResult Hit(HitData EntryData) { return HitResult.Empty(); }
     public virtual void FeedHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
@@ -173,44 +188,6 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         Health = MaxHP;
     }
 
-    //=========================================================================================
-
-    ///// <summary>
-    ///// Retorna la duración de la Transición al siguiente estado de la Animación.
-    ///// </summary>
-    ///// <returns>Float: el tiempo de la transición.</returns>
-    //protected float getCurrentTransitionDuration()
-    //{
-    //    return anims.GetAnimatorTransitionInfo(0).duration;
-    //}
-    ///// <summary>
-    ///// Retorna el tiempo de Animación restante del estado Actual del Animator.
-    ///// </summary>
-    ///// <returns>Float: tiempo de Animación restante del estado actual.</returns>
-    //protected float getRemainingAnimTime()
-    //{
-    //    //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-    //    //float AnimTime = 0f;
-
-    //    var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
-
-    //    //if (clipInfo != null && clipInfo.Length > 0)
-    //    //{
-    //    //    AnimationClip currentClip = clipInfo[0].clip;
-    //    //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
-
-    //    //    if (currentClip.name == ClipName)
-    //    //    {
-    //    //        //print("currentClip is Correct!");
-    //    //        AnimTime = currentClip.length;
-    //    //        float passed = AnimTime - (AnimTime * transitionPassed);
-    //    //        return passed;
-    //    //    }
-    //    //}
-
-    //    return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
-    //}
-
     protected void Die()
     {
         EnemyHealthBar.FadeOut(3f);
@@ -229,6 +206,41 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         _targetDetected = true;
         _alertFriends = false;
         EnemyHealthBar.FadeIn();
+    }
+
+    /// <summary>
+    /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
+    /// </summary>
+    /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
+    public virtual void SetVulnerabity(bool vulnerable)
+    {
+        comboVulnerabilityCountDown = vulnerableTime;
+
+        ConfirmButtonHit();
+
+        //Muestro el siguiente ataque.
+        ShowNextVulnerability(0);
+    }
+
+    protected void ShowNextVulnerability(int index)
+    {
+        if (index < vulnerabilityCombos[1].Length)
+        {
+            var nextAttackType = vulnerabilityCombos[1][index];
+            var ParticleSystem = VulnerableMarker.main;
+
+            if (nextAttackType == Inputs.light)
+                ParticleSystem.startColor = LightColor;
+            if (nextAttackType == Inputs.strong)
+                ParticleSystem.startColor = HeavyColor;
+        }
+    }
+    protected void ConfirmButtonHit()
+    {
+        if (!ButtonHitConfirm.gameObject.activeSelf)
+            ButtonHitConfirm.gameObject.SetActive(true);
+        else
+            ButtonHitConfirm.Play();
     }
 
     IEnumerator FallAfterDie(float delay = 1f)

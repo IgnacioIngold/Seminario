@@ -44,7 +44,8 @@ public class ShieldEnemy : BaseUnit
     public float AlertRadius = 10f;
 
     [Header("Attack & Ritmo")]
-    public ParticleSystem marker;
+    public float CriticDamageMultiplier = 2;
+
     public int CurrentAttackID = 0;
     public AttackStage CurrentStage;
 
@@ -52,7 +53,6 @@ public class ShieldEnemy : BaseUnit
     private float _alertedTimeRemaining = 0f;
     private float _originalRotLerpSpeed = 0f;
     private bool _attacking;
-    private bool LookTowardsPlayer = true;
     private float ThinkTime = 0;
     private float remainingThinkTime = 0;
     private bool _blocking = false;
@@ -60,6 +60,8 @@ public class ShieldEnemy : BaseUnit
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
     private bool _parrying;
+
+    
 #endif
 
     //======================== OVERRIDES & INTERFACES =========================================
@@ -71,7 +73,12 @@ public class ShieldEnemy : BaseUnit
         if (HitInfo.Damage > 0 && IsAlive)
         {
             //Si el enemigo no me había detectado.
-            if (!_targetDetected) _targetDetected = true;
+            if (!_targetDetected)
+            {
+                _targetDetected = true;
+                SetVulnerabity(true);
+            }
+
             //TODO: chequear que el enemigo pase a Alerted despues de recibir el daño.
 
             if (_blocking) //Si estoy bloqueando...
@@ -91,14 +98,43 @@ public class ShieldEnemy : BaseUnit
             }
             else //Si no estoy bloqueando...
             {
+                //Aqui necesitamos info.
                 anims.SetTrigger("getDamage");
+                var FinalDamage = HitInfo.Damage * incommingDamageReduction;
+                bool completedCombo = false;
+                //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
+                if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
+                {
+                    _attacksRecieved++;
+
+                    if (_attacksRecieved == 3)
+                    {
+                        comboVulnerabilityCountDown = 0f;
+                        FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                        completedCombo = true;
+
+                        print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                    }
+                    else if (_attacksRecieved == 2)
+                    {
+                        comboVulnerabilityCountDown += 4f;
+
+                        print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                    }
+                    else comboVulnerabilityCountDown += 1f;
+
+                    ConfirmButtonHit();
+
+                    //Muestro el siguiente ataque.
+                    ShowNextVulnerability(_attacksRecieved);
+                }
+
                 onGetHit();
 
                 result.HitConnected = true;
-                result.bloodEarned = BloodPerHit;
 
                 //Si no estoy bloqueando.
-                Health -= HitInfo.Damage;
+                Health -= FinalDamage;
 
                 var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
                 Destroy(particle, 3f);
@@ -108,7 +144,10 @@ public class ShieldEnemy : BaseUnit
                 if (!IsAlive)
                 {
                     result.TargetEliminated = true;    // Aviso que estoy muerto.
-                    result.bloodEarned = BloodForKill; // Obtengo la recompenza.
+                    if (completedCombo)
+                        result.bloodEarned = BloodForKill * 2;
+                    else
+                        result.bloodEarned = BloodForKill;
                     _sm.Feed(ShieldEnemyStates.dead);  // Paso al estado de muerte.
                 }
                 else
@@ -193,8 +232,16 @@ public class ShieldEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+        VulnerableMarker.gameObject.SetActive(false);
+        ButtonHitConfirm.gameObject.SetActive(false);
 
-        //State Machine.
+        //Vulnerabilidad
+        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
+        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        vulnerabilityCombos.Add(1, MainVulnerability);
+
+        #region State Machine.
+
         var idle = new State<ShieldEnemyStates>("Idle");
         var alerted = new State<ShieldEnemyStates>("Alerted");
         var pursue = new State<ShieldEnemyStates>("pursue");
@@ -264,11 +311,11 @@ public class ShieldEnemy : BaseUnit
 
         #region Estados
 
-        idle.OnEnter += (previousState) => 
+        idle.OnEnter += (previousState) =>
         {
             anims.SetFloat("Moving", 0f);
         };
-        idle.OnUpdate += () => 
+        idle.OnUpdate += () =>
         {
             var toDamage = sight.target.GetComponent<IKilleable>();
             if (!toDamage.IsAlive) return;
@@ -282,16 +329,16 @@ public class ShieldEnemy : BaseUnit
         //idle.OnExit += (nextState) => { };
 
 
-        alerted.OnEnter += (previousState) => 
+        alerted.OnEnter += (previousState) =>
         {
             _alertedTimeRemaining = AlertedTime;
         };
-        alerted.OnUpdate += () => 
+        alerted.OnUpdate += () =>
         {
             if (_alertedTimeRemaining >= 0)
             {
                 _alertedTimeRemaining -= Time.deltaTime;
-                transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+                transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed);
             }
             else
                 _sm.Feed(ShieldEnemyStates.think);
@@ -299,25 +346,25 @@ public class ShieldEnemy : BaseUnit
         alerted.OnExit += (nextState) => { };
 
 
-        blocking.OnEnter += (previousState) => 
+        blocking.OnEnter += (previousState) =>
         {
             anims.SetBool("Blocking", true);
             LookTowardsPlayer = true;
-            rotationLerpSpeed *= 3;
+            _rotationLerpSpeed *= 3;
             _blocking = true;
         };
-        blocking.OnUpdate += () => 
+        blocking.OnUpdate += () =>
         {
             if (sight.distanceToTarget > BlockRange) _sm.Feed(ShieldEnemyStates.think);
         };
-        blocking.OnExit += (nextState) => 
+        blocking.OnExit += (nextState) =>
         {
             anims.SetBool("Blocking", false);
-            rotationLerpSpeed /= 3;
+            _rotationLerpSpeed /= 3;
             _blocking = false;
         };
 
-        vulnerable.OnEnter += (previousState) => 
+        vulnerable.OnEnter += (previousState) =>
         {
             _blocking = false;
             anims.SetTrigger("BlockBreak");
@@ -326,7 +373,7 @@ public class ShieldEnemy : BaseUnit
         //vulnerable.OnExit += (nextState) => { };
 
 
-        parry.OnEnter += (previousState) => 
+        parry.OnEnter += (previousState) =>
         {
             _parrying = true;
             anims.SetTrigger("Parry");
@@ -334,14 +381,14 @@ public class ShieldEnemy : BaseUnit
         //parry.OnUpdate += () => { };
         parry.OnExit += (nextState) => { _parrying = false; };
 
-        pursue.OnEnter += (previousState) => 
+        pursue.OnEnter += (previousState) =>
         {
             anims.SetFloat("Moving", 1f);
         };
-        pursue.OnUpdate += () => 
+        pursue.OnUpdate += () =>
         {
             //Correr como si no hubiera un mañana (?
-            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, rotationLerpSpeed);
+            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed);
 
             if (sight.distanceToTarget > AttackRange) agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
 
@@ -349,23 +396,23 @@ public class ShieldEnemy : BaseUnit
         };
         //pursue.OnExit += (nextState) => { };
 
-        reposition.OnEnter += (previousState) => 
+        reposition.OnEnter += (previousState) =>
         {
             LookTowardsPlayer = true;
-            _originalRotLerpSpeed = rotationLerpSpeed;
-            rotationLerpSpeed *= ((sight.angleToTarget / 360) * 20);
+            _originalRotLerpSpeed = _rotationLerpSpeed;
+            _rotationLerpSpeed *= ((sight.angleToTarget / 360) * 20);
         };
         reposition.OnUpdate += () =>
         {
             if (sight.angleToTarget < 45) _sm.Feed(ShieldEnemyStates.think);
         };
-        reposition.OnExit += (nextState) => 
+        reposition.OnExit += (nextState) =>
         {
             LookTowardsPlayer = false;
-            rotationLerpSpeed = _originalRotLerpSpeed;
+            _rotationLerpSpeed = _originalRotLerpSpeed;
         };
 
-        attack.OnEnter += (previousState) => 
+        attack.OnEnter += (previousState) =>
         {
             _attacking = true;
             agent.isStopped = true;
@@ -373,17 +420,17 @@ public class ShieldEnemy : BaseUnit
             anims.SetInteger("Attack", 1);
         };
         //attack.OnUpdate += () => { };
-        attack.OnExit += (nextState) => 
+        attack.OnExit += (nextState) =>
         {
             _attacking = false;
             agent.isStopped = false;
         };
 
-        think.OnEnter += (previousState) => 
+        think.OnEnter += (previousState) =>
         {
             if (ThinkTime > 0) remainingThinkTime = ThinkTime;
         };
-        think.OnUpdate += () => 
+        think.OnUpdate += () =>
         {
             if (remainingThinkTime > 0)
                 remainingThinkTime -= Time.deltaTime;
@@ -433,12 +480,12 @@ public class ShieldEnemy : BaseUnit
                 }
             }
         };
-        think.OnExit += (nextState) => 
+        think.OnExit += (nextState) =>
         {
             print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
         };
 
-        dead.OnEnter += (previousState) => 
+        dead.OnEnter += (previousState) =>
         {
             anims.SetBool("Dead", true);
             Die();
@@ -446,25 +493,51 @@ public class ShieldEnemy : BaseUnit
 
         #endregion
 
-        _sm = new GenericFSM<ShieldEnemyStates>(idle);
+        _sm = new GenericFSM<ShieldEnemyStates>(idle); 
+        #endregion
     }
 
     // Update is called once per frame
     void Update()
     {
 #if UNITY_EDITOR
-        current = _sm.currentState; 
+        current = _sm.currentState;
 #endif
+
+        if (comboVulnerabilityCountDown > 0)
+            comboVulnerabilityCountDown -= Time.deltaTime;
+        else if (comboVulnerabilityCountDown <= 0)
+        {
+            print("Se acabó el tiempo de vulnerabilidad");
+            _attacksRecieved = 0;
+            SetVulnerabity(false);
+            comboVulnerabilityCountDown = 0;
+            ButtonHitConfirm.gameObject.SetActive(false);
+        }
+
+        if (isVulnerableToAttacks)
+            VulnerableMarker.gameObject.SetActive(true);
+        else if (VulnerableMarker.gameObject.activeSelf)
+            VulnerableMarker.gameObject.SetActive(false);
 
         if (IsAlive)
         {
             sight.Update();
 
             if (LookTowardsPlayer && _targetDetected)
-                transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+                transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed * Time.deltaTime);
 
             _sm.Update();
         }
+        else if(_sm.currentState != ShieldEnemyStates.dead)
+            _sm.Feed(ShieldEnemyStates.dead);
+    }
+
+    public override void SetVulnerabity(bool vulnerable)
+    {
+        _blocking = false;
+
+        base.SetVulnerabity(vulnerable);
     }
 
     IEnumerator StartParryCoolDown()

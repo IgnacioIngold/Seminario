@@ -16,6 +16,7 @@ public class Attack
     public string Name = "";
     public int ChainIndex = 0;
     public int maxChainIndex;
+    public Inputs attackType;
 
     public float Cost = 0f;
     public float AttackDuration = 1f;
