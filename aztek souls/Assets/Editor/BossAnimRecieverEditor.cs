@@ -28,7 +28,7 @@ public class BossAnimRecieverEditor : Editor
         inspected = (BossAnimEvents)target;
 
         //Chequear que el collider este seteado.
-        AEReciever = inspected.boss != null;
+        AEReciever = inspected.Owner != null;
         colliderSetted = inspected.DamageCollider != null;
 
         CheckRelevantData();
@@ -46,7 +46,7 @@ public class BossAnimRecieverEditor : Editor
     private void CheckRelevantData()
     {
         //Chequear que el collider y el Observador esten seteados.
-        AEReciever = inspected.boss != null;
+        AEReciever = inspected.Owner != null;
         colliderSetted = inspected.DamageCollider != null;
 
         //Chequear que la carpeta exista y el archivo existe.

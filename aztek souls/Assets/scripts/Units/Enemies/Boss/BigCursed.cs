@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using IA.StateMachine.Generic;
 using IA.RandomSelections;
@@ -11,6 +12,7 @@ public enum BossStates
         think,
         charge,
         reposition,
+        Smashed,
         pursue,
         basicCombo,
         killerJump,
@@ -27,9 +29,17 @@ public class BigCursed : BaseUnit
     GenericFSM<BossStates> sm;
     State<BossStates> idle;
 
+    [Header("Vulnerabilidad")]
+    private bool _Smashed;
+    private float _remainingSmashTime = 0f;
+    public float SmashDuration = 4f;
+    public float DamageMultiplier = 2f;
+
+
     [Header("Settings del Boss")]
     public float[] BasicAttackDamages;
     public int AttackPhase = 0;
+    public float RepositionLerpSpeed = 20f;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
     [Header("Layers")]
@@ -77,7 +87,52 @@ public class BigCursed : BaseUnit
     public override HitResult Hit(HitData HitInfo)
     {
         HitResult result = HitResult.Empty();
-        Health -= HitInfo.Damage;
+
+        float Damage = HitInfo.Damage;
+
+        if (isVulnerableToAttacks && !_Smashed)
+        {
+            bool completedCombo = false;
+            //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
+            if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
+            {
+                _attacksRecieved++;
+
+                if (_attacksRecieved == 3)
+                {
+                    comboVulnerabilityCountDown = 0f;
+                    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                    completedCombo = true;
+
+                    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                }
+                else if (_attacksRecieved == 2)
+                {
+                    comboVulnerabilityCountDown += 4f;
+
+                    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                }
+                else comboVulnerabilityCountDown += 1f;
+
+                ConfirmButtonHit();
+
+                //Muestro el siguiente ataque.
+                ShowNextVulnerability(_attacksRecieved);
+            }
+
+            if (completedCombo)
+                sm.Feed(BossStates.Smashed);
+        }
+        else if (_Smashed)
+        {
+            Damage *= DamageMultiplier;
+        }
+        else
+        {
+            Damage *= incommingDamageReduction;
+        }
+
+        Health -= Damage;
 
         if (IsAlive)
         {
@@ -92,6 +147,10 @@ public class BigCursed : BaseUnit
         {
             result.TargetEliminated = true;
             result.bloodEarned = BloodForKill;
+
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+
             sm.Feed(BossStates.dead);
         }
         return result;
@@ -124,7 +183,13 @@ public class BigCursed : BaseUnit
         ChargeEmission.enabled = false;
         SmashEmission = OnSmashParticle.emission;
 
-        //State Machine.
+        //Vulnerabilidad
+        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
+        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        vulnerabilityCombos.Add(1, MainVulnerability);
+
+        #region State Machine
+
         idle = new State<BossStates>("Idle");
         var think = new State<BossStates>("Thinking");
         var pursue = new State<BossStates>("Pursue");
@@ -132,6 +197,7 @@ public class BigCursed : BaseUnit
         var charge = new State<BossStates>("Charge");
         var BasicCombo = new State<BossStates>("Attack_BasicCombo");
         var JumpAttack = new State<BossStates>("Attack_SimpleJump");
+        var Smashed = new State<BossStates>("VulnerableToAttacks");
         var KillerJump = new State<BossStates>("Attack_KillerJump");
         var dead = new State<BossStates>("Dead");
 
@@ -170,14 +236,14 @@ public class BigCursed : BaseUnit
 
         #region ThinkState
 
-        think.OnEnter += (previousState) => 
+        think.OnEnter += (previousState) =>
         {
             print("Thinking...");
             anims.SetFloat("Movement", 0f);
             agent.isStopped = true;
             LookTowardsPlayer = true;
         };
-        think.OnUpdate += () => 
+        think.OnUpdate += () =>
         {
             if (thinkTime > 0)
                 thinkTime -= Time.deltaTime;
@@ -247,7 +313,7 @@ public class BigCursed : BaseUnit
                 }
             }
         };
-        think.OnExit += (nextState) =>  
+        think.OnExit += (nextState) =>
         {
             agent.isStopped = false;
             LookTowardsPlayer = false;
@@ -257,7 +323,7 @@ public class BigCursed : BaseUnit
 
         #region SimpleJumpAttack
 
-        JumpAttack.OnEnter += (previousState) => 
+        JumpAttack.OnEnter += (previousState) =>
         {
             //Animación we.
             anims.SetInteger("Attack", 5);
@@ -265,7 +331,7 @@ public class BigCursed : BaseUnit
             LookTowardsPlayer = false;
         };
         //JumpAttack.OnUpdate += () => { };
-        JumpAttack.OnExit += (nextState) => 
+        JumpAttack.OnExit += (nextState) =>
         {
             anims.SetInteger("Attack", 0);
             LookTowardsPlayer = false;
@@ -275,7 +341,7 @@ public class BigCursed : BaseUnit
 
         #region KillerJumpState
 
-        KillerJump.OnEnter += (previousState) => 
+        KillerJump.OnEnter += (previousState) =>
         {
             //Animación we.
             anims.SetInteger("Attack", 4);
@@ -311,14 +377,15 @@ public class BigCursed : BaseUnit
         #endregion
 
         #region Charge
-        charge.OnEnter += (previousState) => 
+        charge.OnEnter += (previousState) =>
         {
+            charging = true;
             //Primero me quedo quieto.
             agent.isStopped = true;
             //Empiezo la animación del rugido.
             anims.SetBool("Roar", true);
         };
-        charge.OnUpdate += () => 
+        charge.OnUpdate += () =>
         {
             float distance = Vector3.Distance(transform.position, _initialChargePosition);
 
@@ -374,20 +441,42 @@ public class BigCursed : BaseUnit
 
         #region Reposition State
 
-        reposition.OnEnter += (previousState) => 
+        reposition.OnEnter += (previousState) =>
         {
             print("Reposicionando we");
+            _rotationLerpSpeed = RepositionLerpSpeed;
             LookTowardsPlayer = true;
         };
-        reposition.OnUpdate += () => 
+        reposition.OnUpdate += () =>
         {
             if (sight.angleToTarget < 5f)
                 sm.Feed(BossStates.think);
             else
                 agent.isStopped = true;
         };
+        reposition.OnExit += (NextState) =>
+        {
+            _rotationLerpSpeed = NormalRotationLerpSeed;
+        };
 
         #endregion
+
+        #region Vulnerable State
+
+        Smashed.OnEnter += (previousState) =>
+        {
+            _Smashed = true;
+            _remainingSmashTime = SmashDuration;
+            anims.SetBool("Smashed", true);
+        };
+        Smashed.OnUpdate += () => { };
+        Smashed.OnExit += (nextState) =>
+        {
+            _Smashed = false;
+        };
+
+        #endregion
+
 
         #region Dead State
         dead.OnEnter += (x) =>
@@ -421,6 +510,7 @@ public class BigCursed : BaseUnit
              .AddTransition(BossStates.charge, charge)
              .AddTransition(BossStates.closeJump, JumpAttack)
              .AddTransition(BossStates.killerJump, KillerJump)
+             .AddTransition(BossStates.Smashed, Smashed)
              .AddTransition(BossStates.basicCombo, BasicCombo);
 
         JumpAttack.AddTransition(BossStates.dead, dead)
@@ -434,16 +524,54 @@ public class BigCursed : BaseUnit
                   .AddTransition(BossStates.think, think);
 
         BasicCombo.AddTransition(BossStates.dead, dead)
-              .AddTransition(BossStates.think, think); 
+                  .AddTransition(BossStates.Smashed, Smashed)
+                  .AddTransition(BossStates.think, think);
+
+        Smashed.AddTransition(BossStates.think, think)
+               .AddTransition(BossStates.dead, dead);
+
         #endregion
 
-        sm = new GenericFSM<BossStates>(idle);
+        sm = new GenericFSM<BossStates>(idle); 
+        #endregion
     }
     void Update()
     {
 #if UNITY_EDITOR
-        CurrentState = sm.currentState; 
+        CurrentState = sm.currentState;
 #endif
+
+        #region Tiempo de recuperación del estado de Derribo (Smashed)
+
+        if (_remainingSmashTime > 0)
+            _remainingSmashTime -= Time.deltaTime;
+        else if (_Smashed && _remainingSmashTime <= 0)
+        {
+            _remainingSmashTime = 0;
+            anims.SetBool("Smashed", false);
+        }
+
+        #endregion
+
+        #region Tiempo de Vulnerabilidad contra Combo.
+        if (comboVulnerabilityCountDown > 0)
+            comboVulnerabilityCountDown -= Time.deltaTime;
+        else if (comboVulnerabilityCountDown <= 0)
+        {
+            print("Se acabó el tiempo de vulnerabilidad");
+            _attacksRecieved = 0;
+            SetVulnerabity(false);
+            comboVulnerabilityCountDown = 0;
+            ButtonHitConfirm.gameObject.SetActive(false);
+        }
+        #endregion
+
+        #region Exposición de Vulnerabilidad
+        if (isVulnerableToAttacks)
+            VulnerableMarker.gameObject.SetActive(true);
+        else if (VulnerableMarker.gameObject.activeSelf)
+            VulnerableMarker.gameObject.SetActive(false); 
+        #endregion
 
         sight.Update();
 
@@ -493,6 +621,10 @@ public class BigCursed : BaseUnit
         StartCoroutine(JumpAttackCoolDown());
         sm.Feed(BossStates.think);
     }
+    public void RiseFromSmash()
+    {
+        sm.Feed(BossStates.think);
+    }
 
     //============================= Corrutinas ================================================
 
@@ -535,7 +667,8 @@ public class BigCursed : BaseUnit
                 sm.Feed(BossStates.think);
 
                 var Target = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
-                Target.Hit(GetDamageStats());
+                HitData data = new HitData() { Damage = ChargeDamage, BreakDefence = false };
+                Target.Hit(data);
                 collision.rigidbody.AddForce(_chargeDir * ChargeCollisionForce, ForceMode.Impulse);
                 return;
             }
