@@ -7,6 +7,7 @@ using Core;
 public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
 {
     public GameObject BreackObject;
+    public int bloodEarnedForBreack = 100;
 
     public void Break()
     {
@@ -14,11 +15,15 @@ public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
         Destroy(gameObject);
     }
 
-    public void FeedHitResult(HitResult result) { print(string.Format("{0} Recibió Data de combate", gameObject.name)); }
+    public void FeedHitResult(HitResult result)
+    {
+        print(string.Format("{0} Recibió Data de combate", gameObject.name));
+    }
     public HitData GetDamageStats() { return HitData.Empty(); }
     public HitResult Hit(HitData EntryData)
     {
+        HitResult result = new HitResult() { bloodEarned = bloodEarnedForBreack, HitConnected = true, HitBlocked = false, TargetEliminated = true };
         Break();
-        return HitResult.Empty();
+        return result;
     }
 }
