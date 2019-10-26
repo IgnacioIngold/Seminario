@@ -129,7 +129,7 @@ ModelImporter:
       takeName: Take 001
       internalID: 0
       firstFrame: 85
-      lastFrame: 100
+      lastFrame: 97
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -157,7 +157,7 @@ ModelImporter:
       name: attack3/Active
       takeName: Take 001
       internalID: 0
-      firstFrame: 101
+      firstFrame: 97
       lastFrame: 105
       wrapMode: 0
       orientationOffsetY: 0
@@ -178,15 +178,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.47203946
+      - time: 0
         functionName: StepPerform
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 20
+        intParameter: 150
         messageOptions: 0
-      - time: 0.003125665
+      - time: 0.012929587
         functionName: EnableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
@@ -260,13 +260,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.21529607
+      - time: 0.0094137285
         functionName: StepPerform
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 20
+        intParameter: 75
         messageOptions: 0
       - time: 0.17187494
         functionName: EnableDamage
@@ -358,15 +358,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.40624
+      - time: 0.07780862
         functionName: StepPerform
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 20
+        intParameter: 75
         messageOptions: 0
-      - time: 0.3343749
+      - time: 0.08927686
         functionName: EnableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
