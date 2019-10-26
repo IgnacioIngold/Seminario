@@ -1,0 +1,24 @@
+# ProBuilder 4.0.5
+# https://unity3d.com/unity/features/worldbuilding/probuilder
+# 25/10/2019 8:42:14 p. m.
+
+mtllib ./piso_bajo.mtl
+o piso bajo
+
+g Plane
+v 22.45913 -9.787899 105.1819
+v 22.45913 -9.787899 135.8545
+v -11.2598 -9.787899 105.1819
+v -11.2598 -9.787899 135.8545
+
+vt 0 0
+vt 0 0.9096553
+vt 1 0
+vt 1 0.9096553
+
+vn 0 1 0
+
+g Plane
+usemtl Piso
+f 3/3/1 4/4/1 2/2/1 1/1/1
+
