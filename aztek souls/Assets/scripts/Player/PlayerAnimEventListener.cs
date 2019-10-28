@@ -27,15 +27,15 @@ public class PlayerAnimEventListener : MonoBehaviour
         player.Step(forceApply);
     }
 
-    private void AllowInterrupt()
-    {
-        player.interruptAllowed = true;
-    }
+    //private void AllowInterrupt()
+    //{
+    //    player.interruptAllowed = true;
+    //}
 
-    private void DenyInterrupt()
-    {
-        player.interruptAllowed = false;
-    }
+    //private void DenyInterrupt()
+    //{
+    //    player.interruptAllowed = false;
+    //}
 
     private void EnableDamage()
     {
@@ -52,8 +52,6 @@ public class PlayerAnimEventListener : MonoBehaviour
     private void AllowGetInput()
     {
         player.CurrentWeapon.CanGetInput(true);
-        player.interruptAllowed = true;
-
     }
     private void DenyGetInput()
     {
@@ -70,7 +68,8 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         if (tail.isPlaying)
             tail.Stop();
-        tail.Play();
+        else
+            tail.Play();
     }
     public void PlayMyParticles(int Index)
     {

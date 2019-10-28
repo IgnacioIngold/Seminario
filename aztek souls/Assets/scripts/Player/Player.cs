@@ -205,7 +205,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     [Header("Combat")]
     public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
-    public bool interruptAllowed = true;
+    public bool interruptAllowed = false;
     public float CombatRotationSpeed = 0.1f;
     public float ShockDuration = 2f;
     bool _attacking = false;                                 // Si estoy atacando actualmente.
@@ -378,7 +378,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
 
-            if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
+            if ( Stamina > rollCost && Input.GetButtonDown("Roll"))
             {
                 _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
                 CurrentWeapon.InterruptAttack();
@@ -649,22 +649,24 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             {
                 if (Input.GetButtonDown("LighAttack"))
                     Attack(Inputs.light);
-                else
-                if (Input.GetButtonDown("StrongAttack"))
-                    Attack(Inputs.strong);
+                //else
+                //if (Input.GetButtonDown("StrongAttack"))
+                //    Attack(Inputs.strong);
             } 
         }
 
         if (_attacking)
         {
             _recoverStamina = false;
+            _running = false;
+            _moving = false;
             CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
                 CurrentWeapon.FeedInput(Inputs.light);
-            else
-               if (Input.GetButtonDown("StrongAttack"))
-                CurrentWeapon.FeedInput(Inputs.strong);
+            //else
+            //   if (Input.GetButtonDown("StrongAttack"))
+            //    CurrentWeapon.FeedInput(Inputs.strong);
         }
 
         if (!_rolling && !_moving && !_attacking)
