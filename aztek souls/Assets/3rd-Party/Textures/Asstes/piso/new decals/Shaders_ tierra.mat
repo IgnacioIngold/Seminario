@@ -23,11 +23,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0e30fcac6cc305b4fbe608d4ba023213, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _pisobajo_Piso_Normal:
+        m_Texture: {fileID: 2800000, guid: 81efd1339e1331f4c8ce95ddc8866f2e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _EdgeLength: 15
+    - _Float0: 2
+    - _TessValue: 32
     - __dirty: 0
-    m_Colors: []
+    m_Colors:
+    - _Vector0: {r: 0, g: 0.5, b: 0, a: 0}
