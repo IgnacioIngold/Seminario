@@ -68,8 +68,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         if (tail.isPlaying)
             tail.Stop();
-        else
-            tail.Play();
+        tail.Play();
     }
     public void PlayMyParticles(int Index)
     {

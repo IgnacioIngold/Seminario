@@ -73,6 +73,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public GameObject marker;                               // Índicador de ventana de Input.
     public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
     public ParticleSystem RollParticle;
+    public ParticleSystem.EmissionModule rollparticleEmission;
     public ParticleSystem FeastBlood;
     public Collider HitCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
@@ -338,6 +339,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
+        rollparticleEmission = RollParticle.emission;
         AxisOrientation = Camera.main.GetComponentInParent<MainCamBehaviour>().getPivotPosition();
 
         Health = BaseHP + (myStats.Vitalidad * 5);
@@ -632,7 +634,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     _moving = false;
             }
 
-            if (_rolling) transform.forward = _rollDir;
+            if (_rolling)
+            {
+                rollparticleEmission.enabled = true;
+                transform.forward = _rollDir;
+            }
             else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
             {
                 //Calculamos la dirección y el punto final.
@@ -668,6 +674,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //   if (Input.GetButtonDown("StrongAttack"))
             //    CurrentWeapon.FeedInput(Inputs.strong);
         }
+
+        if (!_rolling)
+            rollparticleEmission.enabled = false;
 
         if (!_rolling && !_moving && !_attacking)
         {
@@ -821,8 +830,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //FeedBack
         _anims.SetTrigger("RollAction");
-        var emission = RollParticle.emission;
-        emission.enabled = true;
 
         Stamina -= rollCost;
 
@@ -849,9 +856,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //Detengo el roll una vez que termine el roll.
         _rb.velocity = Vector3.zero;
-
-        //Deshabilitamos la emission de la particula de roll.
-        emission.enabled = false;
 
         // Pequeño Delay para cuando el roll Termina.
         yield return new WaitForSeconds(0.1f);
