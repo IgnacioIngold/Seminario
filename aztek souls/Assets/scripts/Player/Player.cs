@@ -168,6 +168,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _invulnerable = false;                              // Si el jugador puede recibir daño.
     bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
     bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
+  
 
     public bool isInStair;
     public Transform stairOrientation;
@@ -207,7 +208,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
     public bool interruptAllowed = false;
-    public float CombatRotationSpeed = 0.1f;
+    public float CombatRotationSpeed = 0f;
     public float ShockDuration = 2f;
     bool _attacking = false;                                 // Si estoy atacando actualmente.
     bool _shoked;
@@ -373,19 +374,19 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _anims.SetFloat("VelX", AxisY);
                 _anims.SetFloat("VelY", 0);
 
-                //Moverme ligeramente.
-                //Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
-                //_rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
             }
+            transform.forward += transform.forward + orientation;
 
-            transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
 
-            if ( Stamina > rollCost && Input.GetButtonDown("Roll"))
-            {
-                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
-                CurrentWeapon.InterruptAttack();
-                StartCoroutine(Roll());
-            }
+
+            // transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
+
+            //if ( Stamina > rollCost && Input.GetButtonDown("Roll"))
+            //{
+            //    _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
+            //    CurrentWeapon.InterruptAttack();
+            //    StartCoroutine(Roll());
+            //}
         };
 
         CurrentWeapon.OnBegginChain += () => 
@@ -419,7 +420,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = 1.434f;
+        L1.AttackDuration = 1.8f;
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
@@ -639,7 +640,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 rollparticleEmission.enabled = true;
                 transform.forward = _rollDir;
             }
-            else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
+            else if (!_rolling && Stamina > 0 && _moving && Input.GetButtonDown("Roll") && !_clamped && !_attacking)
             {
                 //Calculamos la dirección y el punto final.
                 _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
@@ -651,7 +652,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 return;
             }
 
-            if (!_attacking )
+            if (!_attacking && !_rolling)
             {
                 if (Input.GetButtonDown("LighAttack"))
                     Attack(Inputs.light);
@@ -798,6 +799,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         //On Begin Combat
         _attacking = true;
+       
 
         //Bloqueo las animaciones anteriores.
         StopAllCoroutines();
@@ -808,6 +810,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _moving = false;
         _clamped = true;
         //Debug.LogWarning("INICIO COMBATE");
+        
 
         CurrentWeapon.BegginCombo(input);
     }
