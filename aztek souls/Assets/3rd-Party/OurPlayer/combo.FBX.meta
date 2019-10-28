@@ -82,7 +82,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.51944166
+        functionName: DenyInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -184,7 +192,7 @@ ModelImporter:
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 150
+        intParameter: 75
         messageOptions: 0
       - time: 0.012929587
         functionName: EnableDamage
@@ -268,7 +276,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 75
         messageOptions: 0
-      - time: 0.17187494
+      - time: 0.015012195
         functionName: EnableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
@@ -321,8 +329,24 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.7319079
+      - time: 0
+        functionName: DenyInterrupt
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.97700596
         functionName: DenyGetInput
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9831339
+        functionName: AllowInterrupt
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
