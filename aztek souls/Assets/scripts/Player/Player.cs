@@ -213,6 +213,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _attacking = false;                                 // Si estoy atacando actualmente.
     bool _shoked;
     bool breakDefence = false;
+    Vector3 _AttackOrientation = Vector3.zero;
 
     #endregion
 
@@ -359,23 +360,22 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
         CurrentWeapon.DuringAttack += () =>
         {
-            float AxisX = Input.GetAxis("Horizontal");
-            float AxisY = Input.GetAxis("Vertical");
+            //float AxisX = Input.GetAxis("Horizontal");
+            //float AxisY = Input.GetAxis("Vertical");
 
-            Vector3 orientation;
-            _rb.velocity = new Vector3(0, 0, 0);
+            //Vector3 orientation;
+            //_rb.velocity = new Vector3(0, 0, 0);
 
-            if (AxisX == 0 && AxisY == 0)
-                orientation = AxisOrientation.forward;
-            else
-            {
-                orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+            //if (AxisX == 0 && AxisY == 0)
+            //    orientation = AxisOrientation.forward;
+            //else
+            //{
+            //    orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
 
-                _anims.SetFloat("VelX", AxisY);
-                _anims.SetFloat("VelY", 0);
-
-            }
-            transform.forward += transform.forward + orientation;
+            //    _anims.SetFloat("VelX", AxisY);
+            //    _anims.SetFloat("VelY", 0);
+            //}
+            //transform.forward += transform.forward + orientation;
 
 
 
@@ -406,6 +406,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _listenToInput = true;
             _attacking = false;
             _clamped = false;
+
+            _AttackOrientation = Vector3.zero;
         };
 
         #region Attacks
@@ -654,6 +656,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
             if (!_attacking && !_rolling)
             {
+                _AttackOrientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+
                 if (Input.GetButtonDown("LighAttack"))
                     Attack(Inputs.light);
                 //else
@@ -674,6 +678,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //else
             //   if (Input.GetButtonDown("StrongAttack"))
             //    CurrentWeapon.FeedInput(Inputs.strong);
+
+            if (_AttackOrientation != Vector3.zero)
+            {
+                transform.forward = Vector3.Slerp(transform.forward, _AttackOrientation, CombatRotationSpeed);
+            }
         }
 
         if (!_rolling)
@@ -799,7 +808,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         //On Begin Combat
         _attacking = true;
-       
 
         //Bloqueo las animaciones anteriores.
         StopAllCoroutines();
@@ -810,7 +818,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _moving = false;
         _clamped = true;
         //Debug.LogWarning("INICIO COMBATE");
-        
 
         CurrentWeapon.BegginCombo(input);
     }
@@ -951,6 +958,5 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _forceStep = force;
         _timeStep = 0.3f;
         _AttackStep = true;
-        
     }
 }
