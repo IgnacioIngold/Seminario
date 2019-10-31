@@ -71,7 +71,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     #region Variables de Inspector.
 
-    public StatusBars _myBars;                               // Display de la vida y la estamina del jugador.
+    public RuntimeAnimatorController controllerA;           // Animator del Arma principal
+    public RuntimeAnimatorController controllerB;           // Animator del Arma secundaria.
+    public GameObject[] WeaponDisplay;                      // GameObjects de las armas.
+    public StatusBars _myBars;                              // Display de la vida y la estamina del jugador.
     public LevelUpPanel levelUpPanel;
     public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
     public LayerMask floor;                                 // Máscara de collisiones para el piso.
@@ -215,14 +218,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             if (_myBars != null)
                 _myBars.m_UpdateBloodAmmount((int)val);
         }
-    } 
+    }
 
     #endregion
 
     #region Combate
 
     [Header("Combat")]
-    public List<AnimationClip> AttackClips;
+    public int CurrentWeaponIndex = 0;
+    public List<Weapon> weapons = new List<Weapon>();
     public Weapon CurrentWeapon;
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
@@ -388,12 +392,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Combate
 
-        // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
-        // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        CurrentWeapon = new Weapon(_anims);
-
-        CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
-        CurrentWeapon.DuringAttack += () =>
+        Func<bool> canContinueAttack = () => { return Stamina > 0; };
+        Action DuringAttack = () =>
         {
             float AxisX = Input.GetAxis("Horizontal");
             float AxisY = Input.GetAxis("Vertical");
@@ -423,8 +423,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 StartCoroutine(Roll());
             }
         };
-
-        CurrentWeapon.OnBegginChain += () => 
+        Action BegginChain = () =>
         {
             _rolling = false;
             _moving = false;
@@ -434,7 +433,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _attacking = true;
             _clamped = true;
         };
-        CurrentWeapon.OnEndChain += () => 
+        Action EndChain = () =>
         {
             //On Exit Combat
             _anims.SetInteger("combat", 0);
@@ -443,76 +442,75 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _clamped = false;
         };
 
+        #region Arma 1
+
+        CurrentWeapon = new Weapon(_anims);
+        CurrentWeapon.canContinueAttack += canContinueAttack;
+        CurrentWeapon.DuringAttack += DuringAttack;
+        CurrentWeapon.OnBegginChain += BegginChain;
+        CurrentWeapon.OnEndChain += EndChain;
+
         #region Attacks
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f, ChainIndex = 1, maxChainIndex = 3 };
         L1.OnStart += () =>
         {
-            //Por aqui va la activación de la animación correspondiente a este ataque.
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
-            //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = AttackClips[L1.ID - 1].length;
         L1.OnEnableInput += () => { marker.SetActive(true); };
-        L1.OnHit += () => 
+        L1.OnHit += () =>
         {
             //print("Light 1 conecto exitósamente");
         };
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f, ChainIndex = 2, maxChainIndex = 3 };
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
-            //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = AttackClips[L2.ID - 1].length;
         L2.OnEnableInput += () => { marker.SetActive(true); };
-        L2.OnHit += () => 
+        L2.OnHit += () =>
         {
             print("Light 2 conecto exitósamente");
         };
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { ID = 7, Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f,ChainIndex = 3, maxChainIndex = 3 };
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
-            //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = AttackClips[L3.ID - 1].length;
-        L3.OnHit += () => 
+        L3.OnHit += () =>
         {
             print("Light 3 conecto exitósamente");
         };
 
-        Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L4 = new Attack() { ID = 5, Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 2, maxChainIndex = 3 };
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
-        L4.AttackDuration = AttackClips[L4.ID - 1].length;
         L4.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L5 = new Attack() { ID = 9, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 3, maxChainIndex = 3 };
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
             _anims.SetInteger("combat", 9);
             //print("Ejecutando Ataque:" + quick2.IDName);
         };
-        L5.AttackDuration = AttackClips[L5.ID - 1].length;
 
         #endregion
 
         #region Strong
 
-        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f,ChainIndex = 1, maxChainIndex = 3 };
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
@@ -521,10 +519,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
         S1.OnEnd += () => { breakDefence = false; };
-        S1.AttackDuration = AttackClips[S1.ID - 1].length;
         S1.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f, ChainIndex = 1, maxChainIndex = 3 };
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
@@ -533,9 +530,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + heavy1.IDName);
         };
         S2.OnEnd += () => { breakDefence = false; };
-        S2.AttackDuration = AttackClips[S2.ID - 1].length;
 
-        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
@@ -544,9 +540,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + Airheavy.IDName);
         };
         S3.OnEnd += () => { breakDefence = false; };
-        S3.AttackDuration = AttackClips[S3.ID - 1].length;
 
-        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
@@ -555,7 +550,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             //print("Ejecutando Ataque:" + S4.IDName);
         };
         S4.OnEnd += () => { breakDefence = false; };
-        S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion
 
@@ -589,6 +583,54 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         CurrentWeapon.AddEntryPoint(Inputs.light, L1);
         CurrentWeapon.AddEntryPoint(Inputs.strong, S1);
+        weapons.Add(CurrentWeapon);
+
+        #endregion
+
+        #region Arma2
+
+        var Weapon2 = new Weapon(_anims);
+        Weapon2.canContinueAttack = canContinueAttack;
+        Weapon2.DuringAttack += DuringAttack;
+        Weapon2.OnBegginChain += BegginChain;
+        Weapon2.OnEndChain += EndChain;
+
+        #region Ataques Livianos.
+
+        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.5f };
+        light1.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 1); // Animación.
+            Stamina -= L1.Cost;
+        };
+
+        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
+        light2.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 3);
+            Stamina -= L1.Cost;
+        };
+
+        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
+        light3.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 7); //Animación.
+            Stamina -= L1.Cost;
+        };
+
+        #endregion
+        #region Conexiones.
+
+        //Cadena 1.
+        light1.AddConnectedAttack(Inputs.light, light2);
+        light2.AddConnectedAttack(Inputs.light, light3);
+
+        #endregion
+
+        Weapon2.AddEntryPoint(Inputs.light, L1);       //L1 es un Entry Point.
+        weapons.Add(Weapon2);
+
+        #endregion
 
         #endregion
 
@@ -607,6 +649,18 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
     void Update()
     {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            SwapWeapon(0);
+            print("Swapeo al Arma1");
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            print("Swapeo al Arma 2");
+            SwapWeapon(1);
+        }
+
+
         if (!IsAlive || _shoked) return;
 
         if (_st == MaxStamina && _myBars.staminaBarIsVisible)
@@ -749,6 +803,43 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
 
     //=========================================================================================================================
+
+    /// <summary>
+    /// Permite cambiar de Arma
+    /// </summary>
+    /// <param name="weaponIndex">Índice del arma al que queremos cambiar.</param>
+    public void SwapWeapon(int weaponIndex)
+    {
+        //Cambio el animator.
+        switch (weaponIndex)
+        {
+            case 0:
+                //Cambio el Modelo.
+                WeaponDisplay[0].SetActive(true);
+                WeaponDisplay[1].SetActive(false);
+
+                //Cambio el índice del arma actual.
+                weaponIndex = 0;
+
+                //Cambio el animator.
+                _anims.runtimeAnimatorController = controllerA;
+                break;
+            case 1:
+                //Cambio el Modelo.
+                WeaponDisplay[0].SetActive(false);
+                WeaponDisplay[1].SetActive(true);
+
+                //Cambio el índice del arma actual.
+                weaponIndex = 1;
+
+                //Cambio el animator.
+                _anims.runtimeAnimatorController = controllerB;
+                break;
+            default:
+                break;
+        }
+        CurrentWeapon = weapons[weaponIndex];
+    }
 
     public void Move()
     {
