@@ -603,21 +603,21 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.733f };
+        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 40f, AttackDuration = 2.733f };
         light1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1); // Animación.
             Stamina -= L1.Cost;
         };
 
-        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.692f };
+        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 40f, AttackDuration = 0.692f };
         light2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L1.Cost;
         };
 
-        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 2.666f };
+        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 60f, AttackDuration = 2.666f };
         light3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7); //Animación.
