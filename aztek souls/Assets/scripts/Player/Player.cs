@@ -597,7 +597,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.5f };
+        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
         light1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1); // Animación.
