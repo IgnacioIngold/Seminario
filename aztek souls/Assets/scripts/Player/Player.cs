@@ -392,11 +392,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Combate
 
-        Func<bool> canContinueAttack = () => 
-        {
-            print("Stamina mayor a 0?: " + (Stamina > 0).ToString());
-            return (Stamina > 0);
-        };
+        Func<bool> canContinueAttack = () => { return Stamina > 0; };
         Action DuringAttack = () =>
         {
             float AxisX = Input.GetAxis("Horizontal");
@@ -429,7 +425,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         };
         Action BegginChain = () =>
         {
-            print("INICIO DE LA CADENA");
             _rolling = false;
             _moving = false;
             _running = false;
@@ -441,7 +436,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         Action EndChain = () =>
         {
             //On Exit Combat
-            print("FIN DE LA CADENA");
             _anims.SetInteger("combat", 0);
             _listenToInput = true;
             _attacking = false;
@@ -466,7 +460,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
         };
-        L1.OnEnableInput += () => { print("Esta listo."); marker.SetActive(true); };
+        L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () =>
         {
             //print("Light 1 conecto exitósamente");
@@ -603,21 +597,21 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 40f, AttackDuration = 2.733f };
+        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
         light1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1); // Animación.
             Stamina -= L1.Cost;
         };
 
-        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 40f, AttackDuration = 0.692f };
+        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
         light2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L1.Cost;
         };
 
-        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 60f, AttackDuration = 2.666f };
+        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
         light3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7); //Animación.
@@ -633,7 +627,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #endregion
 
-        Weapon2.AddEntryPoint(Inputs.light, light1);       //L1 es un Entry Point.
+        Weapon2.AddEntryPoint(Inputs.light, L1);       //L1 es un Entry Point.
         weapons.Add(Weapon2);
 
         #endregion
@@ -655,12 +649,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     }
     void Update()
     {
-        if (!_attacking && Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKey(KeyCode.Alpha1))
         {
             SwapWeapon(0);
             print("Swapeo al Arma1");
         }
-        if (!_attacking && Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKey(KeyCode.Alpha2))
         {
             print("Swapeo al Arma 2");
             SwapWeapon(1);
@@ -773,17 +767,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (_attacking)
         {
             _recoverStamina = false;
+            CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
-            {
-                print("Input Pressed...");
                 CurrentWeapon.FeedInput(Inputs.light);
-            }
             else
                if (Input.GetButtonDown("StrongAttack"))
                 CurrentWeapon.FeedInput(Inputs.strong);
-
-            CurrentWeapon.Update();
         }
 
         if (!_rolling && !_moving && !_attacking)

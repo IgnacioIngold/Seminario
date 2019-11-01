@@ -79,7 +79,6 @@ public class Weapon
         DuringAttack();
 
         currentDuration -= Time.deltaTime;
-        MonoBehaviour.print(string.Format("Current Duration is {0}, attack is {1}, Total time is {2}.",currentDuration, CurrentAttack.Name, CurrentAttack.AttackDuration));
 
         if (currentDuration <= 0)
         {
@@ -95,10 +94,13 @@ public class Weapon
     }
     public void CanGetInput(bool enabled)
     {
-        Debug.LogWarning("Input Habilitado: " + enabled);
-        canGetInput = enabled;
         if (enabled && CurrentAttack != null)
+        {
+            canGetInput = true;
             CurrentAttack.EnableInput();
+        }
+        else
+            canGetInput = false;
     }
     public void ConfirmHit()
     {
@@ -112,11 +114,9 @@ public class Weapon
     }
     public void FeedInput(Inputs input)
     {
-        Debug.LogWarning(string.Format("Recibido input: Can FeedInput {0}, canContinueAttack() {1}", canContinueAttack(), canGetInput));
         if (canContinueAttack() && canGetInput)
         {
             Attack posible = CurrentAttack.getConnectedAttack(input);
-            Debug.LogWarning(string.Format("Connected attack es {0} y se puede obtener input es {1}", posible.Name, canGetInput));
 
             if (posible != null)
             {
