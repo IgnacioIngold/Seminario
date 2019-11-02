@@ -89,7 +89,6 @@ GameObject:
   - component: {fileID: 400002}
   - component: {fileID: 3300002}
   - component: {fileID: 2300002}
-  - component: {fileID: 13500000}
   m_Layer: 0
   m_Name: Rock1E
   m_TagString: Untagged
@@ -157,19 +156,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &13500000
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100002}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.79000574
-  m_Center: {x: 0, y: 0.000030517578, z: 0.000030517578}
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 0
@@ -181,7 +167,6 @@ GameObject:
   - component: {fileID: 400004}
   - component: {fileID: 3300004}
   - component: {fileID: 2300004}
-  - component: {fileID: 13500002}
   m_Layer: 0
   m_Name: Rock1D
   m_TagString: Untagged
@@ -249,19 +234,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &13500002
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100004}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.1438357
-  m_Center: {x: 0, y: 0, z: 0.000061035156}
 --- !u!1 &100006
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,7 +245,6 @@ GameObject:
   - component: {fileID: 400006}
   - component: {fileID: 3300006}
   - component: {fileID: 2300006}
-  - component: {fileID: 13500004}
   m_Layer: 0
   m_Name: Rock1C
   m_TagString: Untagged
@@ -341,19 +312,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &13500004
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100006}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.2141395
-  m_Center: {x: 0.00006067753, y: -4.6629367e-15, z: 0.000045597553}
 --- !u!1 &100008
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +323,6 @@ GameObject:
   - component: {fileID: 400008}
   - component: {fileID: 3300008}
   - component: {fileID: 2300008}
-  - component: {fileID: 13500006}
   m_Layer: 0
   m_Name: Rock1C
   m_TagString: Untagged
@@ -381,7 +338,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 0.129046, y: -0.033978093, z: -0.15682355, w: 0.9785699}
-  m_LocalPosition: {x: -0.21038818, y: -0.06650543, z: -0.74468994}
+  m_LocalPosition: {x: -0.21038818, y: -0.112, z: -0.74468994}
   m_LocalScale: {x: 0.31760105, y: 0.31760105, z: 0.31760105}
   m_Children: []
   m_Father: {fileID: 400010}
@@ -433,19 +390,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &13500006
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100008}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.2141393
-  m_Center: {x: -0.000030875206, y: 1.3822277e-14, z: -0.00000017881395}
 --- !u!1 &100010
 GameObject:
   m_ObjectHideFlags: 0
