@@ -11,6 +11,12 @@ public class PlayerAnimEventListener : MonoBehaviour
     public Collider DamageCollider;
     public GameObject marker;
     public ParticleSystem tail;
+    public float firstTime;
+    public float SecondTime;
+    public float FirstForce;
+    public float SecondForce;
+
+    
     public List<ParticleSystem> MyParticles = new List<ParticleSystem>();
     Animator anim;
 
@@ -22,9 +28,17 @@ public class PlayerAnimEventListener : MonoBehaviour
     //Eventos de Animación.
 
     //Globales.
-    void StepPerform(int forceApply)
+    void StepPerform(int index)
     {
-        //player.Step(forceApply);
+        if(index == 1)
+        {
+            player.Step(FirstForce,firstTime);
+        }
+        else
+        {
+            player.Step(SecondForce,SecondTime);
+        }
+        
     }
 
     //private void AllowInterrupt()

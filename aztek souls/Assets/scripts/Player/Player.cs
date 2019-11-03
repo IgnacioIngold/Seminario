@@ -180,7 +180,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
     bool _listenToInput = true;
     bool _AttackStep = false;                                // si estoy dando el paso
-    int _forceStep;                                         //fuerza y direccion del movimiento
+    float _forceStep;                                         //fuerza y direccion del movimiento
     float _timeStep;
 
 
@@ -422,7 +422,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = 1.8f;
+        L1.AttackDuration = 1.4f;
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
@@ -436,7 +436,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = 1.334f;
+        L2.AttackDuration = 1.08f;
         L2.OnEnableInput += () => { marker.SetActive(true); };
         L2.OnHit += () => 
         {
@@ -450,7 +450,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = 0.9f;
+        L3.AttackDuration = 0.77f;
         L3.OnHit += () => 
         {
             print("Light 3 conecto exitósamente");
@@ -714,10 +714,14 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!_clamped && _moving) Move();
         if(_AttackStep)
         {
-            _rb.AddForce(transform.forward * _forceStep);
+            _rb.AddForce(transform.forward * _forceStep,ForceMode.Impulse);
             _timeStep -= Time.deltaTime;
             if (_timeStep <= 0)
+            {
                 _AttackStep = false;
+                _rb.velocity = Vector3.zero;
+            }
+                
         }
     }
 
@@ -952,11 +956,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         FeastBlood.Play();
     }
-    public void Step(int force)
+    public void Step(float StepForce, float Steptime)
     {
-        //_rb.AddForce(transform.forward * force,ForceMode.Impulse);
-        _forceStep = force;
-        _timeStep = 0.3f;
+        _forceStep = StepForce;
+        _timeStep = Steptime;
         _AttackStep = true;
+        Debug.Log("fuerza" +StepForce+"tiempo"+ Steptime);
     }
 }

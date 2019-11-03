@@ -184,7 +184,7 @@ ModelImporter:
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 75
+        intParameter: 1
         messageOptions: 0
       - time: 0.012929587
         functionName: EnableDamage
@@ -260,13 +260,13 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.0094137285
+      - time: 0
         functionName: StepPerform
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 75
+        intParameter: 1
         messageOptions: 0
       - time: 0.37080166
         functionName: EnableDamage
@@ -364,7 +364,7 @@ ModelImporter:
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
         floatParameter: 0
-        intParameter: 75
+        intParameter: 1
         messageOptions: 0
       - time: 0.08927686
         functionName: EnableDamage
