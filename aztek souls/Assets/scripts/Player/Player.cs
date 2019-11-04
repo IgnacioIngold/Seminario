@@ -422,7 +422,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = 1.665f;
+        L1.AttackDuration = 1.25f;
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
@@ -436,7 +436,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = 1.251f;
+        L2.AttackDuration = 1.25f;
         L2.OnEnableInput += () => { marker.SetActive(true); };
         L2.OnHit += () => 
         {
@@ -450,7 +450,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = 1f;
+        L3.AttackDuration = 1.25f;
+            
         L3.OnHit += () => 
         {
             print("Light 3 conecto exitósamente");
@@ -654,7 +655,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 return;
             }
 
-            if (!_attacking && !_rolling)
+            if (!_attacking && !_rolling && Stamina>0)
             {
                 _AttackOrientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
 
@@ -714,14 +715,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!_clamped && _moving) Move();
         if(_AttackStep)
         {
-            _rb.AddForce(transform.forward * _forceStep,ForceMode.Impulse);
+             _rb.AddForce(transform.forward * _forceStep,ForceMode.Impulse);
             _timeStep -= Time.deltaTime;
             if (_timeStep <= 0)
             {
                 _AttackStep = false;
                 _rb.velocity = Vector3.zero;
+
             }
-                
+            
         }
     }
 
