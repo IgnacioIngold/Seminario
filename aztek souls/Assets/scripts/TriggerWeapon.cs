@@ -16,10 +16,10 @@ public class TriggerWeapon : MonoBehaviour
     void Awake()
     {
         var getted = Owner.TryGetComponent(out _owner);
-        if (getted)
-            Debug.LogWarning("Encontrado. " + Owner.gameObject.name);
-        else
-            Debug.LogWarning("No encontrado");
+        //if (getted)
+        //    //Debug.LogWarning("Encontrado. " + Owner.gameObject.name);
+        //else
+        //    Debug.LogWarning("No encontrado");
 
         if (col == null)
             col = GetComponent<Collider>();
