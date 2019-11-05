@@ -157,17 +157,17 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float staminaRateDecrease = 5;                    // Reducción de regeneración de stamina al estar exhausto.
     public float rotationLerpSpeed = 0.1f;
     bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
-    public bool moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
-    public bool running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente.
-    public bool clamped = false;                                   // PRIVADO: si el jugador puede moverse.
     //bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
     public float walkSpeed = 4f;                             // Velocidad de movimiento del jugador al caminar.
 
     public float runSpeed = 20f;                             // Velocidad de movimiento del jugador al correr.
     public float runCost = 20;                               // Costo por segundo de la acción correr.
+    bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente.
 
     bool _invulnerable = false;                              // Si el jugador puede recibir daño.
+    bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
+    bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
   
 
     public bool isInStair;
@@ -176,7 +176,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
     public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
-    public bool listenToInput = true;
+    public bool _listenToInput = true;
     //bool _canRoll = true;                                  // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
     bool _AttackStep = false;                                // si estoy dando el paso
@@ -201,6 +201,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _myBars.UpdateBloodAmmount((int)val);
         }
     }
+
+
 
     [Header("Combat")]
     public List<AnimationClip> AttackClips;
@@ -246,12 +248,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //Permito recuperar estamina.
                 _rolling = false;
                 _attacking = false;
-                running = false;
+                _running = false;
                 _recoverStamina = true;
 
                 //FeedBack de Daño.
                 _anims.SetTrigger("hurted");
-                listenToInput = false;
+                _listenToInput = false;
                 CurrentWeapon.InterruptAttack();
                 _attacking = false;
                 GetHit();
@@ -337,8 +339,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void Awake()
     {
-        //Time.timeScale = 0.08f;
-
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
         rollparticleEmission = RollParticle.emission;
@@ -358,23 +358,54 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         CurrentWeapon = new Weapon(_anims);
 
         CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
+        CurrentWeapon.DuringAttack += () =>
+        {
+            //float AxisX = Input.GetAxis("Horizontal");
+            //float AxisY = Input.GetAxis("Vertical");
+
+            //Vector3 orientation;
+            //_rb.velocity = new Vector3(0, 0, 0);
+
+            //if (AxisX == 0 && AxisY == 0)
+            //    orientation = AxisOrientation.forward;
+            //else
+            //{
+            //    orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+
+            //    _anims.SetFloat("VelX", AxisY);
+            //    _anims.SetFloat("VelY", 0);
+            //}
+            //transform.forward += transform.forward + orientation;
+
+
+
+            // transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
+
+            //if ( Stamina > rollCost && Input.GetButtonDown("Roll"))
+            //{
+            //    _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
+            //    CurrentWeapon.InterruptAttack();
+            //    StartCoroutine(Roll());
+            //}
+        };
+
         CurrentWeapon.OnBegginChain += () => 
         {
             _rolling = false;
-            moving = false;
-            running = false;
+            _moving = false;
+            _running = false;
 
-            listenToInput = false;
+            _listenToInput = false;
             _attacking = true;
-            clamped = true;
+            _clamped = true;
         };
         CurrentWeapon.OnEndChain += () => 
         {
             //On Exit Combat
             _anims.SetInteger("combat", 0);
-            listenToInput = true;
+            _listenToInput = true;
             _attacking = false;
-            clamped = false;
+            _clamped = false;
 
             _AttackOrientation = Vector3.zero;
         };
@@ -383,46 +414,116 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.25f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
         L1.OnStart += () =>
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
-            print("Ejecutando Ataque:" + L1.Name);
+            //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.OnEnd += () => { print(string.Format("Ataque {0} ha llegado a su fin", L1.Name)); };
-        L1.OnEnableInput += () => 
+        L1.AttackDuration = 1.25f;
+        L1.OnEnableInput += () => { marker.SetActive(true); };
+        L1.OnHit += () => 
         {
-            var lightAttack = L1.getConnectedAttack(Inputs.light);
-            var strongAttack = L1.getConnectedAttack(Inputs.strong);
-            print(string.Format("Se ha habilitado el input. Posibles siguiente ataques: Light[{0}], Heavy[{1}]", lightAttack != null ? lightAttack.Name : "No tiene conección", strongAttack != null ? strongAttack.Name : "No tiene conección"));
-            marker.SetActive(true);
+            //print("Light 1 conecto exitósamente");
         };
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.25f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
-            print("Ejecutando Ataque:" + L2.Name);
+            //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.OnEnd += () => { print(string.Format("Ataque {0} ha llegado a su fin", L2.Name)); };
-        L2.OnEnableInput += () => {
-            var lightAttack = L2.getConnectedAttack(Inputs.light);
-            var strongAttack = L2.getConnectedAttack(Inputs.strong);
-            print(string.Format("Se ha habilitado el input. Posibles siguiente ataques: Light[{0}], Heavy[{1}]", lightAttack != null ? lightAttack.Name : "No tiene conección", strongAttack != null ? strongAttack.Name : "No tiene conección"));
-            marker.SetActive(true);
+        L2.AttackDuration = 1.25f;
+        L2.OnEnableInput += () => { marker.SetActive(true); };
+        L2.OnHit += () => 
+        {
+            print("Light 2 conecto exitósamente");
         };
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, AttackDuration = 1.25f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
-            print("Ejecutando Ataque:" + L3.Name);
+            //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.OnEnd += () => { print(string.Format("Ataque {0} ha llegado a su fin", L3.Name)); };
+        L3.AttackDuration = 1.25f;
+            
+        L3.OnHit += () => 
+        {
+            print("Light 3 conecto exitósamente");
+        };
+
+        //Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
+        //L4.OnStart += () =>
+        //{
+        //    Stamina -= L4.Cost;
+        //    _anims.SetInteger("combat", 5);
+        //    //print("Ejecutando Ataque:" + quick1.IDName);
+        //};
+        //L4.AttackDuration = AttackClips[L4.ID - 1].length;
+        //L4.OnEnableInput += () => { marker.SetActive(true); };
+
+        //Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
+        //L5.OnStart += () =>
+        //{
+        //    Stamina -= L5.Cost;
+        //    _anims.SetInteger("combat", 9);
+        //    //print("Ejecutando Ataque:" + quick2.IDName);
+        //};
+        //L5.AttackDuration = AttackClips[L5.ID - 1].length;
+
+        #endregion
+
+        #region Strong
+
+        //Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        //S1.OnStart += () =>
+        //{
+        //    _anims.SetInteger("combat", 2);
+        //    Stamina -= S1.Cost;
+        //    breakDefence = true;
+        //    //print("Ejecutando Ataque:" + heavy1.IDName);
+        //};
+        //S1.OnEnd += () => { breakDefence = false; };
+        //S1.AttackDuration = AttackClips[S1.ID - 1].length;
+        //S1.OnEnableInput += () => { marker.SetActive(true); };
+
+        //Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        //S2.OnStart += () =>
+        //{
+        //    _anims.SetInteger("combat", 4);
+        //    Stamina -= S2.Cost;
+        //    breakDefence = true;
+        //    //print("Ejecutando Ataque:" + heavy1.IDName);
+        //};
+        //S2.OnEnd += () => { breakDefence = false; };
+        //S2.AttackDuration = AttackClips[S2.ID - 1].length;
+
+        //Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        //S3.OnStart += () =>
+        //{
+        //    _anims.SetInteger("combat", 6);
+        //    Stamina -= S3.Cost;
+        //    breakDefence = true;
+        //    //print("Ejecutando Ataque:" + Airheavy.IDName);
+        //};
+        //S3.OnEnd += () => { breakDefence = false; };
+        //S3.AttackDuration = AttackClips[S3.ID - 1].length;
+
+        //Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
+        //S4.OnStart += () =>
+        //{
+        //    Stamina -= S4.Cost;
+        //    _anims.SetInteger("combat", 8);
+        //    breakDefence = true;
+        //    //print("Ejecutando Ataque:" + S4.IDName);
+        //};
+        //S4.OnEnd += () => { breakDefence = false; };
+        //S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion
 
@@ -430,14 +531,32 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Conecciones
 
-
+        //N1
         L1.AddConnectedAttack(Inputs.light, L2);
+        //L1.AddConnectedAttack(Inputs.strong, S2);
 
+        //S1.AddConnectedAttack(Inputs.light, L4);
+        //S1.AddConnectedAttack(Inputs.strong, S3);
+
+        //N2
         L2.AddConnectedAttack(Inputs.light, L3);
+        //L2.AddConnectedAttack(Inputs.strong, S4);
+
+        //---> S2 no tiene conecciones.
+
+        //L4.AddConnectedAttack(Inputs.light, L5);
+
+        //---> S3 no tiene conecciones.
+
+        //N3
+        //---> L3 no tiene conecciones.
+        //---> S4 no tiene conecciones.
+        //---> L5 no tiene conecciones.
 
         #endregion
 
         CurrentWeapon.AddEntryPoint(Inputs.light, L1);
+        //CurrentWeapon.AddEntryPoint(Inputs.strong, S1);
 
         #endregion
 
@@ -464,13 +583,13 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
 
-        if (listenToInput)
+        if (_listenToInput)
         {
             if (_canHeal)
             {
                 if (Input.GetButton("FeedBlood"))
                 {
-                    clamped = true;
+                    _clamped = true;
                     if (Blood > 0)
                     {
                         _anims.SetBool("ConsummingBlood", true);
@@ -482,41 +601,41 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                     {
                         print("NO puedes curarte más...");
                         _anims.SetBool("ConsummingBlood", false);
-                        clamped = false;
+                        _clamped = false;
                     }
                 }
 
                 if (Input.GetButtonUp("FeedBlood"))
                 {
                     _anims.SetBool("ConsummingBlood", false);
-                    clamped = false;
+                    _clamped = false;
                 }
             }
 
-            if (!clamped)
+            if (!_clamped)
             {
                 if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
                 {
-                    moving = true;
+                    _moving = true;
                     _dir = AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX;
 
-                    if (!running && Stamina > 0 && Input.GetButtonDown("Run"))
+                    if (!_running && Stamina > 0 && Input.GetButtonDown("Run"))
                     {
-                        running = true;
+                        _running = true;
                         _anims.SetBool("Running", true);
                     }
 
-                    if (running)
+                    if (_running)
                     {
                         if (Input.GetButtonUp("Run") || Stamina <= 0)
                         {
-                            running = false;
+                            _running = false;
                             _anims.SetBool("Running", false);
                         }
                     }
                 }
                 else
-                    moving = false;
+                    _moving = false;
             }
 
             if (_rolling)
@@ -524,7 +643,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 rollparticleEmission.enabled = true;
                 transform.forward = _rollDir;
             }
-            else if (!_rolling && Stamina > 0 && moving && Input.GetButtonDown("Roll") && !clamped && !_attacking)
+            else if (!_rolling && Stamina > 0 && _moving && Input.GetButtonDown("Roll") && !_clamped && !_attacking)
             {
                 //Calculamos la dirección y el punto final.
                 _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
@@ -551,8 +670,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (_attacking)
         {
             _recoverStamina = false;
-            running = false;
-            moving = false;
+            _running = false;
+            _moving = false;
             CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
@@ -570,16 +689,16 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         if (!_rolling)
             rollparticleEmission.enabled = false;
 
-        if (!_rolling && !moving && !_attacking)
+        if (!_rolling && !_moving && !_attacking)
         {
-            running = false;
+            _running = false;
             _anims.SetBool("Running", false);
 
             Vector3 originalVelocity = _rb.velocity;
             _rb.velocity =  new Vector3(originalVelocity.x * AxisX, _rb.velocity.y, originalVelocity.z * AxisY);
         }
 
-        if (running || _rolling || _attacking)
+        if (_running || _rolling || _attacking)
             _recoverStamina = false;
         else
             _recoverStamina = true;
@@ -593,7 +712,19 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     private void FixedUpdate()
     {
         if (!IsAlive) return;
-        if (!clamped && moving) Move();
+        if (!_clamped && _moving) Move();
+        if(_AttackStep)
+        {
+             _rb.AddForce(transform.forward * _forceStep,ForceMode.Impulse);
+            _timeStep -= Time.deltaTime;
+            if (_timeStep <= 0)
+            {
+                _AttackStep = false;
+                _rb.velocity = Vector3.zero;
+
+            }
+            
+        }
     }
 
     //=========================================================================================================================
@@ -606,7 +737,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         float movementSpeed = walkSpeed;
 
         //Correcting Forward.
-        if (running)
+        if (_running)
         {
             movementSpeed = runSpeed;
             Stamina -= runCost * Time.deltaTime;
@@ -643,7 +774,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public void Die()
     {
         _anims.SetTrigger("died");
-        clamped = true;
+        _clamped = true;
         _rb.isKinematic = true;
 
         StartCoroutine(reduxStaminaTo0(3f));
@@ -690,8 +821,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _anims.SetFloat("VelY", 0);
         _anims.SetFloat("VelX", 0);
 
-        moving = false;
-        clamped = true;
+        _moving = false;
+        _clamped = true;
         //Debug.LogWarning("INICIO COMBATE");
 
         CurrentWeapon.BegginCombo(input);
@@ -706,7 +837,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     IEnumerator Roll()
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
-        clamped = true;
+        _clamped = true;
         _rolling = true;
         _recoverStamina = false;
         //_running = false;
@@ -748,7 +879,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //End of Roll.
         _rolling = false;
         _recoverStamina = true;
-        clamped = false;                      // Avisamos que ya nos podemos mover.
+        _clamped = false;                      // Avisamos que ya nos podemos mover.
         _invulnerable = false;
 
         // Adicional poner el roll en enfriamiento.
@@ -788,15 +919,15 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     IEnumerator HurtFreeze()
     {
-        clamped = true;
+        _clamped = true;
         _invulnerable = true;
 
         // Cooldown.
         yield return new WaitForSeconds(1f);
 
-        clamped = false;
+        _clamped = false;
         _invulnerable = false;
-        listenToInput = true;
+        _listenToInput = true;
     }
 
     private void OnCollisionStay(Collision collision)
@@ -827,9 +958,11 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         FeastBlood.Play();
     }
-    public void Step(float StepForce)
+    public void Step(float StepForce, float Steptime)
     {
         _forceStep = StepForce;
-        _rb.AddForce(transform.forward * _forceStep, ForceMode.Impulse);
+        _timeStep = Steptime;
+        _AttackStep = true;
+        Debug.Log("fuerza" +StepForce+"tiempo"+ Steptime);
     }
 }

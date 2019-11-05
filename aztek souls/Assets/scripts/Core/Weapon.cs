@@ -69,8 +69,8 @@ public class Weapon
 
     void StartAttack()
     {
-        if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
-            LastChainAttack = true;
+        //if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
+        //    LastChainAttack = true;
 
         canGetInput = false;
         NextAttack = null;
@@ -79,30 +79,25 @@ public class Weapon
     }
     public void Update()
     {
-        if (CurrentAttack != null)
+        DuringAttack();
+
+        currentDuration -= Time.deltaTime;
+
+        if (currentDuration <= 0)
         {
-            DuringAttack();
-
-            currentDuration -= Time.deltaTime;
-            //MonoBehaviour.print("Current Attack: " + CurrentAttack.Name +" currentTime is:" + currentDuration);
-
-            if (currentDuration <= 0)
+            MonoBehaviour.print(string.Format("Duración del ataque terminado\nEl ultimo ataque fue {0}", CurrentAttack.ID));
+            if (NextAttack == null)
             {
-                MonoBehaviour.print(string.Format("Duración del ataque terminado\nEl ultimo ataque fue {0}", CurrentAttack.Name));
-
-                if (NextAttack == null)
-                {
-                    CurrentAttack.EndAttack();
-                    EndChainCombo();
-                }
-                else
-                {
-                    //Cambio el ataque al nuevo ataque.
-                    CurrentAttack = NextAttack;
-                    currentDuration = CurrentAttack.AttackDuration;
-                    StartAttack();
-                }
-            } 
+                CurrentAttack.EndAttack();
+                EndChainCombo();
+            }
+            else
+            {
+                //Cambio el ataque al nuevo ataque.
+                CurrentAttack = NextAttack;
+                currentDuration = CurrentAttack.AttackDuration;
+                StartAttack();
+            }
         }
     }
 
@@ -135,7 +130,7 @@ public class Weapon
     }
     public void FeedInput(Inputs input)
     {
-        if (CurrentAttack != null && canContinueAttack() && canGetInput && NextAttack == null)
+        if (canContinueAttack() && canGetInput && NextAttack == null)
         {
             Attack posible = CurrentAttack.getConnectedAttack(input);
             MonoBehaviour.print(string.Format("Recibido comando Input\nEl tipo pedido es {0} y el resultado es {1}.", input.ToString(), posible != null ? posible.Name : "Nulo"));
