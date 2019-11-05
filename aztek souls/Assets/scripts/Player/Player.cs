@@ -77,7 +77,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public ParticleSystem FeastBlood;
     public Collider HitCollider;
     Rigidbody _rb;                                          // Componente Rigidbody.
-    //CharacterController controller;
+                                                            //CharacterController controller;
     Animator _anims;                                        // Componente Animator.
     //Orientación
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
@@ -176,9 +176,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
     public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
+    public bool _listenToInput = true;
     //bool _canRoll = true;                                  // Si puedo rollear.
     bool _rolling = false;                                   // Si estoy rolleando actualmente.
-    bool _listenToInput = true;
     bool _AttackStep = false;                                // si estoy dando el paso
     float _forceStep;                                         //fuerza y direccion del movimiento
     float _timeStep;

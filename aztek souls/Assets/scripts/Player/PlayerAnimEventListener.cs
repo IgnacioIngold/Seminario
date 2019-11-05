@@ -40,17 +40,15 @@ public class PlayerAnimEventListener : MonoBehaviour
         }
         
     }
+    void disableInputs(int input)
+    {
+        if (input == 1)
+            player._listenToInput = true;
+        else
+            player._listenToInput = false;
+    }
 
-    //private void AllowInterrupt()
-    //{
-    //    player.interruptAllowed = true;
-    //}
-
-    //private void DenyInterrupt()
-    //{
-    //    player.interruptAllowed = false;
-    //}
-
+    
     private void EnableDamage()
     {
         //print("AnimEvent PLAYER ON START ATTACK activado");
