@@ -11,12 +11,9 @@ public class PlayerAnimEventListener : MonoBehaviour
     public Collider DamageCollider;
     public GameObject marker;
     public ParticleSystem tail;
-    public float firstTime;
-    public float SecondTime;
     public float FirstForce;
     public float SecondForce;
 
-    
     public List<ParticleSystem> MyParticles = new List<ParticleSystem>();
     Animator anim;
 
@@ -30,25 +27,31 @@ public class PlayerAnimEventListener : MonoBehaviour
     //Globales.
     void StepPerform(int index)
     {
-        if(index == 1)
-        {
-            player.Step(FirstForce,firstTime);
-        }
+        if (index == 1)
+            player.Step(FirstForce);
         else
-        {
-            player.Step(SecondForce,SecondTime);
-        }
-        
+            player.Step(SecondForce);
     }
     void disableInputs(int input)
     {
-        if (input == 1)
-            player._listenToInput = true;
+        if (input == 0)
+        {
+            print("disabling input");
+            player.listenToInput = false;
+            player.running = false;
+            player.clamped = true;
+            player.moving = false;
+        }
         else
-            player._listenToInput = false;
+        if (input == 1)
+        {
+            print("enabling input");
+            player.listenToInput = true;
+            player.moving = true;
+            player.clamped = false;
+        }
     }
 
-    
     private void EnableDamage()
     {
         //print("AnimEvent PLAYER ON START ATTACK activado");
