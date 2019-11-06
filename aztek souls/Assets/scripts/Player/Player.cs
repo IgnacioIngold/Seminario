@@ -339,6 +339,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void Awake()
     {
+        
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
         rollparticleEmission = RollParticle.emission;
