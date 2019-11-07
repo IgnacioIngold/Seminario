@@ -61,10 +61,10 @@ public class ShieldEnemy : BaseUnit
     private float ThinkTime = 0;
     private float remainingThinkTime = 0;
     private bool _blocking = false;
+    private bool _parrying;
 
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
-    private bool _parrying;
 #endif
 
     //======================== OVERRIDES & INTERFACES =========================================
