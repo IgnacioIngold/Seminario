@@ -471,7 +471,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
         };
-        L1.OnEnableInput += () => { marker.SetActive(true); };
+        //L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () =>
         {
             //print("Light 1 conecto exitósamente");
@@ -483,7 +483,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
         };
-        L2.OnEnableInput += () => { marker.SetActive(true); };
+        //L2.OnEnableInput += () => { marker.SetActive(true); };
         L2.OnHit += () =>
         {
             print("Light 2 conecto exitósamente");
@@ -507,7 +507,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
-        L4.OnEnableInput += () => { marker.SetActive(true); };
+        //L4.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack L5 = new Attack() { ID = 9, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 3, maxChainIndex = 3 };
         L5.OnStart += () =>
@@ -530,7 +530,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Ejecutando Ataque:" + S1.Name);
         };
         S1.OnEnd += () => { breakDefence = false; };
-        S1.OnEnableInput += () => { marker.SetActive(true); };
+        //S1.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f, ChainIndex = 1, maxChainIndex = 3 };
         S2.OnStart += () =>
@@ -688,14 +688,14 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         float AxisX = Input.GetAxis("Horizontal");
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
-        if(Input.GetKeyDown(KeyCode.B))
-        {
-            _anims.SetLayerWeight(1, 1);
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            _anims.SetLayerWeight(0, 1);
-        }
+        //if(Input.GetKeyDown(KeyCode.B))
+        //{
+        //    _anims.SetLayerWeight(1, 1);
+        //}
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    _anims.SetLayerWeight(0, 1);
+        //}
 
         if (_listenToInput)
         {
