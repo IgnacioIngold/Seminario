@@ -4,23 +4,51 @@ using System;
 namespace Core.Entities
 {
     // Todas las unidades que pueden recibir Daño.
-    public interface IDamageable
+    public interface IDamageable<EntryHitData, ExitHitData>
     {
-        void GetDamage(params object[] DamageStats);
+        ExitHitData Hit(EntryHitData EntryData);
+        EntryHitData GetDamageStats();
+        void FeedHitResult(ExitHitData result);
     }
-    //Todas las unidades que pueden recibir Daño y tienen 2 estados Básicos: vivos o muertos.
-    public interface IKilleable : IDamageable
+    //Todas las unidades tienen 2 estados Básicos: vivos o muertos.
+    public interface IKilleable
     {
         bool IsAlive { get; }
         bool invulnerable { get; }
     }
-    //Todas las Unidades que pueden tener estadísticas de combate.
-    public interface IAttacker<T>
+    ////Todas las Unidades que pueden tener estadísticas de combate.
+    //public interface IAttacker<>
+    //{
+    //    //void OnHitConfirmed(HitData data);
+    //    //void OnHitBlocked(HitData data);
+    //    //void OnKillConfirmed(HitData data);
+    //}
+}
+
+namespace Core
+{
+    public struct HitData
     {
-        void OnHitConfirmed(T data);
-        void OnHitBlocked(T data);
-        void OnKillConfirmed(T data);
-        T GetDamageStats();
+        public float Damage;
+        public bool BreakDefence;
+        public Inputs AttackType;
+
+        public static HitData Empty()
+        {
+            return new HitData() { Damage = 0, BreakDefence = false };
+        }
+    }
+    public struct HitResult
+    {
+        public bool TargetEliminated;
+        public bool HitConnected;
+        public bool HitBlocked;
+        public int bloodEarned;
+
+        public static HitResult Empty()
+        {
+            return new HitResult() { TargetEliminated = false, HitConnected = false, HitBlocked = false, bloodEarned = 0};
+        }
     }
 }
 

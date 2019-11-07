@@ -15,9 +15,8 @@ public class BossAnimEvents : MonoBehaviour
     public Dictionary<int, TransformValues> ColliderTransformKeyFrame = new Dictionary<int, TransformValues>();
     public PlayableDirector DeathACtions;
 
-    public BigCursed boss;
+    public BigCursed Owner;
     public Collider DamageCollider;
-    public ParticleSystem marker;
     //public PlayableDirector FadeOut;
 
 
@@ -66,6 +65,7 @@ public class BossAnimEvents : MonoBehaviour
     //RunTimeLoad
     private void Awake()
     {
+        Owner = GetComponent<BigCursed>();
         loadData(Application.streamingAssetsPath + CompleteDataPath);
     }
 
@@ -76,6 +76,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         //Debug.LogWarning("Empezó el combo");
         //Inicié el combo básico.
+        Owner.SetVulnerabity(true);
     }
     void FirstBasicStart()
     {
@@ -95,7 +96,7 @@ public class BossAnimEvents : MonoBehaviour
     void StartSecondAttack()
     {
         //Debug.LogWarning("StartSecond Attack event Run");
-        boss.SetAttackState(2);
+        Owner.SetAttackState(2);
     }
     void SecondBasicStart()
     {
@@ -113,8 +114,7 @@ public class BossAnimEvents : MonoBehaviour
     void StartThirdAttack()
     {
         //print("Start Third Attack event Run");
-        boss.SetAttackState(3);
-        marker.Play();
+        Owner.SetAttackState(3);
     }
     void ThirdBasicStart()
     {
@@ -123,21 +123,21 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[2].localScale;
         DamageCollider.enabled = true;
 
-        boss.OnSmashParticle.Clear();
-        boss.SmashEmission.enabled = true;
-        boss.OnSmashParticle.Play();
+        Owner.OnSmashParticle.Clear();
+        Owner.SmashEmission.enabled = true;
+        Owner.OnSmashParticle.Play();
     }
     void ThirdBasicEnd()
     {
         DamageCollider.enabled = false;
-        boss.SmashEmission.enabled = false;
+        Owner.SmashEmission.enabled = false;
     }
 
     void EndBasicCombo()
     {
         //Debug.LogWarning("Terminó el combo");
         //Termine el combo básico.
-        boss.SetAttackState(0);
+        Owner.SetAttackState(0);
 
         DamageCollider.transform.localPosition = ColliderTransformKeyFrame[0].localPosition;
         DamageCollider.transform.localRotation = ColliderTransformKeyFrame[0].LocalRotation;
@@ -153,15 +153,14 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[3].localScale;
         DamageCollider.enabled = true;
 
-        boss.OnSmashParticle.Clear();
-        boss.SmashEmission.enabled = true;
-        boss.OnSmashParticle.Play();
+        Owner.OnSmashParticle.Clear();
+        Owner.SmashEmission.enabled = true;
+        Owner.OnSmashParticle.Play();
     }
-
     void HighJumpLandEnd()
     {
         DamageCollider.enabled = false;
-        boss.SmashEmission.enabled = false;
+        Owner.SmashEmission.enabled = false;
     }
 
     void LowJumpLandStart()
@@ -171,14 +170,20 @@ public class BossAnimEvents : MonoBehaviour
         DamageCollider.transform.localScale = ColliderTransformKeyFrame[4].localScale;
         DamageCollider.enabled = true;
 
-        boss.OnSmashParticle.Clear();
-        boss.SmashEmission.enabled = true;
-        boss.OnSmashParticle.Play();
+        Owner.OnSmashParticle.Clear();
+        Owner.SmashEmission.enabled = true;
+        Owner.OnSmashParticle.Play();
     }
     void LowJumpLandEnd()
     {
         DamageCollider.enabled = false;
-        boss.SmashEmission.enabled = false;
+        Owner.SmashEmission.enabled = false;
+    }
+
+    //Recovering from Smashed;
+    void StandUp()
+    {
+        Owner.RiseFromSmash();
     }
     void unlockpassages()
     {

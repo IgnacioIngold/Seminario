@@ -1,12 +1,14 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
-using Core.Entities;
-using IA.LineOfSight;
-using System;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using IA.LineOfSight;
+using Core.Entities;
+using Core;
 
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
-public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
+public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     public Action OnDie = delegate { };
 
@@ -16,9 +18,26 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public FillBar    EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null;
 
+    //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
+    [Header("Sistema de Ritmo")]
+    public float ComboBonus;
+    public ParticleSystem VulnerableMarker;
+    public ParticleSystem ButtonHitConfirm;
+    public Color LightColor;
+    public Color HeavyColor;
+    public Dictionary<int, Inputs[]> vulnerabilityCombos;
+    public float comboVulnerabilityCountDown = 0f;
+    public bool isVulnerableToAttacks = false;
+    protected int _attacksRecieved = 0;
+
+    [Header("Vulnerability")]
+    public float vulnerableTime = 1.5f;
+    public float incommingDamageReduction = 0.3f;
+    public float ComboWindow = 1f;
+
     [Header("Recompensas")]
-    public float BloodPerHit = 100f;
-    public float BloodForKill = 300f;
+    public int BloodPerHit = 100;
+    public int BloodForKill = 300;
 
     protected float _hp = 0f;
     protected float _minForwardAngle = 40f;
@@ -44,12 +63,15 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public float attackRate = 1f;
     public float AttackRange = 1f;
     public float attackDamage = 1f;
-    public float rotationLerpSpeed = 0.1f;
+    protected float _rotationLerpSpeed = 0.1f;
+    public float NormalRotationLerpSeed = 0.1f;
+    public float AttackRotationLerpSpeed = 10f;
 
     public float minDetectionRange = 8f;
     public float MediumRange       = 40f;
     public float HighRange         = 60f;
 
+    public bool LookTowardsPlayer = true;
 
     #region Componentes de Unity
 
@@ -67,7 +89,7 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
     public bool Debug_DetectionRanges = false;
-#endif 
+#endif
     #endregion
 
     //============================== INTERFACES ===============================================
@@ -75,20 +97,9 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
     public bool IsAlive => _hp > 0;
     public bool invulnerable => _invulnerable;
 
-    public virtual void GetDamage(params object[] DamageStats)
-    {
-        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-        Destroy(particle, 3f);
-
-        EnemyHealthBar.FadeIn();
-    }
-    public virtual object[] GetDamageStats()
-    {
-        return new object[0];
-    }
-    public virtual void OnHitBlocked(object[] data) { }
-    public virtual void OnHitConfirmed(object[] data) { }
-    public virtual void OnKillConfirmed(object[] data) { }
+    public virtual HitData GetDamageStats() { return HitData.Empty(); }
+    public virtual HitResult Hit(HitData EntryData) { return HitResult.Empty(); }
+    public virtual void FeedHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
 
@@ -177,44 +188,6 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         Health = MaxHP;
     }
 
-    //=========================================================================================
-
-    /// <summary>
-    /// Retorna la duración de la Transición al siguiente estado de la Animación.
-    /// </summary>
-    /// <returns>Float: el tiempo de la transición.</returns>
-    protected float getCurrentTransitionDuration()
-    {
-        return anims.GetAnimatorTransitionInfo(0).duration;
-    }
-    /// <summary>
-    /// Retorna el tiempo de Animación restante del estado Actual del Animator.
-    /// </summary>
-    /// <returns>Float: tiempo de Animación restante del estado actual.</returns>
-    protected float getRemainingAnimTime()
-    {
-        //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-        //float AnimTime = 0f;
-
-        var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
-
-        //if (clipInfo != null && clipInfo.Length > 0)
-        //{
-        //    AnimationClip currentClip = clipInfo[0].clip;
-        //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
-
-        //    if (currentClip.name == ClipName)
-        //    {
-        //        //print("currentClip is Correct!");
-        //        AnimTime = currentClip.length;
-        //        float passed = AnimTime - (AnimTime * transitionPassed);
-        //        return passed;
-        //    }
-        //}
-
-        return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
-    }
-
     protected void Die()
     {
         EnemyHealthBar.FadeOut(3f);
@@ -233,6 +206,47 @@ public abstract class BaseUnit : MonoBehaviour, IKilleable, IAttacker<object[]>
         _targetDetected = true;
         _alertFriends = false;
         EnemyHealthBar.FadeIn();
+    }
+
+    /// <summary>
+    /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
+    /// </summary>
+    /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
+    public virtual void SetVulnerabity(bool vulnerable, int Combo = 1)
+    {
+        comboVulnerabilityCountDown = vulnerableTime;
+        isVulnerableToAttacks = vulnerable;
+        ConfirmButtonHit();
+
+        //Muestro el siguiente ataque.
+        ShowNextVulnerability(0, Combo);
+    }
+
+    protected void ShowNextVulnerability(int index, int combo = 1)
+    {
+        if (index < vulnerabilityCombos[1].Length)
+        {
+            var nextAttackType = vulnerabilityCombos[combo][index];
+            var ParticleSystem = VulnerableMarker.main;
+
+            if (!VulnerableMarker.gameObject.activeSelf)
+            {
+                print("No estaba activado we");
+                VulnerableMarker.gameObject.SetActive(true);
+            }
+
+            if (nextAttackType == Inputs.light)
+                ParticleSystem.startColor = LightColor;
+            if (nextAttackType == Inputs.strong)
+                ParticleSystem.startColor = HeavyColor;
+        }
+    }
+    protected void ConfirmButtonHit()
+    {
+        if (!ButtonHitConfirm.gameObject.activeSelf)
+            ButtonHitConfirm.gameObject.SetActive(true);
+        else
+            ButtonHitConfirm.Play();
     }
 
     IEnumerator FallAfterDie(float delay = 1f)

@@ -1,7 +1,10 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using Core.Entities;
 using IA.StateMachine.Generic;
+using IA.RandomSelections;
+using Core;
+using Core.Entities;
 
 public enum BossStates
     {
@@ -9,6 +12,7 @@ public enum BossStates
         think,
         charge,
         reposition,
+        Smashed,
         pursue,
         basicCombo,
         killerJump,
@@ -25,14 +29,30 @@ public class BigCursed : BaseUnit
     GenericFSM<BossStates> sm;
     State<BossStates> idle;
 
+    [Header("Vulnerabilidad")]
+    private bool _Smashed;
+    private float _remainingSmashTime = 0f;
+    public float SmashDuration = 4f;
+    public float DamageMultiplier = 2f;
+
+
     [Header("Settings del Boss")]
     public float[] BasicAttackDamages;
     public int AttackPhase = 0;
+    public float RepositionLerpSpeed = 20f;
     Vector3 _lastEnemyPositionKnown = Vector3.zero;
 
     [Header("Layers")]
     public int Layer_walls;
     public int Layer_Killeable;
+
+    [Header("Deciciones")]
+    public float MinimunRange;
+    public float MinimunRangeExtraAdd;
+    public float JumpWeight;
+    public float AttackWeight;
+    public float KillerJumpWeight;
+    public float PursueWeight;
 
     [Header("Charge")]
     public ParticleSystem OnChargeParticle;
@@ -57,43 +77,102 @@ public class BigCursed : BaseUnit
     bool charging = false;
     Vector3 _initialChargePosition;
     Vector3 _chargeDir = Vector3.zero;
-    private bool LookTowardsPlayer = true;
 
     //============================== INTERFACES ===============================================
 
     /// <summary>
-    /// Implementación de Ikilleable, permite recibir daño.
+    /// Permite recibir daño e Informar al agresor del resultado de su ataque.
     /// </summary>
     /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
-    public override void GetDamage(params object[] DamageStats)
+    public override HitResult Hit(HitData HitInfo)
     {
-        IAttacker<object[]> Aggresor = (IAttacker<object[]>)DamageStats[0];
-        float Damage = (float)DamageStats[1];
+        HitResult result = HitResult.Empty();
 
-        Health -= Damage;
+        float Damage = HitInfo.Damage;
 
-        if (!IsAlive)
+        if (isVulnerableToAttacks && !_Smashed)
         {
-            Aggresor.OnKillConfirmed(new object[] { BloodForKill });
-            sm.Feed(BossStates.dead);
+            bool completedCombo = false;
+            //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
+            if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
+            {
+                _attacksRecieved++;
+
+                if (_attacksRecieved == 3)
+                {
+                    comboVulnerabilityCountDown = 0f;
+                    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                    completedCombo = true;
+
+                    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                }
+                else if (_attacksRecieved == 2)
+                {
+                    comboVulnerabilityCountDown += 4f;
+
+                    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                }
+                else comboVulnerabilityCountDown += 1f;
+
+                ConfirmButtonHit();
+
+                //Muestro el siguiente ataque.
+                ShowNextVulnerability(_attacksRecieved);
+            }
+
+            if (completedCombo)
+                sm.Feed(BossStates.Smashed);
+        }
+        else if (_Smashed)
+        {
+            Damage *= DamageMultiplier;
         }
         else
         {
-            Aggresor.OnHitConfirmed(new object[] { BloodPerHit });
-            base.GetDamage();
+            Damage *= incommingDamageReduction;
         }
+
+        Health -= Damage;
+
+        if (IsAlive)
+        {
+            result.bloodEarned = BloodPerHit;
+            result.HitConnected = true;
+
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+            EnemyHealthBar.FadeIn();
+        }
+        else
+        {
+            result.TargetEliminated = true;
+            result.bloodEarned = BloodForKill;
+
+            var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+            Destroy(particle, 3f);
+
+            sm.Feed(BossStates.dead);
+        }
+        return result;
     }
     /// <summary>
     /// Retorna las estadísticas de combate de esta Unidad.
     /// </summary>
-    /// <returns>Un array de objetos, donde cada objeto es una Estadística que afecta el daño.</returns>
-    public override object[] GetDamageStats()
+    /// <returns>Una estructura que contiene las stats involucradas en el ataque.</returns>
+    public override HitData GetDamageStats()
     {
-        return new object[3] { this , attackDamage, false };
+        return new HitData() { Damage = attackDamage, BreakDefence = false };
+    }
+    /// <summary>
+    /// Informa a esta entidad del resultado del lanzamiento y conección de un ataque.
+    /// </summary>
+    /// <param name="result">Resultado del ataque lanzado.</param>
+    public override void FeedHitResult(HitResult result)
+    {
+        print(string.Format("{0} ha conectado un ataque.", gameObject.name));
     }
 
-    //=========================================================================================
-
+    //============================= Funciones Unity ===========================================
 
     protected override void Awake()
     {
@@ -104,7 +183,13 @@ public class BigCursed : BaseUnit
         ChargeEmission.enabled = false;
         SmashEmission = OnSmashParticle.emission;
 
-        //State Machine.
+        //Vulnerabilidad
+        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
+        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        vulnerabilityCombos.Add(1, MainVulnerability);
+
+        #region State Machine
+
         idle = new State<BossStates>("Idle");
         var think = new State<BossStates>("Thinking");
         var pursue = new State<BossStates>("Pursue");
@@ -112,6 +197,7 @@ public class BigCursed : BaseUnit
         var charge = new State<BossStates>("Charge");
         var BasicCombo = new State<BossStates>("Attack_BasicCombo");
         var JumpAttack = new State<BossStates>("Attack_SimpleJump");
+        var Smashed = new State<BossStates>("VulnerableToAttacks");
         var KillerJump = new State<BossStates>("Attack_KillerJump");
         var dead = new State<BossStates>("Dead");
 
@@ -150,15 +236,14 @@ public class BigCursed : BaseUnit
 
         #region ThinkState
 
-        think.OnEnter += (previousState) => 
+        think.OnEnter += (previousState) =>
         {
             print("Thinking...");
-            //StopCoroutine(KillerJumpAttack());
             anims.SetFloat("Movement", 0f);
             agent.isStopped = true;
             LookTowardsPlayer = true;
         };
-        think.OnUpdate += () => 
+        think.OnUpdate += () =>
         {
             if (thinkTime > 0)
                 thinkTime -= Time.deltaTime;
@@ -174,42 +259,61 @@ public class BigCursed : BaseUnit
                     if (sight.angleToTarget > 45f) sm.Feed(BossStates.reposition);
                     else
                     {
-                        if (canPerformSimpleJump && sight.distanceToTarget < AttackRange)
-                        {
-                            print("Decidí hacer un salto corto.");
-                            sm.Feed(BossStates.closeJump);
-                            return;
-                        }
-                        if (sight.distanceToTarget > HighRange)
-                        {
-                            print("Decidí hacer un Charge.");
-                            sm.Feed(BossStates.charge);
-                            return;
-                        }
-                        if (canPerformKIllerJump && sight.distanceToTarget > MediumRange)
-                        {
-                            print("Decidí hacer un Killer Jump.");
-                            sm.Feed(BossStates.killerJump);
-                            return;
-                        }
-                        // si esta visible pero fuera del rango de ataque...
-                        if (sight.distanceToTarget > AttackRange)
-                        {
-                            print("Decidí perseguir al enemigo.");
-                            sm.Feed(BossStates.pursue);                  // paso a pursue.
-                            return;
-                        }
                         if (sight.distanceToTarget <= AttackRange)
                         {
+                            if (canPerformSimpleJump)
+                            {
+                                //Genero los pesos relevantes.
+
+                                float[] posibilities = new float[2]
+                                {
+                                    (AttackWeight * ((AttackRange - (AttackRange - sight.distanceToTarget)) / AttackRange)),
+                                    (JumpWeight * ((AttackRange - sight.distanceToTarget) / AttackRange))
+                                };
+
+                                if (RoulleteSelection.Roll(posibilities) == 1)
+                                {
+                                    print("Decidí hacer un salto corto.");
+                                    sm.Feed(BossStates.closeJump);
+                                    return;
+                                }
+                            }
+
                             print("Decidí Atacar.");
                             sm.Feed(BossStates.basicCombo);
-                            return;
+                        }
+                        if (sight.distanceToTarget > AttackRange)
+                        {
+                            //Si la distancia es mayor al Highrange.
+                            if (sight.distanceToTarget > HighRange)
+                            {
+                                print("Decidí hacer un Charge.");
+                                sm.Feed(BossStates.charge);
+                                return;
+                            }
+
+                            float[] posibilities = new float[]
+                            {
+                                (KillerJumpWeight * ((HighRange - sight.distanceToTarget) / HighRange)),
+                                PursueWeight
+                            };
+
+                            //Si la distancia es mayor al mediumRange.
+                            if (RoulleteSelection.Roll(posibilities) == 0)
+                            {
+                                print("Decidí hacer un Killer Jump.");
+                                sm.Feed(BossStates.killerJump);
+                            }
+
+                            // si esta visible pero fuera del rango de ataque...
+                            print("Decidí perseguir al enemigo.");
+                            sm.Feed(BossStates.pursue);                  // paso a pursue.
                         }
                     }
                 }
             }
         };
-        think.OnExit += (nextState) =>  
+        think.OnExit += (nextState) =>
         {
             agent.isStopped = false;
             LookTowardsPlayer = false;
@@ -219,21 +323,29 @@ public class BigCursed : BaseUnit
 
         #region SimpleJumpAttack
 
-        JumpAttack.OnEnter += (previousState) => 
+        JumpAttack.OnEnter += (previousState) =>
         {
-            StartCoroutine(SimpleJumpAttack());
-            LookTowardsPlayer = true;
+            //Animación we.
+            anims.SetInteger("Attack", 5);
+            anims.SetFloat("Movement", 0f);
+            LookTowardsPlayer = false;
         };
         //JumpAttack.OnUpdate += () => { };
-        JumpAttack.OnExit += (nextState) => { LookTowardsPlayer = false; };
+        JumpAttack.OnExit += (nextState) =>
+        {
+            anims.SetInteger("Attack", 0);
+            LookTowardsPlayer = false;
+        };
 
         #endregion
 
         #region KillerJumpState
 
-        KillerJump.OnEnter += (previousState) => 
+        KillerJump.OnEnter += (previousState) =>
         {
-            StartCoroutine(KillerJumpAttack());
+            //Animación we.
+            anims.SetInteger("Attack", 4);
+            anims.SetFloat("Movement", 0f);
             LookTowardsPlayer = false;
         };
         KillerJump.OnExit += (nextState) => { LookTowardsPlayer = true; };
@@ -265,15 +377,39 @@ public class BigCursed : BaseUnit
         #endregion
 
         #region Charge
-        charge.OnEnter += (previousState) => { StartCoroutine(Charge()); };
-        charge.OnUpdate += () => {};
+        charge.OnEnter += (previousState) =>
+        {
+            charging = true;
+            //Primero me quedo quieto.
+            agent.isStopped = true;
+            //Empiezo la animación del rugido.
+            anims.SetBool("Roar", true);
+        };
+        charge.OnUpdate += () =>
+        {
+            float distance = Vector3.Distance(transform.position, _initialChargePosition);
+
+            if (charging && distance < maxChargeDistance)
+            {
+                //Me muevo primero
+                agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
+
+                //Sino...
+                //Voy calculando la distancia en la que me estoy moviendo
+                distance = Vector3.Distance(transform.position, _initialChargePosition);
+                //print("Charging distance" + distance);
+            }
+            //Si la distancia es mayor al máximo
+            else if (distance > maxChargeDistance)
+                sm.Feed(BossStates.think); //Me detengo.
+        };
         charge.OnExit += (nextState) =>
         {
             attackDamage = BasicAttackDamages[0];
             ChargeEmission.enabled = false;
             charging = false;
             LookTowardsPlayer = true;
-        }; 
+        };
         #endregion
 
         #region Attack State
@@ -305,20 +441,42 @@ public class BigCursed : BaseUnit
 
         #region Reposition State
 
-        reposition.OnEnter += (previousState) => 
+        reposition.OnEnter += (previousState) =>
         {
             print("Reposicionando we");
+            _rotationLerpSpeed = RepositionLerpSpeed;
             LookTowardsPlayer = true;
         };
-        reposition.OnUpdate += () => 
+        reposition.OnUpdate += () =>
         {
             if (sight.angleToTarget < 5f)
                 sm.Feed(BossStates.think);
             else
                 agent.isStopped = true;
         };
+        reposition.OnExit += (NextState) =>
+        {
+            _rotationLerpSpeed = NormalRotationLerpSeed;
+        };
 
         #endregion
+
+        #region Vulnerable State
+
+        Smashed.OnEnter += (previousState) =>
+        {
+            _Smashed = true;
+            _remainingSmashTime = SmashDuration;
+            anims.SetBool("Smashed", true);
+        };
+        Smashed.OnUpdate += () => { };
+        Smashed.OnExit += (nextState) =>
+        {
+            _Smashed = false;
+        };
+
+        #endregion
+
 
         #region Dead State
         dead.OnEnter += (x) =>
@@ -352,6 +510,7 @@ public class BigCursed : BaseUnit
              .AddTransition(BossStates.charge, charge)
              .AddTransition(BossStates.closeJump, JumpAttack)
              .AddTransition(BossStates.killerJump, KillerJump)
+             .AddTransition(BossStates.Smashed, Smashed)
              .AddTransition(BossStates.basicCombo, BasicCombo);
 
         JumpAttack.AddTransition(BossStates.dead, dead)
@@ -365,51 +524,109 @@ public class BigCursed : BaseUnit
                   .AddTransition(BossStates.think, think);
 
         BasicCombo.AddTransition(BossStates.dead, dead)
-              .AddTransition(BossStates.think, think); 
+                  .AddTransition(BossStates.Smashed, Smashed)
+                  .AddTransition(BossStates.think, think);
+
+        Smashed.AddTransition(BossStates.think, think)
+               .AddTransition(BossStates.dead, dead);
+
         #endregion
 
-        sm = new GenericFSM<BossStates>(idle);
+        sm = new GenericFSM<BossStates>(idle); 
+        #endregion
     }
-    // Update is called once per frame
     void Update()
     {
 #if UNITY_EDITOR
-        CurrentState = sm.currentState; 
+        CurrentState = sm.currentState;
 #endif
+
+        #region Tiempo de recuperación del estado de Derribo (Smashed)
+
+        if (_remainingSmashTime > 0)
+            _remainingSmashTime -= Time.deltaTime;
+        else if (_Smashed && _remainingSmashTime <= 0)
+        {
+            _remainingSmashTime = 0;
+            anims.SetBool("Smashed", false);
+        }
+
+        #endregion
+
+        #region Tiempo de Vulnerabilidad contra Combo.
+        if (comboVulnerabilityCountDown > 0)
+            comboVulnerabilityCountDown -= Time.deltaTime;
+        else if (comboVulnerabilityCountDown <= 0)
+        {
+            print("Se acabó el tiempo de vulnerabilidad");
+            _attacksRecieved = 0;
+            SetVulnerabity(false);
+            comboVulnerabilityCountDown = 0;
+            ButtonHitConfirm.gameObject.SetActive(false);
+        }
+        #endregion
+
+        #region Exposición de Vulnerabilidad
+        if (isVulnerableToAttacks)
+            VulnerableMarker.gameObject.SetActive(true);
+        else if (VulnerableMarker.gameObject.activeSelf)
+            VulnerableMarker.gameObject.SetActive(false); 
+        #endregion
 
         sight.Update();
 
         if (LookTowardsPlayer)
-            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed * Time.deltaTime);
 
         sm.Update();
     }
 
-    //=========================================================================================
+    //================================= Animation Events ======================================
 
-    IEnumerator SimpleJumpAttack()
+    /// <summary>
+    /// Cambio la animación a Charge! y realizo los seteos importantes.
+    /// </summary>
+    public void SetCharge()
     {
-        //Animación we.
-        anims.SetInteger("Attack", 5);
-        anims.SetFloat("Movement", 0f);
+
+        //Activo la animación.
+        anims.SetBool("Roar", false);
+        anims.SetFloat("Movement", 2f);
+        ChargeEmission.enabled = true;
+        agent.isStopped = false;
+        charging = true;
         LookTowardsPlayer = false;
-        yield return null;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
+        attackDamage = ChargeDamage;
 
-        float remainingTime = getRemainingAnimTime();
+        //Guardo la posición inicial.
+        _initialChargePosition = transform.position;
 
-#if UNITY_EDITOR
-        if(Debug_Attacks) print(string.Format("La transición dura {0} segundos y tiempo restante es de {1} segundos", currentTransitionTime, remainingTime)); 
-#endif
-
-        anims.SetInteger("Attack", 0);
-        yield return new WaitForSeconds(remainingTime);
-
+        //Calculo la dirección a la que me voy a mover.
+        _chargeDir = (Target.position - transform.position).normalized;
+    }
+    /// <summary>
+    /// Setea el final de la animación del Salto Simple.
+    /// </summary>
+    public void SetSimpleJumpEnd()
+    {
         thinkTime = 1f;
-        StartCoroutine(simpleJumpAttackCoolDown());
         sm.Feed(BossStates.think);
     }
+    /// <summary>
+    /// Setea el final de la animación del Killer Jump.
+    /// </summary>
+    public void KillerJumpEnd()
+    {
+        thinkTime = 2f;
+        StartCoroutine(JumpAttackCoolDown());
+        sm.Feed(BossStates.think);
+    }
+    public void RiseFromSmash()
+    {
+        sm.Feed(BossStates.think);
+    }
+
+    //============================= Corrutinas ================================================
 
     IEnumerator simpleJumpAttackCoolDown()
     {
@@ -417,35 +634,6 @@ public class BigCursed : BaseUnit
         yield return new WaitForSeconds(SimpleJumpAttackCooldown);
         canPerformSimpleJump = true;
     }
-
-    IEnumerator KillerJumpAttack()
-    {
-        //Animación we.
-        anims.SetInteger("Attack", 4);
-        anims.SetFloat("Movement", 0f);
-        yield return null;
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-
-        float remainingTime = getRemainingAnimTime();
-
-#if(UNITY_EDITOR)
-        if(Debug_Attacks) print("Remaining KillerJump Attack is: " + remainingTime);
-#endif
-        //Vector3 originalPosition = transform.position;
-        //float distFromOriginal = maxJumpDistance;
-
-        anims.SetInteger("Attack", 0);
-        yield return new WaitForSeconds(remainingTime);
-
-        anims.SetFloat("Movement", 0f);
-
-        thinkTime = 2f;
-        StartCoroutine(JumpAttackCoolDown());
-        sm.Feed(BossStates.think);
-    }
-
-
     IEnumerator JumpAttackCoolDown()
     {
         canPerformKIllerJump = false;
@@ -463,75 +651,24 @@ public class BigCursed : BaseUnit
         anims.SetInteger("Attack", stateID);
     }
 
-    IEnumerator Charge()
-    {
-        //Primero me quedo quieto.
-        agent.isStopped = true;
+    //============================= Colisiones ================================================
 
-        //Empiezo haciendo un Roar.
-        anims.SetBool("Roar", true);
-        yield return new WaitForEndOfFrame();
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-        float remainingTime = getRemainingAnimTime();
-        anims.SetBool("Roar", false);
-        yield return new WaitForSeconds(remainingTime);
-
-        //Ahora me puedo mover.
-        agent.isStopped = false;
-
-        //Activo la animación.
-        print("Charging");
-        anims.SetFloat("Movement", 2f);
-        ChargeEmission.enabled = true;
-
-        charging = true;
-        LookTowardsPlayer = false;
-        attackDamage = ChargeDamage;
-
-        //Guardo la posición inicial.
-        _initialChargePosition = transform.position;
-
-        //Calculo la dirección a la que me voy a mover.
-        _chargeDir = (Target.position - transform.position).normalized;
-
-        float distance = Vector3.Distance(transform.position, _initialChargePosition);
-
-        //Update
-        do
-        {
-            //Me muevo primero
-            agent.Move(_chargeDir * chargeSpeed * Time.deltaTime);
-
-            //Sino...
-            //Voy calculando la distancia en la que me estoy moviendo
-            distance = Vector3.Distance(transform.position, _initialChargePosition);
-            print("Charging distance" + distance);
-
-            //Si la distancia es mayor al máximo
-            if (distance > maxChargeDistance)
-                sm.Feed(BossStates.think); //Me detengo.
-
-            yield return null;
-        } while (charging && distance < maxChargeDistance);
-    }
-
-    //=========================================================================================
-
-    //Detectamos collisiones con otros cuerpos.
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == Layer_Killeable)
+        //Detectamos collisiones con otros cuerpos.
+        if (collision.gameObject.tag == "Player")
         {
             if (!charging) return;
 
             IKilleable killeable = collision.gameObject.GetComponent<IKilleable>();
             if (killeable != null && killeable.IsAlive && !killeable.invulnerable)
             {
-                //print("EL colisionador choco con algo KILLEABLE: " + collision.gameObject.name);
-                 sm.Feed(BossStates.think);
+                print("EL colisionador choco con algo KILLEABLE: " + collision.gameObject.name);
+                sm.Feed(BossStates.think);
 
-                killeable.GetDamage(GetDamageStats());
+                var Target = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
+                HitData data = new HitData() { Damage = ChargeDamage, BreakDefence = false };
+                Target.Hit(data);
                 collision.rigidbody.AddForce(_chargeDir * ChargeCollisionForce, ForceMode.Impulse);
                 return;
             }
@@ -540,7 +677,28 @@ public class BigCursed : BaseUnit
         if (collision.gameObject.layer == Layer_walls)
         {
             if (charging) sm.Feed(BossStates.think);
-            //print("EL colisionador choco con algo que no es KILLEABLE: " + collision.gameObject.name);
+            print("EL colisionador choco con algo que no es KILLEABLE: " + collision.gameObject.name);
         }
     }
+
+    //============================= Debugg ====================================================
+
+#if UNITY_EDITOR
+
+    [Header("DEBUG (Boss)")]
+    public bool Debug_MinimunRange = true;
+
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        if (Debug_MinimunRange)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, MinimunRange);
+        }
+    }
+
+#endif
 }

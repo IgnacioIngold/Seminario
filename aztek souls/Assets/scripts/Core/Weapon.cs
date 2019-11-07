@@ -90,7 +90,7 @@ public class Weapon
     void EndChainCombo()
     {
         OnEndChain();
-        CurrentAttack = null;
+        //CurrentAttack = null;
     }
     public void CanGetInput(bool enabled)
     {
@@ -120,7 +120,7 @@ public class Weapon
 
             if (posible != null)
             {
-                MonoBehaviour.print("Input CONFIRMADO.");
+                //MonoBehaviour.print("Input CONFIRMADO.");
 
                 CurrentAttack.EndAttack();
                 CurrentAttack = posible;
