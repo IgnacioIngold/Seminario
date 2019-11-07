@@ -7,16 +7,26 @@ using IA.LineOfSight;
 using Core.Entities;
 using Core;
 
-[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(CapsuleCollider)), RequireComponent(typeof(Rigidbody))]
 public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
+    #region Eventos
+
     public Action OnDie = delegate { };
+
+    #endregion
+
+    #region Settings Obligatorios
 
     [Header("Obligatory Settings")]
     protected Transform Target;
     public GameObject OnHitParticle;
-    public FillBar    EnemyHealthBar;
-    [SerializeField] protected LineOfSight sight = null;
+    public FillBar EnemyHealthBar;
+    [SerializeField] protected LineOfSight sight = null; 
+
+    #endregion
+
+    #region Sistema de Ritmo
 
     //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
     [Header("Sistema de Ritmo")]
@@ -30,14 +40,26 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public bool isVulnerableToAttacks = false;
     protected int _attacksRecieved = 0;
 
+    #endregion
+
+    #region Vulnerabilidad
+
     [Header("Vulnerability")]
     public float vulnerableTime = 1.5f;
     public float incommingDamageReduction = 0.3f;
     public float ComboWindow = 1f;
 
+    #endregion
+
+    #region Recompensas
+
     [Header("Recompensas")]
     public int BloodPerHit = 100;
-    public int BloodForKill = 300;
+    public int BloodForKill = 300; 
+
+    #endregion
+
+    #region Variables Hereditarias
 
     protected float _hp = 0f;
     protected float _minForwardAngle = 40f;
@@ -45,7 +67,11 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     protected bool _invulnerable = false;
     protected bool _isMoving = false;
     protected bool _alertFriends = true;
-    protected Vector3 _viewDirection = Vector3.zero;
+    protected Vector3 _viewDirection = Vector3.zero; 
+
+    #endregion
+
+    #region Estadísticas Base
 
     [Header("Estadísticas BASE")]
     public float MaxHP = 100f;
@@ -68,10 +94,12 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public float AttackRotationLerpSpeed = 10f;
 
     public float minDetectionRange = 8f;
-    public float MediumRange       = 40f;
-    public float HighRange         = 60f;
+    public float MediumRange = 40f;
+    public float HighRange = 60f;
 
     public bool LookTowardsPlayer = true;
+
+    #endregion
 
     #region Componentes de Unity
 
@@ -82,23 +110,23 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     #endregion
 
-    #region DebuggVariables
 #if UNITY_EDITOR
+    #region Variables Debugg
     [Header("Debug")]
     public bool Debug_Gizmos          = false;
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
     public bool Debug_DetectionRanges = false;
-#endif
     #endregion
+#endif
 
     //============================== INTERFACES ===============================================
 
     public bool IsAlive => _hp > 0;
     public bool invulnerable => _invulnerable;
 
-    public virtual HitData GetDamageStats() { return HitData.Empty(); }
-    public virtual HitResult Hit(HitData EntryData) { return HitResult.Empty(); }
+    public virtual HitData GetDamageStats() { return HitData.Default(); }
+    public virtual HitResult Hit(HitData EntryData) { return HitResult.Default(); }
     public virtual void FeedHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
@@ -163,7 +191,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
 #endregion
 
-    //=========================================================================================
+    //============================ UNITY FUNCTIONS ============================================
 
     protected virtual void Awake()
     {
@@ -188,6 +216,8 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         Health = MaxHP;
     }
 
+    //=========================== CUSTOM PROTECTED FUNCS ======================================
+
     protected void Die()
     {
         EnemyHealthBar.FadeOut(3f);
@@ -199,29 +229,13 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         StartCoroutine(FallAfterDie(3f));
         OnDie();
     }
-
-    public void AllyDiscoversEnemy(Transform Enemy)
+    protected void ConfirmButtonHit()
     {
-        Target = Enemy;
-        _targetDetected = true;
-        _alertFriends = false;
-        EnemyHealthBar.FadeIn();
+        if (!ButtonHitConfirm.gameObject.activeSelf)
+            ButtonHitConfirm.gameObject.SetActive(true);
+        else
+            ButtonHitConfirm.Play();
     }
-
-    /// <summary>
-    /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
-    /// </summary>
-    /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
-    public virtual void SetVulnerabity(bool vulnerable, int Combo = 1)
-    {
-        comboVulnerabilityCountDown = vulnerableTime;
-        isVulnerableToAttacks = vulnerable;
-        ConfirmButtonHit();
-
-        //Muestro el siguiente ataque.
-        ShowNextVulnerability(0, Combo);
-    }
-
     protected void ShowNextVulnerability(int index, int combo = 1)
     {
         if (index < vulnerabilityCombos[1].Length)
@@ -241,13 +255,34 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
                 ParticleSystem.startColor = HeavyColor;
         }
     }
-    protected void ConfirmButtonHit()
+
+    //============================== PUBLIC FUNCS =============================================
+
+    public void AllyDiscoversEnemy(Transform Enemy)
     {
-        if (!ButtonHitConfirm.gameObject.activeSelf)
-            ButtonHitConfirm.gameObject.SetActive(true);
-        else
-            ButtonHitConfirm.Play();
+        Target = Enemy;
+        _targetDetected = true;
+        _alertFriends = false;
+        EnemyHealthBar.FadeIn();
     }
+
+    //============================== OVERRAIDEABLES ===========================================
+
+    /// <summary>
+    /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
+    /// </summary>
+    /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
+    public virtual void SetVulnerabity(bool vulnerable, int Combo = 1)
+    {
+        comboVulnerabilityCountDown = vulnerableTime;
+        isVulnerableToAttacks = vulnerable;
+        ConfirmButtonHit();
+
+        //Muestro el siguiente ataque.
+        ShowNextVulnerability(0, Combo);
+    }
+
+    //============================== CORRUTINES ===============================================
 
     IEnumerator FallAfterDie(float delay = 1f)
     {
@@ -263,4 +298,6 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
         gameObject.SetActive(false);
     }
+
+    //=========================================================================================
 }

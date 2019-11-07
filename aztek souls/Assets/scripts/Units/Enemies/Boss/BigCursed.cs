@@ -86,7 +86,7 @@ public class BigCursed : BaseUnit
     /// <param name="DamageStats">Las estadísticas que afectan el "Daño" recibído.</param>
     public override HitResult Hit(HitData HitInfo)
     {
-        HitResult result = HitResult.Empty();
+        HitResult result = HitResult.Default();
 
         float Damage = HitInfo.Damage;
 

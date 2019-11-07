@@ -262,7 +262,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     /// <returns>Estadísticas de Salida. </returns>
     public HitResult Hit(HitData EntryData)
     {
-        HitResult hitResult = HitResult.Empty();
+        HitResult hitResult = HitResult.Default();
 
         if (!_invulnerable && IsAlive)
         {
@@ -359,7 +359,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             };
         }
         else
-            returnValue = HitData.Empty();
+            returnValue = HitData.Default();
 
         return returnValue;
     }

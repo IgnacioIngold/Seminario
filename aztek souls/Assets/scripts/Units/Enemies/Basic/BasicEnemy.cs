@@ -59,7 +59,7 @@ public class BasicEnemy : BaseUnit
 
     public override HitResult Hit(HitData HitInfo)
     {
-        HitResult result = HitResult.Empty();
+        HitResult result = HitResult.Default();
         float damage = HitInfo.Damage;
 
         if (IsAlive && damage > 0)

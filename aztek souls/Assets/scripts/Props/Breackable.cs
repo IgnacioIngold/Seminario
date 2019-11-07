@@ -19,7 +19,7 @@ public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
     {
         print(string.Format("{0} Recibió Data de combate", gameObject.name));
     }
-    public HitData GetDamageStats() { return HitData.Empty(); }
+    public HitData GetDamageStats() { return HitData.Default(); }
     public HitResult Hit(HitData EntryData)
     {
         HitResult result = new HitResult() { bloodEarned = bloodEarnedForBreack, HitConnected = true, HitBlocked = false, TargetEliminated = true };

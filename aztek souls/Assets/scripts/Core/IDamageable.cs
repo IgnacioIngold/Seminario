@@ -33,7 +33,7 @@ namespace Core
         public bool BreakDefence;
         public Inputs AttackType;
 
-        public static HitData Empty()
+        public static HitData Default()
         {
             return new HitData() { Damage = 0, BreakDefence = false };
         }
@@ -45,7 +45,7 @@ namespace Core
         public bool HitBlocked;
         public int bloodEarned;
 
-        public static HitResult Empty()
+        public static HitResult Default()
         {
             return new HitResult() { TargetEliminated = false, HitConnected = false, HitBlocked = false, bloodEarned = 0};
         }

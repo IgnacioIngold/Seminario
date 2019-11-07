@@ -48,7 +48,7 @@ public class ShieldEnemy : BaseUnit
     public float CriticDamageMultiplier = 2;
     public bool Disarmed;
     public float DisarmedTime = 4f;
-    float currentDisarmedTime = 0f;
+    float _currentDisarmedTime = 0f;
 
 
     public int CurrentAttackID = 0;
@@ -71,7 +71,7 @@ public class ShieldEnemy : BaseUnit
 
     public override HitResult Hit(HitData HitInfo)
     {
-        HitResult result = HitResult.Empty();
+        HitResult result = HitResult.Default();
 
         if (HitInfo.Damage > 0 && IsAlive)
         {
@@ -261,12 +261,6 @@ public class ShieldEnemy : BaseUnit
         var dead = new State<ShieldEnemyStates>("Dead");
 
         /*
-         * .OnEnter += (previousState) => { };
-         * .OnUpdate += () => { };
-         * .OnExit += (nextState) => { };
-        */
-
-        /*
             anims.SetBool("Dead", true);
             anims.SetTrigger("getDamage");
             anims.SetFloat("Moving", 1f);
@@ -383,7 +377,7 @@ public class ShieldEnemy : BaseUnit
         {
             _blocking = false;
             Disarmed = true;
-            currentDisarmedTime = DisarmedTime;
+            _currentDisarmedTime = DisarmedTime;
             SetVulnerabity(true, 1);
 
             anims.SetBool("Disarmed",true);
@@ -528,9 +522,9 @@ public class ShieldEnemy : BaseUnit
 
         if (Disarmed)
         {
-            if (currentDisarmedTime > 0)
-                currentDisarmedTime -= Time.deltaTime;
-            else if(currentDisarmedTime <= 0)
+            if (_currentDisarmedTime > 0)
+                _currentDisarmedTime -= Time.deltaTime;
+            else if(_currentDisarmedTime <= 0)
             {
                 Disarmed = false;
                 _sm.Feed(ShieldEnemyStates.think);
