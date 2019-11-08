@@ -62,10 +62,8 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     #region Variables Hereditarias
 
     protected float _hp = 0f;
-    protected float _minForwardAngle = 40f;
     protected bool _targetDetected = false;
     protected bool _invulnerable = false;
-    protected bool _isMoving = false;
     protected bool _alertFriends = true;
     protected Vector3 _viewDirection = Vector3.zero; 
 
@@ -74,7 +72,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     #region Estadísticas Base
 
     [Header("Estadísticas BASE")]
-    public float MaxHP = 100f;
+    public float MaxHP = 100f;                       //Vida Máxima de esta unidad.
     public float Health
     {
         get { return _hp; }
@@ -85,19 +83,20 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
             EnemyHealthBar.UpdateDisplay(_hp);
         }
     }
-    public float MovementSpeed = 1f;
-    public float attackRate = 1f;
-    public float AttackRange = 1f;
-    public float attackDamage = 1f;
-    protected float _rotationLerpSpeed = 0.1f;
-    public float NormalRotationLerpSeed = 0.1f;
-    public float AttackRotationLerpSpeed = 10f;
+    public float MovementSpeed = 1f;                 // Velocidad de desplazamiento de esta Unidad.
+    public float attackRate = 1f;                    // El ratio de ataque.
+    public float AttackRange = 1f;                   // El rango de Ataque.
+    public float attackDamage = 1f;                  // El daño básico.
+    public float NormalRotationLerpSeed = 0.1f;      // La velocidad de rotación Normal.
+    public float AttackRotationLerpSpeed = 10f;      // La velocidad de rotación durante el combate.
+    protected float _rotationLerpSpeed = 0.1f;       // La velocidad de rotación actual.
 
-    public float minDetectionRange = 8f;
-    public float MediumRange = 40f;
-    public float HighRange = 60f;
+    [Header("Rangos de Detección")]
+    public float minDetectionRange = 8f;             // Rango de detección Mínima.
+    public float MediumRange = 40f;                  // Rango de detección Medio.
+    public float HighRange = 60f;                    // Rango de detección Máximo.
 
-    public bool LookTowardsPlayer = true;
+    public bool LookTowardsPlayer = true;            // Si la unidad debe rotar hacia el jugador.
 
     #endregion
 
@@ -186,7 +185,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
                 Gizmos.DrawWireSphere(currentPosition, HighRange);
             }
         }
-    } 
+    }
 #endif
 
 #endregion
@@ -218,7 +217,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     //=========================== CUSTOM PROTECTED FUNCS ======================================
 
-    protected void Die()
+    protected virtual void Die()
     {
         EnemyHealthBar.FadeOut(3f);
         agent.enabled = false;
@@ -284,7 +283,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     //============================== CORRUTINES ===============================================
 
-    IEnumerator FallAfterDie(float delay = 1f)
+    protected IEnumerator FallAfterDie(float delay = 1f)
     {
         float fallTime = 10f;
         yield return new WaitForSeconds(delay + 2f);

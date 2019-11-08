@@ -547,6 +547,7 @@ public class ShieldEnemy : BaseUnit
         else if (VulnerableMarker.gameObject.activeSelf)
             VulnerableMarker.gameObject.SetActive(false);
 
+        //Condición de muerte, Update de Sight, FSM y Rotación.
         if (IsAlive)
         {
             sight.Update();

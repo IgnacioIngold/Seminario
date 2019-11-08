@@ -13,30 +13,89 @@ public enum FatEnemyStates
     meleeAttack,
     pursue,
     think,
+    hurted,
     dead
 }
 
+/*
+ * En la sección de propiedades podemos encontrar uno x cada parámetro del animator.
+*/
 public class FatEnemy : BaseUnit
 {
-    public GameObject projectile;
     public GenericFSM<FatEnemyStates> _sm;
 #if UNITY_EDITOR
     public FatEnemyStates currentState;
 #endif
+    [Header("Estado de Alerta")]
+    public float AlertTime;
+    private float _alertedTimeRemainig;
 
     [Header("Rangos de Ataque")]
     public float rangeAttack_MaxRange;
     public float meleeAttack_MaxRange;
-    //Alerta
-    public float AlertTime;
-    private float _alertedTimeRemainig;
-    //Ataque melee
-    public float MeleeAttackTime;
-    public float meleeAttackCooldownTime;
+#if UNITY_EDITOR
+    public bool Debug_AttackRanges; 
+#endif
+
+    [Header("Ataque Melee")]
+    public float MeleeAttackDuration;
+    public float MeleeAttackCooldown;
     private float _remainingMeleeAttackTime;
-    //Ataque Rango.
+
+    [Header("Ataque de Rango")]
+    public GameObject bullet;
+    public Transform bulletParent;
+    public float RangeAttackDuration;
+    public float RangeAttackCooldown;
     private float _remaingRangeAttackTime;
 
+    [Header("Explode")]
+    public LayerMask DamageableMask;
+    public GameObject explodeParticle;
+    public Transform explotionLocator;
+    public SkinnedMeshRenderer rend;
+    public float explotionDamage;
+    public float ExplotionRange;
+    public float explotionForce;
+    public float TimeToExplote;
+    public float minExplodeVel;
+    public float maxExplodeVel;
+    private float _remainingTimeToExplote;
+
+    private float _thinkTime; //Tiempo de pensadar.
+
+    int[] animationParams;
+
+    //============================== PROPIEDADES ==============================================
+
+    public float Locomotion
+    {
+        get => anims.GetFloat(animationParams[0]);
+        set => anims.SetFloat(animationParams[0], value);
+    }
+    public bool IsDead
+    {
+        get => anims.GetBool(animationParams[1]);
+        set => anims.SetBool(animationParams[1], value);
+    }
+    public int Combat
+    {
+        get => anims.GetInteger(animationParams[2]);
+        set => anims.SetInteger(animationParams[2], value);
+    }
+    public bool IsAlerted
+    {
+        get => anims.GetBool(animationParams[3]);
+        set => anims.SetBool(animationParams[3], value);
+    }
+
+    /// <summary>
+    /// Funciona como un Trigger.
+    /// </summary>
+    public void Alert()
+    {
+        StartCoroutine(SetAlertedTrigger());
+    }
 
     //============================== INTERFACES ===============================================
 
@@ -46,7 +105,7 @@ public class FatEnemy : BaseUnit
     /// <returns></returns>
     public override HitData GetDamageStats()
     {
-        return HitData.Default();
+        return new HitData() { Damage = attackDamage, AttackType = Inputs.light, BreakDefence = false };
     }
     /// <summary>
     /// Se llama cuando este enemigo recibe un Hit.
@@ -58,6 +117,18 @@ public class FatEnemy : BaseUnit
         HitResult result = HitResult.Default();
 
         //Completar
+        Health -= EntryData.Damage;
+
+
+        if (Health <= 0)
+        {
+            print("Me Muero");
+            _sm.Feed(FatEnemyStates.dead);
+        }
+
+        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+        Destroy(particle, 3f);
+        EnemyHealthBar.FadeIn();
 
         return result;
     }
@@ -67,7 +138,7 @@ public class FatEnemy : BaseUnit
     /// <param name="result"></param>
     public override void FeedHitResult(HitResult result)
     {
-        //Completar.
+        //Este enemigo en particular no hace mucho.
     }
 
     //============================ UNITY FUNCTIONS ============================================
@@ -75,6 +146,10 @@ public class FatEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+
+        animationParams = new int[4];
+        for (int i = 0; i < animationParams.Length; i++)
+            animationParams[i] = anims.GetParameter(i).nameHash;
 
         #region StateMachine
 
@@ -100,6 +175,12 @@ public class FatEnemy : BaseUnit
         pursue.AddTransition(FatEnemyStates.think, think)
               .AddTransition(FatEnemyStates.dead, dead);
 
+        meleeAttack.AddTransition(FatEnemyStates.dead, dead)
+                   .AddTransition(FatEnemyStates.think, think);
+
+        rangeAttack.AddTransition(FatEnemyStates.think, think)
+                   .AddTransition(FatEnemyStates.dead, dead);
+
         think.AddTransition(FatEnemyStates.meleeAttack, meleeAttack)
              .AddTransition(FatEnemyStates.rangeAttack, rangeAttack)
              .AddTransition(FatEnemyStates.idle, idle)
@@ -119,6 +200,7 @@ public class FatEnemy : BaseUnit
         idle.OnEnter += (previousState) => 
         {
             //Animación.
+            Locomotion = 0;
         };
         idle.OnUpdate += () => 
         {
@@ -135,6 +217,9 @@ public class FatEnemy : BaseUnit
 
         alert.OnEnter += (previousState) => 
         {
+            Alert();
+            _targetDetected = true;
+            LookTowardsPlayer = true;
             //Tiempo de alerta
             if (_alertFriends)
                 _alertedTimeRemainig = AlertTime;
@@ -151,27 +236,45 @@ public class FatEnemy : BaseUnit
         };
         //alert.OnExit += (nextState) => { };
 
-        pursue.OnEnter += (previousState) => 
-        {
-            //Animación
-        };
+        pursue.OnEnter += (previousState) => { Locomotion = 1; };
         pursue.OnUpdate += () => 
         {
-            transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed);
+            LookTowardsPlayer = true;
 
             if (sight.distanceToTarget > AttackRange) agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
 
             if (sight.distanceToTarget <= AttackRange) _sm.Feed(FatEnemyStates.think);
         };
-        //pursue.OnExit += (nextState) => { };
+        pursue.OnExit += (nextState) => 
+        {
+            if (nextState == FatEnemyStates.idle) Locomotion = 0;
+        };
 
-        think.OnEnter += (previousState) => { };
-        think.OnUpdate += () => { };
+        think.OnEnter += (previousState) => { Locomotion = 0; };
+        think.OnUpdate += () => 
+        {
+            if (_thinkTime > 0) _thinkTime -= Time.deltaTime;
+            else
+            {
+                var target = Target.GetComponent<IKilleable>();
+                float targetDistance = sight.distanceToTarget;
+
+                if (!target.IsAlive) _sm.Feed(FatEnemyStates.idle);
+
+                if (targetDistance <= meleeAttack_MaxRange)
+                    _sm.Feed(FatEnemyStates.meleeAttack);
+                else if (targetDistance <= rangeAttack_MaxRange && targetDistance > meleeAttack_MaxRange)
+                    _sm.Feed(FatEnemyStates.rangeAttack);
+                else if (targetDistance > rangeAttack_MaxRange)
+                    _sm.Feed(FatEnemyStates.pursue);
+            }
+        };
         think.OnExit += (nextState) => { };
 
         rangeAttack.OnEnter += (previousState) => 
         {
             agent.isStopped = true;
+            LookTowardsPlayer = true;
             _remaingRangeAttackTime = 0;
         };
         rangeAttack.OnUpdate += () => 
@@ -180,19 +283,21 @@ public class FatEnemy : BaseUnit
             _remaingRangeAttackTime -= Time.deltaTime;
             if (_remaingRangeAttackTime <= 0)
             {
-                //Instanciamos un projectil.
-                //Necesitamos un parent.
-                //Necesitamos el prefab.
+                Combat = 2;
 
                 //Reseteamos el tiempo para el siguiente ataque.
-                _remaingRangeAttackTime = attackRate;
+                _remaingRangeAttackTime = RangeAttackDuration + RangeAttackCooldown;
             }
 
-            if (sight.distanceToTarget <= rangeAttack_MaxRange)
+            if (sight.distanceToTarget <= meleeAttack_MaxRange)
+            {
+                print("Debería ir a closeCombat");
                 _sm.Feed(FatEnemyStates.think);
+            }
         };
         rangeAttack.OnExit += (nextState) => 
         {
+            Combat = 0;
             agent.isStopped = false;
         };
 
@@ -200,6 +305,7 @@ public class FatEnemy : BaseUnit
         {
             rb.velocity = Vector3.zero;
             agent.isStopped = true;
+            
             _remainingMeleeAttackTime = 0;  //Seteamos el valor original del ataque.
         };
         meleeAttack.OnUpdate += () => 
@@ -207,18 +313,20 @@ public class FatEnemy : BaseUnit
             _remainingMeleeAttackTime -= Time.deltaTime;
             if (_remainingMeleeAttackTime <= 0)
             {
-                //Activamos la animación.
-                _remainingMeleeAttackTime = MeleeAttackTime + meleeAttackCooldownTime;
+                Combat = 1;
+                LookTowardsPlayer = true;
+                _remainingMeleeAttackTime = MeleeAttackDuration + MeleeAttackCooldown;
             }
         };
         meleeAttack.OnExit += (nextState) => 
         {
+            Combat = 0;
             agent.isStopped = false;
         };
 
         dead.OnEnter += (previousState) => 
         {
-            //Animación
+            IsDead = true;
             Die();
         };
 
@@ -229,10 +337,137 @@ public class FatEnemy : BaseUnit
     }
     void Update()
     {
-        _sm.Update(); //Actualizamos la state Machine.
+        //Condición de muerte, Update de Sight, FSM y Rotación.
+        if (IsAlive)
+        {
+            sight.Update();
+
+            if (LookTowardsPlayer && _targetDetected)
+                transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed);
+
+            _sm.Update();
+        }
+        else
+            _sm.Feed(FatEnemyStates.dead);
 
 #if UNITY_EDITOR
         currentState = _sm.currentState; 
 #endif
     }
+    //=============================== MEMBER FUNCS ============================================
+
+    
+
+    //================================ OVERRIDES ==============================================
+
+    protected override void Die()
+    {
+        EnemyHealthBar.FadeOut(3f);
+        agent.enabled = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.isKinematic = true;
+        MainColl.enabled = false;
+
+        OnDie();
+
+        StartCoroutine(Explode());
+    }
+
+    //============================= DEBUGG GIZMOS =============================================
+
+#if UNITY_EDITOR
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        if (Debug_AttackRanges)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, meleeAttack_MaxRange);
+
+            Gizmos.color = Color.red;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, rangeAttack_MaxRange);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, ExplotionRange);
+        }
+    } 
+#endif
+
+    //=============================== ANIMATION EVENTS ========================================
+
+    public void Shoot()
+    {
+        //Instanciamos un projectil.
+        var projectil = Instantiate(bullet);
+        projectil.transform.position = bulletParent.position;
+        projectil.GetComponentInChildren<Bullet>().SetOwner(gameObject);
+
+        Vector3 bulletDir = (Target.position - bulletParent.position).normalized;
+
+        projectil.transform.forward = bulletDir;
+    }
+
+    //=============================== CORRUTINES ================================================
+
+    IEnumerator SetAlertedTrigger()
+    {
+        anims.SetBool(animationParams[3], true);
+        yield return new WaitForEndOfFrame();
+        anims.SetBool(animationParams[3], false);
+    }
+
+    IEnumerator Explode()
+    {
+        //Obtengo el material.
+        var mat = rend.materials[2];
+
+        //Seteo el parámetro para que aparezca como que va a explotar.
+        mat.SetFloat("_life", 0);
+
+        //Voy aumentando la velocidad del efecto gradualmente.
+        while (_remainingTimeToExplote > 0)
+        {
+            _remainingTimeToExplote -= Time.deltaTime;
+
+            float transcurred = (TimeToExplote - _remainingTimeToExplote) / TimeToExplote;
+            float Speed = Mathf.Lerp(minExplodeVel, maxExplodeVel, transcurred);
+            mat.SetFloat("_TickSpeed", Speed);
+
+            yield return null;
+        }
+
+
+        //Aplico daño a todos los entes que esten dentro de un rango.
+        Collider[] result = Physics.OverlapSphere(transform.position, ExplotionRange, DamageableMask);
+        foreach (var target in result)
+        {
+            var damageable = target.GetComponentInParent<IDamageable<HitData, HitResult>>();
+
+            if (damageable != null)
+            {
+                //Saco la dirección al objetivo.
+                Vector3 dir = (transform.position - target.transform.position).normalized;
+                dir.y = 0;  //Elimino el eje y.
+
+                //Aplico una fuerza.
+                target.GetComponentInParent<Rigidbody>().AddForce(dir * explotionForce, ForceMode.Impulse);
+
+                //Aplico un Daño.
+                damageable.Hit(new HitData() { Damage = explotionDamage, BreakDefence = true, AttackType = Inputs.strong });
+            }
+        }
+
+        //Instancio la particula.
+        var explotionParticle = Instantiate(explodeParticle);
+        explotionParticle.transform.position = explotionLocator.position;
+        Destroy(explotionParticle, 3f);
+
+        //Destruyo Este GameObject
+        Destroy(gameObject, 5f);
+    }
 }
+
