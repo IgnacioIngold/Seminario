@@ -31,10 +31,10 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
     [Header("Sistema de Ritmo")]
     public float ComboBonus;
-    public ParticleSystem VulnerableMarker;
-    public ParticleSystem ButtonHitConfirm;
-    public Color LightColor;
-    public Color HeavyColor;
+    public ParticleSystem VulnerableMarker;       // Indica la tecla que debemos presionar.
+    public ParticleSystem ButtonHitConfirm;       // Confirma que la tecla fue presionada.
+    public Color LightColor;                      // Indica que se debe presionar el input Light.
+    public Color HeavyColor;                      // Indica que se debe presionar el input Strong.
     public Dictionary<int, Inputs[]> vulnerabilityCombos;
     public float comboVulnerabilityCountDown = 0f;
     public bool isVulnerableToAttacks = false;

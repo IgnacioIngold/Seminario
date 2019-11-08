@@ -20,7 +20,14 @@ public enum FatEnemyStates
 /*
  * En la sección de propiedades podemos encontrar uno x cada parámetro del animator.
 */
-public class FatEnemy : BaseUnit
+
+public interface IHiteable
+{
+    void AdviceInput(Inputs input);
+    void SetHiteableRange(bool inRange);
+}
+
+public class FatEnemy : BaseUnit, IHiteable
 {
     public GenericFSM<FatEnemyStates> _sm;
 #if UNITY_EDITOR
@@ -52,6 +59,7 @@ public class FatEnemy : BaseUnit
     [Header("Explode")]
     public LayerMask DamageableMask;
     public GameObject explodeParticle;
+    public GameObject explodeRangeParticle;
     public Transform explotionLocator;
     public SkinnedMeshRenderer rend;
     public float explotionDamage;
@@ -89,9 +97,7 @@ public class FatEnemy : BaseUnit
         set => anims.SetBool(animationParams[3], value);
     }
 
-    /// <summary>
-    /// Funciona como un Trigger.
-    /// </summary>
+    //Funciona como un Trigger.
     public void Alert()
     {
         StartCoroutine(SetAlertedTrigger());
@@ -115,20 +121,28 @@ public class FatEnemy : BaseUnit
     public override HitResult Hit(HitData EntryData)
     {
         HitResult result = HitResult.Default();
+        EnemyHealthBar.FadeIn(); //Hacemos aparecer su barra de vida.
+
+        //Particula de feedback del golpe
+        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+        Destroy(particle, 3f);
+
+        VulnerableMarker.gameObject.SetActive(true);
+        ButtonHitConfirm.Play();
 
         //Completar
         Health -= EntryData.Damage;
 
+        //Chequeamos el combow?
 
-        if (Health <= 0)
+
+        if (!IsAlive)
         {
-            print("Me Muero");
+            result.TargetEliminated = true;
+            //Si completo el combo...
+
             _sm.Feed(FatEnemyStates.dead);
         }
-
-        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-        Destroy(particle, 3f);
-        EnemyHealthBar.FadeIn();
 
         return result;
     }
@@ -141,7 +155,7 @@ public class FatEnemy : BaseUnit
         //Este enemigo en particular no hace mucho.
     }
 
-    //============================ UNITY FUNCTIONS ============================================
+    //============================ UNITY FUNCTIONS =============================================
 
     protected override void Awake()
     {
@@ -373,7 +387,7 @@ public class FatEnemy : BaseUnit
         StartCoroutine(Explode());
     }
 
-    //============================= DEBUGG GIZMOS =============================================
+    //============================= DEBUGG GIZMOS ===============================================
 
 #if UNITY_EDITOR
     protected override void OnDrawGizmosSelected()
@@ -397,7 +411,7 @@ public class FatEnemy : BaseUnit
     } 
 #endif
 
-    //=============================== ANIMATION EVENTS ========================================
+    //=============================== ANIMATION EVENTS ==========================================
 
     public void Shoot()
     {
@@ -419,14 +433,15 @@ public class FatEnemy : BaseUnit
         yield return new WaitForEndOfFrame();
         anims.SetBool(animationParams[3], false);
     }
-
     IEnumerator Explode()
     {
         //Obtengo el material.
         var mat = rend.materials[2];
+        explodeRangeParticle.SetActive(true);
 
         //Seteo el parámetro para que aparezca como que va a explotar.
         mat.SetFloat("_life", 0);
+        _remainingTimeToExplote = TimeToExplote;
 
         //Voy aumentando la velocidad del efecto gradualmente.
         while (_remainingTimeToExplote > 0)
@@ -453,21 +468,38 @@ public class FatEnemy : BaseUnit
                 Vector3 dir = (transform.position - target.transform.position).normalized;
                 dir.y = 0;  //Elimino el eje y.
 
+                float DistanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+                float maximDistance = (ExplotionRange - DistanceToTarget) / DistanceToTarget;
+
                 //Aplico una fuerza.
-                target.GetComponentInParent<Rigidbody>().AddForce(dir * explotionForce, ForceMode.Impulse);
+                target.GetComponentInParent<Rigidbody>().AddForce((dir * explotionForce) * maximDistance, ForceMode.Impulse);
 
                 //Aplico un Daño.
-                damageable.Hit(new HitData() { Damage = explotionDamage, BreakDefence = true, AttackType = Inputs.strong });
+                damageable.Hit(new HitData() { Damage = (explotionDamage * maximDistance), BreakDefence = true, AttackType = Inputs.strong });
             }
         }
 
         //Instancio la particula.
         var explotionParticle = Instantiate(explodeParticle);
         explotionParticle.transform.position = explotionLocator.position;
-        Destroy(explotionParticle, 3f);
+        Destroy(explotionParticle, 4f);
 
         //Destruyo Este GameObject
-        Destroy(gameObject, 5f);
+        Destroy(gameObject);
+    }
+
+
+
+    public void AdviceInput(Inputs input)
+    {
+        //Con esto le avisamos a la entidad el input que el jugador ha ingresado, en el frame correspondiente.
+        throw new System.NotImplementedException();
+    }
+
+    public void SetHiteableRange(bool inRange)
+    {
+        //Con esto le avisamos a la entidad que debe mostrar su vulnerabilidad.
+        throw new System.NotImplementedException();
     }
 }
 
