@@ -9,6 +9,7 @@ Shader "shad / explode"
 		_TextureSample2("Texture Sample 2", 2D) = "white" {}
 		_life("life", Range( 0 , 100)) = 100
 		_lowlife("low life", Float) = 10
+		_Color0("Color 0", Color) = (0.2264151,0.1035956,0.1035956,0)
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 		[HideInInspector] __dirty( "", Int ) = 1
 	}
@@ -32,6 +33,7 @@ Shader "shad / explode"
 		uniform float4 _TextureSample0_ST;
 		uniform float _life;
 		uniform float _lowlife;
+		uniform float4 _Color0;
 		uniform sampler2D _TextureSample2;
 		uniform float4 _TextureSample2_ST;
 
@@ -41,9 +43,8 @@ Shader "shad / explode"
 			o.Normal = tex2D( _TextureSample1, uv_TextureSample1 ).rgb;
 			float2 uv_TextureSample0 = i.uv_texcoord * _TextureSample0_ST.xy + _TextureSample0_ST.zw;
 			o.Albedo = tex2D( _TextureSample0, uv_TextureSample0 ).rgb;
-			float4 color11 = IsGammaSpace() ? float4(1,0,0,0) : float4(1,0,0,0);
 			float mulTime9 = _Time.y * 5.0;
-			float4 temp_output_13_0 = saturate( ( color11 * sin( mulTime9 ) ) );
+			float4 temp_output_13_0 = saturate( ( _Color0 * sin( mulTime9 ) ) );
 			o.Emission =  ( _life - float4( 0,0,0,0 ) > _lowlife ? 0.0 : _life - float4( 0,0,0,0 ) <= _lowlife && _life + float4( 0,0,0,0 ) >= _lowlife ? temp_output_13_0 : temp_output_13_0 ) .rgb;
 			float2 uv_TextureSample2 = i.uv_texcoord * _TextureSample2_ST.xy + _TextureSample2_ST.zw;
 			o.Metallic = tex2D( _TextureSample2, uv_TextureSample2 ).r;
@@ -57,13 +58,13 @@ Shader "shad / explode"
 }
 /*ASEBEGIN
 Version=16700
-0;728;1496;273;2373.927;-366.6383;1.6;True;False
+0;728;1496;273;1931.043;-217.0255;1.267718;True;False
 Node;AmplifyShaderEditor.SimpleTimeNode;9;-1237,618.5;Float;False;1;0;FLOAT;5;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SinOpNode;10;-1014,613.5;Float;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;11;-1018,444.5;Float;False;Constant;_Color0;Color 0;5;0;Create;True;0;0;False;0;1,0,0,0;0,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.ColorNode;11;-1018,444.5;Float;False;Property;_Color0;Color 0;5;0;Create;True;0;0;False;0;0.2264151,0.1035956,0.1035956,0;0.6132076,0,0,0;True;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;12;-696,645.5;Float;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;5;-1144,262.5;Float;False;Property;_life;life;3;0;Create;True;0;0;False;0;100;0;0;100;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;7;-1050,353.5;Float;False;Property;_lowlife;low life;4;0;Create;True;0;0;False;0;10;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;5;-1144,262.5;Float;False;Property;_life;life;3;0;Create;True;0;0;False;0;100;10;0;100;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;7;-1050,353.5;Float;False;Property;_lowlife;low life;4;0;Create;True;0;0;False;0;10;10;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SaturateNode;13;-511.5269,616.2383;Float;False;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SamplerNode;1;-581,-77.5;Float;True;Property;_TextureSample0;Texture Sample 0;0;0;Create;True;0;0;False;0;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SamplerNode;2;-597,115.5;Float;True;Property;_TextureSample1;Texture Sample 1;1;0;Create;True;0;0;False;0;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -83,4 +84,4 @@ WireConnection;0;1;2;0
 WireConnection;0;2;6;0
 WireConnection;0;3;3;0
 ASEEND*/
-//CHKSM=EB7DA83B4A8418DBF1C1936E22B998E7F4634889
+//CHKSM=E5AF25316A65B17DF4A46C545E022F1AC3988527
