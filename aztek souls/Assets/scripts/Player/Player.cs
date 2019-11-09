@@ -423,7 +423,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L1.Cost;
             //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = 1.25f;
+        L1.AttackDuration = 0.933f;
         L1.OnEnableInput += () => { marker.SetActive(true); };
         L1.OnHit += () => 
         {
@@ -437,7 +437,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L2.Cost;
             //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = 1.25f;
+        L2.AttackDuration = 0.599f;
         L2.OnEnableInput += () => { marker.SetActive(true); };
         L2.OnHit += () => 
         {
@@ -451,7 +451,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             Stamina -= L3.Cost;
             //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = 1.25f;
+        L3.AttackDuration = 1.1f;
             
         L3.OnHit += () => 
         {

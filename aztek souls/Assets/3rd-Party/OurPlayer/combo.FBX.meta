@@ -48,7 +48,8 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: Event DenyGetInput has a time (0.400000) outside the
+      clip's valid range (0.000000..0.400000). It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -66,7 +67,7 @@ ModelImporter:
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 9
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -102,8 +103,8 @@ ModelImporter:
       name: Attack2/Start-Up
       takeName: Take 001
       internalID: 0
-      firstFrame: 61
-      lastFrame: 91
+      firstFrame: 31
+      lastFrame: 35
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -147,8 +148,8 @@ ModelImporter:
       name: attack3/Start-Up
       takeName: Take 001
       internalID: 0
-      firstFrame: 123
-      lastFrame: 153
+      firstFrame: 48
+      lastFrame: 62
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -176,8 +177,8 @@ ModelImporter:
       name: attack3/Active
       takeName: Take 001
       internalID: 0
-      firstFrame: 154
-      lastFrame: 169
+      firstFrame: 63
+      lastFrame: 67
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -229,8 +230,8 @@ ModelImporter:
       name: Attack3-Recovery
       takeName: Take 001
       internalID: 0
-      firstFrame: 170
-      lastFrame: 185
+      firstFrame: 68
+      lastFrame: 83
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -258,8 +259,8 @@ ModelImporter:
       name: Attack1/Active
       takeName: Take 001
       internalID: 0
-      firstFrame: 31
-      lastFrame: 46
+      firstFrame: 10
+      lastFrame: 17
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -279,7 +280,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.37080166
+      - time: 0.33164504
         functionName: EnableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
@@ -287,7 +288,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.990625
+      - time: 0.99966115
         functionName: DisableDamage
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
@@ -303,8 +304,8 @@ ModelImporter:
       name: Attack1/Recovery
       takeName: Take 001
       internalID: 0
-      firstFrame: 45
-      lastFrame: 60
+      firstFrame: 18
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -348,8 +349,8 @@ ModelImporter:
       name: Attack2/Active
       takeName: Take 001
       internalID: 0
-      firstFrame: 92
-      lastFrame: 107
+      firstFrame: 36
+      lastFrame: 42
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -393,8 +394,8 @@ ModelImporter:
       name: Attack2/Recovery
       takeName: Take 001
       internalID: 0
-      firstFrame: 108
-      lastFrame: 123
+      firstFrame: 43
+      lastFrame: 47
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -439,7 +440,7 @@ ModelImporter:
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 193
+      lastFrame: 83
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
