@@ -215,8 +215,10 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     bool breakDefence = false;
     Vector3 _AttackOrientation = Vector3.zero;
 
-    #endregion
+    Vector3 moveDiR;
+    float speedR;
 
+    #endregion
     //============================================= INTERFACES ================================================================
 
     public bool IsAlive => _hp > 0;
@@ -321,7 +323,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         OnHitConfirmed(data);
     }
-
     /// <summary>
     /// Como vampiro XD
     /// </summary>
@@ -656,7 +657,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 return;
             }
 
-            if (!_attacking && !_rolling && Stamina>0)
+            if (!_attacking && !_rolling && Stamina > 0)
             {
                 _AttackOrientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
 
@@ -665,7 +666,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //else
                 //if (Input.GetButtonDown("StrongAttack"))
                 //    Attack(Inputs.strong);
-            } 
+            }
         }
 
         if (_attacking)
@@ -730,8 +731,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     //=========================================================================================================================
 
-    Vector3 moveDiR;
-    float speedR;
 
     public void Move()
     {
@@ -766,12 +765,29 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         _rb.velocity = realPosToGo;
     }
+    public void Attack(Inputs input)
+    {
+        if (!_attacking)
+        {
+            //On Begin Combat
+            _attacking = true;
 
+            //Bloqueo las animaciones anteriores.
+            StopAllCoroutines();
+            _anims.SetBool("Running", false);
+            _anims.SetFloat("VelY", 0);
+            _anims.SetFloat("VelX", 0);
+
+            _moving = false;
+            _clamped = true;
+
+            CurrentWeapon.BegginCombo(input);
+        }
+    }
     public void GetHit()
     {
         OnGetHit();
     }
-
     public void Die()
     {
         _anims.SetTrigger("died");
@@ -784,7 +800,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         //Tengo que decirle a algún Mánager quién es el enemigo que me mató, y luego marcarlo como mi killer.
         //Al volver a matarlo, nos devuelve la sangre que perdimos.
     }
-
     /// <summary>
     /// Al morir el jugador, la barra de estamina se reduce gradualmente a 0.
     /// </summary>
@@ -811,29 +826,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _myBars.FadeOut(3f);
     }
 
-    public void Attack(Inputs input)
-    {
-        //On Begin Combat
-        _attacking = true;
-
-        //Bloqueo las animaciones anteriores.
-        StopAllCoroutines();
-        _anims.SetBool("Running", false);
-        _anims.SetFloat("VelY", 0);
-        _anims.SetFloat("VelX", 0);
-
-        _moving = false;
-        _clamped = true;
-        //Debug.LogWarning("INICIO COMBATE");
-
-        CurrentWeapon.BegginCombo(input);
-    }
-
-    //A futuro we.
-    //public void LevelUp()
-    //{
-    //    Health = BaseHP + myStats.Vitalidad * 5;
-    //}
+    //===================================== CORRUTINAS ========================================================================
 
     IEnumerator Roll()
     {
@@ -886,28 +879,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         // Adicional poner el roll en enfriamiento.
     }
 
-    //IEnumerator RollCooldown()
-    //{
-    //    _canRoll = false;
-    //    yield return new WaitForSeconds(RollCoolDown);
-    //    _canRoll = true;
-    //}
-
     IEnumerator StaminaRecoverDelay(float Delay)
     {
         _recoverStamina = false;
         yield return new WaitForSeconds(Delay);
         _recoverStamina = true;
     }
-
-    //IEnumerator exhausted()
-    //{
-    //    _exhausted = true;
-    //    //print("Exhausted");
-    //    yield return new WaitForSeconds(ExhaustTime);
-    //    //print("Recovered");
-    //    _exhausted = false;
-    //}
 
     IEnumerator Shock()
     {
@@ -930,6 +907,8 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _invulnerable = false;
         _listenToInput = true;
     }
+
+    //======================================== COLLISIONES ====================================================================
 
     private void OnCollisionStay(Collision collision)
     {
