@@ -57,7 +57,10 @@ public class Attack
     /// <returns>Null si el ataque encadenado requerido no existe.</returns>
     public Attack getConnectedAttack(Inputs input)
     {
-        return ConnectedAttacks[input];
+        if (ConnectedAttacks.ContainsKey(input))
+            return ConnectedAttacks[input];
+        else
+            return null;
     }
     /// <summary>
     /// Añade o reemplaza un ataque por otro identificado por el mismo tipo (parametro "type").

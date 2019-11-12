@@ -125,7 +125,6 @@ public class Weapon
 
     public void InterruptAttack()
     {
-        //MonoBehaviour.print("Ataque Interrumpido.");
         OnEndChain();
     }
     public void FeedInput(Inputs input)
