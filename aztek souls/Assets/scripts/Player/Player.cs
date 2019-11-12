@@ -54,8 +54,8 @@ public struct Stats
 //[RequireComponent(typeof(Rigidbody))]
 public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<object[]>
 {
-    #region Estado
-    //Eventos
+    #region Eventos
+
     public event Action OnDie = delegate { };
     public event Action OnGetHit = delegate { };
     public event Action OnAttackLanded = delegate { };
@@ -64,30 +64,38 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public event Action OnFeastBlood = delegate { };
     public event Action OnConsumeBlood = delegate { };
     public event Action OnHealthHitMax = delegate { };
-    //public event Action OnPositionIsUpdated = delegate { };
 
-    //Objetos que hay que setear.
-    public HealthBar _myBars;                               // Display de la vida y la estamina del jugador.
-    [SerializeField] Transform AxisOrientation;             // Transform que determina la orientación del jugador.
-    public LayerMask floor;
-    public GameObject marker;                               // Índicador de ventana de Input.
-    public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
-    public ParticleSystem RollParticle;
-    public ParticleSystem.EmissionModule rollparticleEmission;
-    public ParticleSystem FeastBlood;
-    public Collider HitCollider;
+    #endregion
+
+    #region Variables de Inspector
+    [SerializeField] HealthBar _myBars;                                    // Display de la vida y la estamina del jugador.
+    [SerializeField] Transform AxisOrientation;                            // Transform que determina la orientación del jugador.
+    [SerializeField] LayerMask floor;                                      // Máscara de colisión para el piso.
+    [SerializeField] GameObject marker;                                    // Índicador de ventana de Input.
+    [SerializeField] GameObject OnHitParticle;                             // Particula a instanciar al recibir daño.
+    [SerializeField] ParticleSystem RollParticle;                          // Partícula de Roll.
+    [SerializeField] ParticleSystem.EmissionModule rollparticleEmission;   // Módulo de Emisión de la particula de roll.
+    [SerializeField] ParticleSystem FeastBlood;                            // Particula que se reproduce al cargar vida.
+    [SerializeField] Collider HitCollider;                                 // Collider de daño.
+    [SerializeField] PlayableDirector StaminaEffect;                       // Reproduce el Efecto/Aviso de falta de Stamina.
+    public PlayableDirector CameraShake;                         // Reproduce un Shake de la cámara.
+
     Rigidbody _rb;                                          // Componente Rigidbody.
-                                                            //CharacterController controller;
-    Animator _anims;                                        // Componente Animator.
-    //Orientación
+    Animator _anims;                                        // Componente Animator. 
+    #endregion
+
+    #region Orientación
+    public Transform stairOrientation;
+
     Vector3 _dir = Vector3.zero;                            // Dirección a la que el jugador debe mirar (Forward).
     Vector3 _rollDir = Vector3.zero;                        // Dirección a la que el jugador debe mirar al hacer un roll.
+    Vector3 moveDiR = Vector3.zero;                         // Dirección real utilizada para hacer el movimiento. 
+    #endregion
 
-    public PlayableDirector StaminaEffect;
-    public PlayableDirector CameraShake;
 
     [Header("Main Stats")] //Estados Principales.
     public Stats myStats;
+    #region Health.
     public float BaseHP = 100f;                               // Máxima cantidad de vida posible del jugador.
     /// <summary>
     /// Controla el Display de la vida.
@@ -122,11 +130,9 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         get { return BaseHP + (myStats.Vitalidad * 5); }
     }
-    float _hp = 100f;                                        // PRIVADO: valor actual de la vida.
-    bool _canHeal = false;
-
-    //Estamina.
-    float _st = 100f;                                        // PRIVADO: valor actual de la estamina.
+    float _hp = 100f;                                        // PRIVADO: valor actual de la vida. 
+    #endregion
+    #region Stamina.
     /// <summary>
     /// Controla el Display de la Estamina.
     /// </summary>
@@ -152,37 +158,31 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     public float MaxStamina = 100f;                          // Estamina máxima del jugador.
     public float StaminaRegeneration = 2f;                   // Regeneración por segundo de estamina.
     public float StRecoverDelay = 0.8f;                      // Delay de Regeneración de estamina luego de ejectuar una acción.
-    //public float ExhaustTime = 2f;                           // Tiempo que dura el Estado de "Exhaust".
-    [Range(2,10)]
-    public float staminaRateDecrease = 5;                    // Reducción de regeneración de stamina al estar exhausto.
-    public float rotationLerpSpeed = 0.1f;
-    bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina.
-    //bool _exhausted = false;                                 // Verdadero cuando mi estamina se reduce a 0.
 
+    float _st = 100f;                                        // PRIVADO: valor actual de la estamina.
+    bool _recoverStamina = true;                             // Verdadero cuando se pierde estamina. 
+    #endregion
+
+    #region Walking
+    [Header("Walking")]
     public float walkSpeed = 4f;                             // Velocidad de movimiento del jugador al caminar.
-
+    public float rotationLerpSpeed = 0.1f; 
+    #endregion
+    #region Run
+    [Header("Running")]
     public float runSpeed = 20f;                             // Velocidad de movimiento del jugador al correr.
     public float runCost = 20;                               // Costo por segundo de la acción correr.
-    bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente.
-
-    bool _invulnerable = false;                              // Si el jugador puede recibir daño.
-    bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
-    bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
-  
-
-    public bool isInStair;
-    public Transform stairOrientation;
+    bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente. 
+    #endregion
+    #region Roll
     public float rollSpeed = 30f;                            // Velocidad de desplazamiento mientras hago el roll.
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
-    public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
-    public bool _listenToInput = true;
-    //bool _canRoll = true;                                  // Si puedo rollear.
-    bool _rolling = false;                                   // Si estoy rolleando actualmente.
-    bool _AttackStep = false;                                // si estoy dando el paso
+    public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado. 
+    #endregion
+
     float _forceStep;                                         //fuerza y direccion del movimiento
     float _timeStep;
-
 
     [Header("Blood System")]
     public float consumeBloodRate = 10f;
@@ -202,23 +202,29 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
     }
 
-
-
     [Header("Combat")]
     public List<AnimationClip> AttackClips;
     public Weapon CurrentWeapon;
     public bool interruptAllowed = false;
     public float CombatRotationSpeed = 0f;
     public float ShockDuration = 2f;
-    bool _attacking = false;                                 // Si estoy atacando actualmente.
-    bool _shoked;
     bool breakDefence = false;
     Vector3 _AttackOrientation = Vector3.zero;
 
-    Vector3 moveDiR;
-    float speedR;
+    [Header("Estado Actual")]
+    public bool _listenToInput = true;
+    public bool _isInStair = false;
 
-    #endregion
+    [SerializeField] bool _invulnerable = false;                              // Si el jugador puede recibir daño.
+    [SerializeField] bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
+    [SerializeField] bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
+    [SerializeField] bool _canHeal = false;
+    [SerializeField] bool _rolling = false;                                   // Si estoy rolleando actualmente.
+    [SerializeField] bool _AttackStep = false;                                // si estoy dando el paso
+    [SerializeField] bool _attacking = false;                                 // Si estoy atacando actualmente.
+    [SerializeField] bool _shoked;
+    [SerializeField] float speedR;
+
     //============================================= INTERFACES ================================================================
 
     public bool IsAlive => _hp > 0;
@@ -729,8 +735,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         }
     }
 
-    //=========================================================================================================================
-
+    //======================================== Funciones Miembro ==============================================================
 
     public void Move()
     {
@@ -851,7 +856,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             left -= Time.deltaTime;
             Vector3 normalMove = new Vector3(_rollDir.x, 0, _rollDir.z) * rollSpeed;
 
-            if (stairOrientation != null && isInStair)
+            if (stairOrientation != null && _isInStair)
             {
                 float stairf = Vector3.Dot(transform.forward, stairOrientation.forward);
                 Vector3 stairDir = stairOrientation.forward * stairf;
