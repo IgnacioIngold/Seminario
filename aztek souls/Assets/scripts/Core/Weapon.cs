@@ -25,6 +25,7 @@ public class Weapon
 
     public event Action OnBegginChain = delegate { };
     public event Action OnEndChain = delegate { };
+    public event Action<Attack> OnInputConfirmed = delegate { };
 
     public event Action DuringAttack = delegate { };
 
@@ -35,8 +36,6 @@ public class Weapon
 
     public Weapon(Animator anims)
     {
-        _anims = anims;
-
         _anims = anims;
 
         entryPoints = new Dictionary<Inputs, Attack>();
@@ -138,7 +137,10 @@ public class Weapon
             {
                 MonoBehaviour.print("Input CONFIRMADO.");
                 NextAttack = posible;
+                _anims.SetInteger("combat", NextAttack.ID);
             }
+            else
+                _anims.SetInteger("combat", 0);
         }
     }
 }
