@@ -107,7 +107,7 @@ public class BasicEnemy : BaseUnit
                     }
                     else
                         comboVulnerabilityCountDown += 1f;
-                    ConfirmButtonHit();
+                    Display_CorrectButtonHitted();
 
                     coincided = true;
 
@@ -163,7 +163,7 @@ public class BasicEnemy : BaseUnit
         return result;
     }
 
-    public override void FeedHitResult(HitResult result)
+    public override void GetHitResult(HitResult result)
     {
         print("El enemigo conectó un Hit");
     }

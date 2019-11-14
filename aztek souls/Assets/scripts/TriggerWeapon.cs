@@ -42,7 +42,7 @@ public class TriggerWeapon : MonoBehaviour
                 print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name)); 
 #endif
 
-            _owner.FeedHitResult(Target.Hit(_owner.DamageStats()));
+            _owner.GetHitResult(Target.Hit(_owner.DamageStats()));
 
 #if UNITY_EDITOR
             if (debugOwnerStats)

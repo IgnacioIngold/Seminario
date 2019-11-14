@@ -8,7 +8,7 @@ namespace Core.Entities
     {
         ExitHitData Hit(EntryHitData EntryData);
         EntryHitData DamageStats();
-        void FeedHitResult(ExitHitData result);
+        void GetHitResult(ExitHitData result);
     }
     //Todas las unidades tienen 2 estados Básicos: vivos o muertos.
     public interface IKilleable

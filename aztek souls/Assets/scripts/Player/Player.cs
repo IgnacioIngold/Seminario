@@ -337,7 +337,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         return returnValue;
     }
-    public void FeedHitResult(HitResult result)
+    public void GetHitResult(HitResult result)
     {
         if (result.HitBlocked)
         {

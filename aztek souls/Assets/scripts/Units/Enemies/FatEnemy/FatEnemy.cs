@@ -21,13 +21,7 @@ public enum FatEnemyStates
  * En la sección de propiedades podemos encontrar uno x cada parámetro del animator.
 */
 
-public interface IHiteable
-{
-    void AdviceInput(Inputs input);
-    void SetHiteableRange(bool inRange);
-}
-
-public class FatEnemy : BaseUnit, IHiteable
+public class FatEnemy : BaseUnit
 {
     public GenericFSM<FatEnemyStates> _sm;
 #if UNITY_EDITOR
@@ -150,7 +144,7 @@ public class FatEnemy : BaseUnit, IHiteable
     /// Se llama cuando este Enemigo ejecuta un ataque.
     /// </summary>
     /// <param name="result"></param>
-    public override void FeedHitResult(HitResult result)
+    public override void GetHitResult(HitResult result)
     {
         //Este enemigo en particular no hace mucho.
     }
@@ -371,20 +365,11 @@ public class FatEnemy : BaseUnit, IHiteable
 
     //=============================== MEMBER FUNCS ============================================
 
-    public void AdviceInput(Inputs input)
-    {
-        //Con esto le avisamos a la entidad el input que el jugador ha ingresado, en el frame correspondiente.
-        throw new System.NotImplementedException();
-    }
-    public void SetVulnerability()
-    {
-
-    }
-    public void SetHiteableRange(bool inRange)
-    {
-        //Con esto le avisamos a la entidad que debe mostrar su vulnerabilidad.
-        throw new System.NotImplementedException();
-    }
+    //public void SetHiteableRange(bool inRange)
+    //{
+    //    //Con esto le avisamos a la entidad que debe mostrar su vulnerabilidad.
+    //    throw new System.NotImplementedException();
+    //}
 
     //================================ OVERRIDES ==============================================
 

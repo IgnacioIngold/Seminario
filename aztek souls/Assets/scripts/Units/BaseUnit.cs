@@ -38,6 +38,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public Dictionary<int, Inputs[]> vulnerabilityCombos;
     public float comboVulnerabilityCountDown = 0f;
     public bool isVulnerableToAttacks = false;
+    protected int _currentVulnerabilityCombo;
     protected int _attacksRecieved = 0;
 
     #endregion
@@ -126,7 +127,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     public virtual HitData DamageStats() { return HitData.Default(); }
     public virtual HitResult Hit(HitData EntryData) { return HitResult.Default(); }
-    public virtual void FeedHitResult(HitResult result) { }
+    public virtual void GetHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
 
@@ -217,42 +218,16 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     //=========================== CUSTOM PROTECTED FUNCS ======================================
 
-    protected virtual void Die()
-    {
-        EnemyHealthBar.FadeOut(3f);
-        agent.enabled = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        rb.isKinematic = true;
-        MainColl.enabled = false;
-
-        StartCoroutine(FallAfterDie(3f));
-        OnDie();
-    }
-    protected void ConfirmButtonHit()
+    protected void Display_CorrectButtonHitted()
     {
         if (!ButtonHitConfirm.gameObject.activeSelf)
             ButtonHitConfirm.gameObject.SetActive(true);
         else
             ButtonHitConfirm.Play();
     }
-    protected void ShowNextVulnerability(int index, int combo = 1)
+    protected void Display_IncorrectButtonHitted()
     {
-        if (index < vulnerabilityCombos[1].Length)
-        {
-            var nextAttackType = vulnerabilityCombos[combo][index];
-            var ParticleSystem = VulnerableMarker.main;
-
-            if (!VulnerableMarker.gameObject.activeSelf)
-            {
-                print("No estaba activado we");
-                VulnerableMarker.gameObject.SetActive(true);
-            }
-
-            if (nextAttackType == Inputs.light)
-                ParticleSystem.startColor = LightColor;
-            if (nextAttackType == Inputs.strong)
-                ParticleSystem.startColor = HeavyColor;
-        }
+        //Por ahora no tenemos una particula que muestre lo contrario.
     }
 
     //============================== PUBLIC FUNCS =============================================
@@ -267,18 +242,63 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     //============================== OVERRAIDEABLES ===========================================
 
-    /// <summary>
-    /// Permite setear por evento el momento en el que el enemigo es vulnerable a un ataque enemigo.
-    /// </summary>
-    /// <param name="vulnerable">Si el enemigo entro en su fase vulnerable.</param>
-    public virtual void SetVulnerabity(bool vulnerable, int Combo = 1)
+    //Confirm Button Hit --> Hace el efecto que muestra que el boton era el correcto.
+    public virtual void SetCurrentVulnerability(int ComboIndex)
     {
-        comboVulnerabilityCountDown = vulnerableTime;
-        isVulnerableToAttacks = vulnerable;
-        ConfirmButtonHit();
+        if (vulnerabilityCombos.ContainsKey(ComboIndex))
+            _currentVulnerabilityCombo = ComboIndex;
 
-        //Muestro el siguiente ataque.
-        ShowNextVulnerability(0, Combo);
+        //comboVulnerabilityCountDown = vulnerableTime;
+        //isVulnerableToAttacks = true;
+    }
+    public virtual Inputs GetCurrentVulnerability()
+    {
+        return vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved];
+    }
+
+    /// <summary>
+    /// Muestra la particula de Vulnerabilidad, utilizando _currentVulnerabilityCombo y _AttacksRecieved como referencia.
+    /// </summary>
+    public virtual void ShowVulnerability()
+    {
+        var ParticleSystem = VulnerableMarker.main;
+        Inputs input = GetCurrentVulnerability();
+        switch (input)
+        {
+            case Inputs.light:
+                ParticleSystem.startColor = LightColor;
+                break;
+            case Inputs.strong:
+                ParticleSystem.startColor = HeavyColor;
+                break;
+            default:
+                ParticleSystem.startColor = LightColor;
+                break;
+        }
+
+        VulnerableMarker.gameObject.SetActive(true);
+    }
+    //public void ShowVulnerability(float Time)
+    //{
+
+    //}
+    /// <summary>
+    /// Oculta la particula que indica la vulnerabilidad
+    /// </summary>
+    public virtual void HideVulnerability()
+    {
+        VulnerableMarker.gameObject.SetActive(false);
+    }
+    protected virtual void Die()
+    {
+        EnemyHealthBar.FadeOut(3f);
+        agent.enabled = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.isKinematic = true;
+        MainColl.enabled = false;
+
+        StartCoroutine(FallAfterDie(3f));
+        OnDie();
     }
 
     //============================== CORRUTINES ===============================================

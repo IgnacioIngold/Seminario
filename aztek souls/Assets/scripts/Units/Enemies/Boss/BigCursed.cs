@@ -114,7 +114,7 @@ public class BigCursed : BaseUnit
                 }
                 else comboVulnerabilityCountDown += 1f;
 
-                ConfirmButtonHit();
+                Display_CorrectButtonHitted();
 
                 //Muestro el siguiente ataque.
                 ShowNextVulnerability(_attacksRecieved);
@@ -167,7 +167,7 @@ public class BigCursed : BaseUnit
     /// Informa a esta entidad del resultado del lanzamiento y conección de un ataque.
     /// </summary>
     /// <param name="result">Resultado del ataque lanzado.</param>
-    public override void FeedHitResult(HitResult result)
+    public override void GetHitResult(HitResult result)
     {
         print(string.Format("{0} ha conectado un ataque.", gameObject.name));
     }

@@ -15,7 +15,7 @@ public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
         Destroy(gameObject);
     }
 
-    public void FeedHitResult(HitResult result)
+    public void GetHitResult(HitResult result)
     {
         print(string.Format("{0} Recibió Data de combate", gameObject.name));
     }
