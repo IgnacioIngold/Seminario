@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Opacity tree 101 _ opacity tree 101
+  m_Shader: {fileID: 4800000, guid: ceac02a10a56aad44bf55de13b4980f5, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _diffuse:
+        m_Texture: {fileID: 2800000, guid: ceb55928bbef1f34e8e1be1524363828, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normal_specular:
+        m_Texture: {fileID: 2800000, guid: c8f794f2dbcf03b4a949d126dba87325, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _shadow:
+        m_Texture: {fileID: 2800000, guid: 03f13c8b46a067e4f9d570347f0a7908, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Opacity: 0.5738282
+    - _Value1: 2
+    - _Value2: 1
+    - __dirty: 0
+    m_Colors: []

@@ -623,24 +623,24 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
+        Attack light1 = new Attack() { Name = "Light1", Cost = 20f, Damage = 25f, AttackDuration = 2.733f };
         light1.OnStart += () =>
         {
-            _anims.SetInteger("combat", 1); // Animación.
+            _anims.SetInteger("combat", 10); // Animación.
             Stamina -= light1.Cost;
         };
 
-        Attack light2 = new Attack() { Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
+        Attack light2 = new Attack() { Name = "Light2", Cost = 25f, Damage = 30f, AttackDuration = 0.863f };
         light2.OnStart += () =>
         {
-            _anims.SetInteger("combat", 3);
+            _anims.SetInteger("combat", 11);
             Stamina -= light2.Cost;
         };
 
         Attack light3 = new Attack() { Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
         light3.OnStart += () =>
         {
-            _anims.SetInteger("combat", 7); //Animación.
+            _anims.SetInteger("combat", 12); //Animación.
             Stamina -= light3.Cost;
         };
 
@@ -652,9 +652,24 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         light2.AddConnectedAttack(Inputs.light, light3);
 
         #endregion
-
-        Weapon2.AddEntryPoint(Inputs.light, light1);       //L1 es un Entry Point.
+                
         weapons.Add(Weapon2);
+        Attack Heavy1 = new Attack() { ID = 13, Name = "Heavy1", Cost = 55f, Damage = 50f, AttackDuration = 3f };
+        Heavy1.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 13); // Animación.
+            Stamina -= Heavy1.Cost;
+        };
+        Attack Light4 = new Attack() { ID = 14, Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
+        Light4.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 14); // Animación.
+            Stamina -= Light4.Cost;
+        };
+
+        Heavy1.AddConnectedAttack(Inputs.light, Light4);
+        Weapon2.AddEntryPoint(Inputs.light, light1);
+        Weapon2.AddEntryPoint(Inputs.strong, Heavy1);
 
         #endregion
 

@@ -70,7 +70,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2187698}
-  - {fileID: 2129798}
+  - {fileID: 2100000, guid: 61079801a9fa3a8439a1f8f9ffe99bff, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,7 +160,7 @@ Material:
     - _TranslucencyViewDependency: 0.7
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _TranslucencyColor: {r: 0.73, g: 0.85, b: 0.41, a: 1}
+    - _TranslucencyColor: {r: 0.7215686, g: 1, b: 0, a: 1}
     - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
 --- !u!21 &2187698
