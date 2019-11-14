@@ -377,9 +377,9 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         }
     }
 
-    //=========================================================================================================================
+    //============================================ UNITY FUNCTIONS ============================================================
 
-    private void Awake()
+    void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
@@ -655,8 +655,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             StartCoroutine(StaminaRecoverDelay(StRecoverDelay));
         };
     }
-
-    private void Start()
+    void Start()
     {
         //Esto es para Updatear la cámara apenas comienza el juego.
         //OnPositionIsUpdated();
@@ -810,13 +809,13 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Stamina += rate;
         }
     }
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         if (!IsAlive) return;
         if (!_clamped && _moving) Move();
     }
 
-    //=========================================================================================================================
+    //============================================= CUSTOM FUNCS ==============================================================
 
     /// <summary>
     /// Permite cambiar de Arma
@@ -888,12 +887,10 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         _rb.velocity = realPosToGo;
     }
-
     public void GetHit()
     {
         OnGetHit();
     }
-
     public void Die()
     {
         _anims.SetTrigger("died");
@@ -906,13 +903,40 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         //Tengo que decirle a algún Mánager quién es el enemigo que me mató, y luego marcarlo como mi killer.
         //Al volver a matarlo, nos devuelve la sangre que perdimos.
     }
+    public void Attack(Inputs input)
+    {
+        //On Begin Combat
+        _attacking = true;
+
+        //Bloqueo las animaciones anteriores.
+        //StopAllCoroutines();
+        _anims.SetBool("Running", false);
+        _anims.SetFloat("VelY", 0);
+        _anims.SetFloat("VelX", 0);
+
+        _moving = false;
+        _clamped = true;
+        //Debug.LogWarning("INICIO COMBATE");
+
+        CurrentWeapon.BegginCombo(input);
+    }
+    public void StaminaEffecPlay()
+    {
+        StaminaEffect.Play();
+    }
+    public void FeastBloodEfect()
+    {
+        FeastBlood.Play();
+    }
+
+    //============================================= CORRUTINES ================================================================
 
     /// <summary>
     /// Al morir el jugador, la barra de estamina se reduce gradualmente a 0.
     /// </summary>
     /// <param name="duration">El tiempo en segundos que va a durar el Fade Out</param>
     /// <returns></returns>
-    public IEnumerator reduxStaminaTo0(float duration)
+    IEnumerator reduxStaminaTo0(float duration)
     {
         float remaining = duration;
         _recoverStamina = false;
@@ -932,31 +956,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         _myBars.m_FadeAll( StatusBars.FadeType.FadeOut, 3f);
     }
-
-    public void Attack(Inputs input)
-    {
-        //On Begin Combat
-        _attacking = true;
-
-        //Bloqueo las animaciones anteriores.
-        StopAllCoroutines();
-        _anims.SetBool("Running", false);
-        _anims.SetFloat("VelY", 0);
-        _anims.SetFloat("VelX", 0);
-
-        _moving = false;
-        _clamped = true;
-        //Debug.LogWarning("INICIO COMBATE");
-
-        CurrentWeapon.BegginCombo(input);
-    }
-
-    //A futuro we.
-    //public void LevelUp()
-    //{
-    //    Health = BaseHP + myStats.Vitalidad * 5;
-    //}
-
     IEnumerator Roll()
     {
         //Primero que nada avisamos que no podemos hacer otras acciones.
@@ -1012,30 +1011,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         // Adicional poner el roll en enfriamiento.
     }
-
-    //IEnumerator RollCooldown()
-    //{
-    //    _canRoll = false;
-    //    yield return new WaitForSeconds(RollCoolDown);
-    //    _canRoll = true;
-    //}
-
     IEnumerator StaminaRecoverDelay(float Delay)
     {
         _recoverStamina = false;
         yield return new WaitForSeconds(Delay);
         _recoverStamina = true;
     }
-
-    //IEnumerator exhausted()
-    //{
-    //    _exhausted = true;
-    //    //print("Exhausted");
-    //    yield return new WaitForSeconds(ExhaustTime);
-    //    //print("Recovered");
-    //    _exhausted = false;
-    //}
-
     IEnumerator Shock()
     {
         _shoked = true;
@@ -1044,7 +1025,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         _anims.SetBool("Disarmed", false);
         _shoked = false;
     }
-
     IEnumerator HurtFreeze()
     {
         _clamped = true;
@@ -1057,6 +1037,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         _invulnerable = false;
         _listenToInput = true;
     }
+
+    //============================================= COLLISIONS ================================================================
 
     private void OnCollisionStay(Collision collision)
     {
@@ -1073,7 +1055,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             }
         }
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         IDamageable<HitData, HitResult> Damageable = collision.gameObject.GetComponent<IDamageable<HitData, HitResult>>();
@@ -1086,12 +1067,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Damageable.Hit(data);
         }
     }
-    public void StaminaEffecPlay()
-    {
-        StaminaEffect.Play();
-    }
-    public void FeastBloodEfect()
-    {
-        FeastBlood.Play();
-    }
+
+    //=========================================================================================================================
 }
