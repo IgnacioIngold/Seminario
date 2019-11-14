@@ -465,7 +465,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { ID = 1, Name = "L1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f };
         L1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1);
@@ -477,7 +477,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Light 1 conecto exitósamente");
         };
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { ID = 3, Name = "L2", Cost = 20f, Damage = 20f, AttackDuration = 1.600f };
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
@@ -489,7 +489,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Light 2 conecto exitósamente");
         };
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f,ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { ID = 7, Name = "L3", Cost = 25f, Damage = 20f, AttackDuration = 1.767f };
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
@@ -500,7 +500,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Light 3 conecto exitósamente");
         };
 
-        Attack L4 = new Attack() { ID = 5, Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 2, maxChainIndex = 3 };
+        Attack L4 = new Attack() { ID = 5, Name = "L4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f };
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
@@ -509,7 +509,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         //L4.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack L5 = new Attack() { ID = 9, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 3, maxChainIndex = 3 };
+        Attack L5 = new Attack() { ID = 9, Name = "L5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f };
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
@@ -521,7 +521,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Strong
 
-        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f,ChainIndex = 1, maxChainIndex = 3 };
+        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f };
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
@@ -532,7 +532,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         S1.OnEnd += () => { breakDefence = false; };
         //S1.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f };
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
@@ -542,7 +542,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S2.OnEnd += () => { breakDefence = false; };
 
-        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f };
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
@@ -552,7 +552,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S3.OnEnd += () => { breakDefence = false; };
 
-        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f };
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
@@ -611,25 +611,25 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
+        Attack light1 = new Attack() { ID = 10, Name = "Light1", Cost = 20f, Damage = 25f, AttackDuration = 2.733f };
         light1.OnStart += () =>
         {
-            _anims.SetInteger("combat", 1); // Animación.
-            Stamina -= L1.Cost;
+            _anims.SetInteger("combat", 10); // Animación.
+            Stamina -= light1.Cost;
         };
 
-        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
+        Attack light2 = new Attack() { ID = 11, Name = "Light2", Cost = 25f, Damage = 30f, AttackDuration = 0.517f };
         light2.OnStart += () =>
         {
-            _anims.SetInteger("combat", 3);
-            Stamina -= L1.Cost;
+            _anims.SetInteger("combat", 11);
+            Stamina -= light2.Cost;
         };
 
-        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
+        Attack light3 = new Attack() { ID = 12, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
         light3.OnStart += () =>
         {
-            _anims.SetInteger("combat", 7); //Animación.
-            Stamina -= L1.Cost;
+            _anims.SetInteger("combat", 12); //Animación.
+            Stamina -= light3.Cost;
         };
 
         #endregion
@@ -641,8 +641,24 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #endregion
 
-        Weapon2.AddEntryPoint(Inputs.light, L1);       //L1 es un Entry Point.
+        
         weapons.Add(Weapon2);
+        Attack Heavy1 = new Attack() { ID = 13, Name = "Heavy1", Cost = 45f, Damage = 50f, AttackDuration = 3f };
+        Heavy1.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 13); // Animación.
+            Stamina -= Heavy1.Cost;
+        };
+        Attack Light4 = new Attack() { ID = 14, Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
+        Heavy1.OnStart += () =>
+        {
+            _anims.SetInteger("combat", 14); // Animación.
+            Stamina -= Light4.Cost;
+        };
+
+        Heavy1.AddConnectedAttack(Inputs.light, Light4);
+        Weapon2.AddEntryPoint(Inputs.light, light1);
+        Weapon2.AddEntryPoint(Inputs.strong, Heavy1);
 
         #endregion
 
