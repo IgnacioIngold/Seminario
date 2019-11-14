@@ -159,7 +159,7 @@ public class BigCursed : BaseUnit
     /// Retorna las estadísticas de combate de esta Unidad.
     /// </summary>
     /// <returns>Una estructura que contiene las stats involucradas en el ataque.</returns>
-    public override HitData GetDamageStats()
+    public override HitData DamageStats()
     {
         return new HitData() { Damage = attackDamage, BreakDefence = false };
     }

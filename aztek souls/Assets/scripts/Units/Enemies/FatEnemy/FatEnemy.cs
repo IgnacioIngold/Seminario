@@ -109,7 +109,7 @@ public class FatEnemy : BaseUnit, IHiteable
     /// Retorna las estadísticas de combate de esta Unidad.
     /// </summary>
     /// <returns></returns>
-    public override HitData GetDamageStats()
+    public override HitData DamageStats()
     {
         return new HitData() { Damage = attackDamage, AttackType = Inputs.light, BreakDefence = false };
     }
@@ -368,9 +368,23 @@ public class FatEnemy : BaseUnit, IHiteable
         currentState = _sm.currentState; 
 #endif
     }
+
     //=============================== MEMBER FUNCS ============================================
 
-    
+    public void AdviceInput(Inputs input)
+    {
+        //Con esto le avisamos a la entidad el input que el jugador ha ingresado, en el frame correspondiente.
+        throw new System.NotImplementedException();
+    }
+    public void SetVulnerability()
+    {
+
+    }
+    public void SetHiteableRange(bool inRange)
+    {
+        //Con esto le avisamos a la entidad que debe mostrar su vulnerabilidad.
+        throw new System.NotImplementedException();
+    }
 
     //================================ OVERRIDES ==============================================
 
@@ -487,20 +501,6 @@ public class FatEnemy : BaseUnit, IHiteable
 
         //Destruyo Este GameObject
         Destroy(gameObject);
-    }
-
-
-
-    public void AdviceInput(Inputs input)
-    {
-        //Con esto le avisamos a la entidad el input que el jugador ha ingresado, en el frame correspondiente.
-        throw new System.NotImplementedException();
-    }
-
-    public void SetHiteableRange(bool inRange)
-    {
-        //Con esto le avisamos a la entidad que debe mostrar su vulnerabilidad.
-        throw new System.NotImplementedException();
     }
 }
 

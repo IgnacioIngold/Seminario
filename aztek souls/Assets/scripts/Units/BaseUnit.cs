@@ -124,7 +124,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public bool IsAlive => _hp > 0;
     public bool invulnerable => _invulnerable;
 
-    public virtual HitData GetDamageStats() { return HitData.Default(); }
+    public virtual HitData DamageStats() { return HitData.Default(); }
     public virtual HitResult Hit(HitData EntryData) { return HitResult.Default(); }
     public virtual void FeedHitResult(HitResult result) { }
 

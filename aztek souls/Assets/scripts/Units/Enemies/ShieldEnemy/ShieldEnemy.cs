@@ -167,7 +167,7 @@ public class ShieldEnemy : BaseUnit
         print(string.Format("{0} ha conectado un ataque.", gameObject.name));
     }
 
-    public override HitData GetDamageStats()
+    public override HitData DamageStats()
     {
         return new HitData() { Damage = attackDamage, BreakDefence = false };
     }

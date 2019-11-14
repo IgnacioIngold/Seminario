@@ -168,7 +168,7 @@ public class BasicEnemy : BaseUnit
         print("El enemigo conectó un Hit");
     }
 
-    public override HitData GetDamageStats()
+    public override HitData DamageStats()
     {
         return new HitData() { Damage = attackDamage};
     }

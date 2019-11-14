@@ -42,12 +42,12 @@ public class TriggerWeapon : MonoBehaviour
                 print(string.Format("Owner: {0}, Colisionó con el siguiente Objeto: {1}", Owner.name, other.gameObject.name)); 
 #endif
 
-            _owner.FeedHitResult(Target.Hit(_owner.GetDamageStats()));
+            _owner.FeedHitResult(Target.Hit(_owner.DamageStats()));
 
 #if UNITY_EDITOR
             if (debugOwnerStats)
             {
-                var stats = _owner.GetDamageStats();
+                var stats = _owner.DamageStats();
                 print(string.Format("El daño del owner es {0}, puede romper defenza {1}, tipo de ataque {2}.", stats.Damage, stats.BreakDefence, stats.AttackType.ToString()));
             } 
 #endif

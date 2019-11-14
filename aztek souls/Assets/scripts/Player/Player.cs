@@ -268,7 +268,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         {
             print("Daño recibido es: " + EntryData.Damage);
 
-            float RealDamage = EntryData.Damage - (myStats.Resistencia * 0.5f);
+            float RealDamage = Mathf.Clamp((EntryData.Damage - (myStats.Resistencia * 0.5f)), 0, float.MaxValue);
 
             _shoked = false;
             _anims.SetBool("Disarmed", false);
@@ -315,7 +315,28 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         return hitResult;
     }
+    /// <summary>
+    /// Retorna las estadísticas de combate de esta Entidad.
+    /// </summary>
+    /// <returns></returns>
+    public HitData DamageStats()
+    {
+        //Crear una nueva instancia de HitData.
+        HitData returnValue;
+        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
+        {
+            returnValue = new HitData()
+            {
+                Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
+                BreakDefence = breakDefence,
+                AttackType = CurrentWeapon.CurrentAttack.attackType
+            };
+        }
+        else
+            returnValue = HitData.Default();
 
+        return returnValue;
+    }
     public void FeedHitResult(HitResult result)
     {
         if (result.HitBlocked)
@@ -334,34 +355,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             OnAttackLanded();
         }
 
-    }
-
-    /// <summary>
-    /// Retorna las estadísticas de combate de esta Entidad.
-    /// </summary>
-    /// <returns></returns>
-    public HitData GetDamageStats()
-    {
-        //Crear una nueva instancia de HitData.
-        HitData returnValue;
-        if (CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
-        {
-            //var info = _anims.GetCurrentAnimatorClipInfo(0);
-            //var animationLenght = info[0].clip.length; //La duración de la animación.
-            //var stateInfo =_anims.GetCurrentAnimatorStateInfo(0);
-            //var AnimationTime = stateInfo.normalizedTime; //El timepo escalado en el que esta la animación actual.
-
-            returnValue = new HitData()
-            {
-                Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
-                BreakDefence = breakDefence,
-                AttackType = CurrentWeapon.CurrentAttack.attackType
-            };
-        }
-        else
-            returnValue = HitData.Default();
-
-        return returnValue;
     }
 
     /// <summary>
