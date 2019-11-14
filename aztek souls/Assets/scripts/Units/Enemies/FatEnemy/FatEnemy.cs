@@ -413,7 +413,6 @@ public class FatEnemy : BaseUnit
         StartCoroutine(Explode());
     }
 
-
     //=============================== ANIMATION EVENTS ==========================================
 
     public void Shoot()
