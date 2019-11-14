@@ -420,7 +420,8 @@ public class FatEnemy : BaseUnit, IHiteable
         projectil.transform.position = bulletParent.position;
         projectil.GetComponentInChildren<Bullet>().SetOwner(gameObject);
 
-        Vector3 bulletDir = (Target.position - bulletParent.position).normalized;
+        Vector3 targetpos = Target.position + Vector3.up;
+        Vector3 bulletDir = (targetpos - bulletParent.position).normalized;
 
         projectil.transform.forward = bulletDir;
     }

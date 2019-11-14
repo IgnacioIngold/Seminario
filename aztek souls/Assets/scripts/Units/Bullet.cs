@@ -1,34 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Core;
 using Core.Entities;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] GameObject _root;
+
+    [Header("Collision Layers")]
+    public int WorldCollisionLayer;
+    public int ObstacleCollisionLayer;
+    public int FloorCollisionLayer;
+    public int DamageableCollisionLayer;
+
+    [Header("Stats")]
     public float Duration;
     public float Damage;
     public float Speed;
-    private IDamageable<HitData, HitResult> _owner;
-    private GameObject ownerGameObject;
 
-    private Transform locator;
+    IDamageable<HitData, HitResult> _owner;
+    GameObject _ownerGameObject;
+    Transform _locator;
 
     private void Awake()
     {
-        locator = GetComponentInParent<Transform>();
+        _locator = GetComponentInParent<Transform>();
     }
 
     public void SetOwner(GameObject Owner)
     {
-        ownerGameObject = Owner;
-        ownerGameObject.TryGetComponent(out _owner);
+        _ownerGameObject = Owner;
+        _ownerGameObject.TryGetComponent(out _owner);
     }
 
     // Update is called once per frame
     void Update()
     {
-        locator.position += locator.forward * Speed * Time.deltaTime;
+        _locator.position += _locator.forward * Speed * Time.deltaTime;
         Duration -= Time.deltaTime;
         if (Duration <= 0)
             Destroy(gameObject);
@@ -36,11 +43,18 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == ownerGameObject) return;
+        //print(string.Format("Collisione con {0}, y su layer es {1}", other.gameObject.name, other.gameObject.layer));
 
-        IDamageable<HitData, HitResult> Target = other.GetComponentInParent<IDamageable<HitData, HitResult>>();
+        if (other.gameObject == _ownerGameObject) return;
 
-        if (Target != null && _owner != null)
-            Target.Hit(new HitData() { Damage = Damage, BreakDefence = false });
+        if (other.gameObject.layer == DamageableCollisionLayer)
+        {
+            IDamageable<HitData, HitResult> Target = other.GetComponentInParent<IDamageable<HitData, HitResult>>();
+
+            if (Target != null && _owner != null)
+                Target.Hit(new HitData() { Damage = Damage, BreakDefence = false });
+        }
+
+        Destroy(_root);
     }
 }

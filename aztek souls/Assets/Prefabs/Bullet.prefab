@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 786678974948697002}
   - component: {fileID: 8307051748277395480}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3314784083158471694}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,8 +180,9 @@ GameObject:
   - component: {fileID: 1378208551422415722}
   - component: {fileID: 7401926591011207152}
   - component: {fileID: 5021369074973690352}
-  m_Layer: 30
-  m_Name: HitBox
+  - component: {fileID: 1606567317031987634}
+  m_Layer: 29
+  m_Name: Bullet_HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -273,6 +274,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27e9f57a557a4144fa9cb7f8666cdb10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _root: {fileID: 3575177682716446967}
+  WorldCollisionLayer: 0
+  ObstacleCollisionLayer: 9
+  FloorCollisionLayer: 10
+  DamageableCollisionLayer: 31
   Duration: 10
   Damage: 30
   Speed: 30
+--- !u!54 &1606567317031987634
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8840118577222364872}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
