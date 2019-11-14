@@ -38,7 +38,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public Dictionary<int, Inputs[]> vulnerabilityCombos;
     public float comboVulnerabilityCountDown = 0f;
     public bool isVulnerableToAttacks = false;
-    protected int _currentVulnerabilityCombo;
+    protected int _currentVulnerabilityCombo = 0;
     protected int _attacksRecieved = 0;
 
     #endregion
@@ -201,6 +201,8 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         MainColl = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
 
+        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+
         EnemyHealthBar.SetApha(0f);
 
         Target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -216,34 +218,9 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         Health = MaxHP;
     }
 
-    //=========================== CUSTOM PROTECTED FUNCS ======================================
+    //============================== SISTEMA DE RITMO =========================================
 
-    protected void Display_CorrectButtonHitted()
-    {
-        if (!ButtonHitConfirm.gameObject.activeSelf)
-            ButtonHitConfirm.gameObject.SetActive(true);
-        else
-            ButtonHitConfirm.Play();
-    }
-    protected void Display_IncorrectButtonHitted()
-    {
-        //Por ahora no tenemos una particula que muestre lo contrario.
-    }
-
-    //============================== PUBLIC FUNCS =============================================
-
-    public void AllyDiscoversEnemy(Transform Enemy)
-    {
-        Target = Enemy;
-        _targetDetected = true;
-        _alertFriends = false;
-        EnemyHealthBar.FadeIn();
-    }
-
-    //============================== OVERRAIDEABLES ===========================================
-
-    //Confirm Button Hit --> Hace el efecto que muestra que el boton era el correcto.
-    public virtual void SetCurrentVulnerability(int ComboIndex)
+    public void SetCurrentVulnerabilityCombo(int ComboIndex)
     {
         if (vulnerabilityCombos.ContainsKey(ComboIndex))
             _currentVulnerabilityCombo = ComboIndex;
@@ -251,15 +228,39 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         //comboVulnerabilityCountDown = vulnerableTime;
         //isVulnerableToAttacks = true;
     }
-    public virtual Inputs GetCurrentVulnerability()
+    public virtual void FeedPressedInput(Inputs input)
     {
-        return vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved];
+        Inputs currentVulnerability = GetCurrentVulnerability();
+        if (VulnerableMarker.gameObject.activeSelf)
+        {
+            if (input == currentVulnerability)
+            {
+                print("El input Coíncidió");
+                Display_CorrectButtonHitted();
+            }
+            else
+            {
+                print("El input no Coíncidió");
+                Display_IncorrectButtonHitted();
+            }
+        }
+        HideVulnerability();
     }
-
+    public void Display_CorrectButtonHitted()
+    {
+        if (!ButtonHitConfirm.gameObject.activeSelf)
+            ButtonHitConfirm.gameObject.SetActive(true);
+        else
+            ButtonHitConfirm.Play();
+    }
+    public void Display_IncorrectButtonHitted()
+    {
+        //Por ahora no tenemos una particula que muestre lo contrario.
+    }
     /// <summary>
     /// Muestra la particula de Vulnerabilidad, utilizando _currentVulnerabilityCombo y _AttacksRecieved como referencia.
     /// </summary>
-    public virtual void ShowVulnerability()
+    public void ShowVulnerability()
     {
         var ParticleSystem = VulnerableMarker.main;
         Inputs input = GetCurrentVulnerability();
@@ -285,10 +286,30 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     /// <summary>
     /// Oculta la particula que indica la vulnerabilidad
     /// </summary>
-    public virtual void HideVulnerability()
+    public void HideVulnerability()
     {
-        VulnerableMarker.gameObject.SetActive(false);
+        if (VulnerableMarker.gameObject.activeSelf)
+            VulnerableMarker.gameObject.SetActive(false);
     }
+
+    protected Inputs GetCurrentVulnerability()
+    {
+        return vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved];
+    }
+
+    //============================== PUBLIC FUNCS =============================================
+
+    public void AllyDiscoversEnemy(Transform Enemy)
+    {
+        Target = Enemy;
+        _targetDetected = true;
+        _alertFriends = false;
+        EnemyHealthBar.FadeIn();
+    }
+
+    //============================== OVERRAIDEABLES ===========================================
+
+    //Confirm Button Hit --> Hace el efecto que muestra que el boton era el correcto.
     protected virtual void Die()
     {
         EnemyHealthBar.FadeOut(3f);

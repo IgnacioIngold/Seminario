@@ -79,7 +79,7 @@ public class ShieldEnemy : BaseUnit
             if (!_targetDetected)
             {
                 _targetDetected = true;
-                SetVulnerabity(true);
+                //SetVulnerabity(true);
                 if (!VulnerableMarker.gameObject.activeSelf)
                     VulnerableMarker.gameObject.SetActive(true);
             }
@@ -131,7 +131,7 @@ public class ShieldEnemy : BaseUnit
                     Display_CorrectButtonHitted();
 
                     //Muestro el siguiente ataque.
-                    ShowNextVulnerability(_attacksRecieved);
+                    //ShowNextVulnerability(_attacksRecieved);
                 }
 
                 onGetHit();
@@ -355,7 +355,7 @@ public class ShieldEnemy : BaseUnit
             _originalRotLerpSpeed = _rotationLerpSpeed;
             _rotationLerpSpeed = BlockLerpSpeed;
             _blocking = true;
-            SetVulnerabity(true, 2);
+            //SetVulnerabity(true, 2);
         };
         blocking.OnUpdate += () =>
         {
@@ -378,7 +378,7 @@ public class ShieldEnemy : BaseUnit
             _blocking = false;
             Disarmed = true;
             _currentDisarmedTime = DisarmedTime;
-            SetVulnerabity(true, 1);
+            //SetVulnerabity(true, 1);
 
             anims.SetBool("Disarmed",true);
         };
@@ -537,7 +537,7 @@ public class ShieldEnemy : BaseUnit
         {
             print("Se acabó el tiempo de vulnerabilidad");
             _attacksRecieved = 0;
-            SetVulnerabity(false);
+            //SetVulnerabity(false);
             comboVulnerabilityCountDown = 0;
             ButtonHitConfirm.gameObject.SetActive(false);
         }
@@ -559,11 +559,6 @@ public class ShieldEnemy : BaseUnit
         }
         else if(_sm.currentState != ShieldEnemyStates.dead)
             _sm.Feed(ShieldEnemyStates.dead);
-    }
-
-    public override void SetVulnerabity(bool vulnerable, int combo = 1)
-    {
-        base.SetVulnerabity(vulnerable, combo);
     }
 
     public void SetState(ShieldEnemyStates nextState)

@@ -117,7 +117,7 @@ public class BigCursed : BaseUnit
                 Display_CorrectButtonHitted();
 
                 //Muestro el siguiente ataque.
-                ShowNextVulnerability(_attacksRecieved);
+                //ShowNextVulnerability(_attacksRecieved);
             }
 
             if (completedCombo)
@@ -560,7 +560,7 @@ public class BigCursed : BaseUnit
         {
             print("Se acabó el tiempo de vulnerabilidad");
             _attacksRecieved = 0;
-            SetVulnerabity(false);
+//            SetVulnerabity(false);
             comboVulnerabilityCountDown = 0;
             ButtonHitConfirm.gameObject.SetActive(false);
         }

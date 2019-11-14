@@ -227,6 +227,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     public int CurrentWeaponIndex = 0;
     public List<Weapon> weapons = new List<Weapon>();
     public Weapon CurrentWeapon;
+    [Range(1,10), SerializeField] float AttackRange = 4;
     //public List<Attack> Attacks = new List<Attack>();
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
@@ -249,6 +250,24 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     Vector3 moveDiR;
     float speedR;
 
+    //=============================================== DEBBUG ==================================================================
+
+#if UNITY_EDITOR
+    [Header("Debugg Player")]
+    [SerializeField] bool debugRanges = false;
+
+    private void OnDrawGizmosSelected()
+    {
+        if (debugRanges)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, AttackRange);
+        }
+    }
+
+#endif
+
     //============================================= INTERFACES ================================================================
 
     public bool IsAlive => _hp > 0;
@@ -266,13 +285,13 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         if (!_invulnerable && IsAlive)
         {
-            print("Daño recibido es: " + EntryData.Damage);
+            //print("Daño recibido es: " + EntryData.Damage);
 
             float RealDamage = Mathf.Clamp((EntryData.Damage - (myStats.Resistencia * 0.5f)), 0, float.MaxValue);
 
             _shoked = false;
             _anims.SetBool("Disarmed", false);
-            print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", EntryData.Damage, (myStats.Resistencia * 0.5f), RealDamage));
+            //print(string.Format("El jugador recibió {0} puntos de daño, y mitigó {1} puntos de daño.\nDaño final es: {2}", EntryData.Damage, (myStats.Resistencia * 0.5f), RealDamage));
 
             Health -= RealDamage;
             hitResult.HitConnected = true;
@@ -458,7 +477,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f};
         L1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1);
@@ -470,7 +489,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Light 1 conecto exitósamente");
         };
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f};
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
@@ -482,7 +501,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Light 2 conecto exitósamente");
         };
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f,ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f};
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
@@ -493,7 +512,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Light 3 conecto exitósamente");
         };
 
-        Attack L4 = new Attack() { ID = 5, Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 2, maxChainIndex = 3 };
+        Attack L4 = new Attack() { Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
@@ -502,7 +521,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         //L4.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack L5 = new Attack() { ID = 9, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f,ChainIndex = 3, maxChainIndex = 3 };
+        Attack L5 = new Attack() { Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
@@ -514,7 +533,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Strong
 
-        Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f,ChainIndex = 1, maxChainIndex = 3 };
+        Attack S1 = new Attack() { Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
@@ -525,7 +544,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         S1.OnEnd += () => { breakDefence = false; };
         //S1.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S2 = new Attack() { Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
@@ -535,7 +554,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S2.OnEnd += () => { breakDefence = false; };
 
-        Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S3 = new Attack() { Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
@@ -545,7 +564,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S3.OnEnd += () => { breakDefence = false; };
 
-        Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack S4 = new Attack() { Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
@@ -604,25 +623,25 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
+        Attack light1 = new Attack() { Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 2.75f };
         light1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1); // Animación.
-            Stamina -= L1.Cost;
+            Stamina -= light1.Cost;
         };
 
-        Attack light2 = new Attack() { ID = 2, Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
+        Attack light2 = new Attack() { Name = "Light2", Cost = 20f, Damage = 30f, AttackDuration = 0.517f };
         light2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
-            Stamina -= L1.Cost;
+            Stamina -= light2.Cost;
         };
 
-        Attack light3 = new Attack() { ID = 3, Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
+        Attack light3 = new Attack() { Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
         light3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7); //Animación.
-            Stamina -= L1.Cost;
+            Stamina -= light3.Cost;
         };
 
         #endregion
@@ -634,7 +653,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #endregion
 
-        Weapon2.AddEntryPoint(Inputs.light, L1);       //L1 es un Entry Point.
+        Weapon2.AddEntryPoint(Inputs.light, light1);       //L1 es un Entry Point.
         weapons.Add(Weapon2);
 
         #endregion
@@ -680,14 +699,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         float AxisX = Input.GetAxis("Horizontal");
         _anims.SetFloat("VelY", AxisX);
         _anims.SetFloat("VelX", AxisY);
-        //if(Input.GetKeyDown(KeyCode.B))
-        //{
-        //    _anims.SetLayerWeight(1, 1);
-        //}
-        //if (Input.GetKeyDown(KeyCode.C))
-        //{
-        //    _anims.SetLayerWeight(0, 1);
-        //}
 
         if (_listenToInput)
         {
@@ -767,7 +778,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
                 else
                 if (Input.GetButtonDown("StrongAttack"))
                     Attack(Inputs.strong);
-            } 
+            }
         }
 
         if (_attacking)
@@ -776,10 +787,15 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
+            {
+                FeedInputToClosestEnemies(Inputs.light);
                 CurrentWeapon.FeedInput(Inputs.light);
-            else
-               if (Input.GetButtonDown("StrongAttack"))
+            }
+            else if (Input.GetButtonDown("StrongAttack"))
+            {
+                FeedInputToClosestEnemies(Inputs.light);
                 CurrentWeapon.FeedInput(Inputs.strong);
+            }
         }
 
         if (!_rolling && !_moving && !_attacking)
@@ -920,6 +936,23 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     public void FeastBloodEfect()
     {
         FeastBlood.Play();
+    }
+    public IEnumerable<BaseUnit> GetClosestEnemies()
+    {
+        return FindObjectsOfType<BaseUnit>()
+               .Where(u => Vector3.Distance(u.transform.position, transform.position) <= AttackRange);
+    }
+    void FeedInputToClosestEnemies(Inputs input)
+    {
+        var Enemies = GetClosestEnemies();
+        if (Enemies.Any())
+        {
+            print("Hay al menos un enemigo");
+
+            foreach (var Enemy in Enemies)
+                Enemy.FeedPressedInput(input);
+        }
+        else print("No hay enemigos cercanos");
     }
 
     //============================================= CORRUTINES ================================================================

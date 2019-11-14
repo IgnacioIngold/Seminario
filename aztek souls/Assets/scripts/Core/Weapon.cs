@@ -67,9 +67,6 @@ public class Weapon
 
     void StartAttack()
     {
-        if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
-            LastChainAttack = true;
-
         canGetInput = false;
         currentDuration = CurrentAttack.AttackDuration;
         CurrentAttack.StartAttack();

@@ -67,7 +67,7 @@ public class SE_AnimEventListener : MonoBehaviour
     public void StartVulnerability()
     {
         // Marcamos cuando esta vulnerable.
-        Owner.SetVulnerabity(true);
+        //Owner.SetVulnerabity(true);
     }
 
     //================================= Attaques =================================================

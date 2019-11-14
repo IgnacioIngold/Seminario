@@ -76,7 +76,7 @@ public class BossAnimEvents : MonoBehaviour
     {
         //Debug.LogWarning("Empezó el combo");
         //Inicié el combo básico.
-        Owner.SetVulnerabity(true);
+        //Owner.SetVulnerabity(true);
     }
     void FirstBasicStart()
     {

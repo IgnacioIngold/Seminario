@@ -118,7 +118,7 @@ public class BasicEnemy : BaseUnit
                     }
 
                     //Muestro el siguiente ataque.
-                    ShowNextVulnerability(_attacksRecieved);
+                    //ShowNextVulnerability(_attacksRecieved);
                 }
 
                 if (coincided)
@@ -325,7 +325,7 @@ public class BasicEnemy : BaseUnit
             _rotationLerpSpeed = AttackRotationLerpSpeed;
             LookTowardsPlayer = true;
             anims.SetTrigger("SimpleAttack");
-            SetVulnerabity(true);
+            //SetVulnerabity(true);
         };
         attack.OnUpdate += () =>
         {
@@ -429,7 +429,7 @@ public class BasicEnemy : BaseUnit
         {
             print("Se acabó el tiempo de vulnerabilidad");
             _attacksRecieved = 0;
-            SetVulnerabity(false);
+            //SetVulnerabity(false);
             comboVulnerabilityCountDown = 0;
             ButtonHitConfirm.gameObject.SetActive(false);
         }
@@ -452,12 +452,12 @@ public class BasicEnemy : BaseUnit
         sm.Update();
     }
 
-    public override void SetVulnerabity(bool vulnerable, int combo = 1)
-    {
-        canBlock = !vulnerable;
+    //public override void SetVulnerabity(bool vulnerable, int combo = 1)
+    //{
+    //    canBlock = !vulnerable;
 
-        base.SetVulnerabity(vulnerable);
-    }
+    //    base.SetVulnerabity(vulnerable);
+    //}
 
     IEnumerator thinkAndWatch()
     {

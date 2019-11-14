@@ -24,9 +24,7 @@ public enum FatEnemyStates
 public class FatEnemy : BaseUnit
 {
     public GenericFSM<FatEnemyStates> _sm;
-#if UNITY_EDITOR
-    public FatEnemyStates currentState;
-#endif
+
     [Header("Estado de Alerta")]
     public float AlertTime;
     private float _alertedTimeRemainig;
@@ -34,9 +32,6 @@ public class FatEnemy : BaseUnit
     [Header("Rangos de Ataque")]
     public float rangeAttack_MaxRange;
     public float meleeAttack_MaxRange;
-#if UNITY_EDITOR
-    public bool Debug_AttackRanges; 
-#endif
 
     [Header("Ataque Melee")]
     public float MeleeAttackDuration;
@@ -68,6 +63,33 @@ public class FatEnemy : BaseUnit
 
     int[] animationParams;
 
+    //============================= DEBUGG GIZMOS ===============================================
+
+#if UNITY_EDITOR
+    [Header("Debugg FatEnemy")]
+    public FatEnemyStates currentState;
+    public bool Debug_AttackRanges; 
+    
+    protected override void OnDrawGizmosSelected()
+    {
+        base.OnDrawGizmosSelected();
+
+        if (Debug_AttackRanges)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, meleeAttack_MaxRange);
+
+            Gizmos.color = Color.red;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, rangeAttack_MaxRange);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
+            Gizmos.DrawWireSphere(transform.position, ExplotionRange);
+        }
+    } 
+#endif
     //============================== PROPIEDADES ==============================================
 
     public float Locomotion
@@ -121,14 +143,19 @@ public class FatEnemy : BaseUnit
         var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
         Destroy(particle, 3f);
 
-        VulnerableMarker.gameObject.SetActive(true);
-        ButtonHitConfirm.Play();
+        var vulnerability = GetCurrentVulnerability();
+
+        if (vulnerability == EntryData.AttackType)
+        {
+            _attacksRecieved++;
+            VulnerableMarker.gameObject.SetActive(true);
+            ButtonHitConfirm.Play();
+        }
 
         //Completar
         Health -= EntryData.Damage;
 
         //Chequeamos el combow?
-
 
         if (!IsAlive)
         {
@@ -154,6 +181,9 @@ public class FatEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
+
+        //Combos a los que es vulnerable.
+        vulnerabilityCombos.Add(0, new Inputs[3] { Inputs.light, Inputs.light, Inputs.strong });
 
         animationParams = new int[4];
         for (int i = 0; i < animationParams.Length; i++)
@@ -298,10 +328,7 @@ public class FatEnemy : BaseUnit
             }
 
             if (sight.distanceToTarget <= meleeAttack_MaxRange)
-            {
-                print("Debería ir a closeCombat");
                 _sm.Feed(FatEnemyStates.think);
-            }
         };
         rangeAttack.OnExit += (nextState) => 
         {
@@ -386,29 +413,6 @@ public class FatEnemy : BaseUnit
         StartCoroutine(Explode());
     }
 
-    //============================= DEBUGG GIZMOS ===============================================
-
-#if UNITY_EDITOR
-    protected override void OnDrawGizmosSelected()
-    {
-        base.OnDrawGizmosSelected();
-
-        if (Debug_AttackRanges)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-            Gizmos.DrawWireSphere(transform.position, meleeAttack_MaxRange);
-
-            Gizmos.color = Color.red;
-            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-            Gizmos.DrawWireSphere(transform.position, rangeAttack_MaxRange);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.matrix *= Matrix4x4.Scale(new Vector3(1, 0, 1));
-            Gizmos.DrawWireSphere(transform.position, ExplotionRange);
-        }
-    } 
-#endif
 
     //=============================== ANIMATION EVENTS ==========================================
 
