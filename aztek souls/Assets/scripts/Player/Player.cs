@@ -654,13 +654,13 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         #endregion
                 
         weapons.Add(Weapon2);
-        Attack Heavy1 = new Attack() { ID = 13, Name = "Heavy1", Cost = 55f, Damage = 50f, AttackDuration = 3f };
+        Attack Heavy1 = new Attack() { Name = "Heavy1", Cost = 55f, Damage = 50f, AttackDuration = 3f };
         Heavy1.OnStart += () =>
         {
             _anims.SetInteger("combat", 13); // Animación.
             Stamina -= Heavy1.Cost;
         };
-        Attack Light4 = new Attack() { ID = 14, Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
+        Attack Light4 = new Attack() { Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
         Light4.OnStart += () =>
         {
             _anims.SetInteger("combat", 14); // Animación.

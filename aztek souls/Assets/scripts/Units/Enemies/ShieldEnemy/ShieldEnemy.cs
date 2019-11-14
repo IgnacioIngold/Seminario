@@ -535,7 +535,7 @@ public class ShieldEnemy : BaseUnit
             comboVulnerabilityCountDown -= Time.deltaTime;
         else if (comboVulnerabilityCountDown <= 0)
         {
-            print("Se acabó el tiempo de vulnerabilidad");
+            //print("Se acabó el tiempo de vulnerabilidad");
             _attacksRecieved = 0;
             //SetVulnerabity(false);
             comboVulnerabilityCountDown = 0;
