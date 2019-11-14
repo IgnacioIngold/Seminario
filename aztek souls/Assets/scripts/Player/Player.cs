@@ -618,7 +618,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             Stamina -= light1.Cost;
         };
 
-        Attack light2 = new Attack() { ID = 11, Name = "Light2", Cost = 25f, Damage = 30f, AttackDuration = 0.517f };
+        Attack light2 = new Attack() { ID = 11, Name = "Light2", Cost = 25f, Damage = 30f, AttackDuration = 0.863f };
         light2.OnStart += () =>
         {
             _anims.SetInteger("combat", 11);
@@ -643,14 +643,14 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         
         weapons.Add(Weapon2);
-        Attack Heavy1 = new Attack() { ID = 13, Name = "Heavy1", Cost = 45f, Damage = 50f, AttackDuration = 3f };
+        Attack Heavy1 = new Attack() { ID = 13, Name = "Heavy1", Cost = 55f, Damage = 50f, AttackDuration = 3f };
         Heavy1.OnStart += () =>
         {
             _anims.SetInteger("combat", 13); // Animación.
             Stamina -= Heavy1.Cost;
         };
         Attack Light4 = new Attack() { ID = 14, Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
-        Heavy1.OnStart += () =>
+        Light4.OnStart += () =>
         {
             _anims.SetInteger("combat", 14); // Animación.
             Stamina -= Light4.Cost;
