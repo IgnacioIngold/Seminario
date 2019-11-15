@@ -84,27 +84,27 @@ public class BigCursed : BaseUnit
     public float[] times = new float[0];
 
     //============================== INTERFACES ===============================================
-    void ActualizarMrda()
-    {
-        if (vulnerabilityDeMrda != null)
-        {
-            var TiempoActual = vulnerabilityDeMrda.Item1 - Time.deltaTime;
-            print(string.Format("Actualizando esta poronga, tiempo actual {0}", TiempoActual));
+    //void ActualizarMrda()
+    //{
+    //    if (vulnerabilityDeMrda != null)
+    //    {
+    //        var TiempoActual = vulnerabilityDeMrda.Item1 - Time.deltaTime;
+    //        print(string.Format("Actualizando esta poronga, tiempo actual {0}", TiempoActual));
 
-            if (TiempoActual <= 0)
-                reiniciarMRda();
-        }
-    }
-    void contarMRda()
-    {
-        int acumulación = vulnerabilityDeMrda.Item2 + 1; //Acumento la acumulación.
-        vulnerabilityDeMrda = Tuple.Create(times[acumulación], acumulación);
-    }
-    void reiniciarMRda()
-    {
-        var FirstTime = times[0];
-        vulnerabilityDeMrda = Tuple.Create(0f, 0);
-    }
+    //        if (TiempoActual <= 0)
+    //            reiniciarMRda();
+    //    }
+    //}
+    //void contarMRda()
+    //{
+    //    int acumulación = vulnerabilityDeMrda.Item2 + 1; //Acumento la acumulación.
+    //    vulnerabilityDeMrda = Tuple.Create(times[acumulación], acumulación);
+    //}
+    //void reiniciarMRda()
+    //{
+    //    var FirstTime = times[0];
+    //    vulnerabilityDeMrda = Tuple.Create(0f, 0);
+    //}
 
     /// <summary>
     /// Permite recibir daño e Informar al agresor del resultado de su ataque.
@@ -122,7 +122,7 @@ public class BigCursed : BaseUnit
             //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
             if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
             {
-                contarMRda();
+                //contarMRda();
 
                 //if (_attacksRecieved == 3)
                 //{
@@ -145,8 +145,8 @@ public class BigCursed : BaseUnit
                 //Muestro el siguiente ataque.
                 //ShowNextVulnerability(_attacksRecieved);
             }
-            else
-                reiniciarMRda();
+            //else
+            //    reiniciarMRda();
 
             if (completedCombo)
                 sm.Feed(BossStates.Smashed);
@@ -204,7 +204,7 @@ public class BigCursed : BaseUnit
 
     protected override void Awake()
     {
-        reiniciarMRda();
+        //reiniciarMRda();
 
         base.Awake();
         OnDie += () => {  };
@@ -570,7 +570,7 @@ public class BigCursed : BaseUnit
         CurrentState = sm.currentState;
 #endif
 
-        ActualizarMrda();
+        //ActualizarMrda();
 
         #region Tiempo de recuperación del estado de Derribo (Smashed)
 
