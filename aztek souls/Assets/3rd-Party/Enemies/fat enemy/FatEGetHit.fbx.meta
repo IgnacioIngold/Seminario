@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: f987fceaf6ab46e408a922b0416c00e0
+guid: b851007a3930f8c458d0710596c97cbf
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: SwipAttack
+    second: GetHit
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -35,11 +35,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: SwipAttack
+      name: GetHit
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
-      lastFrame: 76
+      lastFrame: 58
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -58,47 +58,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0
-        functionName: StartUp
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 4f94d99b8d3520e4b89c9f225dc42ac8,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.50384194
-        functionName: Active
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 4f94d99b8d3520e4b89c9f225dc42ac8,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.5762898
-        functionName: Recover
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 4f94d99b8d3520e4b89c9f225dc42ac8,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0
-        functionName: StartVulnerableDisplay
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 4f94d99b8d3520e4b89c9f225dc42ac8,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.41525424
-        functionName: EndVulnerableDisplay
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 4f94d99b8d3520e4b89c9f225dc42ac8,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
