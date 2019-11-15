@@ -159,11 +159,9 @@ MonoBehaviour:
   Debug_LineOFSight: 1
   Debug_Attacks: 1
   Debug_DetectionRanges: 1
-  currentState: 0
   AlertTime: 2
   rangeAttack_MaxRange: 20
   meleeAttack_MaxRange: 3
-  Debug_AttackRanges: 1
   MeleeAttackDuration: 2.533
   MeleeAttackCooldown: 1
   bullet: {fileID: 3575177682716446967, guid: f508376d502e361479891d53caecd340, type: 3}
@@ -184,6 +182,8 @@ MonoBehaviour:
   TimeToExplote: 4
   minExplodeVel: 30
   maxExplodeVel: 100
+  currentState: 0
+  Debug_AttackRanges: 1
 --- !u!1 &6870815793305141052
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,7 +653,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.55
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5101,7 +5101,7 @@ ParticleSystemRenderer:
   m_SortingOrder: 0
   m_RenderMode: 2
   m_SortMode: 0
-  m_MinParticleSize: 0.91
+  m_MinParticleSize: 0
   m_MaxParticleSize: 10
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
@@ -5497,11 +5497,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: PapuPapu
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: 0c91f0100cbb4df43b33bdbf6cbbe867,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 8dede92ea49bd8047b60641188abe96a, type: 2}
     - target: {fileID: -4216859302048453862, guid: 0c91f0100cbb4df43b33bdbf6cbbe867,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5557,6 +5552,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 0c91f0100cbb4df43b33bdbf6cbbe867,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 8dede92ea49bd8047b60641188abe96a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c91f0100cbb4df43b33bdbf6cbbe867, type: 3}
 --- !u!137 &1313209538986303456 stripped
