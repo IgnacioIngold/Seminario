@@ -35,18 +35,21 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public ParticleSystem ButtonHitConfirm;       // Confirma que la tecla fue presionada.
     public Color LightColor;                      // Indica que se debe presionar el input Light.
     public Color HeavyColor;                      // Indica que se debe presionar el input Strong.
-    public Dictionary<int, Inputs[]> vulnerabilityCombos;
-    public float comboVulnerabilityCountDown = 0f;
-    public bool isVulnerableToAttacks = false;
-    protected int _currentVulnerabilityCombo = 0;
-    protected int _attacksRecieved = 0;
-
+    
     #endregion
 
     #region Vulnerabilidad
 
-    [Header("Vulnerability")]
+    [Header("Vulnerability Window")]
+    public Dictionary<int, Inputs[]> vulnerabilityCombos;
+    protected int _currentVulnerabilityCombo = 0;
+    protected int _attacksRecieved = 0;
+
+    public bool SuccesfullHit = false;
+    public bool isVulnerableToAttacks = false;
+
     public float vulnerableTime = 1.5f;
+    //public float comboVulnerabilityCountDown = 0f;
     public float incommingDamageReduction = 0.3f;
     public float ComboWindow = 1f;
 
@@ -228,9 +231,22 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         //comboVulnerabilityCountDown = vulnerableTime;
         //isVulnerableToAttacks = true;
     }
+    public void EnableVulnerabilityState(bool On)
+    {
+        if (On)
+        {
+            print("Ahora es Vulnerable");
+            isVulnerableToAttacks = true;
+        }
+        else if(!SuccesfullHit)
+        {
+            print("Ahora ya no es Vulnerable");
+            isVulnerableToAttacks = false;
+        }
+    }
     public virtual void FeedPressedInput(Inputs input)
     {
-        Inputs currentVulnerability = GetCurrentVulnerability();
+        Inputs currentVulnerability = GetCurrentVulnerabilityInput();
         if (VulnerableMarker.gameObject.activeSelf)
         {
             if (input == currentVulnerability)
@@ -263,7 +279,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public void ShowVulnerability()
     {
         var ParticleSystem = VulnerableMarker.main;
-        Inputs input = GetCurrentVulnerability();
+        Inputs input = GetCurrentVulnerabilityInput();
         switch (input)
         {
             case Inputs.light:
@@ -286,13 +302,13 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     /// <summary>
     /// Oculta la particula que indica la vulnerabilidad
     /// </summary>
-    public void HideVulnerability()
+    public virtual void HideVulnerability()
     {
         if (VulnerableMarker.gameObject.activeSelf)
             VulnerableMarker.gameObject.SetActive(false);
     }
 
-    protected Inputs GetCurrentVulnerability()
+    protected Inputs GetCurrentVulnerabilityInput()
     {
         return vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved];
     }
