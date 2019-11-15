@@ -452,6 +452,7 @@ public class BasicEnemy : BaseUnit
         {
             StopAllCoroutines();
             AP_Die = true;
+            HideVulnerability();
             Die();
         };
 
