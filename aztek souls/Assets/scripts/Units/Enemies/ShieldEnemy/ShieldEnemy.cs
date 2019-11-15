@@ -112,21 +112,21 @@ public class ShieldEnemy : BaseUnit
                 {
                     _attacksRecieved++;
 
-                    if (_attacksRecieved == 3)
-                    {
-                        comboVulnerabilityCountDown = 0f;
-                        FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
-                        completedCombo = true;
+                    //if (_attacksRecieved == 3)
+                    //{
+                    //    comboVulnerabilityCountDown = 0f;
+                    //    FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                    //    completedCombo = true;
 
-                        print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                    }
-                    else if (_attacksRecieved == 2)
-                    {
-                        comboVulnerabilityCountDown += 4f;
+                    //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                    //}
+                    //else if (_attacksRecieved == 2)
+                    //{
+                    //    comboVulnerabilityCountDown += 4f;
 
-                        print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                    }
-                    else comboVulnerabilityCountDown += 1f;
+                    //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                    //}
+                    //else comboVulnerabilityCountDown += 1f;
 
                     Display_CorrectButtonHitted();
 
@@ -531,16 +531,16 @@ public class ShieldEnemy : BaseUnit
             }
         }
 
-        if (comboVulnerabilityCountDown > 0)
-            comboVulnerabilityCountDown -= Time.deltaTime;
-        else if (comboVulnerabilityCountDown <= 0)
-        {
-            //print("Se acabó el tiempo de vulnerabilidad");
-            _attacksRecieved = 0;
-            //SetVulnerabity(false);
-            comboVulnerabilityCountDown = 0;
-            ButtonHitConfirm.gameObject.SetActive(false);
-        }
+        //if (comboVulnerabilityCountDown > 0)
+        //    comboVulnerabilityCountDown -= Time.deltaTime;
+        //else if (comboVulnerabilityCountDown <= 0)
+        //{
+        //    //print("Se acabó el tiempo de vulnerabilidad");
+        //    _attacksRecieved = 0;
+        //    //SetVulnerabity(false);
+        //    comboVulnerabilityCountDown = 0;
+        //    ButtonHitConfirm.gameObject.SetActive(false);
+        //}
 
         if (isVulnerableToAttacks)
             VulnerableMarker.gameObject.SetActive(true);

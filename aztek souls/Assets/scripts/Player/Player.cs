@@ -484,11 +484,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
         };
-        //L1.OnEnableInput += () => { marker.SetActive(true); };
-        L1.OnHit += () =>
-        {
-            //print("Light 1 conecto exitósamente");
-        };
 
         Attack L2 = new Attack() { Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f};
         L2.OnStart += () =>
@@ -496,21 +491,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
         };
-        //L2.OnEnableInput += () => { marker.SetActive(true); };
-        L2.OnHit += () =>
-        {
-            print("Light 2 conecto exitósamente");
-        };
 
         Attack L3 = new Attack() { Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f};
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
-        };
-        L3.OnHit += () =>
-        {
-            print("Light 3 conecto exitósamente");
         };
 
         Attack L4 = new Attack() { Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
@@ -520,7 +506,6 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             _anims.SetInteger("combat", 5);
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
-        //L4.OnEnableInput += () => { marker.SetActive(true); };
 
         Attack L5 = new Attack() { Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
         L5.OnStart += () =>
@@ -677,6 +662,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         #endregion
 
         CurrentWeapon.OnInputConfirmed += (i) => { FeedInputToClosestEnemies(i); };
+        Weapon2.OnInputConfirmed += (i) => { FeedInputToClosestEnemies(i); };
 
         //Permite tener un Delay
         OnActionHasEnded += () =>
@@ -963,12 +949,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         var Enemies = GetClosestEnemies();
         if (Enemies.Any())
         {
-            print("Hay al menos un enemigo");
+            //print("Hay al menos un enemigo");
 
             foreach (var Enemy in Enemies)
                 Enemy.FeedPressedInput(input);
         }
-        else print("No hay enemigos cercanos");
+        //else print("No hay enemigos cercanos");
     }
 
     //============================================= CORRUTINES ================================================================

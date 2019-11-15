@@ -112,11 +112,20 @@ public class FatEnemy : BaseUnit
         get => anims.GetBool(animationParams[3]);
         set => anims.SetBool(animationParams[3], value);
     }
+    public bool IsHurted
+    {
+        get => anims.GetBool(animationParams[4]);
+        set => anims.SetBool(animationParams[4], value);
+    }
 
     //Funciona como un Trigger.
-    public void Alert()
+    public void SetAlertTrigger()
     {
-        StartCoroutine(SetAlertedTrigger());
+        StartCoroutine(AlertTrigger());
+    }
+    public void SetHurtTrigger()
+    {
+        StartCoroutine(HurtTrigger());
     }
 
     //============================== INTERFACES ===============================================
@@ -143,19 +152,25 @@ public class FatEnemy : BaseUnit
         var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
         Destroy(particle, 3f);
 
-        var vulnerability = GetCurrentVulnerability();
+        var vulnerability = GetCurrentVulnerabilityInput();
+        _attacksRecieved++;
 
         if (vulnerability == EntryData.AttackType)
         {
-            _attacksRecieved++;
-            VulnerableMarker.gameObject.SetActive(true);
-            ButtonHitConfirm.Play();
+            _sm.Feed(FatEnemyStates.hurted);
+            SuccesfullHit = true;
+            ShowVulnerability();
         }
 
         //Completar
         Health -= EntryData.Damage;
 
-        //Chequeamos el combow?
+        // Si llegamos al ultimo ataque, lo reseteamos.
+        if (_attacksRecieved == vulnerabilityCombos[_currentVulnerabilityCombo].Length)
+        {
+
+            _attacksRecieved = 0;
+        }
 
         if (!IsAlive)
         {
@@ -185,7 +200,7 @@ public class FatEnemy : BaseUnit
         //Combos a los que es vulnerable.
         vulnerabilityCombos.Add(0, new Inputs[3] { Inputs.light, Inputs.light, Inputs.strong });
 
-        animationParams = new int[4];
+        animationParams = new int[5];
         for (int i = 0; i < animationParams.Length; i++)
             animationParams[i] = anims.GetParameter(i).nameHash;
 
@@ -195,6 +210,7 @@ public class FatEnemy : BaseUnit
 
         var idle = new State<FatEnemyStates>("Idle");
         var alert = new State<FatEnemyStates>("Alerted");
+        var hurted = new State<FatEnemyStates>("Hurted");
         var rangeAttack = new State<FatEnemyStates>("RangeAttack");
         var meleeAttack = new State<FatEnemyStates>("MeleeAttack");
         var pursue = new State<FatEnemyStates>("Pursue");
@@ -205,24 +221,30 @@ public class FatEnemy : BaseUnit
         #region Transiciones.
 
         idle.AddTransition(FatEnemyStates.alert, alert)
+            .AddTransition(FatEnemyStates.hurted, hurted)
             .AddTransition(FatEnemyStates.dead, dead);
 
         alert.AddTransition(FatEnemyStates.think, think)
+             .AddTransition(FatEnemyStates.hurted, hurted)
              .AddTransition(FatEnemyStates.dead, dead);
 
         pursue.AddTransition(FatEnemyStates.think, think)
+              .AddTransition(FatEnemyStates.hurted, hurted)
               .AddTransition(FatEnemyStates.dead, dead);
 
         meleeAttack.AddTransition(FatEnemyStates.dead, dead)
+                   .AddTransition(FatEnemyStates.hurted, hurted)
                    .AddTransition(FatEnemyStates.think, think);
 
         rangeAttack.AddTransition(FatEnemyStates.think, think)
+                   .AddTransition(FatEnemyStates.hurted, hurted)
                    .AddTransition(FatEnemyStates.dead, dead);
 
         think.AddTransition(FatEnemyStates.meleeAttack, meleeAttack)
              .AddTransition(FatEnemyStates.rangeAttack, rangeAttack)
              .AddTransition(FatEnemyStates.idle, idle)
              .AddTransition(FatEnemyStates.pursue, pursue)
+             .AddTransition(FatEnemyStates.hurted, hurted)
              .AddTransition(FatEnemyStates.dead, dead);
 
         dead.AddTransition(FatEnemyStates.idle, idle); 
@@ -255,7 +277,7 @@ public class FatEnemy : BaseUnit
 
         alert.OnEnter += (previousState) => 
         {
-            Alert();
+            SetAlertTrigger();
             _targetDetected = true;
             LookTowardsPlayer = true;
             //Tiempo de alerta
@@ -273,6 +295,17 @@ public class FatEnemy : BaseUnit
                 _sm.Feed(FatEnemyStates.think);
         };
         //alert.OnExit += (nextState) => { };
+
+        hurted.OnEnter += (previousState) => 
+        {
+            isVulnerableToAttacks = true;
+            ShowVulnerability();
+        };
+        hurted.OnUpdate += () => { };
+        hurted.OnExit += (nextState) => 
+        {
+            isVulnerableToAttacks = false;
+        };
 
         pursue.OnEnter += (previousState) => { Locomotion = 1; };
         pursue.OnUpdate += () => 
@@ -427,14 +460,24 @@ public class FatEnemy : BaseUnit
 
         projectil.transform.forward = bulletDir;
     }
+    public void EndHurted()
+    {
+        //Se acabó la animación de Hurted.
+    }
 
     //=============================== CORRUTINES ================================================
 
-    IEnumerator SetAlertedTrigger()
+    IEnumerator AlertTrigger()
     {
         anims.SetBool(animationParams[3], true);
         yield return new WaitForEndOfFrame();
         anims.SetBool(animationParams[3], false);
+    }
+    IEnumerator HurtTrigger()
+    {
+        anims.SetBool(animationParams[4], true);
+        yield return new WaitForEndOfFrame();
+        anims.SetBool(animationParams[4], false);
     }
     IEnumerator Explode()
     {

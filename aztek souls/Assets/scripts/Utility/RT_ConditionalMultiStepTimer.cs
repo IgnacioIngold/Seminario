@@ -19,10 +19,9 @@ namespace Utility.Timers.RunTime
             get => _currentStep;
             set
             {
-                int maxValue = steps.Length > 1 ? steps.Length - 1 : 0;
-                _currentStep = Mathf.Clamp(value, 0, maxValue);
+                _currentStep = Mathf.Clamp(value, 0, steps.Length);
 
-                if (_currentStep == maxValue)
+                if (_currentStep == steps.Length - 1)
                     LastStep = true;
             }
         }
@@ -40,7 +39,8 @@ namespace Utility.Timers.RunTime
 
             OnTimeStart();
             isReady = false;
-            _remainingTime = steps[Step];
+            if (_currentStep < steps.Length)
+                _remainingTime = steps[Step];
             if (_remainingTime == 0)
             {
                 Restart();

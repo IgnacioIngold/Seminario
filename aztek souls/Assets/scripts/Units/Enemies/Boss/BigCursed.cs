@@ -5,6 +5,7 @@ using IA.StateMachine.Generic;
 using IA.RandomSelections;
 using Core;
 using Core.Entities;
+using System;
 
 public enum BossStates
     {
@@ -78,7 +79,32 @@ public class BigCursed : BaseUnit
     Vector3 _initialChargePosition;
     Vector3 _chargeDir = Vector3.zero;
 
+    //TiempoActual - Duración - indiceDelAtaque
+    Tuple<float , int> vulnerabilityDeMrda;
+    public float[] times = new float[0];
+
     //============================== INTERFACES ===============================================
+    void ActualizarMrda()
+    {
+        if (vulnerabilityDeMrda != null)
+        {
+            var TiempoActual = vulnerabilityDeMrda.Item1 - Time.deltaTime;
+            print(string.Format("Actualizando esta poronga, tiempo actual {0}", TiempoActual));
+
+            if (TiempoActual <= 0)
+                reiniciarMRda();
+        }
+    }
+    void contarMRda()
+    {
+        int acumulación = vulnerabilityDeMrda.Item2 + 1; //Acumento la acumulación.
+        vulnerabilityDeMrda = Tuple.Create(times[acumulación], acumulación);
+    }
+    void reiniciarMRda()
+    {
+        var FirstTime = times[0];
+        vulnerabilityDeMrda = Tuple.Create(0f, 0);
+    }
 
     /// <summary>
     /// Permite recibir daño e Informar al agresor del resultado de su ataque.
@@ -96,29 +122,31 @@ public class BigCursed : BaseUnit
             //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
             if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
             {
-                _attacksRecieved++;
+                contarMRda();
 
-                if (_attacksRecieved == 3)
-                {
-                    comboVulnerabilityCountDown = 0f;
-                    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
-                    completedCombo = true;
+                //if (_attacksRecieved == 3)
+                //{
+                //    comboVulnerabilityCountDown = 0f;
+                //    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                //    completedCombo = true;
 
-                    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                }
-                else if (_attacksRecieved == 2)
-                {
-                    comboVulnerabilityCountDown += 4f;
+                //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                //}
+                //else if (_attacksRecieved == 2)
+                //{
+                //    comboVulnerabilityCountDown += 4f;
 
-                    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                }
-                else comboVulnerabilityCountDown += 1f;
+                //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                //}
+                //else comboVulnerabilityCountDown += 1f;
 
                 Display_CorrectButtonHitted();
 
                 //Muestro el siguiente ataque.
                 //ShowNextVulnerability(_attacksRecieved);
             }
+            else
+                reiniciarMRda();
 
             if (completedCombo)
                 sm.Feed(BossStates.Smashed);
@@ -176,6 +204,8 @@ public class BigCursed : BaseUnit
 
     protected override void Awake()
     {
+        reiniciarMRda();
+
         base.Awake();
         OnDie += () => {  };
 
@@ -184,9 +214,8 @@ public class BigCursed : BaseUnit
         SmashEmission = OnSmashParticle.emission;
 
         //Vulnerabilidad
-        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
         vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        vulnerabilityCombos.Add(1, MainVulnerability);
+        vulnerabilityCombos.Add(0, new Inputs[] { Inputs.light, Inputs.light, Inputs.strong });
 
         #region State Machine
 
@@ -541,6 +570,8 @@ public class BigCursed : BaseUnit
         CurrentState = sm.currentState;
 #endif
 
+        ActualizarMrda();
+
         #region Tiempo de recuperación del estado de Derribo (Smashed)
 
         if (_remainingSmashTime > 0)
@@ -554,16 +585,16 @@ public class BigCursed : BaseUnit
         #endregion
 
         #region Tiempo de Vulnerabilidad contra Combo.
-        if (comboVulnerabilityCountDown > 0)
-            comboVulnerabilityCountDown -= Time.deltaTime;
-        else if (comboVulnerabilityCountDown <= 0)
-        {
-            //print("Se acabó el tiempo de vulnerabilidad");
-            _attacksRecieved = 0;
-//            SetVulnerabity(false);
-            comboVulnerabilityCountDown = 0;
-            ButtonHitConfirm.gameObject.SetActive(false);
-        }
+//        if (comboVulnerabilityCountDown > 0)
+//            comboVulnerabilityCountDown -= Time.deltaTime;
+//        else if (comboVulnerabilityCountDown <= 0)
+//        {
+//            //print("Se acabó el tiempo de vulnerabilidad");
+//            _attacksRecieved = 0;
+////            SetVulnerabity(false);
+//            comboVulnerabilityCountDown = 0;
+//            ButtonHitConfirm.gameObject.SetActive(false);
+//        }
         #endregion
 
         #region Exposición de Vulnerabilidad
@@ -588,7 +619,6 @@ public class BigCursed : BaseUnit
     /// </summary>
     public void SetCharge()
     {
-
         //Activo la animación.
         anims.SetBool("Roar", false);
         anims.SetFloat("Movement", 2f);

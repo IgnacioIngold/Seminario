@@ -26,8 +26,8 @@ public class BE_AnimEventListener : MonoBehaviour
     {
         owner.LookTowardsPlayer = true;
         owner.SetCurrentVulnerabilityCombo(0);
-        owner.EnableVulnerabilityState(true);
         owner.vulnerabilityWindow.Start();
+        owner.ShowVulnerability();
     }
 
     public void Active()
@@ -53,6 +53,8 @@ public class BE_AnimEventListener : MonoBehaviour
     public void HurtAnimationEnded()
     {
         print("Final de la animación.");
+        owner.AP_SimpleAttack = false;
+        owner.AP_GetHit = false;
         owner.FeedFSM(BasicEnemyStates.think);
     }
 

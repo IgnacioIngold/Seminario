@@ -133,16 +133,26 @@ public class BasicEnemy : BaseUnit
             //Si el tipo del ataque coincide con el del combo al que es vulnerable añadimos steps al timer o lo reiniciamos cuando corresponda.
             if (vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved] == HitInfo.AttackType)
             {
+                coincided = true;
+
+                print("Coincidencia: " + _attacksRecieved);
                 _attacksRecieved++;
                 vulnerabilityWindow.NextStep();
-
-                coincided = true;
+                ShowVulnerability();
 
                 if (_attacksRecieved == 3)
                 {
+                    print("COMPLETE EL COMBO ALELUYA");
                     completedCombo = true;
                     Health = 0;
                 }
+            }
+            else
+            {
+                print("No coincidió");
+                _attacksRecieved = 0;
+                vulnerabilityWindow.Restart();
+                HideVulnerability();
             }
 
             Health -= damage;
@@ -206,6 +216,8 @@ public class BasicEnemy : BaseUnit
 
         vulnerabilityWindow.OnTimeStart += () =>
         {
+            print("TIME START");
+            vulnerabilityWindow.NextStep();
             ShowVulnerability();
         };
         vulnerabilityWindow.OnTimesUp += () =>
@@ -301,7 +313,6 @@ public class BasicEnemy : BaseUnit
         };
         hurted.OnExit += (nextState) => 
         {
-            print("LLegué al final del estado");
             AP_GetHit = false;
         };
 
@@ -434,11 +445,6 @@ public class BasicEnemy : BaseUnit
             //print("Thinking");
             StartCoroutine(thinkAndWatch());
         };
-        //think.OnUpdate += () => { };
-        //think.OnExit += (nextState) =>
-        //{
-        //    //print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
-        //}; 
 
         #endregion
 

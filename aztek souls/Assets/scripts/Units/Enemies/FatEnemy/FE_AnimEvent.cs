@@ -54,13 +54,15 @@ public class FE_AnimEvent : MonoBehaviour
 
     public void StartVulnerableDisplay()
     {
-        Owner.SetCurrentVulnerabilityCombo(0);
         print("Setting Vulnerability");
+        Owner.SetCurrentVulnerabilityCombo(0);
+        Owner.EnableVulnerabilityState(true);
         Owner.ShowVulnerability();
     }
     public void EndVulnerableDisplay()
     {
         print("Hiding Vulnerability");
+        Owner.EnableVulnerabilityState(false);
         Owner.HideVulnerability();
     }
 }
