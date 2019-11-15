@@ -22,35 +22,38 @@ public class BE_AnimEventListener : MonoBehaviour
     {
         _AM.Play(Source);
     }
-    public void AttackStartUp()
+    public void StartUp()
     {
         owner.LookTowardsPlayer = true;
+        owner.SetCurrentVulnerabilityCombo(0);
+        owner.EnableVulnerabilityState(true);
+        owner.vulnerabilityWindow.Start();
     }
 
-    public void Attack_ActivePhase()
+    public void Active()
     {
-        //print("AnimEvent basicEnemy ON START ATTACK activado");
-        if (owner.isAttacking)
-        {
-            AttackCollider.enabled = true;
-            owner.LookTowardsPlayer = false;
-        }
-    }
-    public void Attack_ActivePhaseEnd()
-    {
-        //print("AnimEvent basicEnemy ON FINIT ATTACK activado");
-        if (owner.isAttacking)
-            AttackCollider.enabled = false;
+        AttackCollider.enabled = true;
+        owner.LookTowardsPlayer = false;
     }
 
-    public void AttackRecovery()
+    public void Recovery()
     {
         //owner.LookTowardsPlayer = true;
+        AttackCollider.enabled = false;
     }
 
     public void AttackFinished()
     {
-        if (owner.isAttacking)
-            owner.FeedFSM(BasicEnemyStates.think);
+        owner.AP_SimpleAttack = false;
+        owner.FeedFSM(BasicEnemyStates.think);
     }
+
+    //============================= Hurt Animation ==========================================
+
+    public void HurtAnimationEnded()
+    {
+        print("Final de la animación.");
+        owner.FeedFSM(BasicEnemyStates.think);
+    }
+
 }

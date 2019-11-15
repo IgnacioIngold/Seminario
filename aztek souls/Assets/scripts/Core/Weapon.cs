@@ -24,7 +24,7 @@ public class Weapon
 
     public event Action OnBegginChain = delegate { };
     public event Action OnEndChain = delegate { };
-
+    public event Action<Inputs> OnInputConfirmed = delegate { };
     public event Action DuringAttack = delegate { };
 
     public bool LastChainAttack = false;
@@ -60,6 +60,7 @@ public class Weapon
     {
         if (beggining == Inputs.none) return;
 
+        OnInputConfirmed(beggining);
         CurrentAttack = entryPoints[beggining];
         OnBegginChain();
         StartAttack();
@@ -118,6 +119,7 @@ public class Weapon
             if (posible != null)
             {
                 //MonoBehaviour.print("Input CONFIRMADO.");
+                OnInputConfirmed(input);
 
                 CurrentAttack.EndAttack();
                 CurrentAttack = posible;

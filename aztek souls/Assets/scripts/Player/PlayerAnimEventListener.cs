@@ -56,6 +56,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         player.CurrentWeapon.CanGetInput(true);
         player.interruptAllowed = true;
+        player.SlowDownTime();
     }
     private void DenyGetInput()
     {

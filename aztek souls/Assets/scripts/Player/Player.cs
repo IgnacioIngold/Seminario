@@ -204,16 +204,16 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     [Header("Blood System")]
     public float consumeBloodRate = 10f;
     public float HealthGainedBySeconds = 10f;
-    public int Blood
+    public float Blood
     {
         get { return myStats.Sangre; }
         set
         {
-            int val = value;
+            float val = value;
             if (val < 0)
                 val = 0;
 
-            myStats.Sangre = val;
+            myStats.Sangre = (int)val;
             if (_myBars != null)
                 _myBars.m_UpdateBloodAmmount((int)val);
         }
@@ -367,6 +367,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         else if (result.HitConnected && CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
             //Esto se llama cuando un Hit Conecta.
+            //SlowDownTime();
 
             if (result.TargetEliminated)
                 FeedBlood(result.bloodEarned);
@@ -675,6 +676,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #endregion
 
+        CurrentWeapon.OnInputConfirmed += (i) => { FeedInputToClosestEnemies(i); };
+
         //Permite tener un Delay
         OnActionHasEnded += () =>
         {
@@ -727,7 +730,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
                         _anims.SetBool("ConsummingBlood", true);
                         BloodConsume.SetActive(true);
                         Health += HealthGainedBySeconds * Time.deltaTime;
-                        Blood -= (int)(consumeBloodRate * Time.deltaTime);
+                        Blood -= (consumeBloodRate * Time.deltaTime);
                     }
 
                     if (Blood <= 0 || !_canHeal)
@@ -802,15 +805,9 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
-            {
-                FeedInputToClosestEnemies(Inputs.light);
                 CurrentWeapon.FeedInput(Inputs.light);
-            }
             else if (Input.GetButtonDown("StrongAttack"))
-            {
-                FeedInputToClosestEnemies(Inputs.light);
                 CurrentWeapon.FeedInput(Inputs.strong);
-            }
         }
 
         if (!_rolling && !_moving && !_attacking)
@@ -876,6 +873,10 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
                 break;
         }
         CurrentWeapon = weapons[weaponIndex];
+    }
+    public void SlowDownTime()
+    {
+        StartCoroutine(HitSlowEffect());
     }
 
     public void Move()
@@ -1077,6 +1078,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         _clamped = false;
         _invulnerable = false;
         _listenToInput = true;
+    }
+    IEnumerator HitSlowEffect()
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(0.3f);
+        Time.timeScale = 1f;
     }
 
     //============================================= COLLISIONS ================================================================

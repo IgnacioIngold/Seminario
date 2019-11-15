@@ -6,12 +6,13 @@ using UnityEngine;
 using IA.StateMachine.Generic;
 using Core.Entities;
 using Random = UnityEngine.Random;
-using Utility.Timers;
+using Utility.Timers.RunTime;
 using Core;
 
 public enum BasicEnemyStates
 {
     idle,
+    hurted,
     alerted,
     pursue,
     attack,
@@ -44,7 +45,9 @@ public class BasicEnemy : BaseUnit
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
-    public bool isAttacking;
+
+    [Header("Timers")]
+    public RT_ConditionalMultiStepTimer vulnerabilityWindow = new RT_ConditionalMultiStepTimer();
 
     [Header("Blocking")]
     public bool canBlock = true;
@@ -55,6 +58,46 @@ public class BasicEnemy : BaseUnit
 
     private float _alertedTimeRemaining = 0f;
 
+    //============================ PROPIEDADES ================================================
+
+    int[] animationParams;
+    public bool AP_Walking
+    {
+        get => anims.GetBool(animationParams[0]);
+        set => anims.SetBool(animationParams[0], value);
+    }
+    public bool AP_Blocking
+    {
+        get => anims.GetBool(animationParams[1]);
+        set => anims.SetBool(animationParams[1], value);
+    }
+    public bool AP_SimpleAttack
+    {
+        get => anims.GetBool(animationParams[2]);
+        set => anims.SetBool(animationParams[2], value);
+    }
+    public bool AP_GetHit
+    {
+        get => anims.GetBool(animationParams[3]);
+        set => anims.SetBool(animationParams[3], value);
+    }
+    public bool AP_Die
+    {
+        get => anims.GetBool(animationParams[4]);
+        set => anims.SetBool(animationParams[4], value);
+    }
+
+    public void SetAttackTrigger()
+    {
+        StartCoroutine(AttackTrigger());
+    }
+    IEnumerator AttackTrigger()
+    {
+        AP_SimpleAttack = true;
+        yield return new WaitForEndOfFrame();
+        AP_SimpleAttack = false;
+    }
+
     //======================== OVERRIDES & INTERFACES =========================================
 
     public override HitResult Hit(HitData HitInfo)
@@ -62,112 +105,84 @@ public class BasicEnemy : BaseUnit
         HitResult result = HitResult.Default();
         float damage = HitInfo.Damage;
 
+        if (!_targetDetected) _targetDetected = true;
+
+        EnemyHealthBar.FadeIn();
+
         if (IsAlive && damage > 0)
         {
-            //print("Estoy Vulnerable?: " + isVulnerableToAttacks);
+            //if (!isVulnerableToAttacks && _targetDetected) //Bloqueo.
+            //{
+            //    //print("BLOQUEO");
+            //    sm.Feed(BasicEnemyStates.blocking);
+            //    result.HitBlocked = true;
 
-            if (!isVulnerableToAttacks && _targetDetected) //Bloqueo.
+            //    float damageReduced = damage * incommingDamageReduction;
+            //    Health -= damageReduced;
+
+            //    OnBlockHit();
+            //}
+
+            //HitNormal.
+            sm.Feed(BasicEnemyStates.hurted);
+            OnGetHit();
+
+            bool coincided = false;
+            bool completedCombo = false;
+            // Contamos la cantidad de hits que obtenemos.
+            //Si el tipo del ataque coincide con el del combo al que es vulnerable añadimos steps al timer o lo reiniciamos cuando corresponda.
+            if (vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved] == HitInfo.AttackType)
             {
-                //print("BLOQUEO");
+                _attacksRecieved++;
+                vulnerabilityWindow.NextStep();
 
-                sm.Feed(BasicEnemyStates.blocking);
-                result.HitBlocked = true;
+                coincided = true;
 
-                float damageReduced = damage * incommingDamageReduction;
-                Health -= damageReduced;
-
-                OnBlockHit();
+                if (_attacksRecieved == 3)
+                {
+                    completedCombo = true;
+                    Health = 0;
+                }
             }
-            else //HitNormal.
+
+            Health -= damage;
+
+            //Si el enemigo murió x el ataque.
+            if (!IsAlive)
             {
-                anims.SetTrigger("GetHit");
-
-                OnGetHit();
-
-                bool coincided = false;
-                bool completedCombo = false;
-                //Contamos la cantidad de hits que obtenemos.
-                //Aumentamos el "timer"
-                comboVulnerabilityCountDown = ComboWindow; //Reasignamos el tiempo del combo.
-                //Si el tipo del ataque coincide con el del combo al que es vulnerable
-                if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
-                {
-                    _attacksRecieved++;
-                    print("Recibido : " + _attacksRecieved);
-
-                    if (_attacksRecieved == 3)
-                    {
-                        comboVulnerabilityCountDown = 0f;
-                        print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                    }
-                    else if (_attacksRecieved == 2)
-                    {
-                        comboVulnerabilityCountDown += 4f;
-                        print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                    }
-                    else
-                        comboVulnerabilityCountDown += 1f;
-                    Display_CorrectButtonHitted();
-
-                    coincided = true;
-
-                    if (_attacksRecieved == 3)
-                    {
-                        completedCombo = true;
-                        Health = 0;
-                    }
-
-                    //Muestro el siguiente ataque.
-                    //ShowNextVulnerability(_attacksRecieved);
-                }
-
+                //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
+                result.HitConnected = true;
+                result.TargetEliminated = true;
+                if (completedCombo)
+                    result.bloodEarned = BloodForKill * 2;
+                else
+                    result.bloodEarned = BloodForKill;
+                sm.Feed(BasicEnemyStates.dead);
+            }
+            //Si el enemigo no murió por el ataque.
+            else
+            {
+                result.HitConnected = true;
                 if (coincided)
-                    Health -= damage;
-                else
-                    Health -= damage * incommingDamageReduction;
-
-
-                if (!IsAlive)
-                {
-                    //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
-                    result.TargetEliminated = true;
-                    if (completedCombo)
-                        result.bloodEarned = BloodForKill * 2;
-                    else
-                        result.bloodEarned = BloodForKill;
-                    sm.Feed(BasicEnemyStates.dead);
-                }
-                else
-                {
-                    result.HitConnected = true;
                     result.bloodEarned = BloodPerHit;
 
-                    if (!_targetDetected)
-                    {
-                        _targetDetected = true;
-                        sm.Feed(BasicEnemyStates.pursue);
-                    }
-                    else
-                        sm.Feed(BasicEnemyStates.idle);
+                if (!_targetDetected)
+                    _targetDetected = true;
 
-                    LookTowardsPlayer = true;
-                    sm.Feed(BasicEnemyStates.think);
-                }
+                LookTowardsPlayer = true;
+                sm.Feed(BasicEnemyStates.hurted);
             }
 
             var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
             Destroy(particle, 3f);
-            EnemyHealthBar.FadeIn();
         }
 
         return result;
     }
-
     public override void GetHitResult(HitResult result)
     {
         print("El enemigo conectó un Hit");
     }
-
     public override HitData DamageStats()
     {
         return new HitData() { Damage = attackDamage};
@@ -181,14 +196,28 @@ public class BasicEnemy : BaseUnit
         VulnerableMarker.gameObject.SetActive(false);
         ButtonHitConfirm.gameObject.SetActive(false);
 
+        animationParams = new int[5];
+        for (int i = 0; i < animationParams.Length; i++)
+            animationParams[i] = anims.GetParameter(i).nameHash;
+
         //Vulnerabilidad
-        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong};
         vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        vulnerabilityCombos.Add(1, MainVulnerability);
+        vulnerabilityCombos.Add(0, new Inputs[] { Inputs.light, Inputs.light, Inputs.strong });
+
+        vulnerabilityWindow.OnTimeStart += () =>
+        {
+            ShowVulnerability();
+        };
+        vulnerabilityWindow.OnTimesUp += () =>
+        {
+            _attacksRecieved = 0;
+            HideVulnerability();
+        };
 
         #region State Machine
 
         var idle = new State<BasicEnemyStates>("Idle");
+        var hurted = new State<BasicEnemyStates>("Hurted");
         var alerted = new State<BasicEnemyStates>("Alerted");
         var pursue = new State<BasicEnemyStates>("pursue");
         var attack = new State<BasicEnemyStates>("Attacking");
@@ -198,32 +227,41 @@ public class BasicEnemy : BaseUnit
 
         #region Transiciones
         idle.AddTransition(BasicEnemyStates.dead, dead)
+            .AddTransition(BasicEnemyStates.hurted, hurted)
             .AddTransition(BasicEnemyStates.attack, attack)
             .AddTransition(BasicEnemyStates.alerted, alerted)
             .AddTransition(BasicEnemyStates.blocking, block);
 
+        hurted.AddTransition(BasicEnemyStates.dead, dead)
+              .AddTransition(BasicEnemyStates.think, think)
+              .AddTransition(BasicEnemyStates.idle, idle);
+
         alerted.AddTransition(BasicEnemyStates.dead, dead)
+               .AddTransition(BasicEnemyStates.hurted, hurted)
                .AddTransition(BasicEnemyStates.attack, attack)
                .AddTransition(BasicEnemyStates.pursue, pursue);
 
         pursue.AddTransition(BasicEnemyStates.dead, dead)
               .AddTransition(BasicEnemyStates.attack, attack)
+              .AddTransition(BasicEnemyStates.hurted, hurted)
               .AddTransition(BasicEnemyStates.blocking, block);
 
         attack.AddTransition(BasicEnemyStates.dead, dead)
               .AddTransition(BasicEnemyStates.pursue, pursue)
+              .AddTransition(BasicEnemyStates.hurted, hurted)
               .AddTransition(BasicEnemyStates.idle, idle)
               .AddTransition(BasicEnemyStates.think, think)
               .AddTransition(BasicEnemyStates.blocking, block);
 
         block.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.attack, attack)
+             .AddTransition(BasicEnemyStates.hurted, hurted)
              .AddTransition(BasicEnemyStates.think, think)
              .AddTransition(BasicEnemyStates.blocking, block);
 
-
         think.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.pursue, pursue)
+             .AddTransition(BasicEnemyStates.hurted, hurted)
              .AddTransition(BasicEnemyStates.idle, idle)
              .AddTransition(BasicEnemyStates.attack, attack)
              .AddTransition(BasicEnemyStates.blocking, block);
@@ -237,6 +275,8 @@ public class BasicEnemy : BaseUnit
         idle.OnEnter += (previousState) =>
         {
             //Seteo la animación inicial.
+            AP_Walking = false;
+            AP_SimpleAttack = false;
         };
         idle.OnUpdate += () =>
         {
@@ -252,13 +292,27 @@ public class BasicEnemy : BaseUnit
         //idle.OnExit += (nextState) => { };
 
         #endregion
+        #region Hurted
 
+        hurted.OnEnter += (previousState) => 
+        {
+            AP_SimpleAttack = false;
+            AP_GetHit = true;
+        };
+        hurted.OnExit += (nextState) => 
+        {
+            print("LLegué al final del estado");
+            AP_GetHit = false;
+        };
+
+        #endregion
         #region Alerted
 
         alerted.OnEnter += (previousState) =>
         {
             //print("Enemy has been Alerted");
             _alertedTimeRemaining = AlertedTime;
+            _targetDetected = true;
 
             //EnemyHealthBar.FadeIn();
 
@@ -292,14 +346,12 @@ public class BasicEnemy : BaseUnit
         //alerted.OnExit += (nextState) => { };
 
         #endregion
-
         #region Pursue
 
         pursue.OnEnter += (previousState) =>
         {
             //print("pursue");
-            //Setear Animación.
-            anims.SetBool("Walking", true);
+            AP_Walking = true;
         };
         pursue.OnUpdate += () =>
         {
@@ -311,21 +363,19 @@ public class BasicEnemy : BaseUnit
             if (sight.distanceToTarget <= AttackRange)
                 sm.Feed(BasicEnemyStates.attack);
         };
-        pursue.OnExit += (nextState) => anims.SetBool("Walking", false);
+        pursue.OnExit += (nextState) => AP_Walking = false;
 
         #endregion
-
         #region Attack
 
         attack.OnEnter += (previousState) =>
         {
-            //Debug.LogWarning("Enemy Start of Attack");
-            isAttacking = true;
             //GetComponent<NavMeshAgent>().enabled = false;
+            //anims.SetTrigger("SimpleAttack");
+            //SetVulnerabity(true);
+            SetAttackTrigger();
             _rotationLerpSpeed = AttackRotationLerpSpeed;
             LookTowardsPlayer = true;
-            anims.SetTrigger("SimpleAttack");
-            //SetVulnerabity(true);
         };
         attack.OnUpdate += () =>
         {
@@ -336,20 +386,16 @@ public class BasicEnemy : BaseUnit
         };
         attack.OnExit += (nextState) =>
         {
-            //GetComponent<NavMeshAgent>().enabled = true;
             _rotationLerpSpeed = NormalRotationLerpSeed;
-            isAttacking = false;
             Debug.LogWarning("Enemy End of Attack");
         };
 
         #endregion
-
         #region Blocking
 
         block.OnEnter += (previousState) =>
         {
-            anims.SetBool("Blocking", true);
-            isBlocking = true;
+            AP_Blocking = true;
             LookTowardsPlayer = true;
 
             blockTime = blockDuration;
@@ -376,13 +422,11 @@ public class BasicEnemy : BaseUnit
             if (nextState != BasicEnemyStates.blocking)
             {
                 LookTowardsPlayer = true;
-                isBlocking = false;
+                AP_Blocking = false;
             }
-            anims.SetBool("Blocking", false);
         };
 
         #endregion
-
         #region Thinking
 
         think.OnEnter += (previousState) =>
@@ -401,7 +445,7 @@ public class BasicEnemy : BaseUnit
         dead.OnEnter += (previousState) =>
         {
             StopAllCoroutines();
-            anims.SetTrigger("Die");
+            AP_Die = true;
             Die();
         };
 
@@ -418,33 +462,11 @@ public class BasicEnemy : BaseUnit
 #if UNITY_EDITOR
         CurrentState = sm.currentState;
 #endif
-
-        //print("Sigo al objetivo: " + LookTowardsPlayer);
-
-        #region CountDown de Vulnerabilidad.
-
-        if (comboVulnerabilityCountDown > 0)
-            comboVulnerabilityCountDown -= Time.deltaTime;
-        else if (comboVulnerabilityCountDown <= 0)
-        {
-            //print("Se acabó el tiempo de vulnerabilidad");
-            _attacksRecieved = 0;
-            //SetVulnerabity(false);
-            comboVulnerabilityCountDown = 0;
-            ButtonHitConfirm.gameObject.SetActive(false);
-        }
-
-        #endregion
-
+        vulnerabilityWindow.Update();
         sight.Update();
 
         if (LookTowardsPlayer && _targetDetected)
             transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed * Time.deltaTime);
-
-        if (isVulnerableToAttacks)
-            VulnerableMarker.gameObject.SetActive(true);
-        else if (VulnerableMarker.gameObject.activeSelf)
-            VulnerableMarker.gameObject.SetActive(false);
 
         if (_hp <= 0)
             sm.Feed(BasicEnemyStates.dead);
@@ -452,12 +474,7 @@ public class BasicEnemy : BaseUnit
         sm.Update();
     }
 
-    //public override void SetVulnerabity(bool vulnerable, int combo = 1)
-    //{
-    //    canBlock = !vulnerable;
-
-    //    base.SetVulnerabity(vulnerable);
-    //}
+    //=========================== CORRUTINES ==================================================
 
     IEnumerator thinkAndWatch()
     {

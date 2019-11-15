@@ -3,7 +3,7 @@ using Utility.Timers.RunTime;
 
 public class TestTimer : MonoBehaviour
 {
-    [SerializeField] RT_ConditionalMultiStepTimer HitWindows;
+    [SerializeField] RT_ConditionalMultiStepTimer HitWindows = new RT_ConditionalMultiStepTimer();
 
     // Start is called before the first frame update
     void Start()
