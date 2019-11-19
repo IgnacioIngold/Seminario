@@ -135,6 +135,8 @@ public class BasicEnemy : BaseUnit
     {
         base.Awake();
 
+        sight.target = FindObjectOfType<Player>().GetComponent<Transform>();
+
         //State Machine
         var idle = new State<BasicEnemyStates>("Idle");
         var alerted = new State<BasicEnemyStates>("Alerted");
