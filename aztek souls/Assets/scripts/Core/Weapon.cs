@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Core.Entities;
 
 public enum Inputs
 {
@@ -14,7 +12,6 @@ public enum Inputs
 public class Weapon
 {
     public Attack CurrentAttack = null;
-    public Attack NextAttack = null;
     Animator _anims;
 
     public Dictionary<Inputs, Attack> entryPoints = new Dictionary<Inputs, Attack>();
@@ -26,22 +23,21 @@ public class Weapon
     public event Action OnBegginChain = delegate { };
     public event Action OnEndChain = delegate { };
     public event Action<Attack> OnInputConfirmed = delegate { };
-
     public event Action DuringAttack = delegate { };
 
-    public bool LastChainAttack = false;
-
-    bool canGetInput = true;
-    float currentDuration = 0f;
+    bool _inputLock = true;                      //El arma actual puede recibir input.
+    bool _inputConfirm = false;                  // El arma actual recibió un input correcto.
 
     public Weapon(Animator anims)
     {
         _anims = anims;
 
-        entryPoints = new Dictionary<Inputs, Attack>();
-        entryPoints.Add(Inputs.light, null);
-        entryPoints.Add(Inputs.strong, null);
-        entryPoints.Add(Inputs.none, null);
+        entryPoints = new Dictionary<Inputs, Attack>
+        {
+            { Inputs.light, null },
+            { Inputs.strong, null },
+            { Inputs.none, null }
+        };
     }
     public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
@@ -58,7 +54,7 @@ public class Weapon
 
     public void BegginCombo(Inputs beggining)
     {
-        Debug.LogWarning("============ INICIO DEL COMBO ============");
+        //Debug.LogWarning("============ INICIO DEL COMBO ============");
         if (beggining == Inputs.none) return;
 
         CurrentAttack = entryPoints[beggining];
@@ -68,79 +64,55 @@ public class Weapon
 
     void StartAttack()
     {
-        //if (CurrentAttack.ChainIndex == CurrentAttack.maxChainIndex)
-        //    LastChainAttack = true;
+        _inputLock = false;
+        _inputConfirm = false;
 
-        canGetInput = false;
-        NextAttack = null;
-        currentDuration = CurrentAttack.AttackDuration;
         CurrentAttack.StartAttack();
     }
-    public void Update()
+
+    public void EndCurrentAttack()
     {
-        DuringAttack();
-
-        currentDuration -= Time.deltaTime;
-
-        if (currentDuration <= 0)
-        {
-            MonoBehaviour.print(string.Format("Duración del ataque terminado\nEl ultimo ataque fue {0}", CurrentAttack.ID));
-            if (NextAttack == null)
-            {
-                CurrentAttack.EndAttack();
-                EndChainCombo();
-            }
-            else
-            {
-                //Cambio el ataque al nuevo ataque.
-                CurrentAttack = NextAttack;
-                currentDuration = CurrentAttack.AttackDuration;
-                StartAttack();
-            }
-        }
+        if (_inputConfirm)
+            StartAttack();
+        else
+            EndChainCombo();
     }
-
     void EndChainCombo()
     {
         OnEndChain();
         CurrentAttack = null;
-        NextAttack = null;
-        Debug.LogWarning("============ FINAL DEL COMBO ============");
+        //Debug.LogWarning("============ FINAL DEL COMBO ============");
     }
-    public void CanGetInput(bool enabled)
+    public void CanGetInput()
     {
-        if (enabled && CurrentAttack != null)
-        {
-            canGetInput = true;
-            CurrentAttack.EnableInput();
-        }
-        else
-            canGetInput = false;
+        _inputLock = true;
+        if (_inputLock) CurrentAttack.EnableInput();
     }
     public void ConfirmHit()
     {
         CurrentAttack.Hit();
     }
 
-    public void InterruptAttack()
-    {
-        OnEndChain();
-    }
+    //public void InterruptAttack()
+    //{
+    //    OnEndChain();
+    //}
+
     public void FeedInput(Inputs input)
     {
-        if (canContinueAttack() && canGetInput && NextAttack == null)
+        if (CurrentAttack.isChainFinale || !_inputLock) return;
+
+        if (_inputLock)
         {
-            Attack posible = CurrentAttack.getConnectedAttack(input);
-            MonoBehaviour.print(string.Format("Recibido comando Input\nEl tipo pedido es {0} y el resultado es {1}.", input.ToString(), posible != null ? posible.Name : "Nulo"));
+            Attack posible = CurrentAttack.GetConnectedAttack(input);
 
             if (posible != null)
             {
-                MonoBehaviour.print("Input CONFIRMADO.");
-                NextAttack = posible;
-                _anims.SetInteger("combat", NextAttack.ID);
+                _anims.SetInteger("combat", posible.ID);
+                CurrentAttack = posible;
+                _inputConfirm = true;
+                _inputLock = false;
             }
-            else
-                _anims.SetInteger("combat", 0);
         }
     }
 }

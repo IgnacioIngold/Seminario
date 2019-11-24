@@ -87,7 +87,7 @@ namespace Core
         {
             Context.LevelupPanel = active;
 
-            Player.active = !active;
+            Player.Active = !active;
             mainCamB.EnableRotation(!active);
             EnableDisableEnemies(!active);
 
@@ -102,7 +102,7 @@ namespace Core
 
             PauseMenuPanel.SetActive(paused);
 
-            Player.active = !paused;
+            Player.Active = !paused;
 
             EnableDisableEnemies(!paused);
 

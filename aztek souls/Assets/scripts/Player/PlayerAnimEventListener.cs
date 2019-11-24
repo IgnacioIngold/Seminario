@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -16,7 +14,6 @@ public class PlayerAnimEventListener : MonoBehaviour
     public float FirstForce;
     public float SecondForce;
 
-    
     public List<ParticleSystem> MyParticles = new List<ParticleSystem>();
     Animator anim;
 
@@ -31,16 +28,12 @@ public class PlayerAnimEventListener : MonoBehaviour
     void StepPerform(int index)
     {
         if(index == 1)
-        {
             player.Step(FirstForce,firstTime);
-        }
         else
-        {
             player.Step(SecondForce,SecondTime);
-        }
         
     }
-    void disableInputs(int input)
+    void DisableInputs(int input)
     {
         if (input == 1)
             player._listenToInput = true;
@@ -48,7 +41,6 @@ public class PlayerAnimEventListener : MonoBehaviour
             player._listenToInput = false;
     }
 
-    
     private void EnableDamage()
     {
         //print("AnimEvent PLAYER ON START ATTACK activado");
@@ -63,11 +55,11 @@ public class PlayerAnimEventListener : MonoBehaviour
 
     private void AllowGetInput()
     {
-        player.CurrentWeapon.CanGetInput(true);
+        player.CurrentWeapon.CanGetInput();
     }
     private void DenyGetInput()
     {
-        player.CurrentWeapon.CanGetInput(false);
+        //player.CurrentWeapon.CanGetInput();
 
         if (marker.activeInHierarchy) marker.SetActive(false);
     }
@@ -76,7 +68,7 @@ public class PlayerAnimEventListener : MonoBehaviour
     {
         player.CameraShake.Play();
     }
-    public void playTails()
+    public void PlayTails()
     {
         if (tail.isPlaying)
             tail.Stop();
@@ -85,5 +77,11 @@ public class PlayerAnimEventListener : MonoBehaviour
     public void PlayMyParticles(int Index)
     {
         MyParticles[Index].Play();
+    }
+
+    public void EndAnimation()
+    {
+        print("PlayerAnimEventListener: CHUPAME LA PIJA LCDTM");
+        player.EndAttackAnimation();
     }
 }

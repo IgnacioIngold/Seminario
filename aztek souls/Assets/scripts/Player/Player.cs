@@ -8,7 +8,7 @@ using UnityEngine.Playables;
 
 public interface IPlayerController
 {
-    bool active { get; set; }
+    bool Active { get; set; }
 }
 
 [Serializable]
@@ -68,16 +68,16 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     #endregion
 
     #region Variables de Inspector
-    [SerializeField] HealthBar _myBars;                                    // Display de la vida y la estamina del jugador.
+    [SerializeField] HealthBar _myBars = null;                                    // Display de la vida y la estamina del jugador.
     [SerializeField] Transform AxisOrientation;                            // Transform que determina la orientación del jugador.
     [SerializeField] LayerMask floor;                                      // Máscara de colisión para el piso.
-    [SerializeField] GameObject marker;                                    // Índicador de ventana de Input.
+    [SerializeField] GameObject marker = null;                                    // Índicador de ventana de Input.
     [SerializeField] GameObject OnHitParticle;                             // Particula a instanciar al recibir daño.
-    [SerializeField] ParticleSystem RollParticle;                          // Partícula de Roll.
+    [SerializeField] ParticleSystem RollParticle = null;                          // Partícula de Roll.
     [SerializeField] ParticleSystem.EmissionModule rollparticleEmission;   // Módulo de Emisión de la particula de roll.
-    [SerializeField] ParticleSystem FeastBlood;                            // Particula que se reproduce al cargar vida.
+    [SerializeField] ParticleSystem FeastBlood = null;                            // Particula que se reproduce al cargar vida.
     [SerializeField] Collider HitCollider;                                 // Collider de daño.
-    [SerializeField] PlayableDirector StaminaEffect;                       // Reproduce el Efecto/Aviso de falta de Stamina.
+    [SerializeField] PlayableDirector StaminaEffect = null;                       // Reproduce el Efecto/Aviso de falta de Stamina.
     public PlayableDirector CameraShake;                         // Reproduce un Shake de la cámara.
 
     Rigidbody _rb;                                          // Componente Rigidbody.
@@ -228,7 +228,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     //============================================= INTERFACES ================================================================
 
     public bool IsAlive => _hp > 0;
-    public bool active { get => enabled; set => enabled = value; }
+    public bool Active { get => enabled; set => enabled = value; }
     public bool invulnerable => _invulnerable;
 
     public void GetDamage(params object[] DamageStats)
@@ -262,7 +262,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 //FeedBack de Daño.
                 _anims.SetTrigger("hurted");
                 _listenToInput = false;
-                CurrentWeapon.InterruptAttack();
+                //CurrentWeapon.InterruptAttack();
                 _attacking = false;
                 GetHit();
                 _rb.velocity /= 3;
@@ -303,7 +303,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     {
         int blockTipe = (int)data[0];
         print("Ataque Bloqueado.");
-        CurrentWeapon.InterruptAttack();
+        //CurrentWeapon.InterruptAttack();
 
         if (blockTipe == 1)
         {
@@ -346,7 +346,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
     private void Awake()
     {
-        
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
         rollparticleEmission = RollParticle.emission;
@@ -363,39 +362,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         // El inicio del ataque tiene muchos settings, que en general se van a compartir con otras armas
         // Asi que seria buena idea encapsularlo en un Lambda y guardarlo para un uso compartido.
-        CurrentWeapon = new Weapon(_anims);
-
-        CurrentWeapon.canContinueAttack = () => { return Stamina > 0; };
-        CurrentWeapon.DuringAttack += () =>
-        {
-            //float AxisX = Input.GetAxis("Horizontal");
-            //float AxisY = Input.GetAxis("Vertical");
-
-            //Vector3 orientation;
-            //_rb.velocity = new Vector3(0, 0, 0);
-
-            //if (AxisX == 0 && AxisY == 0)
-            //    orientation = AxisOrientation.forward;
-            //else
-            //{
-            //    orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
-
-            //    _anims.SetFloat("VelX", AxisY);
-            //    _anims.SetFloat("VelY", 0);
-            //}
-            //transform.forward += transform.forward + orientation;
-
-
-
-            // transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
-
-            //if ( Stamina > rollCost && Input.GetButtonDown("Roll"))
-            //{
-            //    _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
-            //    CurrentWeapon.InterruptAttack();
-            //    StartCoroutine(Roll());
-            //}
-        };
+        CurrentWeapon = new Weapon(_anims) { canContinueAttack = () => { return Stamina > 0; } };
 
         CurrentWeapon.OnBegginChain += () => 
         {
@@ -422,116 +389,33 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f, ChainIndex = 1, maxChainIndex = 3 };
+        Attack L1 = new Attack() { ID = 1, Name = "Light1", Cost = 15f, Damage = 20f};
         L1.OnStart += () =>
         {
             //Por aqui va la activación de la animación correspondiente a este ataque.
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
-            //print("Ejecutando Ataque:" + light1.IDName);
         };
-        L1.AttackDuration = 0.933f;
-        L1.OnEnableInput += () => { marker.SetActive(true); };
-        L1.OnHit += () => 
+        L1.OnEnableInput += () => 
         {
-            //print("Light 1 conecto exitósamente");
+            print("Input está habilitado");
+            marker.SetActive(true);
         };
 
-        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f, ChainIndex = 2, maxChainIndex = 3 };
+        Attack L2 = new Attack() { ID = 3, Name = "Light2", Cost = 15f, Damage = 20f};
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
-            //print("Ejecutando Ataque:" + light2.IDName);
         };
-        L2.AttackDuration = 0.599f;
         L2.OnEnableInput += () => { marker.SetActive(true); };
-        L2.OnHit += () => 
-        {
-            print("Light 2 conecto exitósamente");
-        };
 
-        Attack L3 = new Attack() { ID = 7, Name = "Light3",  Cost = 15f, Damage = 20f, ChainIndex = 3, maxChainIndex = 3 };
+        Attack L3 = new Attack() { ID = 7, Name = "Light3", Cost = 15f, Damage = 20f, isChainFinale = true };
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
-            //print("Ejecutando Ataque:" + light3.IDName);
         };
-        L3.AttackDuration = 1.1f;
-            
-        L3.OnHit += () => 
-        {
-            print("Light 3 conecto exitósamente");
-        };
-
-        //Attack L4 = new Attack() { ID = 5, Name = "Light4",  Cost = 10f, Damage = 15f, ChainIndex = 2, maxChainIndex = 3 };
-        //L4.OnStart += () =>
-        //{
-        //    Stamina -= L4.Cost;
-        //    _anims.SetInteger("combat", 5);
-        //    //print("Ejecutando Ataque:" + quick1.IDName);
-        //};
-        //L4.AttackDuration = AttackClips[L4.ID - 1].length;
-        //L4.OnEnableInput += () => { marker.SetActive(true); };
-
-        //Attack L5 = new Attack() { ID = 9, Name = "Light5",  Cost = 10f, Damage = 15f, ChainIndex = 3, maxChainIndex = 3 };
-        //L5.OnStart += () =>
-        //{
-        //    Stamina -= L5.Cost;
-        //    _anims.SetInteger("combat", 9);
-        //    //print("Ejecutando Ataque:" + quick2.IDName);
-        //};
-        //L5.AttackDuration = AttackClips[L5.ID - 1].length;
-
-        #endregion
-
-        #region Strong
-
-        //Attack S1 = new Attack() { ID = 2, Name = "Strong1", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
-        //S1.OnStart += () =>
-        //{
-        //    _anims.SetInteger("combat", 2);
-        //    Stamina -= S1.Cost;
-        //    breakDefence = true;
-        //    //print("Ejecutando Ataque:" + heavy1.IDName);
-        //};
-        //S1.OnEnd += () => { breakDefence = false; };
-        //S1.AttackDuration = AttackClips[S1.ID - 1].length;
-        //S1.OnEnableInput += () => { marker.SetActive(true); };
-
-        //Attack S2 = new Attack() { ID = 4, Name = "Strong2", Cost = 25f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
-        //S2.OnStart += () =>
-        //{
-        //    _anims.SetInteger("combat", 4);
-        //    Stamina -= S2.Cost;
-        //    breakDefence = true;
-        //    //print("Ejecutando Ataque:" + heavy1.IDName);
-        //};
-        //S2.OnEnd += () => { breakDefence = false; };
-        //S2.AttackDuration = AttackClips[S2.ID - 1].length;
-
-        //Attack S3 = new Attack() { ID = 6, Name = "Strong3", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
-        //S3.OnStart += () =>
-        //{
-        //    _anims.SetInteger("combat", 6);
-        //    Stamina -= S3.Cost;
-        //    breakDefence = true;
-        //    //print("Ejecutando Ataque:" + Airheavy.IDName);
-        //};
-        //S3.OnEnd += () => { breakDefence = false; };
-        //S3.AttackDuration = AttackClips[S3.ID - 1].length;
-
-        //Attack S4 = new Attack() { ID = 8, Name = "Strong4", Cost = 30f, Damage = 30f, ChainIndex = 1, maxChainIndex = 3 };
-        //S4.OnStart += () =>
-        //{
-        //    Stamina -= S4.Cost;
-        //    _anims.SetInteger("combat", 8);
-        //    breakDefence = true;
-        //    //print("Ejecutando Ataque:" + S4.IDName);
-        //};
-        //S4.OnEnd += () => { breakDefence = false; };
-        //S4.AttackDuration = AttackClips[S4.ID - 1].length;
 
         #endregion
 
@@ -539,32 +423,12 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         #region Conecciones
 
-        //N1
         L1.AddConnectedAttack(Inputs.light, L2);
-        //L1.AddConnectedAttack(Inputs.strong, S2);
-
-        //S1.AddConnectedAttack(Inputs.light, L4);
-        //S1.AddConnectedAttack(Inputs.strong, S3);
-
-        //N2
         L2.AddConnectedAttack(Inputs.light, L3);
-        //L2.AddConnectedAttack(Inputs.strong, S4);
-
-        //---> S2 no tiene conecciones.
-
-        //L4.AddConnectedAttack(Inputs.light, L5);
-
-        //---> S3 no tiene conecciones.
-
-        //N3
-        //---> L3 no tiene conecciones.
-        //---> S4 no tiene conecciones.
-        //---> L5 no tiene conecciones.
 
         #endregion
 
         CurrentWeapon.AddEntryPoint(Inputs.light, L1);
-        //CurrentWeapon.AddEntryPoint(Inputs.strong, S1);
 
         #endregion
 
@@ -669,9 +533,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
                 if (Input.GetButtonDown("LighAttack"))
                     Attack(Inputs.light);
-                //else
-                //if (Input.GetButtonDown("StrongAttack"))
-                //    Attack(Inputs.strong);
             }
         }
 
@@ -680,7 +541,6 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
             _recoverStamina = false;
             _running = false;
             _moving = false;
-            CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
                 CurrentWeapon.FeedInput(Inputs.light);
@@ -731,11 +591,16 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
                 _rb.velocity = Vector3.zero;
 
             }
-            
         }
     }
 
     //======================================== Funciones Miembro ==============================================================
+
+    public void EndAttackAnimation()
+    {
+        print("PLayer: LA tuya CON VINAGRE LCDTM");
+        CurrentWeapon.EndCurrentAttack();
+    }
 
     public void Move()
     {
@@ -763,8 +628,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
 
         //Hago un sphereCast basado en el movimiento.
         Ray ray = new Ray(transform.position + ((moveDiR * 0.1f) + (Vector3.up * 4)), Vector3.down);
-        RaycastHit info;
-        Physics.Raycast(ray, out info, 100f, floor);
+        Physics.Raycast(ray, out RaycastHit info, 100f, floor);
 
         Vector3 realPosToGo = ((info.point - transform.position).normalized) * speedR;
 
@@ -799,7 +663,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _clamped = true;
         _rb.isKinematic = true;
 
-        StartCoroutine(reduxStaminaTo0(3f));
+        StartCoroutine(ReduxStaminaTo0(3f));
 
         //Termina el juego...
         //Tengo que decirle a algún Mánager quién es el enemigo que me mató, y luego marcarlo como mi killer.
@@ -810,7 +674,7 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
     /// </summary>
     /// <param name="duration">El tiempo en segundos que va a durar el Fade Out</param>
     /// <returns></returns>
-    public IEnumerator reduxStaminaTo0(float duration)
+    public IEnumerator ReduxStaminaTo0(float duration)
     {
         float remaining = duration;
         _recoverStamina = false;
@@ -948,6 +812,5 @@ public class Player : MonoBehaviour, IPlayerController, IKilleable, IAttacker<ob
         _forceStep = StepForce;
         _timeStep = Steptime;
         _AttackStep = true;
-        Debug.Log("fuerza" +StepForce+"tiempo"+ Steptime);
     }
 }
