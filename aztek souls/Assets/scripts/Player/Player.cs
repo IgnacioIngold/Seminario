@@ -7,10 +7,6 @@ using UnityEngine.Playables;
 using Core;
 using Core.Entities;
 
-public interface IPlayerController
-{
-    bool active { get; set; }
-}
 
 [Serializable]
 public struct Stats
@@ -53,7 +49,7 @@ public struct Stats
 }
 
 //[RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, HitResult>, IKilleable
+public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     #region Eventos.
 
