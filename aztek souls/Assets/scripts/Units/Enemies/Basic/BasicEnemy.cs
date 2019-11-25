@@ -291,6 +291,9 @@ public class BasicEnemy : BaseUnit
         if (LookTowardsPlayer && _targetDetected)
             transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, rotationLerpSpeed * Time.deltaTime);
 
+        if (Health <= 0 && CurrentState != BasicEnemyStates.dead)
+            sm.Feed(BasicEnemyStates.dead);
+
         sm.Update();
     }
 
