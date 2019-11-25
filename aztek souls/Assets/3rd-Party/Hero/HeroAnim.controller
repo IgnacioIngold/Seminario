@@ -67,10 +67,10 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.06911057
+  m_TransitionDuration: 0.016180694
   m_TransitionOffset: 0
-  m_ExitTime: 0.82375485
-  m_HasExitTime: 0
+  m_ExitTime: 0.97643715
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 2
   m_OrderedInterruption: 1
@@ -1307,7 +1307,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -5790571755338685388}
-    m_Position: {x: 210, y: -70, z: 0}
+    m_Position: {x: 200, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1297379156018161571}
     m_Position: {x: 1950, y: -110, z: 0}
@@ -1331,7 +1331,7 @@ AnimatorStateMachine:
     m_Position: {x: 470, y: 330, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3902746710327758122}
-    m_Position: {x: 210, y: -10, z: 0}
+    m_Position: {x: 200, y: -10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7770056269282616407}
     m_Position: {x: 200, y: 60, z: 0}
@@ -1983,7 +1983,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack1/Recovery
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6644121515598741934}

@@ -251,21 +251,12 @@ public class BasicEnemy : BaseUnit
             StartCoroutine(SimpleAttack());
         };
         attack.OnUpdate += () => {};
-        attack.OnExit += (nextState) => 
-        {
-            //print("Salió del ataque");
-        };
 
         think.OnEnter += (previousState) => 
         {
-            //print("Thinking");
             StartCoroutine(thinkAndWatch());
         };
         think.OnUpdate += () => { };
-        think.OnExit += (nextState) => 
-        {
-            //print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
-        };
 
         dead.OnEnter += (previousState) => 
         {

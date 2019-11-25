@@ -2416,7 +2416,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh634362
+  m_Name: pb_Mesh24600
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2846,6 +2846,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3321857712010025227, guid: d266bfcf1cca8a645ad6b9bc3d11c6ff,
     type: 3}
   m_PrefabInstance: {fileID: 94083687}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &101388101 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2051084050706509538, guid: c3ff16c0320d61541a042c6c000a2b4e,
+    type: 3}
+  m_PrefabInstance: {fileID: 2072814303}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &107236467 stripped
 Transform:
@@ -8648,7 +8654,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh634208
+  m_Name: pb_Mesh24446
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -31649,7 +31655,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh635774
+  m_Name: pb_Mesh26012
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -32678,7 +32684,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh635622
+  m_Name: pb_Mesh25860
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -38167,7 +38173,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh635720
+  m_Name: pb_Mesh25958
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -44869,7 +44875,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh635170
+  m_Name: pb_Mesh25408
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -64419,6 +64425,11 @@ PrefabInstance:
       propertyPath: rollDuration
       value: 0.83
       objectReference: {fileID: 0}
+    - target: {fileID: 9108182208082019406, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: OnHitParticle
+      value: 
+      objectReference: {fileID: 101388101}
     - target: {fileID: 8407269639489368618, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -64574,7 +64585,7 @@ PrefabInstance:
     - target: {fileID: 8886631398360550434, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.449707
+      value: 2.4501953
       objectReference: {fileID: 0}
     - target: {fileID: 4789811083725254601, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
@@ -64617,10 +64628,20 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -0.19995117
       objectReference: {fileID: 0}
+    - target: {fileID: 5031445367566584909, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.32009888
+      objectReference: {fileID: 0}
     - target: {fileID: 1111364036919962444, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0.3999939
+      objectReference: {fileID: 0}
+    - target: {fileID: 1111364036919962444, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.3999939
       objectReference: {fileID: 0}
     - target: {fileID: 7278277717290182397, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
@@ -65035,7 +65056,12 @@ PrefabInstance:
     - target: {fileID: 4302807219755334350, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.34998322
+      value: 0.3499756
+      objectReference: {fileID: 0}
+    - target: {fileID: 7900240239650362260, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.30000305
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3363581449291269175, guid: c3ff16c0320d61541a042c6c000a2b4e, type: 3}
