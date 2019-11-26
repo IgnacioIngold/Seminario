@@ -17,7 +17,7 @@ public class Attack
     public bool isChainFinale = false;
 
     public float Cost = 0f;
-    //public float AttackDuration = 1f;
+    public Inputs attackType;
 
     public float Damage = 0f;
 
