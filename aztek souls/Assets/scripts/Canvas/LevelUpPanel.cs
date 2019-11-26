@@ -19,9 +19,9 @@ public class LevelUpPanel : MonoBehaviour
     public TextMeshProUGUI CurrentBlood;
     public TextMeshProUGUI BloodToLvlUp;
 
-    public TextMeshProUGUI CurrentVit;
-    public TextMeshProUGUI CurrentStr;
-    public TextMeshProUGUI CurrentDef;
+    //public TextMeshProUGUI CurrentVit;
+    //public TextMeshProUGUI CurrentStr;
+    //public TextMeshProUGUI CurrentDef;
 
     public TextMeshProUGUI newVit;
     public TextMeshProUGUI newStr;
@@ -92,9 +92,9 @@ public class LevelUpPanel : MonoBehaviour
         CurrentBlood.text = blood.ToString();
         BloodToLvlUp.text = BloodForLevelUp.ToString();
 
-        CurrentVit.text = source.myStats.Vitalidad.ToString();
-        CurrentStr.text = source.myStats.Fuerza.ToString();
-        CurrentDef.text = source.myStats.Resistencia.ToString();
+        //CurrentVit.text = source.myStats.Vitalidad.ToString();
+        //CurrentStr.text = source.myStats.Fuerza.ToString();
+        //CurrentDef.text = source.myStats.Resistencia.ToString();
 
         newVit.text = source.myStats.Vitalidad.ToString();
         newStr.text = source.myStats.Fuerza.ToString();
