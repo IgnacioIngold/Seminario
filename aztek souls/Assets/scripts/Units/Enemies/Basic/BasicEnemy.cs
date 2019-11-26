@@ -78,7 +78,10 @@ public class BasicEnemy : BaseUnit
 
             //    OnBlockHit();
             //}
-            anims.SetTrigger("GetHit");
+            if(HitInfo.AttackID == 1)
+                 anims.SetTrigger("GetHit");
+            else
+                 anims.SetTrigger("GetHit2");
 
             OnGetHit();
 

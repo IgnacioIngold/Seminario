@@ -215,6 +215,16 @@ MonoBehaviour:
     dirToTarget: {x: -0.051078126, y: 0.15062529, z: -0.9872705}
     angleToTarget: 86.46681
     distanceToTarget: 63.12353
+  ComboBonus: 0
+  VulnerableMarker: {fileID: 0}
+  ButtonHitConfirm: {fileID: 0}
+  LightColor: {r: 0, g: 0, b: 0, a: 0}
+  HeavyColor: {r: 0, g: 0, b: 0, a: 0}
+  comboVulnerabilityCountDown: 0
+  isVulnerableToAttacks: 0
+  vulnerableTime: 4
+  incommingDamageReduction: 0.3
+  ComboWindow: 1
   BloodPerHit: 10
   BloodForKill: 100
   MaxHP: 100
@@ -222,10 +232,12 @@ MonoBehaviour:
   attackRate: 1.5
   AttackRange: 1.8
   attackDamage: 35
-  rotationLerpSpeed: 0.3
+  NormalRotationLerpSeed: 0.1
+  AttackRotationLerpSpeed: 10
   minDetectionRange: 6
   MediumRange: 2.5
   HighRange: 5.71
+  LookTowardsPlayer: 1
   Debug_Gizmos: 1
   Debug_LineOFSight: 1
   Debug_Attacks: 1
@@ -234,9 +246,11 @@ MonoBehaviour:
   CurrentState: 0
   AlertedTime: 2
   AlertRadius: 10
-  vulnerableTime: 4
-  incommingDamageReduction: 0.3
+  isAttacking: 0
   canBlock: 1
+  isBlocking: 0
+  blockDuration: 1.467
+  blockExtraTimePerHit: 0.7
 --- !u!1 &609346536890294315
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,9 +308,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1131de405274f24b987c1a9078eb155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 609346536890294314}
   Owner: {fileID: 609346536399887383}
   debugThisUnit: 0
+  debugOwnerStats: 0
 --- !u!114 &609346536748742399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,11 +337,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: nightshade_j_friedrich
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     - target: {fileID: -4216859302048453862, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -383,6 +392,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 7603f12ccdf75a6489530bdfbfa0c2e4,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: db49790aec4b6854282a92302bc1355c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7603f12ccdf75a6489530bdfbfa0c2e4, type: 3}
 --- !u!1 &8887071442991250830 stripped
@@ -557,6 +571,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: circle
       objectReference: {fileID: 0}
+    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
+        type: 3}
+      propertyPath: ColorModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.ctime1
+      value: 14842
+      objectReference: {fileID: 0}
     - target: {fileID: 1821274765474441743, guid: 51e501eee2f58e3418d726cdb7ac0338,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -626,16 +650,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.57274395
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
-        type: 3}
-      propertyPath: ColorModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821274765474441742, guid: 51e501eee2f58e3418d726cdb7ac0338,
-        type: 3}
-      propertyPath: ColorModule.gradient.maxGradient.ctime1
-      value: 14842
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 51e501eee2f58e3418d726cdb7ac0338, type: 3}

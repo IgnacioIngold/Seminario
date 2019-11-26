@@ -298,7 +298,8 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
             {
                 Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
                 BreakDefence = breakDefence,
-                AttackType = CurrentWeapon.CurrentAttack.attackType
+                AttackType = CurrentWeapon.CurrentAttack.attackType,
+                AttackID = CurrentWeapon.CurrentAttack.ID
             };
         }
         else
