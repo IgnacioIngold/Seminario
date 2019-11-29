@@ -80,8 +80,8 @@ public class ShieldEnemy : BaseUnit
             {
                 _targetDetected = true;
                 //SetVulnerabity(true);
-                if (!VulnerableMarker.gameObject.activeSelf)
-                    VulnerableMarker.gameObject.SetActive(true);
+                //if (!VulnerableMarker.gameObject.activeSelf)
+                //    VulnerableMarker.gameObject.SetActive(true);
             }
 
             if (_blocking && !Disarmed) //Si estoy bloqueando...
@@ -105,41 +105,41 @@ public class ShieldEnemy : BaseUnit
             {
                 //Aqui necesitamos info.
                 anims.SetTrigger("getDamage");
-                var FinalDamage = HitInfo.Damage * incommingDamageReduction;
+                //var FinalDamage = HitInfo.Damage * incommingDamageReduction;
                 bool completedCombo = false;
                 //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
-                if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
-                {
-                    _attacksRecieved++;
+                //if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
+                //{
+                //    //_attacksRecieved++;
 
-                    //if (_attacksRecieved == 3)
-                    //{
-                    //    comboVulnerabilityCountDown = 0f;
-                    //    FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
-                    //    completedCombo = true;
+                //    //if (_attacksRecieved == 3)
+                //    //{
+                //    //    comboVulnerabilityCountDown = 0f;
+                //    //    FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+                //    //    completedCombo = true;
 
-                    //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                    //}
-                    //else if (_attacksRecieved == 2)
-                    //{
-                    //    comboVulnerabilityCountDown += 4f;
+                //    //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+                //    //}
+                //    //else if (_attacksRecieved == 2)
+                //    //{
+                //    //    comboVulnerabilityCountDown += 4f;
 
-                    //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                    //}
-                    //else comboVulnerabilityCountDown += 1f;
+                //    //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+                //    //}
+                //    //else comboVulnerabilityCountDown += 1f;
 
-                    Display_CorrectButtonHitted();
+                //    //Display_CorrectButtonHitted();
 
-                    //Muestro el siguiente ataque.
-                    //ShowNextVulnerability(_attacksRecieved);
-                }
+                //    //Muestro el siguiente ataque.
+                //    //ShowNextVulnerability(_attacksRecieved);
+                //}
 
                 onGetHit();
 
                 result.HitConnected = true;
 
                 //Si no estoy bloqueando.
-                Health -= FinalDamage;
+                //Health -= FinalDamage;
 
                 var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
                 Destroy(particle, 3f);
@@ -237,15 +237,15 @@ public class ShieldEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
-        VulnerableMarker.gameObject.SetActive(false);
-        ButtonHitConfirm.gameObject.SetActive(false);
+        //VulnerableMarker.gameObject.SetActive(false);
+        //ButtonHitConfirm.gameObject.SetActive(false);
 
-        //Vulnerabilidad
-        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
-        var SecondaryVulnerability = new Inputs[] { Inputs.strong, Inputs.light, Inputs.light };
-        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        vulnerabilityCombos.Add(1, MainVulnerability);
-        vulnerabilityCombos.Add(2, SecondaryVulnerability);
+        ////Vulnerabilidad
+        //var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
+        //var SecondaryVulnerability = new Inputs[] { Inputs.strong, Inputs.light, Inputs.light };
+        //vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        //vulnerabilityCombos.Add(1, MainVulnerability);
+        //vulnerabilityCombos.Add(2, SecondaryVulnerability);
 
         #region State Machine.
 
@@ -542,10 +542,10 @@ public class ShieldEnemy : BaseUnit
         //    ButtonHitConfirm.gameObject.SetActive(false);
         //}
 
-        if (isVulnerableToAttacks)
-            VulnerableMarker.gameObject.SetActive(true);
-        else if (VulnerableMarker.gameObject.activeSelf)
-            VulnerableMarker.gameObject.SetActive(false);
+        //if (isVulnerableToAttacks)
+        //    VulnerableMarker.gameObject.SetActive(true);
+        //else if (VulnerableMarker.gameObject.activeSelf)
+        //    VulnerableMarker.gameObject.SetActive(false);
 
         //Condición de muerte, Update de Sight, FSM y Rotación.
         if (IsAlive)

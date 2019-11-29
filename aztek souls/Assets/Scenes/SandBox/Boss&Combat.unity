@@ -919,11 +919,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 609346536371168526, guid: 09c6eadaed60a214a8bda79ba950dc1d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 609346536399887384, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}
       propertyPath: v_Window.steps.Array.size
@@ -964,8 +959,50 @@ PrefabInstance:
       propertyPath: vulnerabilityWindow.steps.Array.data[2]
       value: 2.333
       objectReference: {fileID: 0}
+    - target: {fileID: 609346536371168526, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 09c6eadaed60a214a8bda79ba950dc1d, type: 3}
+--- !u!1 &1654516735 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 609346536399887383, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1654516734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1654516736 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7358815438255073378, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1654516734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &1654516737 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7358815439784401536, guid: 09c6eadaed60a214a8bda79ba950dc1d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1654516734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1654516738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654516735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ab34a65c25b59f4ab6264b54e1be0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VulnerableMarker: {fileID: 1654516737}
+  ButtonHitConfirm: {fileID: 1654516736}
+  LightColor: {r: 0.39909673, g: 1, b: 0, a: 1}
+  HeavyColor: {r: 1, g: 0.99789584, b: 0, a: 1}
+  AttackCoincided: 0
+  SuccesfullHit: 0
+  ComboWindow: 2
 --- !u!1 &1679795876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1020,6 +1057,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CCC
+      objectReference: {fileID: 0}
+    - target: {fileID: 9108182208082019406, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: Attacks.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8407269639489368618, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
@@ -1076,30 +1118,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1159931168844759500, guid: c3ff16c0320d61541a042c6c000a2b4e,
-        type: 3}
-      propertyPath: m_Name
-      value: BloodConsume
-      objectReference: {fileID: 0}
     - target: {fileID: 9108182208082019411, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -15.35
       objectReference: {fileID: 0}
-    - target: {fileID: 9108182208082019406, guid: c3ff16c0320d61541a042c6c000a2b4e,
+    - target: {fileID: 8656725598884969302, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
-      propertyPath: Attacks.Array.size
-      value: 3
+      propertyPath: m_AnchoredPosition.y
+      value: -49.999756
       objectReference: {fileID: 0}
     - target: {fileID: 3591201410579185481, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8656725598884969302, guid: c3ff16c0320d61541a042c6c000a2b4e,
+    - target: {fileID: 1159931168844759500, guid: c3ff16c0320d61541a042c6c000a2b4e,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -49.999756
+      propertyPath: m_Name
+      value: BloodConsume
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3ff16c0320d61541a042c6c000a2b4e, type: 3}

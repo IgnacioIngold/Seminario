@@ -116,49 +116,50 @@ public class BigCursed : BaseUnit
 
         float Damage = HitInfo.Damage;
 
-        if (isVulnerableToAttacks && !_Smashed)
-        {
-            bool completedCombo = false;
-            //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
-            if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
-            {
-                //contarMRda();
+        //if (isVulnerableToAttacks && !_Smashed)
+        //{
+        //    bool completedCombo = false;
+        //    //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
+        //    if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
+        //    {
+        //        //contarMRda();
+        //        ShowVulnerability()
 
-                //if (_attacksRecieved == 3)
-                //{
-                //    comboVulnerabilityCountDown = 0f;
-                //    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
-                //    completedCombo = true;
+        //        //if (_attacksRecieved == 3)
+        //        //{
+        //        //    comboVulnerabilityCountDown = 0f;
+        //        //    //FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
+        //        //    completedCombo = true;
 
-                //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                //}
-                //else if (_attacksRecieved == 2)
-                //{
-                //    comboVulnerabilityCountDown += 4f;
+        //        //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
+        //        //}
+        //        //else if (_attacksRecieved == 2)
+        //        //{
+        //        //    comboVulnerabilityCountDown += 4f;
 
-                //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                //}
-                //else comboVulnerabilityCountDown += 1f;
+        //        //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
+        //        //}
+        //        //else comboVulnerabilityCountDown += 1f;
 
-                Display_CorrectButtonHitted();
+        //        Display_CorrectButtonHitted();
 
-                //Muestro el siguiente ataque.
-                //ShowNextVulnerability(_attacksRecieved);
-            }
-            //else
-            //    reiniciarMRda();
+        //        //Muestro el siguiente ataque.
+        //        //ShowNextVulnerability(_attacksRecieved);
+        //    }
+        //    //else
+        //    //    reiniciarMRda();
 
-            if (completedCombo)
-                sm.Feed(BossStates.Smashed);
-        }
-        else if (_Smashed)
+        //    if (completedCombo)
+        //        sm.Feed(BossStates.Smashed);
+        //}
+        if (_Smashed)
         {
             Damage *= DamageMultiplier;
         }
-        else
-        {
-            Damage *= incommingDamageReduction;
-        }
+        //else
+        //{
+        //    Damage *= incommingDamageReduction;
+        //}
 
         Health -= Damage;
 
@@ -214,8 +215,8 @@ public class BigCursed : BaseUnit
         SmashEmission = OnSmashParticle.emission;
 
         //Vulnerabilidad
-        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        vulnerabilityCombos.Add(0, new Inputs[] { Inputs.light, Inputs.light, Inputs.strong });
+        //vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        //vulnerabilityCombos.Add(0, new Inputs[] { Inputs.light, Inputs.light, Inputs.strong });
 
         #region State Machine
 
@@ -597,12 +598,12 @@ public class BigCursed : BaseUnit
 //        }
         #endregion
 
-        #region Exposición de Vulnerabilidad
-        if (isVulnerableToAttacks)
-            VulnerableMarker.gameObject.SetActive(true);
-        else if (VulnerableMarker.gameObject.activeSelf)
-            VulnerableMarker.gameObject.SetActive(false); 
-        #endregion
+        //#region Exposición de Vulnerabilidad
+        //if (isVulnerableToAttacks)
+        //    VulnerableMarker.gameObject.SetActive(true);
+        //else if (VulnerableMarker.gameObject.activeSelf)
+        //    VulnerableMarker.gameObject.SetActive(false); 
+        //#endregion
 
         sight.Update();
 

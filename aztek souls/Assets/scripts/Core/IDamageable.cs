@@ -24,11 +24,12 @@ namespace Core
     {
         public float Damage;
         public bool BreakDefence;
+        public int AttackID;
         public Inputs AttackType;
 
         public static HitData Default()
         {
-            return new HitData() { Damage = 0, BreakDefence = false };
+            return new HitData() { Damage = 0, BreakDefence = false, AttackID = 0, AttackType = Inputs.light };
         }
     }
     public struct HitResult

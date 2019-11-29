@@ -152,25 +152,25 @@ public class FatEnemy : BaseUnit
         var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
         Destroy(particle, 3f);
 
-        var vulnerability = GetCurrentVulnerabilityInput();
-        _attacksRecieved++;
+        //var vulnerability = GetCurrentVulnerabilityInput();
+        //_attacksRecieved++;
 
-        if (vulnerability == EntryData.AttackType)
-        {
-            _sm.Feed(FatEnemyStates.hurted);
-            SuccesfullHit = true;
-            ShowVulnerability();
-        }
+        //if (vulnerability == EntryData.AttackType)
+        //{
+        //    _sm.Feed(FatEnemyStates.hurted);
+        //    SuccesfullHit = true;
+        //    ShowVulnerability();
+        //}
 
-        //Completar
-        Health -= EntryData.Damage;
+        ////Completar
+        //Health -= EntryData.Damage;
 
-        // Si llegamos al ultimo ataque, lo reseteamos.
-        if (_attacksRecieved == vulnerabilityCombos[_currentVulnerabilityCombo].Length)
-        {
+        //// Si llegamos al ultimo ataque, lo reseteamos.
+        //if (_attacksRecieved == vulnerabilityCombos[_currentVulnerabilityCombo].Length)
+        //{
 
-            _attacksRecieved = 0;
-        }
+        //    _attacksRecieved = 0;
+        //}
 
         if (!IsAlive)
         {
@@ -198,7 +198,7 @@ public class FatEnemy : BaseUnit
         base.Awake();
 
         //Combos a los que es vulnerable.
-        vulnerabilityCombos.Add(0, new Inputs[3] { Inputs.light, Inputs.light, Inputs.strong });
+        //vulnerabilityCombos.Add(0, new Inputs[3] { Inputs.light, Inputs.light, Inputs.strong });
 
         animationParams = new int[5];
         for (int i = 0; i < animationParams.Length; i++)
@@ -298,13 +298,13 @@ public class FatEnemy : BaseUnit
 
         hurted.OnEnter += (previousState) => 
         {
-            isVulnerableToAttacks = true;
-            ShowVulnerability();
+            //isVulnerableToAttacks = true;
+            //ShowVulnerability();
         };
         hurted.OnUpdate += () => { };
         hurted.OnExit += (nextState) => 
         {
-            isVulnerableToAttacks = false;
+            //isVulnerableToAttacks = false;
         };
 
         pursue.OnEnter += (previousState) => { Locomotion = 1; };

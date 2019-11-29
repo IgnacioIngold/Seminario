@@ -12,7 +12,7 @@ public class Attack
     public event Action OnEnableInput = delegate { };
     public event Action AttackEffects = delegate { };
 
-    //public int ID = 0;
+    public int ID = 0;
     public string Name = "";
     //public int ChainIndex = 0;
     //public int maxChainIndex;

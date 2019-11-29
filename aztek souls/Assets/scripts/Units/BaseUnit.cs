@@ -8,11 +8,12 @@ using Core.Entities;
 using Core;
 
 [RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(CapsuleCollider)), RequireComponent(typeof(Rigidbody))]
-public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
+public class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     #region Eventos
 
     public Action OnDie = delegate { };
+    public Action OnGetHit = delegate { };
 
     #endregion
 
@@ -23,35 +24,6 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     public GameObject OnHitParticle;
     public FillBar EnemyHealthBar;
     [SerializeField] protected LineOfSight sight = null; 
-
-    #endregion
-
-    #region Sistema de Ritmo
-
-    //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
-    [Header("Sistema de Ritmo")]
-    public float ComboBonus;
-    public ParticleSystem VulnerableMarker;       // Indica la tecla que debemos presionar.
-    public ParticleSystem ButtonHitConfirm;       // Confirma que la tecla fue presionada.
-    public Color LightColor;                      // Indica que se debe presionar el input Light.
-    public Color HeavyColor;                      // Indica que se debe presionar el input Strong.
-    
-    #endregion
-
-    #region Vulnerabilidad
-
-    [Header("Vulnerability Window")]
-    public Dictionary<int, Inputs[]> vulnerabilityCombos;
-    protected int _currentVulnerabilityCombo = 0;
-    protected int _attacksRecieved = 0;
-
-    public bool SuccesfullHit = false;
-    public bool isVulnerableToAttacks = false;
-
-    public float vulnerableTime = 1.5f;
-    //public float comboVulnerabilityCountDown = 0f;
-    public float incommingDamageReduction = 0.3f;
-    public float ComboWindow = 1f;
 
     #endregion
 
@@ -111,17 +83,19 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     protected Collider MainColl;
     protected Rigidbody rb;
 
+    [SerializeField] protected FeedbackRitmo FRitmo;
+
     #endregion
 
-#if UNITY_EDITOR
     #region Variables Debugg
+    #if UNITY_EDITOR
     [Header("Debug")]
     public bool Debug_Gizmos          = false;
     public bool Debug_LineOFSight     = false;
     public bool Debug_Attacks         = false;
     public bool Debug_DetectionRanges = false;
+    #endif
     #endregion
-#endif
 
     //============================== INTERFACES ===============================================
 
@@ -203,8 +177,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         agent = GetComponent<NavMeshAgent>();
         MainColl = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
-
-        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
+        FRitmo = GetComponent<FeedbackRitmo>();
 
         EnemyHealthBar.SetApha(0f);
 
@@ -221,98 +194,6 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         Health = MaxHP;
     }
 
-    //============================== SISTEMA DE RITMO =========================================
-
-    public void SetCurrentVulnerabilityCombo(int ComboIndex)
-    {
-        if (vulnerabilityCombos.ContainsKey(ComboIndex))
-            _currentVulnerabilityCombo = ComboIndex;
-
-        //comboVulnerabilityCountDown = vulnerableTime;
-        //isVulnerableToAttacks = true;
-    }
-    public void EnableVulnerabilityState(bool On)
-    {
-        if (On)
-        {
-            print("Ahora es Vulnerable");
-            isVulnerableToAttacks = true;
-        }
-        else if(!SuccesfullHit)
-        {
-            print("Ahora ya no es Vulnerable");
-            isVulnerableToAttacks = false;
-        }
-    }
-    public virtual void FeedPressedInput(Inputs input)
-    {
-        Inputs currentVulnerability = GetCurrentVulnerabilityInput();
-        if (VulnerableMarker.gameObject.activeSelf)
-        {
-            if (input == currentVulnerability)
-            {
-                print("El input Coíncidió");
-                Display_CorrectButtonHitted();
-            }
-            else
-            {
-                print("El input no Coíncidió");
-                Display_IncorrectButtonHitted();
-            }
-        }
-        HideVulnerability();
-    }
-    public void Display_CorrectButtonHitted()
-    {
-        if (!ButtonHitConfirm.gameObject.activeSelf)
-            ButtonHitConfirm.gameObject.SetActive(true);
-        else
-            ButtonHitConfirm.Play();
-    }
-    public void Display_IncorrectButtonHitted()
-    {
-        //Por ahora no tenemos una particula que muestre lo contrario.
-    }
-    /// <summary>
-    /// Muestra la particula de Vulnerabilidad, utilizando _currentVulnerabilityCombo y _AttacksRecieved como referencia.
-    /// </summary>
-    public void ShowVulnerability()
-    {
-        var ParticleSystem = VulnerableMarker.main;
-        Inputs input = GetCurrentVulnerabilityInput();
-        switch (input)
-        {
-            case Inputs.light:
-                ParticleSystem.startColor = LightColor;
-                break;
-            case Inputs.strong:
-                ParticleSystem.startColor = HeavyColor;
-                break;
-            default:
-                ParticleSystem.startColor = LightColor;
-                break;
-        }
-
-        VulnerableMarker.gameObject.SetActive(true);
-    }
-    //public void ShowVulnerability(float Time)
-    //{
-
-    //}
-    /// <summary>
-    /// Oculta la particula que indica la vulnerabilidad
-    /// </summary>
-    public virtual void HideVulnerability()
-    {
-        if (VulnerableMarker.gameObject.activeSelf)
-            VulnerableMarker.gameObject.SetActive(false);
-    }
-
-    protected Inputs GetCurrentVulnerabilityInput()
-    {
-        return vulnerabilityCombos[_currentVulnerabilityCombo][_attacksRecieved];
-    }
-
     //============================== PUBLIC FUNCS =============================================
 
     public void AllyDiscoversEnemy(Transform Enemy)
@@ -321,6 +202,10 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         _targetDetected = true;
         _alertFriends = false;
         EnemyHealthBar.FadeIn();
+    }
+    public void FeedPressedInput(Inputs input)
+    {
+        FRitmo.FeedPressedInput(input);
     }
 
     //============================== OVERRAIDEABLES ===========================================

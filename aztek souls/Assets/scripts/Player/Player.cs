@@ -7,11 +7,6 @@ using UnityEngine.Playables;
 using Core;
 using Core.Entities;
 
-public interface IPlayerController
-{
-    bool active { get; set; }
-}
-
 [Serializable]
 public struct Stats
 {
@@ -53,7 +48,7 @@ public struct Stats
 }
 
 //[RequireComponent(typeof(Rigidbody))]
-public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, HitResult>, IKilleable
+public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     #region Eventos.
 
@@ -245,8 +240,13 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
     #endregion
 
+    #region Componentes de Unity
+
     Rigidbody _rb;                                          // Componente Rigidbody.
     Animator _anims;                                        // Componente Animator.
+
+    #endregion
+
     Vector3 moveDiR;
     float speedR;
 
@@ -348,7 +348,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             {
                 Damage = (myStats.Fuerza + CurrentWeapon.CurrentAttack.Damage),
                 BreakDefence = breakDefence,
-                AttackType = CurrentWeapon.CurrentAttack.attackType
+                AttackType = CurrentWeapon.CurrentAttack.attackType,
+                AttackID = CurrentWeapon.CurrentAttack.ID
             };
         }
         else
@@ -478,28 +479,28 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Light
 
-        Attack L1 = new Attack() { Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f};
+        Attack L1 = new Attack() { ID = 1, attackType = Inputs.light, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f};
         L1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
         };
 
-        Attack L2 = new Attack() { Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f};
+        Attack L2 = new Attack() { ID = 3, attackType = Inputs.light,Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f};
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
         };
 
-        Attack L3 = new Attack() { Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f};
+        Attack L3 = new Attack() { ID = 7, attackType = Inputs.light, Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f};
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
         };
 
-        Attack L4 = new Attack() { Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
+        Attack L4 = new Attack() { ID = 5, attackType = Inputs.light, Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
@@ -507,7 +508,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
 
-        Attack L5 = new Attack() { Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
+        Attack L5 = new Attack() { ID = 9, attackType = Inputs.light, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
@@ -519,7 +520,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
 
         #region Strong
 
-        Attack S1 = new Attack() { Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
+        Attack S1 = new Attack() {ID = 2, attackType = Inputs.strong, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
@@ -528,9 +529,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             print("Ejecutando Ataque:" + S1.Name);
         };
         S1.OnEnd += () => { breakDefence = false; };
-        //S1.OnEnableInput += () => { marker.SetActive(true); };
 
-        Attack S2 = new Attack() { Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
+        Attack S2 = new Attack() { ID = 4, attackType = Inputs.strong, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
@@ -540,7 +540,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S2.OnEnd += () => { breakDefence = false; };
 
-        Attack S3 = new Attack() { Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
+        Attack S3 = new Attack() { ID = 6, attackType = Inputs.strong, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
@@ -550,13 +550,12 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
         };
         S3.OnEnd += () => { breakDefence = false; };
 
-        Attack S4 = new Attack() { Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
+        Attack S4 = new Attack() { ID = 8, attackType = Inputs.strong, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
             _anims.SetInteger("combat", 8);
             breakDefence = true;
-            print("Ejecutando Ataque:" + S4.Name);
         };
         S4.OnEnd += () => {
             breakDefence = false;
@@ -954,7 +953,7 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
             foreach (var Enemy in Enemies)
                 Enemy.FeedPressedInput(input);
         }
-        //else print("No hay enemigos cercanos");
+        else print("No hay enemigos cercanos");
     }
 
     //============================================= CORRUTINES ================================================================
@@ -1067,8 +1066,8 @@ public class Player : MonoBehaviour, IPlayerController, IDamageable<HitData, Hit
     }
     IEnumerator HitSlowEffect()
     {
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(0.3f);
+        Time.timeScale = 0.4f;
+        yield return new WaitForSecondsRealtime(0.2f);
         Time.timeScale = 1f;
     }
 
