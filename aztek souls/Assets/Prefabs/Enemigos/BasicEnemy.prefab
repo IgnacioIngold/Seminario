@@ -112,6 +112,7 @@ GameObject:
   - component: {fileID: 609346536399887386}
   - component: {fileID: 609346536399887387}
   - component: {fileID: 609346536399887384}
+  - component: {fileID: 3007349605639680622}
   m_Layer: 0
   m_Name: BasicEnemy
   m_TagString: Untagged
@@ -217,16 +218,6 @@ MonoBehaviour:
     dirToTarget: {x: -0.051078126, y: 0.15062529, z: -0.9872705}
     angleToTarget: 86.46681
     distanceToTarget: 63.12353
-  ComboBonus: 0
-  VulnerableMarker: {fileID: 7358815439784401536}
-  ButtonHitConfirm: {fileID: 7358815438255073378}
-  LightColor: {r: 1, g: 0.9167996, b: 0, a: 1}
-  HeavyColor: {r: 1, g: 0, b: 0, a: 1}
-  comboVulnerabilityCountDown: 0
-  isVulnerableToAttacks: 0
-  vulnerableTime: 4
-  incommingDamageReduction: 0.1
-  ComboWindow: 1
   BloodPerHit: 10
   BloodForKill: 100
   MaxHP: 100
@@ -240,18 +231,38 @@ MonoBehaviour:
   MediumRange: 2.5
   HighRange: 5.71
   LookTowardsPlayer: 1
+  FRitmo: {fileID: 0}
   Debug_Gizmos: 0
   Debug_LineOFSight: 1
   Debug_Attacks: 1
   Debug_DetectionRanges: 1
-  CurrentState: 0
   AlertedTime: 2
   AlertRadius: 10
-  isAttacking: 0
   canBlock: 1
   isBlocking: 0
   blockDuration: 1.467
   blockExtraTimePerHit: 0.7
+  vulnerability: 0
+  CurrentState: 0
+--- !u!114 &3007349605639680622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609346536399887383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ab34a65c25b59f4ab6264b54e1be0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VulnerableMarker: {fileID: 7358815439784401536}
+  ButtonHitConfirm: {fileID: 7358815438255073378}
+  LightColor: {r: 0.39909673, g: 1, b: 0, a: 1}
+  HeavyColor: {r: 1, g: 0.99789584, b: 0, a: 1}
+  AttackCoincided: 0
+  SuccesfullHit: 0
+  ComboWindow: 2
 --- !u!1 &609346536890294315
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,12 +719,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2204337464192955518, guid: 05b27f85cc964da47b6649c1000779f5,
+    - target: {fileID: 2204337465741182612, guid: 05b27f85cc964da47b6649c1000779f5,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 2.8
       objectReference: {fileID: 0}
-    - target: {fileID: 2204337465741182612, guid: 05b27f85cc964da47b6649c1000779f5,
+    - target: {fileID: 2204337464192955518, guid: 05b27f85cc964da47b6649c1000779f5,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 2.8

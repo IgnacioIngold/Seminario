@@ -8,7 +8,6 @@ public class BE_AnimEventListener : MonoBehaviour
     public BasicEnemy owner;
     public Collider AttackCollider;
     audioManager _AM;
-    
 
     private void Awake()
     {
@@ -25,9 +24,6 @@ public class BE_AnimEventListener : MonoBehaviour
     public void StartUp()
     {
         owner.LookTowardsPlayer = true;
-        //owner.SetCurrentVulnerabilityCombo(0);
-        //owner.vulnerabilityWindow.Start();
-        //owner.ShowVulnerability();
     }
 
     public void Active()
@@ -52,19 +48,5 @@ public class BE_AnimEventListener : MonoBehaviour
 
     public void HurtAnimationEnded()
     {
-        //print("Final de la animación.");
-        //owner.AP_SimpleAttack = false;
-        //owner.AP_GetHit = false;
-
-        //if (owner.vulnerability)
-        //{
-        //    owner.FeedFSM(BasicEnemyStates.idle);
-        //}
-        //else
-        //{
-        //    print("El enemigo no esta en su lapso de vulnerabilidad");
-        //    owner.FeedFSM(BasicEnemyStates.think);
-        //}
     }
-
 }
