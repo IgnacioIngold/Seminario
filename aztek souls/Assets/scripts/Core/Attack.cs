@@ -14,21 +14,21 @@ public class Attack
 
     public int ID = 0;
     public string Name = "";
-    //public int ChainIndex = 0;
-    //public int maxChainIndex;
-    public Inputs attackType;
+    public bool isChainFinale = false;
 
     public float Cost = 0f;
-    public float AttackDuration = 1f;
+    public Inputs attackType;
 
     public float Damage = 0f;
 
     public Attack()
     {
-        ConnectedAttacks = new Dictionary<Inputs, Attack>();
-        ConnectedAttacks.Add(Inputs.light, null);
-        ConnectedAttacks.Add(Inputs.strong, null);
-        ConnectedAttacks.Add(Inputs.none, null);
+        ConnectedAttacks = new Dictionary<Inputs, Attack>
+        {
+            { Inputs.light, null },
+            { Inputs.strong, null },
+            { Inputs.none, null }
+        };
     }
 
     public void StartAttack()
@@ -56,9 +56,12 @@ public class Attack
     /// </summary>
     /// <param name="input">Tipo de input del ataque encadenado</param>
     /// <returns>Null si el ataque encadenado requerido no existe.</returns>
-    public Attack getConnectedAttack(Inputs input)
+    public Attack GetConnectedAttack(Inputs input)
     {
-        return ConnectedAttacks[input];
+        if (ConnectedAttacks.ContainsKey(input))
+            return ConnectedAttacks[input];
+        else
+            return null;
     }
     /// <summary>
     /// Añade o reemplaza un ataque por otro identificado por el mismo tipo (parametro "type").

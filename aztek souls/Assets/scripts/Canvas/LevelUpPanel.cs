@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
 using TMPro;
-using Core;
+using System;
 
 public class LevelUpPanel : MonoBehaviour
 {
@@ -53,10 +52,9 @@ public class LevelUpPanel : MonoBehaviour
     int _strExtraPoints = 0;
     int _defExtraPoints = 0;
 
-    public void SetAndLoad()
+    private void Awake()
     {
         source = FindObjectOfType<Player>();
-        //print("Source Setted: " + source);
         source.myStats.bloodForLevelUp = 1000;
 
         originalAmmount = BloodForLevelUp;
@@ -80,33 +78,7 @@ public class LevelUpPanel : MonoBehaviour
         Btn_DefDecrease.interactable = _defExtraPoints > 0;
     }
 
-    /// <summary>
-    /// Abre la ventana del Level Up. No reinicia los cambios hechos.
-    /// </summary>
-    public void Open()
-    {
-        Context.LevelupPanel = true;
-        gameObject.SetActive(true);
-    }
-    /// <summary>
-    /// Cierra la ventana del Level Up. NO reinicia los cambios hechos.
-    /// </summary>
-    public void Close()
-    {
-        Context.LevelupPanel = false;
-        gameObject.SetActive(false);
-    }
-    /// <summary>
-    /// Abre la ventana del Level Up y carga los datos, pisando cualquer cambio realizado previamente.
-    /// </summary>
-    public void OpenAndLoad()
-    {
-        Context.LevelupPanel = true;
-        gameObject.SetActive(true);
-        LoadData();
-    }
-
-    void LoadData()
+    public void LoadData()
     {
         level = source.myStats.Nivel;
         blood = (int)source.myStats.Sangre;
@@ -129,10 +101,7 @@ public class LevelUpPanel : MonoBehaviour
         newDef.text = source.myStats.Resistencia.ToString();
     }
 
-    /// <summary>
-    /// Aplica los cambios realizados y luego cierra la ventana de Level Up.
-    /// </summary>
-    public void AcceptAndClose()
+    public void Accept()
     {
         if (_vitExtraPoints > 0 || _strExtraPoints > 0 || _defExtraPoints > 0)
         {
@@ -150,20 +119,15 @@ public class LevelUpPanel : MonoBehaviour
         }
 
         OnAccept();
-        Close();
     }
-    /// <summary>
-    /// Reinicia los cambios realizados y luego cierra la ventana de Level Up.
-    /// </summary>
-    public void CancelAndClose()
+    public void Cancel()
     {
         BloodForLevelUp = originalAmmount;
         _vitExtraPoints = 0;
         _strExtraPoints = 0;
         _defExtraPoints = 0;
-
+        LoadData();
         OnCancel();
-        Close();
     }
 
     public void VitIncrease()

@@ -1,6 +1,4 @@
 ﻿using Core.Entities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Core;
 
@@ -11,6 +9,7 @@ public class Breackable : MonoBehaviour, IDamageable<HitData, HitResult>
 
     public void Break()
     {
+        Debug.Log("entre");
         Instantiate(BreackObject, transform.position, transform.rotation);
         Destroy(gameObject);
     }
