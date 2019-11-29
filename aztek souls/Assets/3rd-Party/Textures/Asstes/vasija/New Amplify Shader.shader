@@ -53,7 +53,7 @@ Shader "shader/ vasija"
 }
 /*ASEBEGIN
 Version=16700
-781;617;742;384;639.5266;-14.57622;1.3;False;False
+552;728;742;273;682.502;-58.34996;1;False;False
 Node;AmplifyShaderEditor.SamplerNode;1;-467.189,10.21149;Float;True;Property;_vasijaalbedo;vasija albedo;0;0;Create;True;0;0;False;0;5602dbc02fa725143b45737ace228c56;5602dbc02fa725143b45737ace228c56;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SamplerNode;4;-635.7889,78.9115;Float;True;Property;_vasijanormal;vasija normal;3;0;Create;True;0;0;False;0;2b7882afabd5ff94388b12313ada48ee;2b7882afabd5ff94388b12313ada48ee;True;0;True;white;Auto;True;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SamplerNode;2;-443.489,350.5116;Float;True;Property;_vasijaao;vasija ao;1;0;Create;True;0;0;False;0;1ba41ba30cb8f3a4ab1a596f821688cd;1ba41ba30cb8f3a4ab1a596f821688cd;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -64,4 +64,4 @@ WireConnection;0;1;4;0
 WireConnection;0;3;3;0
 WireConnection;0;5;2;0
 ASEEND*/
-//CHKSM=7432C2387C69D4FBBCF3D801C6B29B07D6D348E9
+//CHKSM=4EE763F16641F675A9D6991B1512A7778CC9D60B

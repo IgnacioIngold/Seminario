@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 7957975991266432461}
   - component: {fileID: 338501159602209598}
   - component: {fileID: 558454510717733584}
+  - component: {fileID: 1310641920589968391}
   m_Layer: 0
   m_Name: pared chica
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7957975991266432461
 Transform:
@@ -58,6 +59,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 750852bf2956167499fbfa2f2fec10e8, type: 2}
+  - {fileID: 2100000, guid: 6d9ec6b8372cc264481293dc6e769670, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -65,7 +67,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
+  m_ReceiveGI: 2
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -78,6 +80,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &1310641920589968391
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 381205276355123123}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.01999033, y: 0.03663947, z: 0.07996107}
+  m_Center: {x: 0.006641726, y: 0.018319739, z: 0.039980534}
 --- !u!1 &7110516035300124522
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +181,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5996664933084697131}
-  - component: {fileID: 6504256593789168786}
   m_Layer: 0
   m_Name: Pared Chica
   m_TagString: Untagged
@@ -189,16 +203,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6504256593789168786
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9022779752112296447}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4536141, y: 7.1699014, z: 3.2740493}
-  m_Center: {x: -0.6898233, y: 3.603391, z: -1.6386993}

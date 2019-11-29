@@ -42,12 +42,13 @@ GameObject:
   - component: {fileID: 7734806386607167217}
   - component: {fileID: 6526528202406396597}
   - component: {fileID: 100838932618301439}
+  - component: {fileID: 5744855476620592389}
   m_Layer: 0
   m_Name: Esquina adentro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &7734806386607167217
 Transform:
@@ -89,6 +90,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 750852bf2956167499fbfa2f2fec10e8, type: 2}
+  - {fileID: 2100000, guid: 6d9ec6b8372cc264481293dc6e769670, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,6 +111,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5744855476620592389
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527600257969621929}
+  m_Material: {fileID: 13400000, guid: 275a79a64d085d24c9c346570a5cbd04, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.026653698, y: 0.02665372, z: 0.07996106}
+  m_Center: {x: 0.013326845, y: 0.013326869, z: 0.03998053}
 --- !u!1 &7422145176716304548
 GameObject:
   m_ObjectHideFlags: 0
