@@ -666,7 +666,7 @@ PrefabInstance:
     - target: {fileID: 6870815793048422319, guid: 5b71304bce30aee48ab044543d7c786a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6870815793048422312, guid: 5b71304bce30aee48ab044543d7c786a,
         type: 3}
@@ -733,6 +733,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6870815794728668963, guid: 5b71304bce30aee48ab044543d7c786a,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6870815794728668960, guid: 5b71304bce30aee48ab044543d7c786a,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -751,7 +756,22 @@ PrefabInstance:
     - target: {fileID: 6870815794981293219, guid: 5b71304bce30aee48ab044543d7c786a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870815793048422316, guid: 5b71304bce30aee48ab044543d7c786a,
+        type: 3}
+      propertyPath: NormalRotationLerpSeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870815793048422316, guid: 5b71304bce30aee48ab044543d7c786a,
+        type: 3}
+      propertyPath: explotionDamage
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870815794728668974, guid: 5b71304bce30aee48ab044543d7c786a,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 5.21
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b71304bce30aee48ab044543d7c786a, type: 3}
@@ -862,7 +882,7 @@ PrefabInstance:
     - target: {fileID: 609346536399887383, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 609346536399887382, guid: 09c6eadaed60a214a8bda79ba950dc1d,
         type: 3}
@@ -1003,6 +1023,12 @@ MonoBehaviour:
   AttackCoincided: 0
   SuccesfullHit: 0
   ComboWindow: 2
+--- !u!198 &1662454681 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6870815794981293230, guid: 5b71304bce30aee48ab044543d7c786a,
+    type: 3}
+  m_PrefabInstance: {fileID: 864751924}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1679795876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,6 +1072,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1895672709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6870815793048422319, guid: 5b71304bce30aee48ab044543d7c786a,
+    type: 3}
+  m_PrefabInstance: {fileID: 864751924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1895672715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1895672709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ab34a65c25b59f4ab6264b54e1be0c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VulnerableMarker: {fileID: 1662454681}
+  ButtonHitConfirm: {fileID: 2040807071}
+  LightColor: {r: 0.39909673, g: 1, b: 0, a: 1}
+  HeavyColor: {r: 1, g: 0.99789584, b: 0, a: 1}
+  AttackCoincided: 0
+  SuccesfullHit: 0
+  ComboWindow: 2
 --- !u!1001 &1919013339
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1140,6 +1191,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3ff16c0320d61541a042c6c000a2b4e, type: 3}
+--- !u!198 &2040807071 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6870815793451908684, guid: 5b71304bce30aee48ab044543d7c786a,
+    type: 3}
+  m_PrefabInstance: {fileID: 864751924}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2072961300
 GameObject:
   m_ObjectHideFlags: 0

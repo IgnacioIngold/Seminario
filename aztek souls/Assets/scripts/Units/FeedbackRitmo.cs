@@ -136,7 +136,6 @@ public class FeedbackRitmo : MonoBehaviour
         else
         {
             //Cuando no coincide.
-            print("COMBO FALLIDO");
             OnComboFailed();
             displayVulnerability = false;
             Reset();

@@ -4,11 +4,13 @@ using Core;
 using UnityEngine;
 using IA.StateMachine.Generic;
 using Core.Entities;
+using System;
 
 public enum FatEnemyStates
 {
     idle,
     alert,
+    stunned,
     rangeAttack,
     meleeAttack,
     pursue,
@@ -24,6 +26,7 @@ public enum FatEnemyStates
 public class FatEnemy : BaseUnit
 {
     public GenericFSM<FatEnemyStates> _sm;
+    public FatEnemyStates currentState;
 
     [Header("Estado de Alerta")]
     public float AlertTime;
@@ -67,9 +70,8 @@ public class FatEnemy : BaseUnit
 
 #if UNITY_EDITOR
     [Header("Debugg FatEnemy")]
-    public FatEnemyStates currentState;
     public bool Debug_AttackRanges; 
-    
+
     protected override void OnDrawGizmosSelected()
     {
         base.OnDrawGizmosSelected();
@@ -146,39 +148,20 @@ public class FatEnemy : BaseUnit
     public override HitResult Hit(HitData EntryData)
     {
         HitResult result = HitResult.Default();
+
+        if (!IsAlerted) IsAlerted = true;
         EnemyHealthBar.FadeIn(); //Hacemos aparecer su barra de vida.
-
-        //Particula de feedback del golpe
-        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
-        Destroy(particle, 3f);
-
-        //var vulnerability = GetCurrentVulnerabilityInput();
-        //_attacksRecieved++;
-
-        //if (vulnerability == EntryData.AttackType)
-        //{
-        //    _sm.Feed(FatEnemyStates.hurted);
-        //    SuccesfullHit = true;
-        //    ShowVulnerability();
-        //}
-
-        ////Completar
-        //Health -= EntryData.Damage;
-
-        //// Si llegamos al ultimo ataque, lo reseteamos.
-        //if (_attacksRecieved == vulnerabilityCombos[_currentVulnerabilityCombo].Length)
-        //{
-
-        //    _attacksRecieved = 0;
-        //}
+        FRitmo.HitRecieved(EntryData.AttackID, EntryData.AttackType);
 
         if (!IsAlive)
         {
             result.TargetEliminated = true;
-            //Si completo el combo...
-
             _sm.Feed(FatEnemyStates.dead);
         }
+
+        //Particula de feedback del golpe
+        var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
+        Destroy(particle, 3f);
 
         return result;
     }
@@ -198,8 +181,25 @@ public class FatEnemy : BaseUnit
         base.Awake();
 
         //Combos a los que es vulnerable.
-        //vulnerabilityCombos.Add(0, new Inputs[3] { Inputs.light, Inputs.light, Inputs.strong });
+        FRitmo = GetComponent<FeedbackRitmo>();
 
+        FRitmo.OnComboSuccesfullyStart += () =>
+        {
+            Combat = 1;
+            _sm.Feed(FatEnemyStates.stunned);
+        };
+        FRitmo.OnComboCompleted += () => { Health = 0; };
+        FRitmo.TimeEnded += () => { _sm.Feed(FatEnemyStates.think); };
+        FRitmo.OnComboFailed += () => { _sm.Feed(FatEnemyStates.think); };
+
+        Tuple<int, Inputs>[] data = new Tuple<int, Inputs>[3];
+        data[0] = Tuple.Create(1, Inputs.light);
+        data[1] = Tuple.Create(3, Inputs.light);
+        data[2] = Tuple.Create(8, Inputs.strong);
+
+        FRitmo.AddVulnerability(0, data);
+
+        // Parámetros de animación.
         animationParams = new int[5];
         for (int i = 0; i < animationParams.Length; i++)
             animationParams[i] = anims.GetParameter(i).nameHash;
@@ -210,7 +210,7 @@ public class FatEnemy : BaseUnit
 
         var idle = new State<FatEnemyStates>("Idle");
         var alert = new State<FatEnemyStates>("Alerted");
-        var hurted = new State<FatEnemyStates>("Hurted");
+        var stunned = new State<FatEnemyStates>("Stunned");
         var rangeAttack = new State<FatEnemyStates>("RangeAttack");
         var meleeAttack = new State<FatEnemyStates>("MeleeAttack");
         var pursue = new State<FatEnemyStates>("Pursue");
@@ -221,30 +221,32 @@ public class FatEnemy : BaseUnit
         #region Transiciones.
 
         idle.AddTransition(FatEnemyStates.alert, alert)
-            .AddTransition(FatEnemyStates.hurted, hurted)
             .AddTransition(FatEnemyStates.dead, dead);
 
         alert.AddTransition(FatEnemyStates.think, think)
-             .AddTransition(FatEnemyStates.hurted, hurted)
              .AddTransition(FatEnemyStates.dead, dead);
 
+        stunned.AddTransition(FatEnemyStates.dead, dead)
+               .AddTransition(FatEnemyStates.think, think);
+
+
         pursue.AddTransition(FatEnemyStates.think, think)
-              .AddTransition(FatEnemyStates.hurted, hurted)
+              .AddTransition(FatEnemyStates.stunned, stunned)
               .AddTransition(FatEnemyStates.dead, dead);
 
         meleeAttack.AddTransition(FatEnemyStates.dead, dead)
-                   .AddTransition(FatEnemyStates.hurted, hurted)
+                   .AddTransition(FatEnemyStates.stunned, stunned)
                    .AddTransition(FatEnemyStates.think, think);
 
         rangeAttack.AddTransition(FatEnemyStates.think, think)
-                   .AddTransition(FatEnemyStates.hurted, hurted)
+                   .AddTransition(FatEnemyStates.stunned, stunned)
                    .AddTransition(FatEnemyStates.dead, dead);
 
         think.AddTransition(FatEnemyStates.meleeAttack, meleeAttack)
              .AddTransition(FatEnemyStates.rangeAttack, rangeAttack)
+             .AddTransition(FatEnemyStates.stunned, stunned)
              .AddTransition(FatEnemyStates.idle, idle)
              .AddTransition(FatEnemyStates.pursue, pursue)
-             .AddTransition(FatEnemyStates.hurted, hurted)
              .AddTransition(FatEnemyStates.dead, dead);
 
         dead.AddTransition(FatEnemyStates.idle, idle); 
@@ -296,15 +298,13 @@ public class FatEnemy : BaseUnit
         };
         //alert.OnExit += (nextState) => { };
 
-        hurted.OnEnter += (previousState) => 
+        stunned.OnEnter += (previousState) =>
         {
-            //isVulnerableToAttacks = true;
-            //ShowVulnerability();
+            print("Duro como la piedra!");
         };
-        hurted.OnUpdate += () => { };
-        hurted.OnExit += (nextState) => 
+        stunned.OnExit += (nextState) =>
         {
-            //isVulnerableToAttacks = false;
+            print("Siempre en movimiento we");
         };
 
         pursue.OnEnter += (previousState) => { Locomotion = 1; };
@@ -314,7 +314,7 @@ public class FatEnemy : BaseUnit
 
             if (sight.distanceToTarget > AttackRange) agent.Move(sight.dirToTarget * MovementSpeed * Time.deltaTime);
 
-            if (sight.distanceToTarget <= AttackRange) _sm.Feed(FatEnemyStates.think);
+            if (sight.distanceToTarget <= rangeAttack_MaxRange) _sm.Feed(FatEnemyStates.think);
         };
         pursue.OnExit += (nextState) => 
         {
@@ -346,6 +346,7 @@ public class FatEnemy : BaseUnit
         {
             agent.isStopped = true;
             LookTowardsPlayer = true;
+            _rotationLerpSpeed = AttackRotationLerpSpeed;
             _remaingRangeAttackTime = 0;
         };
         rangeAttack.OnUpdate += () => 
@@ -360,6 +361,11 @@ public class FatEnemy : BaseUnit
                 _remaingRangeAttackTime = RangeAttackDuration + RangeAttackCooldown;
             }
 
+            //Si sale fuera del rango de ataque a distancia.
+            if (sight.distanceToTarget > rangeAttack_MaxRange)
+                _sm.Feed(FatEnemyStates.think);
+
+            //Si entra a rango de melee.
             if (sight.distanceToTarget <= meleeAttack_MaxRange)
                 _sm.Feed(FatEnemyStates.think);
         };
@@ -367,24 +373,30 @@ public class FatEnemy : BaseUnit
         {
             Combat = 0;
             agent.isStopped = false;
+            _rotationLerpSpeed = NormalRotationLerpSeed;
         };
 
         meleeAttack.OnEnter += (previousState) => 
         {
             rb.velocity = Vector3.zero;
             agent.isStopped = true;
-            
+
+            FRitmo.ShowVulnerability();
             _remainingMeleeAttackTime = 0;  //Seteamos el valor original del ataque.
         };
         meleeAttack.OnUpdate += () => 
         {
             _remainingMeleeAttackTime -= Time.deltaTime;
+            if (sight.distanceToTarget > meleeAttack_MaxRange)
+                _sm.Feed(FatEnemyStates.think);
+
             if (_remainingMeleeAttackTime <= 0)
             {
                 Combat = 1;
                 LookTowardsPlayer = true;
                 _remainingMeleeAttackTime = MeleeAttackDuration + MeleeAttackCooldown;
             }
+
         };
         meleeAttack.OnExit += (nextState) => 
         {
@@ -459,10 +471,6 @@ public class FatEnemy : BaseUnit
         Vector3 bulletDir = (targetpos - bulletParent.position).normalized;
 
         projectil.transform.forward = bulletDir;
-    }
-    public void EndHurted()
-    {
-        //Se acabó la animación de Hurted.
     }
 
     //=============================== CORRUTINES ================================================
