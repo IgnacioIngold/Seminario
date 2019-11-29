@@ -219,6 +219,8 @@ public class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleab
         rb.isKinematic = true;
         MainColl.enabled = false;
 
+        FRitmo.HideVulnerability();
+
         StartCoroutine(FallAfterDie(3f));
         OnDie();
     }

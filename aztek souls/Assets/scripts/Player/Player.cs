@@ -368,7 +368,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         else if (result.HitConnected && CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
         {
             //Esto se llama cuando un Hit Conecta.
-            //SlowDownTime();
+            SlowDownTime();
 
             if (result.TargetEliminated)
                 FeedBlood(result.bloodEarned);

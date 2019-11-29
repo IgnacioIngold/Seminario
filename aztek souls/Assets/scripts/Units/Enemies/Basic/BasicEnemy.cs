@@ -25,10 +25,10 @@ public enum BasicEnemyStates
 public class BasicEnemy : BaseUnit
 {
     #region Eventos
-    /// <summary>
-    /// Evento que se llama cuando el Enemigo recibió un golpe directo.
-    /// </summary>
-    public event Action OnGetHit = delegate { };
+    ///// <summary>
+    ///// Evento que se llama cuando el Enemigo recibió un golpe directo.
+    ///// </summary>
+    //public event Action OnGetHit = delegate { };
     /// <summary>
     /// Evento que se llama cuando el enemigo recibió un golpe y lo bloqueó.
     /// </summary>
