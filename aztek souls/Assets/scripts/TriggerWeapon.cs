@@ -4,11 +4,8 @@ using System;
 using Core;
 using Core.Entities;
 
-//[AddComponentMenu("Core/Trigger Weapon"), RequireComponent(typeof(Collider))]
 public class TriggerWeapon : MonoBehaviour
 {
-    //[SerializeField, Tooltip("El collider es desactivado al producirse el primer impacto.")]
-    //protected Collider col;
     public GameObject Owner;
 
 #if UNITY_EDITOR
@@ -21,13 +18,7 @@ public class TriggerWeapon : MonoBehaviour
     void Awake()
     {
         var getted = Owner.TryGetComponent(out _owner);
-        //if (getted)
-        //    Debug.LogWarning("Encontrado. " + Owner.gameObject.name);
-        //else
-        //    Debug.LogWarning("No encontrado");
-
-        //if (col == null)
-        //    col = GetComponent<Collider>();
+        if (!getted) this.enabled = false;
     }
 
     void OnTriggerEnter(Collider other)

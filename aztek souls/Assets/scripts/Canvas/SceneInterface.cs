@@ -67,13 +67,13 @@ namespace Core
             }
 
             //Level Up Panel.
-            if (Input.GetButtonDown(LevelUpMenuButton) && !Context.Paused)
-            {
-                Context.LevelupPanel = !Context.LevelupPanel;
-                LevelUpPanelWasOpened = Context.LevelupPanel;
+            //if (Input.GetButtonDown(LevelUpMenuButton) && !Context.Paused)
+            //{
+            //    Context.LevelupPanel = !Context.LevelupPanel;
+            //    LevelUpPanelWasOpened = Context.LevelupPanel;
 
-                EnableDisableLevelUpPanel(Context.LevelupPanel);
-            }
+            //    EnableDisableLevelUpPanel(Context.LevelupPanel);
+            //}
         }
 
         /// <summary>
