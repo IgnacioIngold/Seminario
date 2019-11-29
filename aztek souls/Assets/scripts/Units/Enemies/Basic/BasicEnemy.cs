@@ -198,7 +198,6 @@ public class BasicEnemy : BaseUnit
 
         var idle = new State<BasicEnemyStates>("Idle");
         var stunned = new State<BasicEnemyStates>("Stunned");
-        //var hurted = new State<BasicEnemyStates>("Hurted");
         var alerted = new State<BasicEnemyStates>("Alerted");
         var pursue = new State<BasicEnemyStates>("pursue");
         var attack = new State<BasicEnemyStates>("Attacking");
@@ -208,7 +207,6 @@ public class BasicEnemy : BaseUnit
 
         #region Transiciones
         idle.AddTransition(BasicEnemyStates.dead, dead)
-            //.AddTransition(BasicEnemyStates.hurted, hurted)
             .AddTransition(BasicEnemyStates.stunned, stunned)
             .AddTransition(BasicEnemyStates.attack, attack)
             .AddTransition(BasicEnemyStates.alerted, alerted)
@@ -217,24 +215,17 @@ public class BasicEnemy : BaseUnit
         stunned.AddTransition(BasicEnemyStates.dead, dead)
                .AddTransition(BasicEnemyStates.think, think);
 
-        //hurted.AddTransition(BasicEnemyStates.dead, dead)
-        //      .AddTransition(BasicEnemyStates.think, think)
-        //      .AddTransition(BasicEnemyStates.idle, idle);
-
         alerted.AddTransition(BasicEnemyStates.dead, dead)
-               //.AddTransition(BasicEnemyStates.hurted, hurted)
                .AddTransition(BasicEnemyStates.attack, attack)
                .AddTransition(BasicEnemyStates.pursue, pursue);
 
         pursue.AddTransition(BasicEnemyStates.dead, dead)
               .AddTransition(BasicEnemyStates.attack, attack)
-              //.AddTransition(BasicEnemyStates.hurted, hurted)
               .AddTransition(BasicEnemyStates.blocking, block);
 
         attack.AddTransition(BasicEnemyStates.dead, dead)
               .AddTransition(BasicEnemyStates.stunned, stunned)
               .AddTransition(BasicEnemyStates.pursue, pursue)
-              //.AddTransition(BasicEnemyStates.hurted, hurted)
               .AddTransition(BasicEnemyStates.idle, idle)
               .AddTransition(BasicEnemyStates.think, think)
               .AddTransition(BasicEnemyStates.blocking, block);
@@ -242,14 +233,12 @@ public class BasicEnemy : BaseUnit
         block.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.attack, attack)
              .AddTransition(BasicEnemyStates.stunned, stunned)
-             //.AddTransition(BasicEnemyStates.hurted, hurted)
              .AddTransition(BasicEnemyStates.think, think)
              .AddTransition(BasicEnemyStates.blocking, block);
 
         think.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.pursue, pursue)
              .AddTransition(BasicEnemyStates.stunned, stunned)
-             //.AddTransition(BasicEnemyStates.hurted, hurted)
              .AddTransition(BasicEnemyStates.idle, idle)
              .AddTransition(BasicEnemyStates.attack, attack)
              .AddTransition(BasicEnemyStates.blocking, block);
