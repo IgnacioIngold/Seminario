@@ -75,10 +75,13 @@ public class FeedbackRitmo : MonoBehaviour
         SuccesfullHit = false;
         _currentAttackIndex = 0;
         LastPresedInput = Inputs.none;
+        activeState = false;
     }
 
     public void FeedPressedInput(Inputs input)
     {
+        if (!activeState) return;
+
         LastPresedInput = input;
 
         var vul = vulnerabilityCombos[_currentComboIndex].inputBind[_currentAttackIndex];
@@ -213,6 +216,7 @@ public class FeedbackRitmo : MonoBehaviour
         VulnerableMarker.gameObject.SetActive(true);
         displayVulnerability = true;
         _currentTime = ComboWindow;
+        activeState = true;
     }
     /// <summary>
     /// Oculta la particula que indica la vulnerabilidad

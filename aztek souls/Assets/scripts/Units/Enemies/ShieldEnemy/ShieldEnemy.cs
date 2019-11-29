@@ -12,6 +12,7 @@ public enum ShieldEnemyStates
 {
     idle,
     alerted,
+    stunned,
     block,
     vulnerable,
     reposition,
@@ -34,17 +35,25 @@ public class ShieldEnemy : BaseUnit
     public event Action onBlockedHit = delegate { };
     public event Action onGetHit = delegate { };
 
+    [Header("Reposition")]
+    public float repositionLerpSpeed = 10f;
+
     [Header("Parry")]
     public ParticleSystem ShieldSparks;
-    public float BlockRange = 3f;
     public float ParryCoolDown = 3f;
     private bool _canParry = true;
+    public int FreeHits = 2;
+    [SerializeField] int recievedHits = 0;
+
+    [Header("Blocking")]
+    public float BlockRange = 3f;
     public float BlockLerpSpeed = 3f;
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
 
     [Header("Attack & Ritmo")]
+    public float ComboCompleteDamage = 60f;
     public float CriticDamageMultiplier = 2;
     public bool Disarmed;
     public float DisarmedTime = 4f;
@@ -65,6 +74,7 @@ public class ShieldEnemy : BaseUnit
 
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
+
 #endif
 
     //======================== OVERRIDES & INTERFACES =========================================
@@ -76,13 +86,7 @@ public class ShieldEnemy : BaseUnit
         if (HitInfo.Damage > 0 && IsAlive)
         {
             //Si el enemigo no me había detectado.
-            if (!_targetDetected)
-            {
-                _targetDetected = true;
-                //SetVulnerabity(true);
-                //if (!VulnerableMarker.gameObject.activeSelf)
-                //    VulnerableMarker.gameObject.SetActive(true);
-            }
+            if (!_targetDetected) _targetDetected = true;
 
             if (_blocking && !Disarmed) //Si estoy bloqueando...
             {
@@ -103,43 +107,13 @@ public class ShieldEnemy : BaseUnit
             }
             else //Si no estoy bloqueando...
             {
-                //Aqui necesitamos info.
                 anims.SetTrigger("getDamage");
-                //var FinalDamage = HitInfo.Damage * incommingDamageReduction;
-                bool completedCombo = false;
-                //Ahora si el ataque que recibimos coincide con el combo al que somos vulnerable.
-                //if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
-                //{
-                //    //_attacksRecieved++;
-
-                //    //if (_attacksRecieved == 3)
-                //    //{
-                //    //    comboVulnerabilityCountDown = 0f;
-                //    //    FinalDamage = HitInfo.Damage * CriticDamageMultiplier;
-                //    //    completedCombo = true;
-
-                //    //    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                //    //}
-                //    //else if (_attacksRecieved == 2)
-                //    //{
-                //    //    comboVulnerabilityCountDown += 4f;
-
-                //    //    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                //    //}
-                //    //else comboVulnerabilityCountDown += 1f;
-
-                //    //Display_CorrectButtonHitted();
-
-                //    //Muestro el siguiente ataque.
-                //    //ShowNextVulnerability(_attacksRecieved);
-                //}
 
                 onGetHit();
 
                 result.HitConnected = true;
 
-                //Si no estoy bloqueando.
-                //Health -= FinalDamage;
+                Health -= HitInfo.Damage;
 
                 var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
                 Destroy(particle, 3f);
@@ -149,10 +123,8 @@ public class ShieldEnemy : BaseUnit
                 if (!IsAlive)
                 {
                     result.TargetEliminated = true;    // Aviso que estoy muerto.
-                    if (completedCombo)
-                        result.bloodEarned = BloodForKill * 2;
-                    else
-                        result.bloodEarned = BloodForKill;
+                    result.bloodEarned = BloodForKill;
+
                     _sm.Feed(ShieldEnemyStates.dead);  // Paso al estado de muerte.
                 }
                 else
@@ -164,7 +136,7 @@ public class ShieldEnemy : BaseUnit
 
     public override void GetHitResult(HitResult result)
     {
-        print(string.Format("{0} ha conectado un ataque.", gameObject.name));
+        //print(string.Format("{0} ha conectado un ataque.", gameObject.name));
     }
 
     public override HitData DamageStats()
@@ -237,15 +209,29 @@ public class ShieldEnemy : BaseUnit
     protected override void Awake()
     {
         base.Awake();
-        //VulnerableMarker.gameObject.SetActive(false);
-        //ButtonHitConfirm.gameObject.SetActive(false);
 
-        ////Vulnerabilidad
-        //var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
-        //var SecondaryVulnerability = new Inputs[] { Inputs.strong, Inputs.light, Inputs.light };
-        //vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        //vulnerabilityCombos.Add(1, MainVulnerability);
-        //vulnerabilityCombos.Add(2, SecondaryVulnerability);
+        //Vulnerabilidad.
+        //Si interrumpo el ataque... voy a stunned.
+        FRitmo.OnComboSuccesfullyStart += () => _sm.Feed(ShieldEnemyStates.stunned);
+        FRitmo.OnComboCompleted += () => { Health -= ComboCompleteDamage; };
+        FRitmo.TimeEnded += () => { _sm.Feed(ShieldEnemyStates.think); };
+        FRitmo.OnComboFailed += () => { _sm.Feed(ShieldEnemyStates.think); };
+
+        //Primera vulnerabilidad.
+        Tuple<int, Inputs>[] data = new Tuple<int, Inputs>[3];
+        data[0] = Tuple.Create(1, Inputs.light);
+        data[1] = Tuple.Create(3, Inputs.light);
+        data[2] = Tuple.Create(7, Inputs.light);
+
+        FRitmo.AddVulnerability(0, data);
+
+        //Segunda vulnerabilidad
+        Tuple<int, Inputs>[] data2 = new Tuple<int, Inputs>[3];
+        data2[0] = Tuple.Create(2, Inputs.strong);
+        data2[1] = Tuple.Create(5, Inputs.light);
+        data[2] = Tuple.Create(9, Inputs.light);
+
+        FRitmo.AddVulnerability(1, data2);
 
         #region State Machine.
 
@@ -327,8 +313,6 @@ public class ShieldEnemy : BaseUnit
             if (_targetDetected)
                 _sm.Feed(ShieldEnemyStates.alerted);
         };
-        //idle.OnExit += (nextState) => { };
-
 
         alerted.OnEnter += (previousState) =>
         {
@@ -355,7 +339,10 @@ public class ShieldEnemy : BaseUnit
             _originalRotLerpSpeed = _rotationLerpSpeed;
             _rotationLerpSpeed = BlockLerpSpeed;
             _blocking = true;
-            //SetVulnerabity(true, 2);
+            recievedHits = 0;
+
+            FRitmo.SetCurrentVulnerabilityCombo(1);
+            FRitmo.ShowVulnerability();
         };
         blocking.OnUpdate += () =>
         {
@@ -392,14 +379,17 @@ public class ShieldEnemy : BaseUnit
         parry.OnEnter += (previousState) =>
         {
             _parrying = true;
-            anims.SetTrigger("Parry");
+            recievedHits = 0;
+
+            anims.SetTrigger("Parrying");
+            ShieldSparks.Play();
         };
-        //parry.OnUpdate += () => { };
         parry.OnExit += (nextState) => { _parrying = false; };
 
         pursue.OnEnter += (previousState) =>
         {
             anims.SetFloat("Moving", 1f);
+            recievedHits = 0;
         };
         pursue.OnUpdate += () =>
         {
@@ -416,7 +406,7 @@ public class ShieldEnemy : BaseUnit
         {
             LookTowardsPlayer = true;
             _originalRotLerpSpeed = _rotationLerpSpeed;
-            _rotationLerpSpeed *= ((sight.angleToTarget / 360) * 20);
+            _rotationLerpSpeed = repositionLerpSpeed;
         };
         reposition.OnUpdate += () =>
         {
@@ -434,6 +424,7 @@ public class ShieldEnemy : BaseUnit
             agent.isStopped = true;
             rb.velocity = Vector3.zero;
             anims.SetInteger("Attack", 1);
+            recievedHits = 0;
         };
         //attack.OnUpdate += () => { };
         attack.OnExit += (nextState) =>
@@ -468,8 +459,8 @@ public class ShieldEnemy : BaseUnit
                     float pursueImportance = ((Health / MaxHP) * 10);
                     float AttackImportance = 10f - (blockImportance * 0.8f);
 
-                    print(string.Format("BlockImp: {0} / PursueImp: {1} / AttackImportance: {2}",
-                        blockImportance, pursueImportance, AttackImportance));
+                    //print(string.Format("BlockImp: {0} / PursueImp: {1} / AttackImportance: {2}",
+                    //    blockImportance, pursueImportance, AttackImportance));
 
                     //Desiciones posibles:
                     //Perseguir --> se realiza siempre que el enemigo esté más lejos de cierta distancia.
@@ -479,7 +470,7 @@ public class ShieldEnemy : BaseUnit
                     if (sight.distanceToTarget > AttackRange)
                     {
                         int decition = RoulleteSelection.Roll(new float[2] { pursueImportance, blockImportance });
-                        print("Distance is bigger than the AttackRange.\nDecition was: " + (decition == 0 ? "pursue" : "block"));
+                        //print("Distance is bigger than the AttackRange.\nDecition was: " + (decition == 0 ? "pursue" : "block"));
 
                         if (decition == 0) _sm.Feed(ShieldEnemyStates.pursue);
                         if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
@@ -488,7 +479,7 @@ public class ShieldEnemy : BaseUnit
                     if (sight.distanceToTarget < AttackRange)
                     {
                         int decition = RoulleteSelection.Roll(new float[2] { AttackImportance, blockImportance });
-                        print("Distance is smaller than the AttackRange.\nDecition was: " + (decition == 0 ? "Attack" : "block"));
+                        //print("Distance is smaller than the AttackRange.\nDecition was: " + (decition == 0 ? "Attack" : "block"));
 
                         if (decition == 0) _sm.Feed(ShieldEnemyStates.attack);
                         if (decition == 1) _sm.Feed(ShieldEnemyStates.block);
@@ -498,7 +489,7 @@ public class ShieldEnemy : BaseUnit
         };
         think.OnExit += (nextState) =>
         {
-            print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
+            //print(string.Format("Exiting from Thinking, next State will be {0}", nextState.ToString()));
         };
 
         dead.OnEnter += (previousState) =>
@@ -530,22 +521,6 @@ public class ShieldEnemy : BaseUnit
                 _sm.Feed(ShieldEnemyStates.think);
             }
         }
-
-        //if (comboVulnerabilityCountDown > 0)
-        //    comboVulnerabilityCountDown -= Time.deltaTime;
-        //else if (comboVulnerabilityCountDown <= 0)
-        //{
-        //    //print("Se acabó el tiempo de vulnerabilidad");
-        //    _attacksRecieved = 0;
-        //    //SetVulnerabity(false);
-        //    comboVulnerabilityCountDown = 0;
-        //    ButtonHitConfirm.gameObject.SetActive(false);
-        //}
-
-        //if (isVulnerableToAttacks)
-        //    VulnerableMarker.gameObject.SetActive(true);
-        //else if (VulnerableMarker.gameObject.activeSelf)
-        //    VulnerableMarker.gameObject.SetActive(false);
 
         //Condición de muerte, Update de Sight, FSM y Rotación.
         if (IsAlive)
