@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 using IA.LineOfSight;
-using System;
-using System.Collections;
 using Core.Entities;
 using Core;
-using System.Collections.Generic;
 
-[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Rigidbody))]
-public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
+[RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(CapsuleCollider)), RequireComponent(typeof(Rigidbody))]
+public class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 {
     #region Eventos
 
     public Action OnDie = delegate { };
+    public Action OnGetHit = delegate { };
 
     #endregion
 
@@ -22,33 +23,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     protected Transform Target;
     public GameObject OnHitParticle;
     public FillBar EnemyHealthBar;
-    [SerializeField] protected LineOfSight sight = null;
-
-    #endregion
-
-    #region Sistema de Ritmo
-
-    //Sistema de ritmo. --> Este es el combo al cual es "vulnerable"
-    [Header("Sistema de Ritmo")]
-    public float ComboBonus;
-    public ParticleSystem VulnerableMarker;       // Indica la tecla que debemos presionar.
-    public ParticleSystem ButtonHitConfirm;       // Confirma que la tecla fue presionada.
-    public Color LightColor;                      // Indica que se debe presionar el input Light.
-    public Color HeavyColor;                      // Indica que se debe presionar el input Strong.
-    public Dictionary<int, Inputs[]> vulnerabilityCombos;
-    public float comboVulnerabilityCountDown = 0f;
-    public bool isVulnerableToAttacks = false;
-    protected int _currentVulnerabilityCombo = 0;
-    protected int _attacksRecieved = 0;
-
-    #endregion
-
-    #region Vulnerabilidad
-
-    [Header("Vulnerability")]
-    public float vulnerableTime = 1.5f;
-    public float incommingDamageReduction = 0.3f;
-    public float ComboWindow = 1f;
+    [SerializeField] protected LineOfSight sight = null; 
 
     #endregion
 
@@ -56,7 +31,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
     [Header("Recompensas")]
     public int BloodPerHit = 100;
-    public int BloodForKill = 300;
+    public int BloodForKill = 300; 
 
     #endregion
 
@@ -66,7 +41,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     protected bool _targetDetected = false;
     protected bool _invulnerable = false;
     protected bool _alertFriends = true;
-    protected Vector3 _viewDirection = Vector3.zero;
+    protected Vector3 _viewDirection = Vector3.zero; 
 
     #endregion
 
@@ -108,25 +83,27 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
     protected Collider MainColl;
     protected Rigidbody rb;
 
+    [SerializeField] protected FeedbackRitmo FRitmo;
+
     #endregion
 
-#if UNITY_EDITOR
     #region Variables Debugg
+    #if UNITY_EDITOR
     [Header("Debug")]
-    public bool Debug_Gizmos = false;
-    public bool Debug_LineOFSight = false;
-    public bool Debug_Attacks = false;
+    public bool Debug_Gizmos          = false;
+    public bool Debug_LineOFSight     = false;
+    public bool Debug_Attacks         = false;
     public bool Debug_DetectionRanges = false;
+    #endif
     #endregion
-#endif
 
     //============================== INTERFACES ===============================================
 
     public bool IsAlive => _hp > 0;
     public bool invulnerable => _invulnerable;
 
-    public virtual HitResult Hit(HitData EntryData) { return HitResult.Default(); }
     public virtual HitData DamageStats() { return HitData.Default(); }
+    public virtual HitResult Hit(HitData EntryData) { return HitResult.Default(); }
     public virtual void GetHitResult(HitResult result) { }
 
     //============================= DEBUGG GIZMOS =============================================
@@ -186,12 +163,12 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
                 Gizmos.DrawWireSphere(currentPosition, HighRange);
             }
         }
-    } 
+    }
 #endif
 
 #endregion
 
-    //=========================================================================================
+    //============================ UNITY FUNCTIONS ============================================
 
     protected virtual void Awake()
     {
@@ -200,6 +177,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         agent = GetComponent<NavMeshAgent>();
         MainColl = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
+        FRitmo = GetComponent<FeedbackRitmo>();
 
         EnemyHealthBar.SetApha(0f);
 
@@ -216,55 +194,7 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         Health = MaxHP;
     }
 
-    //=========================================================================================
-
-    /// <summary>
-    /// Retorna la duración de la Transición al siguiente estado de la Animación.
-    /// </summary>
-    /// <returns>Float: el tiempo de la transición.</returns>
-    protected float getCurrentTransitionDuration()
-    {
-        return anims.GetAnimatorTransitionInfo(0).duration;
-    }
-    /// <summary>
-    /// Retorna el tiempo de Animación restante del estado Actual del Animator.
-    /// </summary>
-    /// <returns>Float: tiempo de Animación restante del estado actual.</returns>
-    protected float getRemainingAnimTime()
-    {
-        //AnimatorClipInfo[] clipInfo = anims.GetCurrentAnimatorClipInfo(0);
-        //float AnimTime = 0f;
-
-        var CurrentState = anims.GetCurrentAnimatorStateInfo(0);
-
-        //if (clipInfo != null && clipInfo.Length > 0)
-        //{
-        //    AnimationClip currentClip = clipInfo[0].clip;
-        //    print("Clip Searched: " + ClipName + " ClipGetted: " + currentClip.name);
-
-        //    if (currentClip.name == ClipName)
-        //    {
-        //        //print("currentClip is Correct!");
-        //        AnimTime = currentClip.length;
-        //        float passed = AnimTime - (AnimTime * transitionPassed);
-        //        return passed;
-        //    }
-        //}
-
-        return CurrentState.length - (CurrentState.length * CurrentState.normalizedTime);
-    }
-
-    protected void Die()
-    {
-        EnemyHealthBar.FadeOut(3f);
-        agent.enabled = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        rb.isKinematic = true;
-        MainColl.enabled = false;
-
-        StartCoroutine(FallAfterDie(3f));
-        OnDie();
-    }
+    //============================== PUBLIC FUNCS =============================================
 
     public void AllyDiscoversEnemy(Transform Enemy)
     {
@@ -273,8 +203,31 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
         _alertFriends = false;
         EnemyHealthBar.FadeIn();
     }
+    public void FeedPressedInput(Inputs input)
+    {
+        FRitmo.FeedPressedInput(input);
+    }
 
-    IEnumerator FallAfterDie(float delay = 1f)
+    //============================== OVERRAIDEABLES ===========================================
+
+    //Confirm Button Hit --> Hace el efecto que muestra que el boton era el correcto.
+    protected virtual void Die()
+    {
+        EnemyHealthBar.FadeOut(3f);
+        agent.enabled = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        rb.isKinematic = true;
+        MainColl.enabled = false;
+
+        FRitmo.HideVulnerability();
+
+        StartCoroutine(FallAfterDie(3f));
+        OnDie();
+    }
+
+    //============================== CORRUTINES ===============================================
+
+    protected IEnumerator FallAfterDie(float delay = 1f)
     {
         float fallTime = 10f;
         yield return new WaitForSeconds(delay + 2f);
@@ -288,4 +241,6 @@ public abstract class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>,
 
         gameObject.SetActive(false);
     }
+
+    //=========================================================================================
 }

@@ -1,17 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using IA.StateMachine.Generic;
 using Core.Entities;
-using System;
 using Random = UnityEngine.Random;
-using Utility.Timers;
+using Utility.Timers.RunTime;
 using Core;
-using System.Collections.Generic;
 
 public enum BasicEnemyStates
 {
     idle,
+    stunned,
+    hurted,
     alerted,
     pursue,
     attack,
@@ -23,26 +25,24 @@ public enum BasicEnemyStates
 public class BasicEnemy : BaseUnit
 {
     #region Eventos
-    /// <summary>
-    /// Evento que se llama cuando el Enemigo recibió un golpe directo.
-    /// </summary>
-    public event Action OnGetHit = delegate { };
+    ///// <summary>
+    ///// Evento que se llama cuando el Enemigo recibió un golpe directo.
+    ///// </summary>
+    //public event Action OnGetHit = delegate { };
     /// <summary>
     /// Evento que se llama cuando el enemigo recibió un golpe y lo bloqueó.
     /// </summary>
-    public event Action OnBlockHit = delegate { }; 
+    public event Action OnBlockHit = delegate { };
     #endregion
 
-    public ParticleSystem VulnerableMark;
-
-#if UNITY_EDITOR
-    public BasicEnemyStates CurrentState; 
-#endif
     GenericFSM<BasicEnemyStates> sm;
+    public void FeedFSM(BasicEnemyStates nextState)
+    {
+        sm.Feed(nextState);
+    }
 
     public float AlertedTime = 2f;
     public float AlertRadius = 10f;
-    public bool isAttacking;
 
     [Header("Blocking")]
     public bool canBlock = true;
@@ -51,138 +51,120 @@ public class BasicEnemy : BaseUnit
     public float blockExtraTimePerHit = 0.7f;
     float blockTime = 0f;
 
-    Vector3 _lastEnemyPositionKnow = Vector3.zero;
     private float _alertedTimeRemaining = 0f;
+    public bool vulnerability = false;
+
+    //============================= EDITOR ONLY ===============================================
+
+#if UNITY_EDITOR
+    public BasicEnemyStates CurrentState;
+#endif
+
+    //============================ PROPIEDADES ================================================
+
+    int[] animationParams;
+    public bool AP_Walking
+    {
+        get => anims.GetBool(animationParams[0]);
+        set => anims.SetBool(animationParams[0], value);
+    }
+    public bool AP_Blocking
+    {
+        get => anims.GetBool(animationParams[1]);
+        set => anims.SetBool(animationParams[1], value);
+    }
+    public bool AP_SimpleAttack
+    {
+        get => anims.GetBool(animationParams[2]);
+        set => anims.SetBool(animationParams[2], value);
+    }
+    public bool AP_GetHit
+    {
+        get => anims.GetBool(animationParams[3]);
+        set => anims.SetBool(animationParams[3], value);
+    }
+    public bool AP_Die
+    {
+        get => anims.GetBool(animationParams[4]);
+        set => anims.SetBool(animationParams[4], value);
+    }
+
+    public void SetAttackTrigger()
+    {
+        StartCoroutine(AttackTrigger());
+    }
+    IEnumerator AttackTrigger()
+    {
+        AP_SimpleAttack = true;
+        yield return new WaitForEndOfFrame();
+        AP_SimpleAttack = false;
+    }
+    IEnumerator HitTrigger()
+    {
+        AP_GetHit = true;
+        yield return new WaitForEndOfFrame();
+        AP_GetHit = false;
+    }
 
     //======================== OVERRIDES & INTERFACES =========================================
 
-    //int recieved = 0;
     public override HitResult Hit(HitData HitInfo)
     {
         HitResult result = HitResult.Default();
         float damage = HitInfo.Damage;
 
+        if (!_targetDetected) _targetDetected = true; //Si golpeo mientras no esta siendo detectado.
+
+        FRitmo.HitRecieved(HitInfo.AttackID, HitInfo.AttackType);
+
+        EnemyHealthBar.FadeIn();
+
         if (IsAlive && damage > 0)
         {
-            //print("Estoy Vulnerable?: " + isVulnerableToAttacks);
-
-            //if (!isVulnerableToAttacks && _targetDetected) //Bloqueo.
-            //{
-            //    //print("BLOQUEO");
-
-            //    sm.Feed(BasicEnemyStates.blocking);
-            //    result.HitBlocked = true;
-
-            //    float damageReduced = damage * incommingDamageReduction;
-            //    Health -= damageReduced;
-
-            //    OnBlockHit();
-            //}
-            if(HitInfo.AttackID == 1)
-                 anims.SetTrigger("GetHit");
-            else
-                 anims.SetTrigger("GetHit2");
-
+            //HitNormal.
+            sm.Feed(BasicEnemyStates.hurted);
             OnGetHit();
 
-            bool coincided = false;
-            bool completedCombo = false;
-            //Contamos la cantidad de hits que obtenemos.
-            //Aumentamos el "timer"
-            comboVulnerabilityCountDown = ComboWindow; //Reasignamos el tiempo del combo.
-                                                       //Si el tipo del ataque coincide con el del combo al que es vulnerable
-            if (vulnerabilityCombos[1][_attacksRecieved] == HitInfo.AttackType)
-            {
-                _attacksRecieved++;
-                print("Recibido : " + _attacksRecieved);
+            Health -= damage;
 
-                if (_attacksRecieved == 3)
-                {
-                    comboVulnerabilityCountDown = 0f;
-                    print(string.Format("Reducido a 0 segundos la vulnerabilidad, tiempo de vulnerabilidad es {0}", comboVulnerabilityCountDown));
-                }
-                else if (_attacksRecieved == 2)
-                {
-                    comboVulnerabilityCountDown += 4f;
-                    print(string.Format("Añadido {0} segundos al combo, tiempo de vulnerabilidad es {1}", 4f, comboVulnerabilityCountDown));
-                }
-                else
-                    comboVulnerabilityCountDown += 1f;
-                //Display_CorrectButtonHitted();
-
-                coincided = true;
-
-                if (_attacksRecieved == 3)
-                {
-                    completedCombo = true;
-                    Health = 0;
-                }
-
-                //Muestro el siguiente ataque.
-                //ShowNextVulnerability(_attacksRecieved);
-            }
-
-            if (coincided)
-                Health -= damage;
-            else
-                Health -= damage * incommingDamageReduction;
-
-
+            //Si el enemigo murió x el ataque.
             if (!IsAlive)
             {
                 //Si el enemigo es el que mato al Player, entonces le añade el bono acumulado. TO DO.
+                print("Se murio el wey");
+
+                result.HitConnected = true;
                 result.TargetEliminated = true;
-                if (completedCombo)
-                    result.bloodEarned = BloodForKill * 2;
-                else
-                    result.bloodEarned = BloodForKill;
+                result.bloodEarned = BloodForKill;
                 sm.Feed(BasicEnemyStates.dead);
             }
+            //Si el enemigo no murió por el ataque.
             else
             {
-                result.HitConnected = true;
-                result.bloodEarned = BloodPerHit;
+                StartCoroutine(HitTrigger());
 
-                if (!_targetDetected)
-                {
-                    _targetDetected = true;
-                    sm.Feed(BasicEnemyStates.pursue);
-                }
-                else
-                    sm.Feed(BasicEnemyStates.idle);
+                result.HitConnected = true;
+
+                if (FRitmo.AttackCoincided)
+                    result.bloodEarned = BloodPerHit;
 
                 LookTowardsPlayer = true;
-                sm.Feed(BasicEnemyStates.think);
+                sm.Feed(BasicEnemyStates.hurted);
             }
 
             var particle = Instantiate(OnHitParticle, transform.position, Quaternion.identity);
             Destroy(particle, 3f);
-            EnemyHealthBar.FadeIn();
         }
 
         return result;
     }
-    public override HitData DamageStats()
-    {
-        return new HitData() { Damage = attackDamage };
-    }
-
     public override void GetHitResult(HitResult result)
     {
         print("El enemigo conectó un Hit");
     }
-
-    IEnumerator vulnerableToAttacks()
+    public override HitData DamageStats()
     {
-        canBlock = false;
-        isVulnerableToAttacks = true;
-
-        //BersekrMode = false;
-        //StopCoroutine(Block());
-
-        yield return new WaitForSeconds(vulnerableTime);
-        canBlock = true;
-        isVulnerableToAttacks = false;
+        return new HitData() { Damage = attackDamage};
     }
 
     //=========================================================================================
@@ -191,53 +173,89 @@ public class BasicEnemy : BaseUnit
     {
         base.Awake();
 
-        sight.target = FindObjectOfType<Player>().GetComponent<Transform>();
+        //Si interrumpo el ataque... voy a stunned.
+        FRitmo.OnComboSuccesfullyStart += () => 
+        {
+            AP_SimpleAttack = false;
+            sm.Feed(BasicEnemyStates.stunned);
+        };
+        FRitmo.OnComboCompleted += () => { Health = 0; };
+        FRitmo.TimeEnded += () => { sm.Feed(BasicEnemyStates.think); };
+        FRitmo.OnComboFailed += () => { sm.Feed(BasicEnemyStates.think); };
 
-        //Vulnerabilidad
-        var MainVulnerability = new Inputs[] { Inputs.light, Inputs.light, Inputs.strong };
-        vulnerabilityCombos = new Dictionary<int, Inputs[]>();
-        vulnerabilityCombos.Add(1, MainVulnerability);
+        animationParams = new int[5];
+        for (int i = 0; i < animationParams.Length; i++)
+            animationParams[i] = anims.GetParameter(i).nameHash;
 
-        //State Machine
+        Tuple<int, Inputs>[] data = new Tuple<int, Inputs>[3];
+        data[0] = Tuple.Create(1, Inputs.light);
+        data[1] = Tuple.Create(3, Inputs.light);
+        data[2] = Tuple.Create(8, Inputs.strong);
+
+        FRitmo.AddVulnerability(0, data);
+
+        #region State Machine
+
         var idle = new State<BasicEnemyStates>("Idle");
+        var stunned = new State<BasicEnemyStates>("Stunned");
         var alerted = new State<BasicEnemyStates>("Alerted");
         var pursue = new State<BasicEnemyStates>("pursue");
         var attack = new State<BasicEnemyStates>("Attacking");
+        var block = new State<BasicEnemyStates>("Blocking");
         var think = new State<BasicEnemyStates>("Thinking");
         var dead = new State<BasicEnemyStates>("Dead");
 
         #region Transiciones
         idle.AddTransition(BasicEnemyStates.dead, dead)
+            .AddTransition(BasicEnemyStates.stunned, stunned)
             .AddTransition(BasicEnemyStates.attack, attack)
-            .AddTransition(BasicEnemyStates.alerted, alerted);
+            .AddTransition(BasicEnemyStates.alerted, alerted)
+            .AddTransition(BasicEnemyStates.blocking, block);
+
+        stunned.AddTransition(BasicEnemyStates.dead, dead)
+               .AddTransition(BasicEnemyStates.think, think);
 
         alerted.AddTransition(BasicEnemyStates.dead, dead)
                .AddTransition(BasicEnemyStates.attack, attack)
                .AddTransition(BasicEnemyStates.pursue, pursue);
 
         pursue.AddTransition(BasicEnemyStates.dead, dead)
-              .AddTransition(BasicEnemyStates.attack, attack);
+              .AddTransition(BasicEnemyStates.attack, attack)
+              .AddTransition(BasicEnemyStates.blocking, block);
 
         attack.AddTransition(BasicEnemyStates.dead, dead)
+              .AddTransition(BasicEnemyStates.stunned, stunned)
               .AddTransition(BasicEnemyStates.pursue, pursue)
               .AddTransition(BasicEnemyStates.idle, idle)
-              .AddTransition(BasicEnemyStates.think, think);
+              .AddTransition(BasicEnemyStates.think, think)
+              .AddTransition(BasicEnemyStates.blocking, block);
 
+        block.AddTransition(BasicEnemyStates.dead, dead)
+             .AddTransition(BasicEnemyStates.attack, attack)
+             .AddTransition(BasicEnemyStates.stunned, stunned)
+             .AddTransition(BasicEnemyStates.think, think)
+             .AddTransition(BasicEnemyStates.blocking, block);
 
         think.AddTransition(BasicEnemyStates.dead, dead)
              .AddTransition(BasicEnemyStates.pursue, pursue)
+             .AddTransition(BasicEnemyStates.stunned, stunned)
              .AddTransition(BasicEnemyStates.idle, idle)
-             .AddTransition(BasicEnemyStates.attack, attack);
+             .AddTransition(BasicEnemyStates.attack, attack)
+             .AddTransition(BasicEnemyStates.blocking, block);
 
         #endregion
 
         #region Estados
 
-        idle.OnEnter += (previousState) => 
+        #region Idle
+
+        idle.OnEnter += (previousState) =>
         {
             //Seteo la animación inicial.
+            AP_Walking = false;
+            AP_SimpleAttack = false;
         };
-        idle.OnUpdate += () => 
+        idle.OnUpdate += () =>
         {
             var toDamage = sight.target.GetComponent<IKilleable>();
             if (!toDamage.IsAlive) return;
@@ -249,11 +267,30 @@ public class BasicEnemy : BaseUnit
                 sm.Feed(BasicEnemyStates.alerted);
         };
         //idle.OnExit += (nextState) => { };
+        #endregion
 
-        alerted.OnEnter += (previousState) => 
+        stunned.OnEnter += (previousState) => { print("Quieto como una planta --> STUNNED"); };
+        stunned.OnExit += (NextState) => { print("YA NO TAN Quieto como una planta STUNNED OFF"); };
+        //#region Hurted
+
+        //hurted.OnEnter += (previousState) => 
+        //{
+        //    AP_SimpleAttack = false;
+        //    AP_GetHit = true;
+        //};
+        //hurted.OnExit += (nextState) => 
+        //{
+        //    AP_GetHit = false;
+        //};
+
+        //#endregion
+        #region Alerted
+
+        alerted.OnEnter += (previousState) =>
         {
             //print("Enemy has been Alerted");
             _alertedTimeRemaining = AlertedTime;
+            _targetDetected = true;
 
             //EnemyHealthBar.FadeIn();
 
@@ -274,7 +311,7 @@ public class BasicEnemy : BaseUnit
                 }
             }
         };
-        alerted.OnUpdate += () => 
+        alerted.OnUpdate += () =>
         {
             if (_alertedTimeRemaining > 0)
             {
@@ -286,13 +323,15 @@ public class BasicEnemy : BaseUnit
         };
         //alerted.OnExit += (nextState) => { };
 
-        pursue.OnEnter += (previousState) => 
+        #endregion
+        #region Pursue
+
+        pursue.OnEnter += (previousState) =>
         {
             //print("pursue");
-            //Setear Animación.
-            anims.SetBool("Walking", true);
+            AP_Walking = true;
         };
-        pursue.OnUpdate += () => 
+        pursue.OnUpdate += () =>
         {
             //Correr como si no hubiera un mañana (?
             transform.forward = Vector3.Slerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed);
@@ -302,96 +341,115 @@ public class BasicEnemy : BaseUnit
             if (sight.distanceToTarget <= AttackRange)
                 sm.Feed(BasicEnemyStates.attack);
         };
-        pursue.OnExit += (nextState) => 
-        { anims.SetBool("Walking", false); };
+        pursue.OnExit += (nextState) => AP_Walking = false;
 
-        attack.OnEnter += (previousState) => 
+        #endregion
+        #region Attack
+
+        attack.OnEnter += (previousState) =>
         {
-            //print("Attack");
-            agent.isStopped = true;
-            StartCoroutine(SimpleAttack());
+            //SetAttackTrigger();
+            AP_SimpleAttack = true;
+            _rotationLerpSpeed = AttackRotationLerpSpeed;
+            LookTowardsPlayer = true;
+            FRitmo.ShowVulnerability();
         };
-        attack.OnUpdate += () => {};
-
-        think.OnEnter += (previousState) => 
+        attack.OnUpdate += () =>
         {
+            var toDamage = sight.target.GetComponent<IKilleable>();
+
+            if (!toDamage.IsAlive)
+                sm.Feed(BasicEnemyStates.idle);
+        };
+        attack.OnExit += (nextState) =>
+        {
+            _rotationLerpSpeed = NormalRotationLerpSeed;
+            //Debug.LogWarning("Enemy End of Attack");
+        };
+
+        #endregion
+        #region Blocking
+
+        block.OnEnter += (previousState) =>
+        {
+            AP_Blocking = true;
+            LookTowardsPlayer = true;
+
+            blockTime = blockDuration;
+        };
+        block.OnUpdate += () =>
+        {
+            blockTime -= Time.deltaTime;
+
+            if (blockTime <= 0)
+            {
+                if (!IsAlive)
+                    sm.Feed(BasicEnemyStates.dead);
+
+                var toDamage = sight.target.GetComponent<IKilleable>();
+
+                if (sight.distanceToTarget < AttackRange)
+                    sm.Feed(BasicEnemyStates.attack);
+                else
+                    sm.Feed(BasicEnemyStates.think);
+            }
+        };
+        block.OnExit += (nextState) =>
+        {
+            if (nextState != BasicEnemyStates.blocking)
+            {
+                LookTowardsPlayer = true;
+                AP_Blocking = false;
+            }
+        };
+
+        #endregion
+        #region Thinking
+
+        think.OnEnter += (previousState) =>
+        {
+            //print("Thinking");
             StartCoroutine(thinkAndWatch());
         };
-        think.OnUpdate += () => { };
-
-        dead.OnEnter += (previousState) => 
-        {
-            StopAllCoroutines();
-            anims.SetTrigger("Die");
-            Die();
-        }; 
 
         #endregion
 
-        sm = new GenericFSM<BasicEnemyStates>(idle);
+        dead.OnEnter += (previousState) =>
+        {
+            StopAllCoroutines();
+            AP_Die = true;
+            //HideVulnerability();
+            Die();
+        };
+
+        #endregion
+
+        sm = new GenericFSM<BasicEnemyStates>(idle); 
+
+        #endregion
     }
 
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR
-        CurrentState = sm.currentState; 
-#endif
+        #region Editor Only
+        #if UNITY_EDITOR
+        CurrentState = sm.currentState;
+        #endif 
+        #endregion
 
         sight.Update();
 
         if (LookTowardsPlayer && _targetDetected)
             transform.forward = Vector3.Lerp(transform.forward, sight.dirToTarget, _rotationLerpSpeed * Time.deltaTime);
 
-        if (Health <= 0 && CurrentState != BasicEnemyStates.dead)
+        if (_hp <= 0)
             sm.Feed(BasicEnemyStates.dead);
 
         sm.Update();
     }
 
-    public void SetVulnerabity(bool vulnerable)
-    {
-        isVulnerableToAttacks = vulnerable;
-        StartCoroutine(vulnerableToAttacks());
-        VulnerableMark.Play();
-    }
-
-    IEnumerator SimpleAttack()
-    {
-        var toDamage = sight.target.GetComponent<IKilleable>();
-
-        if (!toDamage.IsAlive)
-            sm.Feed(BasicEnemyStates.idle);
-
-        //Inicio el primer ataque.
-        LookTowardsPlayer = false;
-        anims.SetTrigger("SimpleAttack");
-        yield return null;
-
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-
-        float remainingTime = getRemainingAnimTime();
-        yield return new WaitForSeconds(remainingTime);
-
-        LookTowardsPlayer = true;
-        sm.Feed(BasicEnemyStates.think);
-    }
-
-    IEnumerator Block()
-    {
-        LookTowardsPlayer = true;
-        yield return null;
-
-        float currentTransitionTime = getCurrentTransitionDuration();
-        yield return new WaitForSeconds(currentTransitionTime);
-
-        float remainingTime = getRemainingAnimTime();
-        yield return new WaitForSeconds(remainingTime);
-        LookTowardsPlayer = true;
-
-        sm.Feed(BasicEnemyStates.attack);
-    }
+    //=========================== CORRUTINES ==================================================
 
     IEnumerator thinkAndWatch()
     {

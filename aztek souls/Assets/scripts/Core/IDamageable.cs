@@ -29,7 +29,7 @@ namespace Core
 
         public static HitData Default()
         {
-            return new HitData() { Damage = 0, BreakDefence = false, AttackID = 0 };
+            return new HitData() { Damage = 0, BreakDefence = false, AttackID = 0, AttackType = Inputs.light };
         }
     }
     public struct HitResult

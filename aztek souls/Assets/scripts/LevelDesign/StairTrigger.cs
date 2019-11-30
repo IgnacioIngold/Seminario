@@ -15,7 +15,7 @@ public class StairTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == PlayerTag)
         {
-            p._isInStair = true;
+            p.isInStair = true;
             p.stairOrientation = StairOrientation;
         }
     }
@@ -24,7 +24,7 @@ public class StairTrigger : MonoBehaviour
     {
         if (other.gameObject.tag == PlayerTag)
         {
-            p._isInStair = false;
+            p.isInStair = false;
             p.stairOrientation = StairOrientation;
         }
     }

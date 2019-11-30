@@ -7,25 +7,46 @@ public class BE_AnimEventListener : MonoBehaviour
 {
     public BasicEnemy owner;
     public Collider AttackCollider;
-    
+    audioManager _AM;
 
     private void Awake()
     {
         owner = GetComponentInParent<BasicEnemy>();
+        _AM = GetComponent<audioManager>();
     }
 
-    public void AE_AttackEnable()
+    //============================= Attack ==================================================
+
+    void PlaySound(string Source)
     {
-        //print("AnimEvent basicEnemy ON START ATTACK activado");
-        AttackCollider.enabled = true;
+        _AM.Play(Source);
     }
-    public void AE_AttackDisable()
+    public void StartUp()
     {
-        //print("AnimEvent basicEnemy ON FINIT ATTACK activado");
+        owner.LookTowardsPlayer = true;
+    }
+
+    public void Active()
+    {
+        AttackCollider.enabled = true;
+        owner.LookTowardsPlayer = false;
+    }
+
+    public void Recovery()
+    {
+        //owner.LookTowardsPlayer = true;
         AttackCollider.enabled = false;
     }
-    public void AE_EnableMarker()
+
+    public void AttackFinished()
     {
-        owner.SetVulnerabity(true);
+        owner.AP_SimpleAttack = false;
+        owner.FeedFSM(BasicEnemyStates.think);
+    }
+
+    //============================= Hurt Animation ==========================================
+
+    public void HurtAnimationEnded()
+    {
     }
 }
