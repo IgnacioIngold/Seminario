@@ -142,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 4668271041496302403}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.7277167, y: 1.7277167, z: 1.7277167}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 410868845617787584}
   - {fileID: 4668271041905385391}
@@ -249,12 +249,16 @@ MonoBehaviour:
   Debug_LineOFSight: 1
   Debug_Attacks: 1
   Debug_DetectionRanges: 1
+  repositionLerpSpeed: 10
   ShieldSparks: {fileID: 904915460355244093}
-  BlockRange: 3
   ParryCoolDown: 3
+  FreeHits: 2
+  recievedHits: 0
+  BlockRange: 3
   BlockLerpSpeed: 5
   AlertedTime: 2
   AlertRadius: 10
+  ComboCompleteDamage: 60
   CriticDamageMultiplier: 2
   Disarmed: 0
   DisarmedTime: 4
