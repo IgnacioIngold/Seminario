@@ -83,7 +83,7 @@ public class BaseUnit : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleab
     protected Collider MainColl;
     protected Rigidbody rb;
 
-    [SerializeField] protected FeedbackRitmo FRitmo;
+    protected FeedbackRitmo FRitmo;
 
     #endregion
 
