@@ -3498,6 +3498,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 247042778}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &251879691 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9108182208082019406, guid: c3ff16c0320d61541a042c6c000a2b4e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1466260063}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35dd7bfc2a6f8e64c9282b75701b7b2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &251894308 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7608817230921037560, guid: 06755c6b3ea369b408d8dcaa16c1b612,
@@ -17535,6 +17547,16 @@ PrefabInstance:
       propertyPath: controllerA
       value: 
       objectReference: {fileID: 9100000, guid: f6969f8cb46c07d47834225d14a5abbb, type: 2}
+    - target: {fileID: 6624738397154282152, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 251879691}
+    - target: {fileID: 6624738397154282152, guid: c3ff16c0320d61541a042c6c000a2b4e,
+        type: 3}
+      propertyPath: DamageCollider
+      value: 
+      objectReference: {fileID: 1761264507}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3ff16c0320d61541a042c6c000a2b4e, type: 3}
 --- !u!1 &1468042871
@@ -22300,6 +22322,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7819169230025754415, guid: 3a5d2913014230e41a932b461be1763a,
     type: 3}
   m_PrefabInstance: {fileID: 7323663931989492074}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1761264507 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 241611323910572645, guid: c3ff16c0320d61541a042c6c000a2b4e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1466260063}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1763575686 stripped
 Transform:
