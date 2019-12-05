@@ -35,9 +35,9 @@ public class BasicEnemy : BaseUnit
 
     public ParticleSystem VulnerableMark;
 
-#if UNITY_EDITOR
+
     public BasicEnemyStates CurrentState; 
-#endif
+
     GenericFSM<BasicEnemyStates> sm;
 
     public float AlertedTime = 2f;
@@ -334,9 +334,9 @@ public class BasicEnemy : BaseUnit
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR
+
         CurrentState = sm.currentState; 
-#endif
+
 
         sight.Update();
 
