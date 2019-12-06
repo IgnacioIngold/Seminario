@@ -1,0 +1,24 @@
+# ProBuilder 4.0.5
+# https://unity3d.com/unity/features/worldbuilding/probuilder
+# 5/12/2019 11:21:39 p. m.
+
+mtllib ./piso_salida.mtl
+o piso salida
+
+g Plane
+v -4.6672 -2.902599 213.42
+v -4.6672 -2.902599 316.3164
+v -13.09534 -2.902599 213.42
+v -13.09534 -2.902599 316.3164
+
+vt 0 0
+vt 0 102.8964
+vt 8.428135 0
+vt 8.428135 102.8964
+
+vn 0 1 0
+
+g Plane
+usemtl Piso
+f 3/3/1 4/4/1 2/2/1 1/1/1
+

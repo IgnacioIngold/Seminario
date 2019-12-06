@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 7957975991266432461}
   - component: {fileID: 338501159602209598}
   - component: {fileID: 558454510717733584}
-  - component: {fileID: 1310641920589968391}
-  - component: {fileID: 3490062399441242003}
   m_Layer: 0
   m_Name: pared chica
   m_TagString: Untagged
@@ -59,7 +57,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fd0d9006a1847b6408b5f0457acfd2a7, type: 2}
+  - {fileID: 2100000, guid: 750852bf2956167499fbfa2f2fec10e8, type: 2}
+  - {fileID: 2100000, guid: 6d9ec6b8372cc264481293dc6e769670, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80,34 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &1310641920589968391
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381205276355123123}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.01999033, y: 0.03663947, z: 0.07996107}
-  m_Center: {x: 0.006641726, y: 0.018319739, z: 0.039980534}
---- !u!114 &3490062399441242003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381205276355123123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff9288046d6ea44a8b8423730558de1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shad: {fileID: 4800000, guid: 5e4115b4cf3bdcb4ab25aa7be98b5fa0, type: 3}
-  playerPos: {fileID: 8000256201698320091, guid: c3ff16c0320d61541a042c6c000a2b4e,
-    type: 3}
 --- !u!1 &7110516035300124522
 GameObject:
   m_ObjectHideFlags: 0

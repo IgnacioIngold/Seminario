@@ -90,7 +90,6 @@ GameObject:
   - component: {fileID: 3085479844567290383}
   - component: {fileID: 6534158816222454392}
   - component: {fileID: 7662219878770944933}
-  - component: {fileID: 4226524923880608220}
   m_Layer: 0
   m_Name: Esquina afuera
   m_TagString: Untagged
@@ -159,19 +158,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &4226524923880608220
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2440876684076149307}
-  m_Material: {fileID: 13400000, guid: 275a79a64d085d24c9c346570a5cbd04, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.019990275, y: 0.02334367, z: 0.079961054}
-  m_Center: {x: 0.0066417092, y: 0.011671833, z: 0.039980527}
 --- !u!1 &8525175818425403485
 GameObject:
   m_ObjectHideFlags: 0
