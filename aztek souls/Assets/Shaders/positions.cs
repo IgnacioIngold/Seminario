@@ -9,7 +9,7 @@ public class positions : MonoBehaviour
     public Material _mat;
     void Awake ()
     {
-        
+        playerPos = FindObjectOfType<Player>().transform;
     }
 
     // Update is called once per frame
