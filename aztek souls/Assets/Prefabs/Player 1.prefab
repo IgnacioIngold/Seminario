@@ -1,0 +1,2568 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &269339808003433537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2284818151760243233}
+  m_Layer: 0
+  m_Name: VikingLArmDigit11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2284818151760243233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269339808003433537}
+  m_LocalRotation: {x: 0.2913413, y: 0.35356858, z: 0.064310856, w: 0.88655156}
+  m_LocalPosition: {x: -0.03128334, y: 0, z: 0.05152027}
+  m_LocalScale: {x: 0.9999644, y: 1.0000161, z: 1.0000209}
+  m_Children:
+  - {fileID: 3776179845557422408}
+  m_Father: {fileID: 9059861041265459666}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &325566384530939105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3855572512738701268}
+  m_Layer: 0
+  m_Name: VikingLArmDigit53
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3855572512738701268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325566384530939105}
+  m_LocalRotation: {x: 0.12409356, y: 0.068520136, z: 0.46002543, w: 0.87651724}
+  m_LocalPosition: {x: -0.03919873, y: 0, z: 0}
+  m_LocalScale: {x: 1.0000322, y: 0.9999888, z: 0.99997884}
+  m_Children: []
+  m_Father: {fileID: 610399559899891533}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &341178753800675867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5680599539662466647}
+  m_Layer: 0
+  m_Name: VikingSpine2 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5680599539662466647
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341178753800675867}
+  m_LocalRotation: {x: 0.12526369, y: 0.040877048, z: 0.018823182, w: 0.99110234}
+  m_LocalPosition: {x: -0.12338413, y: -0.000000057220458, z: 0}
+  m_LocalScale: {x: 1.0000002, y: 0.99999976, z: 0.9999997}
+  m_Children:
+  - {fileID: 1414248700993775626}
+  m_Father: {fileID: 8116771472632103480}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &444569574582174576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1431681250461369482}
+  m_Layer: 0
+  m_Name: VikingAnkleBone002
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1431681250461369482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444569574582174576}
+  m_LocalRotation: {x: -0.00000006007028, y: -0.000000024214394, z: 0.000000029802326,
+    w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7439106344333562152}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &457782894434448303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7526945902687473392}
+  m_Layer: 0
+  m_Name: VikingRArmDigit51
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7526945902687473392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457782894434448303}
+  m_LocalRotation: {x: -0.0035557551, y: -0.003187012, z: 0.23357874, w: 0.97232616}
+  m_LocalPosition: {x: -0.07685803, y: -0.003705654, z: 0.0661536}
+  m_LocalScale: {x: 1.0000147, y: 1.0000067, z: 0.9999817}
+  m_Children:
+  - {fileID: 4487098926684827804}
+  m_Father: {fileID: 4322461455613290071}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &681286062876421347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1414248700993775626}
+  m_Layer: 0
+  m_Name: VikingHub003
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1414248700993775626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681286062876421347}
+  m_LocalRotation: {x: 0.029205857, y: -0.025233626, z: 0.108473726, w: 0.9933498}
+  m_LocalPosition: {x: -0.12310581, y: 0, z: -0.000000007152557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5680599539662466647}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &719387019288190539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8116771472632103480}
+  m_Layer: 0
+  m_Name: VikingSpine1 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8116771472632103480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719387019288190539}
+  m_LocalRotation: {x: 0.028608546, y: 0.024684703, z: 0.010414217, w: 0.9992316}
+  m_LocalPosition: {x: -0.005302734, y: -0.042757474, z: 0.0000000035762786}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 5680599539662466647}
+  m_Father: {fileID: 743171781076420645}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &730042114494203768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5494655720183407879}
+  m_Layer: 0
+  m_Name: VikingSpine1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5494655720183407879
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730042114494203768}
+  m_LocalRotation: {x: 0.004899117, y: 0.0079246275, z: -0.0042024422, w: 0.9999478}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8967880036943235331}
+  m_Father: {fileID: 6927881932229819480}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &777693553052031928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5613813387590828551}
+  m_Layer: 0
+  m_Name: VikingLArm2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5613813387590828551
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777693553052031928}
+  m_LocalRotation: {x: -0.08978102, y: 0.08523743, z: -0.39379895, w: 0.9108218}
+  m_LocalPosition: {x: -0.39335278, y: 0.000000007152557, z: 0.000000057220458}
+  m_LocalScale: {x: 0.9999973, y: 1.0000045, z: 1.0000007}
+  m_Children:
+  - {fileID: 9059861041265459666}
+  m_Father: {fileID: 6714135691768021573}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &997375114794652109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3632329998918977681}
+  m_Layer: 0
+  m_Name: Viking
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3632329998918977681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997375114794652109}
+  m_LocalRotation: {x: 0.50000006, y: -0.5, z: -0.4999999, w: 0.5}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8200273056684986796}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1007333167412743832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2185731257543737485}
+  m_Layer: 0
+  m_Name: VikingRLegDigit11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2185731257543737485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007333167412743832}
+  m_LocalRotation: {x: -0.009157459, y: 0.03196684, z: -0.28477782, w: 0.95801663}
+  m_LocalPosition: {x: -0.25297105, y: 0.008121249, z: -0.0000004863739}
+  m_LocalScale: {x: 1.0000002, y: 0.99999994, z: 0.9999998}
+  m_Children: []
+  m_Father: {fileID: 1329477600250148288}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1038687101257428266
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7086304660039001499}
+  m_Layer: 0
+  m_Name: VikingAnkleBone001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7086304660039001499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038687101257428266}
+  m_LocalRotation: {x: -0.00000006007028, y: -0.000000024214394, z: 0.000000029802326,
+    w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7439106344333562152}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1087344574972404336
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7147103052191998237}
+  - component: {fileID: 4881259050760305122}
+  - component: {fileID: 448976839697739051}
+  m_Layer: 0
+  m_Name: Cylinder003
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7147103052191998237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087344574972404336}
+  m_LocalRotation: {x: -0.5420938, y: 0.10768116, z: 0.046987936, w: 0.83206445}
+  m_LocalPosition: {x: -0.13806361, y: 1.1317075, z: 0.415754}
+  m_LocalScale: {x: 0.9999996, y: 0.9999841, z: 1.0000175}
+  m_Children: []
+  m_Father: {fileID: 8200273056684986796}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4881259050760305122
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087344574972404336}
+  m_Mesh: {fileID: 8245426573784773463, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+--- !u!23 &448976839697739051
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087344574972404336}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 670224309865224971, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &1286084965429953798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4760400055686063837}
+  m_Layer: 0
+  m_Name: VikingRArmDigit32
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4760400055686063837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286084965429953798}
+  m_LocalRotation: {x: -0.123226434, y: -0.0964171, z: 0.58598673, w: 0.7950714}
+  m_LocalPosition: {x: -0.045000028, y: -0.000000057220458, z: -0.000000114440915}
+  m_LocalScale: {x: 0.99993163, y: 1.0000397, z: 1.000028}
+  m_Children:
+  - {fileID: 4325240704590455974}
+  m_Father: {fileID: 7089630950440023216}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1559087067876115796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8386487993946701008}
+  m_Layer: 0
+  m_Name: VikingRLeg1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8386487993946701008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559087067876115796}
+  m_LocalRotation: {x: -0.31524557, y: 0.9417402, z: -0.03767873, w: -0.11102219}
+  m_LocalPosition: {x: 0.0019729615, y: -0.0013628912, z: -0.11808965}
+  m_LocalScale: {x: 0.9999998, y: 1.0000001, z: 0.99999994}
+  m_Children:
+  - {fileID: 2189464884705493452}
+  m_Father: {fileID: 6927881932229819480}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1678305073989852837
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3776179845557422408}
+  m_Layer: 0
+  m_Name: VikingLArmDigit12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3776179845557422408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678305073989852837}
+  m_LocalRotation: {x: 0.32428882, y: 0.25680253, z: 0.4142794, w: 0.81071687}
+  m_LocalPosition: {x: -0.02407166, y: 0, z: 0.000000114440915}
+  m_LocalScale: {x: 0.99993443, y: 1.0000397, z: 1.0000255}
+  m_Children:
+  - {fileID: 7137009213730791597}
+  m_Father: {fileID: 2284818151760243233}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1714993663780593433
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7439106344333562152}
+  m_Layer: 0
+  m_Name: VikingLLegAnkle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7439106344333562152
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714993663780593433}
+  m_LocalRotation: {x: 0.053461175, y: 0.13342865, z: -0.6120441, w: 0.7776508}
+  m_LocalPosition: {x: -0.6194506, y: 0, z: 0}
+  m_LocalScale: {x: 0.9999802, y: 1.0000204, z: 0.9999999}
+  m_Children:
+  - {fileID: 7086304660039001499}
+  - {fileID: 1431681250461369482}
+  - {fileID: 6745311682327997302}
+  m_Father: {fileID: 4688402786704158817}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1756853721871965521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9059861041265459666}
+  m_Layer: 0
+  m_Name: VikingLArmPalm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9059861041265459666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756853721871965521}
+  m_LocalRotation: {x: -0.535991, y: 0.13944514, z: -0.06889775, w: 0.8297721}
+  m_LocalPosition: {x: -0.2297148, y: 0.000000114440915, z: 0.000000028610229}
+  m_LocalScale: {x: 0.99998045, y: 1.0000018, z: 1.0000169}
+  m_Children:
+  - {fileID: 2284818151760243233}
+  - {fileID: 503141991747901250}
+  - {fileID: 2669335464797676267}
+  - {fileID: 2807705221217193690}
+  - {fileID: 4247512118087334402}
+  - {fileID: 6974163437424219611}
+  m_Father: {fileID: 5613813387590828551}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1853243640246931176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 610399559899891533}
+  m_Layer: 0
+  m_Name: VikingLArmDigit52
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &610399559899891533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853243640246931176}
+  m_LocalRotation: {x: -0.028028816, y: 0.11889247, z: 0.39164436, w: 0.91197246}
+  m_LocalPosition: {x: -0.047174376, y: 0.000000057220458, z: -0.000000114440915}
+  m_LocalScale: {x: 1.0000182, y: 1.0000002, z: 0.99998134}
+  m_Children:
+  - {fileID: 3855572512738701268}
+  m_Father: {fileID: 4247512118087334402}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2128091186553119846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 743171781076420645}
+  m_Layer: 0
+  m_Name: VikingHub002
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &743171781076420645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128091186553119846}
+  m_LocalRotation: {x: 0.006656414, y: -0.0030796037, z: 0.053628847, w: 0.998534}
+  m_LocalPosition: {x: -0.23958424, y: 0, z: -0.0000000035762786}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7983158711719686942}
+  - {fileID: 4784830334221485725}
+  - {fileID: 8116771472632103480}
+  m_Father: {fileID: 1568517798539132953}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2180429886680167081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5206823426822582228}
+  m_Layer: 0
+  m_Name: VikingRArmDigit11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5206823426822582228
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180429886680167081}
+  m_LocalRotation: {x: -0.49410072, y: -0.28048983, z: 0.15138619, w: 0.808871}
+  m_LocalPosition: {x: -0.03128328, y: 0, z: -0.0515205}
+  m_LocalScale: {x: 0.999967, y: 1.0000118, z: 1.0000219}
+  m_Children:
+  - {fileID: 1486684993318348440}
+  m_Father: {fileID: 4322461455613290071}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2367236461602826843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7297228893306846462}
+  m_Layer: 0
+  m_Name: VikingRArmDigit22
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7297228893306846462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367236461602826843}
+  m_LocalRotation: {x: -0.00970208, y: 0.0669263, z: 0.31765345, w: 0.94579226}
+  m_LocalPosition: {x: -0.039684005, y: 0, z: 0.000000114440915}
+  m_LocalScale: {x: 0.99995977, y: 1.0000179, z: 1.0000216}
+  m_Children:
+  - {fileID: 5039334878291504862}
+  m_Father: {fileID: 4947840496315877281}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2494247424365526530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2669335464797676267}
+  m_Layer: 0
+  m_Name: VikingLArmDigit31
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2669335464797676267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2494247424365526530}
+  m_LocalRotation: {x: -0.014713066, y: 0.22832376, z: 0.24330778, w: 0.94257796}
+  m_LocalPosition: {x: -0.10512285, y: 0.008611106, z: -0.014268722}
+  m_LocalScale: {x: 0.99996823, y: 1.000004, z: 1.0000281}
+  m_Children:
+  - {fileID: 3943061993375521041}
+  m_Father: {fileID: 9059861041265459666}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2708999452612874972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5039334878291504862}
+  m_Layer: 0
+  m_Name: VikingRArmDigit23
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5039334878291504862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708999452612874972}
+  m_LocalRotation: {x: -0.050165568, y: 0.007454525, z: 0.54391986, w: 0.83760315}
+  m_LocalPosition: {x: -0.047979325, y: -0.000000028610229, z: 0}
+  m_LocalScale: {x: 0.99992114, y: 1.0000582, z: 1.0000212}
+  m_Children: []
+  m_Father: {fileID: 7297228893306846462}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2797414619949790211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3217104073768231192}
+  m_Layer: 0
+  m_Name: VikingLLeg1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3217104073768231192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2797414619949790211}
+  m_LocalRotation: {x: -0.39220867, y: 0.89709747, z: 0.124715105, w: 0.16073164}
+  m_LocalPosition: {x: 0.0019730758, y: -0.0013628912, z: 0.11808965}
+  m_LocalScale: {x: 0.9999969, y: 1.0000031, z: 1.0000002}
+  m_Children:
+  - {fileID: 4688402786704158817}
+  m_Father: {fileID: 6927881932229819480}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3924236282777317067
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4487098926684827804}
+  m_Layer: 0
+  m_Name: VikingRArmDigit52
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4487098926684827804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3924236282777317067}
+  m_LocalRotation: {x: 0.013612707, y: -0.14923623, z: 0.3252991, w: 0.9336615}
+  m_LocalPosition: {x: -0.04717435, y: -0.000000057220458, z: 0}
+  m_LocalScale: {x: 1.0000141, y: 1.0000039, z: 0.99998164}
+  m_Children:
+  - {fileID: 8665077118217414284}
+  m_Father: {fileID: 7526945902687473392}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4073951997247383273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7579074380073143475}
+  m_Layer: 0
+  m_Name: VikingRArmDigit43
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7579074380073143475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4073951997247383273}
+  m_LocalRotation: {x: -0.014504608, y: 0.048410874, z: 0.22923699, w: 0.9720578}
+  m_LocalPosition: {x: -0.046640623, y: -0.000000028610229, z: -0.000000114440915}
+  m_LocalScale: {x: 0.99999225, y: 0.99998695, z: 1.000021}
+  m_Children: []
+  m_Father: {fileID: 119928638400725891}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4076778655427561976
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 263950902209839044}
+  m_Layer: 0
+  m_Name: VikingRArmDigit41
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &263950902209839044
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4076778655427561976}
+  m_LocalRotation: {x: 0.20903602, y: -0.082907654, z: 0.25770396, w: 0.9396909}
+  m_LocalPosition: {x: -0.10427762, y: 0, z: 0.04614521}
+  m_LocalScale: {x: 0.9999709, y: 1.0000073, z: 1.0000232}
+  m_Children:
+  - {fileID: 119928638400725891}
+  m_Father: {fileID: 4322461455613290071}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4113151547192185647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2807705221217193690}
+  m_Layer: 0
+  m_Name: VikingLArmDigit41
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2807705221217193690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113151547192185647}
+  m_LocalRotation: {x: -0.09734236, y: 0.13627382, z: 0.32983035, w: 0.9290672}
+  m_LocalPosition: {x: -0.1042777, y: 0.000000057220458, z: -0.04614521}
+  m_LocalScale: {x: 0.9999689, y: 1.0000091, z: 1.0000234}
+  m_Children:
+  - {fileID: 2059739997851592952}
+  m_Father: {fileID: 9059861041265459666}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4289982437027627812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1486684993318348440}
+  m_Layer: 0
+  m_Name: VikingRArmDigit12
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1486684993318348440
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4289982437027627812}
+  m_LocalRotation: {x: -0.23693806, y: -0.26158726, z: 0.05174028, w: 0.9342138}
+  m_LocalPosition: {x: -0.024071617, y: 0.000000114440915, z: 0}
+  m_LocalScale: {x: 0.99996316, y: 1.0000224, z: 1.0000143}
+  m_Children:
+  - {fileID: 4234734510809010557}
+  m_Father: {fileID: 5206823426822582228}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4435074314836194532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8867640966566280942}
+  m_Layer: 0
+  m_Name: VikingLArmDigit43
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8867640966566280942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4435074314836194532}
+  m_LocalRotation: {x: -0.053824462, y: -0.037142616, z: 0.507204, w: 0.8593413}
+  m_LocalPosition: {x: -0.046640567, y: 0, z: 0.000000114440915}
+  m_LocalScale: {x: 0.9999828, y: 0.99999636, z: 1.000021}
+  m_Children: []
+  m_Father: {fileID: 2059739997851592952}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4993014238711740096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7983158711719686942}
+  m_Layer: 0
+  m_Name: VikingLArmCollarbone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7983158711719686942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993014238711740096}
+  m_LocalRotation: {x: -0.114062145, y: 0.66449475, z: -0.11409611, w: 0.7296702}
+  m_LocalPosition: {x: 0.000000114440915, y: 0.000000057220458, z: 0.09933018}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6714135691768021573}
+  m_Father: {fileID: 743171781076420645}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5005794141954874894
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3943061993375521041}
+  m_Layer: 0
+  m_Name: VikingLArmDigit32
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3943061993375521041
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5005794141954874894}
+  m_LocalRotation: {x: 0.004016111, y: 0.02681513, z: 0.58976954, w: 0.8071163}
+  m_LocalPosition: {x: -0.045000013, y: -0.000000057220458, z: 0}
+  m_LocalScale: {x: 0.99994284, y: 1.000037, z: 1.0000205}
+  m_Children:
+  - {fileID: 3323713040019739860}
+  m_Father: {fileID: 2669335464797676267}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5066279181761868496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8106558985398544377}
+  m_Layer: 0
+  m_Name: VikingRArm1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8106558985398544377
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066279181761868496}
+  m_LocalRotation: {x: 0.2903099, y: -0.6672869, z: 0.06560611, w: 0.68274754}
+  m_LocalPosition: {x: -0.20456922, y: 0, z: 0}
+  m_LocalScale: {x: 0.99999785, y: 1.0000031, z: 1.0000001}
+  m_Children:
+  - {fileID: 4918380822037690501}
+  m_Father: {fileID: 4784830334221485725}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5158417337878881215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8200273056684986796}
+  - component: {fileID: 2253835165451091158}
+  - component: {fileID: 9105236134235561135}
+  - component: {fileID: 9105236134235561133}
+  - component: {fileID: 9105236134235561132}
+  m_Layer: 0
+  m_Name: Player 1
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8200273056684986796
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158417337878881215}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.014579058, y: 0.103, z: 0.02}
+  m_LocalScale: {x: 1.1204687, y: 0.82, z: 1.128812}
+  m_Children:
+  - {fileID: 1292349373607899593}
+  - {fileID: 3924326223292892201}
+  - {fileID: 7147103052191998237}
+  - {fileID: 3632329998918977681}
+  - {fileID: 6927881932229819480}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2253835165451091158
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158417337878881215}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+  m_Controller: {fileID: 9100000, guid: f6969f8cb46c07d47834225d14a5abbb, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!82 &9105236134235561135
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158417337878881215}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 207adcb7008421345ba8c4497dd1b181, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &9105236134235561133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158417337878881215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  DamageCollider: {fileID: 0}
+  marker: {fileID: 0}
+  tail: {fileID: 0}
+--- !u!114 &9105236134235561132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158417337878881215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c05185866652784ba90282b01c8261c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Steps
+    clip: {fileID: 8300000, guid: 207adcb7008421345ba8c4497dd1b181, type: 3}
+    volume: 0.5
+    pitch: 0
+    Loop: 0
+    source: {fileID: 0}
+  - name: Roll
+    clip: {fileID: 8300000, guid: a016d329e30ca87448d288d7d6a13306, type: 3}
+    volume: 0.5
+    pitch: 0
+    Loop: 0
+    source: {fileID: 0}
+  - name: Hurted
+    clip: {fileID: 8300000, guid: b60870528bc917c479e23335ae17c403, type: 3}
+    volume: 0.5
+    pitch: 0
+    Loop: 0
+    source: {fileID: 0}
+  - name: dead
+    clip: {fileID: 8300000, guid: c443322c8b768504db7af967ffee3141, type: 3}
+    volume: 0.5
+    pitch: 0
+    Loop: 0
+    source: {fileID: 0}
+  - name: Slash
+    clip: {fileID: 8300000, guid: dc6a7e864184cb24c944ed3f51f39595, type: 3}
+    volume: 0.5
+    pitch: 0
+    Loop: 0
+    source: {fileID: 0}
+--- !u!1 &5314585915963232539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6666103208849358747}
+  m_Layer: 0
+  m_Name: VikingAnkleBone001 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6666103208849358747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5314585915963232539}
+  m_LocalRotation: {x: 0.000000007450583, y: -0.000000072643154, z: -0.0000000149011585,
+    w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1329477600250148288}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5353801074025059451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4688402786704158817}
+  m_Layer: 0
+  m_Name: VikingLLeg2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4688402786704158817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353801074025059451}
+  m_LocalRotation: {x: 0.0013580464, y: -0.011185239, z: 0.5351837, w: 0.8446605}
+  m_LocalPosition: {x: -0.56749177, y: -0.000000057220458, z: 0.000000028610229}
+  m_LocalScale: {x: 0.99998695, y: 1.0000128, z: 1.0000008}
+  m_Children:
+  - {fileID: 7439106344333562152}
+  m_Father: {fileID: 3217104073768231192}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5599909817133604197
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2059739997851592952}
+  m_Layer: 0
+  m_Name: VikingLArmDigit42
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2059739997851592952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5599909817133604197}
+  m_LocalRotation: {x: 0.014638251, y: 0.021075131, z: 0.3585612, w: 0.9331535}
+  m_LocalPosition: {x: -0.03882388, y: 0, z: 0.000000114440915}
+  m_LocalScale: {x: 1.0000014, y: 1.0000176, z: 0.9999814}
+  m_Children:
+  - {fileID: 8867640966566280942}
+  m_Father: {fileID: 2807705221217193690}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5717516693712749053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8665077118217414284}
+  m_Layer: 0
+  m_Name: VikingRArmDigit53
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8665077118217414284
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5717516693712749053}
+  m_LocalRotation: {x: -0.12081986, y: -0.1098312, z: 0.48939103, w: 0.85664237}
+  m_LocalPosition: {x: -0.03919876, y: 0, z: 0}
+  m_LocalScale: {x: 1.0000261, y: 0.99999654, z: 0.99997795}
+  m_Children: []
+  m_Father: {fileID: 4487098926684827804}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5889836941233366590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1568517798539132953}
+  m_Layer: 0
+  m_Name: VikingSpine3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1568517798539132953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5889836941233366590}
+  m_LocalRotation: {x: 0.028320221, y: 0.0079283435, z: -0.095710665, w: 0.9949747}
+  m_LocalPosition: {x: -0.23805301, y: 0, z: 0.000000007152557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 743171781076420645}
+  m_Father: {fileID: 8967880036943235331}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5917910058527781945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4784830334221485725}
+  m_Layer: 0
+  m_Name: VikingRArmCollarbone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4784830334221485725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917910058527781945}
+  m_LocalRotation: {x: 0.10653514, y: -0.66915333, z: -0.10608471, w: 0.7277569}
+  m_LocalPosition: {x: 0, y: 0.00000017166137, z: -0.099330224}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8106558985398544377}
+  m_Father: {fileID: 743171781076420645}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5984147240171978161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4947840496315877281}
+  m_Layer: 0
+  m_Name: VikingRArmDigit21
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4947840496315877281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5984147240171978161}
+  m_LocalRotation: {x: 0.16347577, y: -0.14745213, z: 0.42527416, w: 0.8778812}
+  m_LocalPosition: {x: -0.10435332, y: 0.013168373, z: -0.014432258}
+  m_LocalScale: {x: 0.999956, y: 1.0000213, z: 1.0000234}
+  m_Children:
+  - {fileID: 7297228893306846462}
+  m_Father: {fileID: 4322461455613290071}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6494722408715217940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 503141991747901250}
+  m_Layer: 0
+  m_Name: VikingLArmDigit21
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &503141991747901250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6494722408715217940}
+  m_LocalRotation: {x: -0.15420344, y: 0.19867979, z: 0.42983246, w: 0.86717457}
+  m_LocalPosition: {x: -0.10435355, y: 0.013168259, z: 0.014431915}
+  m_LocalScale: {x: 0.9999603, y: 1.0000148, z: 1.0000255}
+  m_Children:
+  - {fileID: 3972881990187204665}
+  m_Father: {fileID: 9059861041265459666}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6502096912885472955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3861362629228208744}
+  m_Layer: 0
+  m_Name: VikingLArmDigit23
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3861362629228208744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502096912885472955}
+  m_LocalRotation: {x: 0.022458237, y: -0.08041593, z: 0.5221525, w: 0.84875536}
+  m_LocalPosition: {x: -0.047979355, y: 0, z: 0}
+  m_LocalScale: {x: 0.999932, y: 1.0000457, z: 1.0000225}
+  m_Children: []
+  m_Father: {fileID: 3972881990187204665}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6725844034620140375
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7089630950440023216}
+  m_Layer: 0
+  m_Name: VikingRArmDigit31
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7089630950440023216
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6725844034620140375}
+  m_LocalRotation: {x: 0.094720155, y: -0.13057196, z: 0.30071554, w: 0.939973}
+  m_LocalPosition: {x: -0.10512274, y: 0.008611106, z: 0.014268722}
+  m_LocalScale: {x: 0.9999664, y: 1.0000113, z: 1.0000234}
+  m_Children:
+  - {fileID: 4760400055686063837}
+  m_Father: {fileID: 4322461455613290071}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6849746318871321733
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7137009213730791597}
+  m_Layer: 0
+  m_Name: VikingLArmDigit13
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7137009213730791597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6849746318871321733}
+  m_LocalRotation: {x: -0.02854433, y: -0.22488956, z: 0.007241037, w: 0.9739392}
+  m_LocalPosition: {x: -0.038959466, y: 0, z: 0.000000028610229}
+  m_LocalScale: {x: 0.9999665, y: 1.0000205, z: 1.0000136}
+  m_Children: []
+  m_Father: {fileID: 3776179845557422408}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6996443513205010410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1292349373607899593}
+  - component: {fileID: 8009349084646928468}
+  m_Layer: 0
+  m_Name: cabeza
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1292349373607899593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996443513205010410}
+  m_LocalRotation: {x: -0.71018535, y: 0, z: 0, w: 0.7040147}
+  m_LocalPosition: {x: -0, y: 0, z: 0.027184982}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8200273056684986796}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &8009349084646928468
+SkinnedMeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996443513205010410}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 883740d4635691c4d96510b1fb41e38a, type: 2}
+  - {fileID: 2100000, guid: ddf2a383aa3b3154190421548dde839e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  serializedVersion: 2
+  m_Quality: 0
+  m_UpdateWhenOffscreen: 0
+  m_SkinnedMotionVectors: 1
+  m_Mesh: {fileID: 6858611281598592400, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+  m_Bones:
+  - {fileID: 1414248700993775626}
+  - {fileID: 743171781076420645}
+  - {fileID: 1568517798539132953}
+  - {fileID: 5680599539662466647}
+  - {fileID: 8116771472632103480}
+  - {fileID: 6714135691768021573}
+  - {fileID: 7983158711719686942}
+  - {fileID: 5613813387590828551}
+  - {fileID: 9059861041265459666}
+  - {fileID: 3776179845557422408}
+  - {fileID: 2284818151760243233}
+  - {fileID: 8967880036943235331}
+  - {fileID: 3855572512738701268}
+  - {fileID: 610399559899891533}
+  - {fileID: 7137009213730791597}
+  - {fileID: 5494655720183407879}
+  - {fileID: 6927881932229819480}
+  - {fileID: 3972881990187204665}
+  - {fileID: 503141991747901250}
+  - {fileID: 4247512118087334402}
+  - {fileID: 2807705221217193690}
+  - {fileID: 2059739997851592952}
+  - {fileID: 8867640966566280942}
+  - {fileID: 3943061993375521041}
+  - {fileID: 2669335464797676267}
+  - {fileID: 3861362629228208744}
+  - {fileID: 3323713040019739860}
+  - {fileID: 8106558985398544377}
+  - {fileID: 3217104073768231192}
+  - {fileID: 8386487993946701008}
+  - {fileID: 4688402786704158817}
+  - {fileID: 7439106344333562152}
+  - {fileID: 1431681250461369482}
+  - {fileID: 7086304660039001499}
+  - {fileID: 6745311682327997302}
+  - {fileID: 4784830334221485725}
+  - {fileID: 4322461455613290071}
+  - {fileID: 4234734510809010557}
+  - {fileID: 1486684993318348440}
+  - {fileID: 4918380822037690501}
+  - {fileID: 5206823426822582228}
+  - {fileID: 7297228893306846462}
+  - {fileID: 4947840496315877281}
+  - {fileID: 7526945902687473392}
+  - {fileID: 4487098926684827804}
+  - {fileID: 8665077118217414284}
+  - {fileID: 263950902209839044}
+  - {fileID: 7089630950440023216}
+  - {fileID: 4760400055686063837}
+  - {fileID: 119928638400725891}
+  - {fileID: 5039334878291504862}
+  - {fileID: 4325240704590455974}
+  - {fileID: 7579074380073143475}
+  - {fileID: 2189464884705493452}
+  - {fileID: 1329477600250148288}
+  - {fileID: 8264774188020923079}
+  - {fileID: 2185731257543737485}
+  - {fileID: 6666103208849358747}
+  m_BlendShapeWeights: []
+  m_RootBone: {fileID: 6927881932229819480}
+  m_AABB:
+    m_Center: {x: 0.12319058, y: -0.029201388, z: -0.0000011920929}
+    m_Extent: {x: 1.346246, y: 0.2963394, z: 0.870538}
+  m_DirtyAABB: 0
+--- !u!1 &7248333521458491312
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3924326223292892201}
+  - component: {fileID: 4255149889551949383}
+  - component: {fileID: 6409326000442130544}
+  m_Layer: 0
+  m_Name: Cylinder002
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3924326223292892201
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248333521458491312}
+  m_LocalRotation: {x: -0.59987426, y: 0.06353656, z: 0.08426169, w: 0.793104}
+  m_LocalPosition: {x: 0.4887676, y: 1.1416082, z: 0.22676261}
+  m_LocalScale: {x: 0.9999983, y: 0.99998164, z: 1.0000222}
+  m_Children: []
+  m_Father: {fileID: 8200273056684986796}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4255149889551949383
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248333521458491312}
+  m_Mesh: {fileID: -2128599272216676504, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+--- !u!23 &6409326000442130544
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7248333521458491312}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 670224309865224971, guid: 1dae6f5eed2b2ea40993aff6fb202089, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &7289742364881454265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8264774188020923079}
+  m_Layer: 0
+  m_Name: VikingAnkleBone003
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8264774188020923079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7289742364881454265}
+  m_LocalRotation: {x: 0.000000007450583, y: -0.000000072643154, z: -0.0000000149011585,
+    w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1329477600250148288}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7722554561335464618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 119928638400725891}
+  m_Layer: 0
+  m_Name: VikingRArmDigit42
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &119928638400725891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7722554561335464618}
+  m_LocalRotation: {x: -0.060118284, y: 0.049418673, z: 0.56135535, w: 0.8239076}
+  m_LocalPosition: {x: -0.03882391, y: -0.000000028610229, z: 0}
+  m_LocalScale: {x: 0.99997324, y: 1.0000443, z: 0.9999806}
+  m_Children:
+  - {fileID: 7579074380073143475}
+  m_Father: {fileID: 263950902209839044}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7772410570705439639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1329477600250148288}
+  m_Layer: 0
+  m_Name: VikingRLegAnkle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1329477600250148288
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7772410570705439639}
+  m_LocalRotation: {x: 0.04992807, y: -0.12801276, z: -0.70536673, w: 0.69539756}
+  m_LocalPosition: {x: -0.6174384, y: -0.000000007152557, z: -0.000000028610229}
+  m_LocalScale: {x: 0.99999934, y: 1.0000004, z: 0.99999994}
+  m_Children:
+  - {fileID: 6666103208849358747}
+  - {fileID: 8264774188020923079}
+  - {fileID: 2185731257543737485}
+  m_Father: {fileID: 2189464884705493452}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8033264370715408055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4234734510809010557}
+  m_Layer: 0
+  m_Name: VikingRArmDigit13
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4234734510809010557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8033264370715408055}
+  m_LocalRotation: {x: 0.18256886, y: 0.329202, z: 0.17238994, w: 0.91026175}
+  m_LocalPosition: {x: -0.038959466, y: 0, z: 0}
+  m_LocalScale: {x: 0.99993515, y: 1.000031, z: 1.000034}
+  m_Children: []
+  m_Father: {fileID: 1486684993318348440}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8060348910978405149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2189464884705493452}
+  m_Layer: 0
+  m_Name: VikingRLeg2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2189464884705493452
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8060348910978405149}
+  m_LocalRotation: {x: -0.0013005079, y: 0.024232615, z: 0.56986505, w: 0.82137996}
+  m_LocalPosition: {x: -0.5670856, y: 0, z: 0}
+  m_LocalScale: {x: 0.99999976, y: 0.99999994, z: 1.0000002}
+  m_Children:
+  - {fileID: 1329477600250148288}
+  m_Father: {fileID: 8386487993946701008}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8096468707237478580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3972881990187204665}
+  m_Layer: 0
+  m_Name: VikingLArmDigit22
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3972881990187204665
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8096468707237478580}
+  m_LocalRotation: {x: 0.0074628945, y: -0.143933, z: 0.26544473, w: 0.95329255}
+  m_LocalPosition: {x: -0.039684005, y: -0.000000028610229, z: 0}
+  m_LocalScale: {x: 0.9999641, y: 1.0000093, z: 1.0000263}
+  m_Children:
+  - {fileID: 3861362629228208744}
+  m_Father: {fileID: 503141991747901250}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8369613519910571065
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4918380822037690501}
+  m_Layer: 0
+  m_Name: VikingRArm2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4918380822037690501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8369613519910571065}
+  m_LocalRotation: {x: 0.016838731, y: -0.030290287, z: -0.47139633, w: 0.8812403}
+  m_LocalPosition: {x: -0.39335278, y: 0.000000014305114, z: 0}
+  m_LocalScale: {x: 0.9999902, y: 1.0000103, z: 0.9999999}
+  m_Children:
+  - {fileID: 4322461455613290071}
+  m_Father: {fileID: 8106558985398544377}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8454105967482863490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6927881932229819480}
+  m_Layer: 0
+  m_Name: VikingHub001
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6927881932229819480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8454105967482863490}
+  m_LocalRotation: {x: 0.3755954, y: -0.3633891, z: -0.6159268, w: 0.5895004}
+  m_LocalPosition: {x: -0.0122792525, y: 1.1039251, z: -0.09889827}
+  m_LocalScale: {x: 1, y: 1, z: 0.99999994}
+  m_Children:
+  - {fileID: 3217104073768231192}
+  - {fileID: 8386487993946701008}
+  - {fileID: 5494655720183407879}
+  m_Father: {fileID: 8200273056684986796}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8482269987926860006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6745311682327997302}
+  m_Layer: 0
+  m_Name: VikingLLegDigit11
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6745311682327997302
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8482269987926860006}
+  m_LocalRotation: {x: -0.0047816336, y: 0.014322547, z: -0.28024492, w: 0.9598098}
+  m_LocalPosition: {x: -0.25297117, y: 0.008121414, z: 0.00008900642}
+  m_LocalScale: {x: 0.9999936, y: 1.0000063, z: 0.9999994}
+  m_Children: []
+  m_Father: {fileID: 7439106344333562152}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8523970423133737520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3323713040019739860}
+  m_Layer: 0
+  m_Name: VikingLArmDigit33
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3323713040019739860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8523970423133737520}
+  m_LocalRotation: {x: -0.061551213, y: 0.011536415, z: 0.44801977, w: 0.89182776}
+  m_LocalPosition: {x: -0.05697152, y: 0, z: 0.00000022888183}
+  m_LocalScale: {x: 0.99994254, y: 1.0000366, z: 1.0000213}
+  m_Children: []
+  m_Father: {fileID: 3943061993375521041}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8554806763257439329
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4325240704590455974}
+  m_Layer: 0
+  m_Name: VikingRArmDigit33
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4325240704590455974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8554806763257439329}
+  m_LocalRotation: {x: 0.09996539, y: -0.06666968, z: 0.22105055, w: 0.96783197}
+  m_LocalPosition: {x: -0.05697155, y: 0.000000057220458, z: 0}
+  m_LocalScale: {x: 0.99996465, y: 1.0000112, z: 1.0000238}
+  m_Children: []
+  m_Father: {fileID: 4760400055686063837}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8664250613692371801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4247512118087334402}
+  m_Layer: 0
+  m_Name: VikingLArmDigit51
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4247512118087334402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8664250613692371801}
+  m_LocalRotation: {x: -0.0035722363, y: 0.016436249, z: 0.24586767, w: 0.96915746}
+  m_LocalPosition: {x: -0.07685809, y: -0.003705883, z: -0.06615349}
+  m_LocalScale: {x: 1.0000145, y: 1.0000044, z: 0.9999813}
+  m_Children:
+  - {fileID: 610399559899891533}
+  m_Father: {fileID: 9059861041265459666}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8697848086995026162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6714135691768021573}
+  m_Layer: 0
+  m_Name: VikingLArm1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6714135691768021573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8697848086995026162}
+  m_LocalRotation: {x: -0.17223203, y: 0.63232577, z: -0.030576743, w: 0.75469553}
+  m_LocalPosition: {x: -0.2045692, y: 0, z: -0.000000114440915}
+  m_LocalScale: {x: 1.0000038, y: 0.99999833, z: 1.0000004}
+  m_Children:
+  - {fileID: 5613813387590828551}
+  m_Father: {fileID: 7983158711719686942}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8944890033684738513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4322461455613290071}
+  m_Layer: 0
+  m_Name: VikingRArmPalm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4322461455613290071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8944890033684738513}
+  m_LocalRotation: {x: 0.5766809, y: -0.044950888, z: -0.12653863, w: 0.80585766}
+  m_LocalPosition: {x: -0.22971477, y: -0.000000114440915, z: 0}
+  m_LocalScale: {x: 0.9999798, y: 1.0000077, z: 1.0000124}
+  m_Children:
+  - {fileID: 5206823426822582228}
+  - {fileID: 4947840496315877281}
+  - {fileID: 7089630950440023216}
+  - {fileID: 263950902209839044}
+  - {fileID: 7526945902687473392}
+  - {fileID: 6974163437840252278}
+  m_Father: {fileID: 4918380822037690501}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9195560990439719616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8967880036943235331}
+  m_Layer: 0
+  m_Name: VikingSpine2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8967880036943235331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9195560990439719616}
+  m_LocalRotation: {x: 0.027165964, y: 0.015698232, z: -0.12041042, w: 0.99222827}
+  m_LocalPosition: {x: -0.2391117, y: 0, z: 0.0000000035762786}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1568517798539132953}
+  m_Father: {fileID: 5494655720183407879}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2716656272792993473
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 9059861041265459666}
+    m_Modifications:
+    - target: {fileID: -927199367670048503, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Name
+      value: hacha (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.08470948
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.020150302
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0051464504
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.19199467
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.15617666
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.11042285
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9625766
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -32.813
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -4.256
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 65.625
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.69599324
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.695991
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6959887
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 670224309865224971, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d029dc42cab0ff4428eee73833787673, type: 2}
+    - target: {fileID: -5178661895559278292, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2783131832183395012, guid: 4915d3d62d00f1e4089750865f8a0df4,
+        type: 3}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f, type: 3}
+--- !u!4 &6974163437424219611 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2716656272792993473}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2716656273191179884
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4322461455613290071}
+    m_Modifications:
+    - target: {fileID: -927199367670048503, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Name
+      value: hacha
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.09096948
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.012733452
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0060272883
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.9748602
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.081237175
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.1325424
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.15962651
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -28.664001
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 1.394
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 119.158005
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.69599324
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.69599074
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6959887
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 670224309865224971, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+    - target: {fileID: -1504981713932161579, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d029dc42cab0ff4428eee73833787673, type: 2}
+    - target: {fileID: -5178661895559278292, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2783131832183395012, guid: 4915d3d62d00f1e4089750865f8a0df4,
+        type: 3}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f, type: 3}
+--- !u!4 &6974163437840252278 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 9ffb1df7b9b16214aae0fe6af0a38c6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2716656273191179884}
+  m_PrefabAsset: {fileID: 0}

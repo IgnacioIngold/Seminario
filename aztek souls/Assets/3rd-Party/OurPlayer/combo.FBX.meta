@@ -86,15 +86,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.91846865
-        functionName: StepPerform
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 1
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -131,14 +123,6 @@ ModelImporter:
           type: 3}
         floatParameter: 0
         intParameter: 0
-        messageOptions: 0
-      - time: 0.9964316
-        functionName: StepPerform
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 1
         messageOptions: 0
       transformMask: []
       maskType: 3
@@ -198,14 +182,6 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0
-        functionName: StepPerform
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 1
-        messageOptions: 0
       - time: 0.022020502
         functionName: EnableDamage
         data: 
@@ -258,14 +234,7 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 1
-        functionName: EndAnimation
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
@@ -350,14 +319,6 @@ ModelImporter:
       events:
       - time: 0
         functionName: AllowGetInput
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.9227273
-        functionName: EndAnimation
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}
@@ -464,14 +425,6 @@ ModelImporter:
         messageOptions: 0
       - time: 1
         functionName: DenyGetInput
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 1
-        functionName: EndAnimation
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d287791b7169a374eb229829ad4bcb2d,
           type: 3}

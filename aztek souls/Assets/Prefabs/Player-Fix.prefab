@@ -375,11 +375,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7163442870093080226}
     m_Modifications:
-    - target: {fileID: 1939761766653161042, guid: e47f6dc8b6030614c80d361c9c6a03d7,
-        type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 3220129620853005377, guid: e47f6dc8b6030614c80d361c9c6a03d7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -450,6 +445,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.128812
       objectReference: {fileID: 0}
+    - target: {fileID: 1939761766653161042, guid: e47f6dc8b6030614c80d361c9c6a03d7,
+        type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47f6dc8b6030614c80d361c9c6a03d7, type: 3}
 --- !u!4 &1341543549027531332 stripped
@@ -478,7 +478,7 @@ PrefabInstance:
     - target: {fileID: 2684549427181809210, guid: 819ad0eb9e0cc9c4cb502b407f055889,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.021
+      value: 0.27
       objectReference: {fileID: 0}
     - target: {fileID: 2684549427181809210, guid: 819ad0eb9e0cc9c4cb502b407f055889,
         type: 3}
