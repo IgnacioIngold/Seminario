@@ -4,9 +4,11 @@ Shader "Blood / flow blood"
 {
 	Properties
 	{
+		_Cutoff( "Mask Clip Value", Float ) = 0.5
 		_Blood_flow_sanja_AlbedoTransparency("Blood_flow_sanja_AlbedoTransparency", 2D) = "white" {}
 		_Blood_flow_sanja_MetallicSmoothness("Blood_flow_sanja_MetallicSmoothness", 2D) = "white" {}
 		_Blood_flow_sanja_Normal("Blood_flow_sanja_Normal", 2D) = "bump" {}
+		_Blood_flow_sanja_Opacity("Blood_flow_sanja_Opacity", 2D) = "white" {}
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 		[HideInInspector] __dirty( "", Int ) = 1
 	}
@@ -27,6 +29,9 @@ Shader "Blood / flow blood"
 		uniform sampler2D _Blood_flow_sanja_Normal;
 		uniform sampler2D _Blood_flow_sanja_AlbedoTransparency;
 		uniform sampler2D _Blood_flow_sanja_MetallicSmoothness;
+		uniform sampler2D _Blood_flow_sanja_Opacity;
+		uniform float4 _Blood_flow_sanja_Opacity_ST;
+		uniform float _Cutoff = 0.5;
 
 		void surf( Input i , inout SurfaceOutputStandard o )
 		{
@@ -35,6 +40,8 @@ Shader "Blood / flow blood"
 			o.Albedo = tex2D( _Blood_flow_sanja_AlbedoTransparency, panner5 ).rgb;
 			o.Metallic = tex2D( _Blood_flow_sanja_MetallicSmoothness, panner5 ).r;
 			o.Alpha = 1;
+			float2 uv_Blood_flow_sanja_Opacity = i.uv_texcoord * _Blood_flow_sanja_Opacity_ST.xy + _Blood_flow_sanja_Opacity_ST.zw;
+			clip( tex2D( _Blood_flow_sanja_Opacity, uv_Blood_flow_sanja_Opacity ).r - _Cutoff );
 		}
 
 		ENDCG
@@ -44,7 +51,7 @@ Shader "Blood / flow blood"
 }
 /*ASEBEGIN
 Version=16700
-573;489;984;512;848.54;-87.46576;1;True;False
+0;728;1529;273;1737.968;-267.2318;1.973638;False;False
 Node;AmplifyShaderEditor.TextureCoordinatesNode;7;-2033.066,-296.737;Float;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.PannerNode;5;-1504.962,-176.9518;Float;False;3;0;FLOAT2;0,0;False;2;FLOAT2;0,0.05;False;1;FLOAT;1;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.SamplerNode;4;-483.66,636.0889;Float;True;Property;_Blood_flow_sanja_Opacity;Blood_flow_sanja_Opacity;4;0;Create;True;0;0;False;0;e69bab758db746241ac5765b74702a65;e69bab758db746241ac5765b74702a65;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
@@ -59,5 +66,6 @@ WireConnection;2;1;5;0
 WireConnection;0;0;1;0
 WireConnection;0;1;3;0
 WireConnection;0;3;2;0
+WireConnection;0;10;4;0
 ASEEND*/
-//CHKSM=52AA2BDD41CD0D9F5373C43C058633A422AE085C
+//CHKSM=376CE449A5AF455D76831AABFA8B2F3F80840876
