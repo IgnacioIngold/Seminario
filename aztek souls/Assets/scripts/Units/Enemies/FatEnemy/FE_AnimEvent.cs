@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CombatAnimationState
-{
-    StartUp,
-    Active,
-    Recover,
-    inactive
-}
+//public enum CombatAnimationState
+//{
+//    StartUp,
+//    Active,
+//    Recover,
+//    inactive
+//}
 
 public class FE_AnimEvent : MonoBehaviour
 {
     public FatEnemy Owner;
     public Collider DamageCollider;
-    CombatAnimationState currentState = CombatAnimationState.inactive;
+    //CombatAnimationState currentState = CombatAnimationState.inactive;
 
     private void Awake()
     {
@@ -34,19 +34,19 @@ public class FE_AnimEvent : MonoBehaviour
     public void StartUp()
     {
         //Esto hay que ver que pasa xD.
-        currentState = CombatAnimationState.StartUp;
+        //currentState = CombatAnimationState.StartUp;
     }
 
     public void Active()
     {
-        currentState = CombatAnimationState.Active;
+        //currentState = CombatAnimationState.Active;
         DamageCollider.enabled = true;
         Owner.LookTowardsPlayer = false;
     }
 
     public void Recover()
     {
-        currentState = CombatAnimationState.Recover;
+        //currentState = CombatAnimationState.Recover;
         DamageCollider.enabled = false;
     }
 

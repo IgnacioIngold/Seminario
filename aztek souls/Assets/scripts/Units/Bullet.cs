@@ -4,7 +4,7 @@ using Core.Entities;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] GameObject _root;
+    [SerializeField] GameObject _root = null;
 
     [Header("Collision Layers")]
     public int WorldCollisionLayer;

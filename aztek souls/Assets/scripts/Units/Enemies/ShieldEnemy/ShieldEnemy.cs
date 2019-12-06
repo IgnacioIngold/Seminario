@@ -43,7 +43,7 @@ public class ShieldEnemy : BaseUnit
     public float ParryCoolDown = 3f;
     private bool _canParry = true;
     public int FreeHits = 2;
-    [SerializeField] int recievedHits = 0;
+    //[SerializeField] int recievedHits = 0;
 
     [Header("Blocking")]
     public float BlockRange = 3f;
@@ -66,11 +66,11 @@ public class ShieldEnemy : BaseUnit
     GenericFSM<ShieldEnemyStates> _sm;
     private float _alertedTimeRemaining = 0f;
     private float _originalRotLerpSpeed = 0f;
-    private bool _attacking;
+    //private bool _attacking;
     private float ThinkTime = 0;
     private float remainingThinkTime = 0;
     private bool _blocking = false;
-    private bool _parrying;
+    //private bool _parrying;
 
 #if(UNITY_EDITOR)
     [SerializeField] ShieldEnemyStates current;
@@ -339,7 +339,7 @@ public class ShieldEnemy : BaseUnit
             _originalRotLerpSpeed = _rotationLerpSpeed;
             _rotationLerpSpeed = BlockLerpSpeed;
             _blocking = true;
-            recievedHits = 0;
+            //recievedHits = 0;
 
             FRitmo.SetCurrentVulnerabilityCombo(1);
             FRitmo.ShowVulnerability();
@@ -378,18 +378,18 @@ public class ShieldEnemy : BaseUnit
 
         parry.OnEnter += (previousState) =>
         {
-            _parrying = true;
-            recievedHits = 0;
+            //_parrying = true;
+            //recievedHits = 0;
 
             anims.SetTrigger("Parrying");
             ShieldSparks.Play();
         };
-        parry.OnExit += (nextState) => { _parrying = false; };
+        //parry.OnExit += (nextState) => { _parrying = false; };
 
         pursue.OnEnter += (previousState) =>
         {
             anims.SetFloat("Moving", 1f);
-            recievedHits = 0;
+            //recievedHits = 0;
         };
         pursue.OnUpdate += () =>
         {
@@ -420,16 +420,16 @@ public class ShieldEnemy : BaseUnit
 
         attack.OnEnter += (previousState) =>
         {
-            _attacking = true;
+            //_attacking = true;
             agent.isStopped = true;
             rb.velocity = Vector3.zero;
             anims.SetInteger("Attack", 1);
-            recievedHits = 0;
+            //recievedHits = 0;
         };
         //attack.OnUpdate += () => { };
         attack.OnExit += (nextState) =>
         {
-            _attacking = false;
+            //_attacking = false;
             agent.isStopped = false;
         };
 
