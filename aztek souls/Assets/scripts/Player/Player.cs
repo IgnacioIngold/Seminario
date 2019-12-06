@@ -60,25 +60,25 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     public event Action OnFeastBlood = delegate { };
     public event Action OnConsumeBlood = delegate { };
     public event Action OnHealthHitMax = delegate { };
-    //public event Action OnPositionIsUpdated = delegate { }; 
 
     #endregion
 
     #region Variables de Inspector.
 
-    public RuntimeAnimatorController controllerA;           // Animator del Arma principal
-    public RuntimeAnimatorController controllerB;           // Animator del Arma secundaria.
-    public GameObject[] WeaponDisplay;                      // GameObjects de las armas.
-    public StatusBars _myBars;                              // Display de la vida y la estamina del jugador.
-    public LevelUpPanel levelUpPanel;
-    public Transform AxisOrientation;                       // Transform que determina la orientación del jugador.
-    public LayerMask floor;                                 // Máscara de collisiones para el piso.
-    public GameObject OnHitParticle;                        // Particula a instanciar al recibir daño.
-    public ParticleSystem RollParticle;                     // Partícula que emite cuando rollea.
-    public ParticleSystem FeastBlood;                       // Partícula que emite cuando recibe sangre.
-    public PlayableDirector StaminaEffect;                  // Efecto que se reproduce al reducirse la estamina por debajo de cierto punto.
-    public PlayableDirector CameraShake;                    // Efecto "Sacudón" que se reproduce al recibir daño.
-    public GameObject BloodConsume;                         // Efecto curacion.
+    [SerializeField] RuntimeAnimatorController controllerA;                // Animator del Arma principal
+    [SerializeField] RuntimeAnimatorController controllerB;                // Animator del Arma secundaria.
+    [SerializeField] GameObject[] WeaponDisplay;                           // GameObjects de las armas.
+    [SerializeField] StatusBars _myBars;                                   // Display de la vida y la estamina del jugador.
+    [SerializeField] LevelUpPanel levelUpPanel;                            // Panel que utilizamos para subir de nivel.
+    [SerializeField] Transform AxisOrientation;                            // Transform que determina la orientación del jugador.
+    [SerializeField] LayerMask floor;                                      // Máscara de collisiones para el piso.
+    [SerializeField] GameObject OnHitParticle;                             // Particula a instanciar al recibir daño.
+    [SerializeField] ParticleSystem RollParticle;                          // Partícula que emite cuando rollea.
+    [SerializeField] ParticleSystem.EmissionModule rollparticleEmission;   // Módulo de Emisión de la particula de roll.
+    [SerializeField] ParticleSystem FeastBlood;                            // Partícula que emite cuando recibe sangre.
+    [SerializeField] PlayableDirector StaminaEffect;                       // Efecto que se reproduce al reducirse la estamina por debajo de cierto punto.
+    [SerializeField] GameObject BloodConsume;                              // Efecto curacion.
+    public PlayableDirector CameraShake;                                   // Efecto "Sacudón" que se reproduce al recibir daño.
     #endregion
 
     [Header("Main Stats")] //Estados Principales.
@@ -119,7 +119,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         get { return BaseHP + (myStats.Vitalidad * 5); }
     }
     float _hp = 100f;                                        // PRIVADO: valor actual de la vida.
-    bool _canHeal = false;
     #endregion
 
     #region Estamina.
@@ -169,15 +168,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
     public float runSpeed = 20f;                             // Velocidad de movimiento del jugador al correr.
     public float runCost = 20;                               // Costo por segundo de la acción correr.
-    bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente. 
-    #endregion
-
-    #region Estados Alterados.
-
-    bool _invulnerable = false;                              // Si el jugador puede recibir daño.
-    bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
-    bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente. 
-
     #endregion
 
     #region Roll
@@ -188,9 +178,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     public float rollDuration = 0.8f;                        // Duración del Roll.
     public float rollCost = 20f;                             // Costo del roll por Acción.
     public float RollCoolDown = 0.1f;                        // Cooldown del roll despues de ser Ejecutado.
-    //bool _canRoll = true;                                    // Si puedo rollear.
-    bool _rolling = false;                                   // Si estoy rolleando actualmente.
-    bool _listenToInput = true;
 
     #endregion
 
@@ -227,9 +214,8 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     public bool interruptAllowed = true;
     public float CombatRotationSpeed = 0.1f;
     public float ShockDuration = 2f;
-    bool _attacking = false;                                 // Si estoy atacando actualmente.
-    bool _shoked;
-    bool breakDefence = false; 
+    bool breakDefence = false;
+    Vector3 _AttackOrientation = Vector3.zero;
 
     #endregion
 
@@ -247,12 +233,30 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
     #endregion
 
+
+    [Header("Estado Actual")]
+    public bool _listenToInput = true;
+    public bool _isInStair = false;
+
+    [SerializeField] bool _invulnerable = false;                              // Si el jugador puede recibir daño.
+    [SerializeField] bool _clamped = false;                                   // PRIVADO: si el jugador puede moverse.
+    [SerializeField] bool _moving = false;                                    // PRIVADO: Si el jugador se está moviendo actualmente.
+    [SerializeField] bool _running = false;                                   // PRIVADO: si el jugador esta corriendo actualmente. 
+    [SerializeField] bool _canHeal = false;
+    [SerializeField] bool _rolling = false;                                   // Si estoy rolleando actualmente.
+    [SerializeField] bool _AttackStep = false;                                // si estoy dando el paso
+    [SerializeField] bool _attacking = false;                                 // Si estoy atacando actualmente.
+    [SerializeField] bool _shoked;
+    [SerializeField] float speedR;
+
     Vector3 moveDiR;
-    float speedR;
+    float _forceStep;                                                         //fuerza y direccion del movimiento
+    float _timeStep;
 
     //=============================================== DEBBUG ==================================================================
 
 #if UNITY_EDITOR
+
     [Header("Debugg Player")]
     [SerializeField] bool debugRanges = false;
 
@@ -309,7 +313,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
                 //FeedBack de Daño.
                 _anims.SetTrigger("hurted");
                 _listenToInput = false;
-                CurrentWeapon.InterruptAttack();
                 _attacking = false;
                 _rb.velocity /= 3;
 
@@ -362,7 +365,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         if (result.HitBlocked)
         {
             print("Ataque Bloqueado.");
-            CurrentWeapon.InterruptAttack();
             StartCoroutine(Shock());
         }
         else if (result.HitConnected && CurrentWeapon != null && CurrentWeapon.CurrentAttack != null)
@@ -375,7 +377,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
             CurrentWeapon.ConfirmHit();
             OnAttackLanded();
         }
-
     }
 
     /// <summary>
@@ -397,6 +398,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     {
         _rb = GetComponent<Rigidbody>();
         _anims = GetComponentInChildren<Animator>();
+        rollparticleEmission = RollParticle.emission;
         AxisOrientation = Camera.main.GetComponentInParent<MainCamBehaviour>().getPivotPosition();
 
         Health = BaseHP + (myStats.Vitalidad * 5);
@@ -418,36 +420,36 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         #region Combate
 
         Func<bool> canContinueAttack = () => { return Stamina > 0; };
-        Action DuringAttack = () =>
-        {
-            float AxisX = Input.GetAxis("Horizontal");
-            float AxisY = Input.GetAxis("Vertical");
+        //Action DuringAttack = () =>
+        //{
+        //    float AxisX = Input.GetAxis("Horizontal");
+        //    float AxisY = Input.GetAxis("Vertical");
 
-            Vector3 orientation;
+        //    Vector3 orientation;
 
-            if (AxisX == 0 && AxisY == 0)
-                orientation = AxisOrientation.forward;
-            else
-            {
-                orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+        //    if (AxisX == 0 && AxisY == 0)
+        //        orientation = AxisOrientation.forward;
+        //    else
+        //    {
+        //        orientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
 
-                _anims.SetFloat("VelX", AxisY);
-                _anims.SetFloat("VelY", 0);
+        //        _anims.SetFloat("VelX", AxisY);
+        //        _anims.SetFloat("VelY", 0);
 
-                //Moverme ligeramente.
-                Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
-                _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
-            }
+        //        //Moverme ligeramente.
+        //        Vector3 moveDir = orientation.normalized * (walkSpeed / 3);
+        //        _rb.velocity = new Vector3(moveDir.x, _rb.velocity.y, moveDir.z);
+        //    }
 
-            transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
+        //    transform.forward = Vector3.Slerp(transform.forward, orientation, CombatRotationSpeed);
 
-            if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
-            {
-                _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
-                CurrentWeapon.InterruptAttack();
-                StartCoroutine(Roll());
-            }
-        };
+        //    if (interruptAllowed && Stamina > rollCost && Input.GetButtonDown("Roll"))
+        //    {
+        //        _rollDir = (AxisOrientation.forward * AxisY + AxisOrientation.right * AxisX).normalized;
+        //        CurrentWeapon.InterruptAttack();
+        //        StartCoroutine(Roll());
+        //    }
+        //};
         Action BegginChain = () =>
         {
             _rolling = false;
@@ -471,7 +473,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
         CurrentWeapon = new Weapon(_anims);
         CurrentWeapon.canContinueAttack += canContinueAttack;
-        CurrentWeapon.DuringAttack += DuringAttack;
+        //CurrentWeapon.DuringAttack += DuringAttack;
         CurrentWeapon.OnBegginChain += BegginChain;
         CurrentWeapon.OnEndChain += EndChain;
 
@@ -479,28 +481,28 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
         #region Light
 
-        Attack L1 = new Attack() { ID = 1, attackType = Inputs.light, Name = "Light1", Cost = 15f, Damage = 20f, AttackDuration = 1.500f};
+        Attack L1 = new Attack() { ID = 1, attackType = Inputs.light, Name = "Light1", Cost = 15f, Damage = 20f};
         L1.OnStart += () =>
         {
             _anims.SetInteger("combat", 1);
             Stamina -= L1.Cost;
         };
 
-        Attack L2 = new Attack() { ID = 3, attackType = Inputs.light,Name = "Light2", Cost = 15f, Damage = 20f, AttackDuration = 1.600f};
+        Attack L2 = new Attack() { ID = 3, attackType = Inputs.light,Name = "Light2", Cost = 15f, Damage = 20f};
         L2.OnStart += () =>
         {
             _anims.SetInteger("combat", 3);
             Stamina -= L2.Cost;
         };
 
-        Attack L3 = new Attack() { ID = 7, attackType = Inputs.light, Name = "Light3", Cost = 15f, Damage = 20f, AttackDuration = 1.767f};
+        Attack L3 = new Attack() { ID = 7, attackType = Inputs.light, Name = "Light3", Cost = 15f, Damage = 20f};
         L3.OnStart += () =>
         {
             _anims.SetInteger("combat", 7);
             Stamina -= L3.Cost;
         };
 
-        Attack L4 = new Attack() { ID = 5, attackType = Inputs.light, Name = "Light4", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
+        Attack L4 = new Attack() { ID = 5, attackType = Inputs.light, Name = "Light4", Cost = 10f, Damage = 15f};
         L4.OnStart += () =>
         {
             Stamina -= L4.Cost;
@@ -508,7 +510,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
             //print("Ejecutando Ataque:" + quick1.IDName);
         };
 
-        Attack L5 = new Attack() { ID = 9, attackType = Inputs.light, Name = "Light5", Cost = 10f, Damage = 15f, AttackDuration = 1.067f};
+        Attack L5 = new Attack() { ID = 9, attackType = Inputs.light, Name = "Light5", Cost = 10f, Damage = 15f};
         L5.OnStart += () =>
         {
             Stamina -= L5.Cost;
@@ -520,7 +522,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
         #region Strong
 
-        Attack S1 = new Attack() {ID = 2, attackType = Inputs.strong, Name = "Strong1", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
+        Attack S1 = new Attack() {ID = 2, attackType = Inputs.strong, Name = "Strong1", Cost = 25f, Damage = 30f};
         S1.OnStart += () =>
         {
             _anims.SetInteger("combat", 2);
@@ -530,7 +532,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         };
         S1.OnEnd += () => { breakDefence = false; };
 
-        Attack S2 = new Attack() { ID = 4, attackType = Inputs.strong, Name = "Strong2", Cost = 25f, Damage = 30f, AttackDuration = 1.633f};
+        Attack S2 = new Attack() { ID = 4, attackType = Inputs.strong, Name = "Strong2", Cost = 25f, Damage = 30f};
         S2.OnStart += () =>
         {
             _anims.SetInteger("combat", 4);
@@ -540,7 +542,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         };
         S2.OnEnd += () => { breakDefence = false; };
 
-        Attack S3 = new Attack() { ID = 6, attackType = Inputs.strong, Name = "Strong3", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
+        Attack S3 = new Attack() { ID = 6, attackType = Inputs.strong, Name = "Strong3", Cost = 30f, Damage = 30f};
         S3.OnStart += () =>
         {
             _anims.SetInteger("combat", 6);
@@ -550,7 +552,7 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         };
         S3.OnEnd += () => { breakDefence = false; };
 
-        Attack S4 = new Attack() { ID = 8, attackType = Inputs.strong, Name = "Strong4", Cost = 30f, Damage = 30f, AttackDuration = 2.333f};
+        Attack S4 = new Attack() { ID = 8, attackType = Inputs.strong, Name = "Strong4", Cost = 30f, Damage = 30f};
         S4.OnStart += () =>
         {
             Stamina -= S4.Cost;
@@ -600,29 +602,30 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
 
         #region Arma2
 
-        var Weapon2 = new Weapon(_anims);
-        Weapon2.canContinueAttack = canContinueAttack;
-        Weapon2.DuringAttack += DuringAttack;
+        var Weapon2 = new Weapon(_anims)
+        {
+            canContinueAttack = canContinueAttack
+        };
         Weapon2.OnBegginChain += BegginChain;
         Weapon2.OnEndChain += EndChain;
 
         #region Ataques Livianos.
 
-        Attack light1 = new Attack() { Name = "Light1", Cost = 20f, Damage = 25f, AttackDuration = 2.733f };
+        Attack light1 = new Attack() { Name = "Light1", attackType = Inputs.light, Cost = 20f, Damage = 25f};
         light1.OnStart += () =>
         {
             _anims.SetInteger("combat", 10); // Animación.
             Stamina -= light1.Cost;
         };
 
-        Attack light2 = new Attack() { Name = "Light2", Cost = 25f, Damage = 30f, AttackDuration = 0.863f };
+        Attack light2 = new Attack() { Name = "Light2", attackType = Inputs.light, Cost = 25f, Damage = 30f};
         light2.OnStart += () =>
         {
             _anims.SetInteger("combat", 11);
             Stamina -= light2.Cost;
         };
 
-        Attack light3 = new Attack() { Name = "Light3", Cost = 30f, Damage = 40f, AttackDuration = 1.533f };
+        Attack light3 = new Attack() { Name = "Light3", attackType = Inputs.light, Cost = 30f, Damage = 40f};
         light3.OnStart += () =>
         {
             _anims.SetInteger("combat", 12); //Animación.
@@ -639,13 +642,13 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         #endregion
                 
         weapons.Add(Weapon2);
-        Attack Heavy1 = new Attack() { Name = "Heavy1", Cost = 55f, Damage = 50f, AttackDuration = 3f };
+        Attack Heavy1 = new Attack() { Name = "Heavy1", attackType = Inputs.strong, Cost = 55f, Damage = 50f};
         Heavy1.OnStart += () =>
         {
             _anims.SetInteger("combat", 13); // Animación.
             Stamina -= Heavy1.Cost;
         };
-        Attack Light4 = new Attack() { Name = "Light4", Cost = 25f, Damage = 15f, AttackDuration = 1.384f };
+        Attack Light4 = new Attack() { Name = "Heavy4", attackType = Inputs.strong, Cost = 25f, Damage = 15f};
         Light4.OnStart += () =>
         {
             _anims.SetInteger("combat", 14); // Animación.
@@ -669,11 +672,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
             StopCoroutine("StaminaRecoverDelay");
             StartCoroutine(StaminaRecoverDelay(StRecoverDelay));
         };
-    }
-    void Start()
-    {
-        //Esto es para Updatear la cámara apenas comienza el juego.
-        //OnPositionIsUpdated();
     }
     void Update()
     {
@@ -761,7 +759,11 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
                     _moving = false;
             }
 
-            if (_rolling) transform.forward = _rollDir;
+            if (_rolling)
+            {
+                rollparticleEmission.enabled = true;
+                transform.forward = _rollDir;
+            }
             else if (!_rolling && Stamina > rollCost && _moving && Input.GetButtonDown("Roll"))
             {
                 //Calculamos la dirección y el punto final.
@@ -774,8 +776,10 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
                 return;
             }
 
-            if (!_attacking )
+            if (!_attacking && !_rolling && Stamina > 0)
             {
+                _AttackOrientation = (AxisOrientation.forward * AxisY) + (AxisOrientation.right * AxisX);
+
                 if (Input.GetButtonDown("LighAttack"))
                     Attack(Inputs.light);
                 else
@@ -787,13 +791,15 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         if (_attacking)
         {
             _recoverStamina = false;
-            CurrentWeapon.Update();
 
             if (Input.GetButtonDown("LighAttack"))
                 CurrentWeapon.FeedInput(Inputs.light);
             else if (Input.GetButtonDown("StrongAttack"))
                 CurrentWeapon.FeedInput(Inputs.strong);
         }
+
+        if (!_rolling)
+            rollparticleEmission.enabled = false;
 
         if (!_rolling && !_moving && !_attacking)
         {
@@ -819,10 +825,26 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     {
         if (!IsAlive) return;
         if (!_clamped && _moving) Move();
+        if (_AttackStep)
+        {
+            _rb.AddForce(transform.forward * _forceStep, ForceMode.Impulse);
+            _timeStep -= Time.deltaTime;
+            if (_timeStep <= 0)
+            {
+                _AttackStep = false;
+                _rb.velocity = Vector3.zero;
+
+            }
+        }
     }
 
     //============================================= CUSTOM FUNCS ==============================================================
 
+    public void EndAttackAnimation()
+    {
+        print("Termino la animación de Combate");
+        CurrentWeapon.EndCurrentAttack();
+    }
     /// <summary>
     /// Permite cambiar de Arma
     /// </summary>
@@ -915,33 +937,22 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
     }
     public void Attack(Inputs input)
     {
-        //On Begin Combat
-        _attacking = true;
+        if (!_attacking)
+        {
+            //On Begin Combat
+            _attacking = true;
 
-        //Bloqueo las animaciones anteriores.
-        //StopAllCoroutines();
-        _anims.SetBool("Running", false);
-        _anims.SetFloat("VelY", 0);
-        _anims.SetFloat("VelX", 0);
+            //Bloqueo las animaciones anteriores.
+            StopAllCoroutines();
+            _anims.SetBool("Running", false);
+            _anims.SetFloat("VelY", 0);
+            _anims.SetFloat("VelX", 0);
 
-        _moving = false;
-        _clamped = true;
-        //Debug.LogWarning("INICIO COMBATE");
+            _moving = false;
+            _clamped = true;
 
-        CurrentWeapon.BegginCombo(input);
-    }
-    public void StaminaEffecPlay()
-    {
-        StaminaEffect.Play();
-    }
-    public void FeastBloodEfect()
-    {
-        FeastBlood.Play();
-    }
-    public IEnumerable<BaseUnit> GetClosestEnemies()
-    {
-        return FindObjectsOfType<BaseUnit>()
-               .Where(u => Vector3.Distance(u.transform.position, transform.position) <= AttackRange);
+            CurrentWeapon.BegginCombo(input);
+        }
     }
     void FeedInputToClosestEnemies(Inputs input)
     {
@@ -954,6 +965,11 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
                 Enemy.FeedPressedInput(input);
         }
         else print("No hay enemigos cercanos");
+    }
+    public IEnumerable<BaseUnit> GetClosestEnemies()
+    {
+        return FindObjectsOfType<BaseUnit>()
+               .Where(u => Vector3.Distance(u.transform.position, transform.position) <= AttackRange);
     }
 
     //============================================= CORRUTINES ================================================================
@@ -989,8 +1005,6 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         _clamped = true;
         _rolling = true;
         _recoverStamina = false;
-        //_running = false;
-        //_anims.SetBool("Running", false);
         _invulnerable = true;
 
         //FeedBack
@@ -1101,5 +1115,20 @@ public class Player : MonoBehaviour, IDamageable<HitData, HitResult>, IKilleable
         }
     }
 
-    //=========================================================================================================================
+    //========================================== FEEDBACKS ====================================================================
+
+    public void StaminaEffecPlay()
+    {
+        StaminaEffect.Play();
+    }
+    public void FeastBloodEfect()
+    {
+        FeastBlood.Play();
+    }
+    public void Step(float StepForce, float Steptime)
+    {
+        _forceStep = StepForce;
+        _timeStep = Steptime;
+        _AttackStep = true;
+    }
 }

@@ -27,21 +27,19 @@ public class Weapon
     public event Action<Inputs> OnInputConfirmed = delegate { };
     public event Action DuringAttack = delegate { };
 
-    public bool LastChainAttack = false;
-
-    bool canGetInput = true;
-    float currentDuration = 0f;
+    bool _inputLock = true;                      //El arma actual puede recibir input.
+    bool _inputConfirm = false;                  // El arma actual recibió un input correcto.
 
     public Weapon(Animator anims)
     {
         _anims = anims;
 
-        _anims = anims;
-
-        entryPoints = new Dictionary<Inputs, Attack>();
-        entryPoints.Add(Inputs.light, null);
-        entryPoints.Add(Inputs.strong, null);
-        entryPoints.Add(Inputs.none, null);
+        entryPoints = new Dictionary<Inputs, Attack>
+        {
+            { Inputs.light, null },
+            { Inputs.strong, null },
+            { Inputs.none, null }
+        };
     }
     public Weapon AddEntryPoint(Inputs type, Attack attack)
     {
@@ -58,9 +56,9 @@ public class Weapon
 
     public void BegginCombo(Inputs beggining)
     {
+        //Debug.LogWarning("============ INICIO DEL COMBO ============");
         if (beggining == Inputs.none) return;
 
-        OnInputConfirmed(beggining);
         CurrentAttack = entryPoints[beggining];
         OnBegginChain();
         StartAttack();
@@ -68,63 +66,53 @@ public class Weapon
 
     void StartAttack()
     {
-        canGetInput = false;
-        currentDuration = CurrentAttack.AttackDuration;
+        _inputLock = false;
+        _inputConfirm = false;
+
         CurrentAttack.StartAttack();
     }
-    public void Update()
+    public void EndCurrentAttack()
     {
-        DuringAttack();
-
-        currentDuration -= Time.deltaTime;
-
-        if (currentDuration <= 0)
-        {
-            if (CurrentAttack != null) CurrentAttack.EndAttack();
+        if (_inputConfirm)
+            StartAttack();
+        else
             EndChainCombo();
-        }
     }
-
     void EndChainCombo()
     {
         OnEndChain();
-        //CurrentAttack = null;
+        CurrentAttack = null;
+        //Debug.LogWarning("============ FINAL DEL COMBO ============");
     }
-    public void CanGetInput(bool enabled)
+    public void CanGetInput()
     {
-        if (enabled && CurrentAttack != null)
-        {
-            canGetInput = true;
-            CurrentAttack.EnableInput();
-        }
-        else
-            canGetInput = false;
+        _inputLock = true;
+        if (_inputLock) CurrentAttack.EnableInput();
     }
     public void ConfirmHit()
     {
         CurrentAttack.Hit();
     }
 
-    public void InterruptAttack()
-    {
-        //MonoBehaviour.print("Ataque Interrumpido.");
-        OnEndChain();
-    }
+    //public void InterruptAttack()
+    //{
+    //    //MonoBehaviour.print("Ataque Interrumpido.");
+    //    OnEndChain();
+    //}
     public void FeedInput(Inputs input)
     {
-        if (canContinueAttack() && canGetInput)
+        if (CurrentAttack.isChainFinale || !_inputLock) return;
+
+        if (_inputLock)
         {
-            Attack posible = CurrentAttack.getConnectedAttack(input);
+            Attack posible = CurrentAttack.GetConnectedAttack(input);
 
             if (posible != null)
             {
-                //MonoBehaviour.print("Input CONFIRMADO.");
-                OnInputConfirmed(input);
-
-                CurrentAttack.EndAttack();
+                _anims.SetInteger("combat", posible.ID);
                 CurrentAttack = posible;
-                currentDuration = CurrentAttack.AttackDuration;
-                StartAttack();
+                _inputConfirm = true;
+                _inputLock = false;
             }
         }
     }

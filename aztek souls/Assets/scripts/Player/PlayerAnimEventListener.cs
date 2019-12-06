@@ -12,21 +12,37 @@ public class PlayerAnimEventListener : MonoBehaviour
     public ParticleSystem tail;
     Animator anim;
     audioManager _AM;
-   
 
+    public List<ParticleSystem> MyParticles = new List<ParticleSystem>();
+
+    public float firstTime;
+    public float SecondTime;
+    public float FirstForce;
+    public float SecondForce;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         _AM = GetComponent<audioManager>();
-
-
     }
 
     //Eventos de Animación.
 
     //Globales.
-
+    void StepPerform(int index)
+    {
+        if (index == 1)
+            player.Step(FirstForce, firstTime);
+        else
+            player.Step(SecondForce, SecondTime);
+    }
+    void DisableInputs(int input)
+    {
+        if (input == 1)
+            player._listenToInput = true;
+        else
+            player._listenToInput = false;
+    }
     void PlaySound(String source)
     {
         _AM.Play(source);
@@ -55,14 +71,18 @@ public class PlayerAnimEventListener : MonoBehaviour
 
     private void AllowGetInput()
     {
-        player.CurrentWeapon.CanGetInput(true);
+        player.CurrentWeapon.CanGetInput();
         player.interruptAllowed = true;
     }
     private void DenyGetInput()
     {
-        player.CurrentWeapon.CanGetInput(false);
-
+        //player.CurrentWeapon.CanGetInput();
         //if (marker.activeInHierarchy) marker.SetActive(false);
+    }
+    public void EndAnimation()
+    {
+        print("PlayerAnimEventListener: CHUPAME LA PIJA LCDTM");
+        player.EndAttackAnimation();
     }
 
     public void GetHurtEvent()
@@ -75,5 +95,8 @@ public class PlayerAnimEventListener : MonoBehaviour
             tail.Stop();
         tail.Play();
     }
-   
+    public void PlayMyParticles(int Index)
+    {
+        MyParticles[Index].Play();
+    }
 }
