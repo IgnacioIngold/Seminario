@@ -1646,7 +1646,7 @@ GameObject:
   - component: {fileID: 193887834}
   - component: {fileID: 193887833}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: ColliderPoso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1673,12 +1673,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193887832}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.05, y: -14.91, z: 113.61}
-  m_LocalScale: {x: 8.321111, y: 13.800561, z: 8.321111}
+  m_LocalRotation: {x: 0.61247045, y: -0.35338366, z: -0.35338366, w: 0.61247045}
+  m_LocalPosition: {x: 0.23395514, y: 0.08360399, z: 0.07031926}
+  m_LocalScale: {x: 0.5536736, y: 0.9182671, z: 0.5536738}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_Father: {fileID: 887986335}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &194610866 stripped
 Transform:
